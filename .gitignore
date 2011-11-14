@@ -1,0 +1,6 @@
+# Mac OS X Finder config files.
+.DS_Store
+
+# Vim automatic backup files.
+*.swp
+
