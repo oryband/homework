@@ -4,3 +4,6 @@
 # Vim automatic backup files.
 *.swp
 
+# Java Class files.
+*.class
+
