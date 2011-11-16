@@ -2,9 +2,9 @@ import java.util.Scanner;
 
 public class Ex2 {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
+        Scanner scan = new Scanner(System.in);
 
-        int limit = input.nextInt();
+        int limit = scan.nextInt();
 
         boolean is_prime;
 
