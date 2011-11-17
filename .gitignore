@@ -7,3 +7,6 @@
 # Java Class files.
 *.class
 
+# Archives.
+*.zip
+
