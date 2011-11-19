@@ -8,8 +8,8 @@ public class Ex4 {
 
         // Print all Pythagorean triples (a^2 + b^2 = c^2) until the limit given as input.
         // Iterates over all c's, b's & a's, checks and prints triples.
-        for (int c=5; c<input; c++) {
-            for (int b=3; b<c; b++) {
+        for (int c=5; c<input; c++) {  // c can't be lower than 5.
+            for (int b=3; b<c; b++) {  // a & b can't be lower than 3.
                 for (int a=3; a<b; a++) {
                     if (a*a + b*b == c*c) {
                         System.out.println("(" + a + "," + b + "," + c + ") : " + a + "*" + a + " + " + b + "*" + b + " = " + c + "*" + c);
