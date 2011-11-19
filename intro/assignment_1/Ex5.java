@@ -15,7 +15,7 @@ public class Ex5 {
             }
         }
 
-        // Don't print the special case where the last prime is 1 calculated is 1.
+        // Don't print the special case where the last prime calculated was 1.
         if (input != 1) {
             System.out.println(input);
         }
