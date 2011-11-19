@@ -11,6 +11,8 @@ public class Ex6 {
         int sum;        // Sum of digits.
         int total = 0;  // Total sum of numbers.
         
+        // Prints the sum of all integers until (including) the integer given as input,
+        // where each one's sum of all its digits divide by 7 with no remainder.
         for (int i=1; i<=input; i++) {
             left = i;
             sum = 0;

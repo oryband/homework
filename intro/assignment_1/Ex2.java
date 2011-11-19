@@ -11,6 +11,7 @@ public class Ex2 {
         int c = 1;  // Counter. Initial value includes 2.
         int s = 2;  // Sum.
 
+        // Print the average of all primes from 2 to the limit given as input.
         if (limit != 2) {
             for (int i=limit-1; i>2; i--) {
                 is_prime = true;

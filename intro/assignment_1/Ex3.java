@@ -11,10 +11,11 @@ public class Ex3 {
         int b = -1;
         int c = -1;
 
+        // Recieves integers until given '0' as input, and prints the third biggest integer given so far.
         do {
             input = scan.nextInt();
 
-            // Init.
+            // Init the three biggest integers.
             if (input == 0) {}
             else if (a == -1) {
                 a = input;
@@ -39,6 +40,7 @@ public class Ex3 {
                 }
             }
 
+            // Compare and assign the given integer to the three biggest integers, if needed.
             else {
                 if (input > a) {
                     c = b;
