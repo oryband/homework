@@ -5,46 +5,31 @@ public class Part1 {
 	 * ********************************** */
 	// Task 1.1
 	public static boolean increment(int[] vec, int base) {
-        for (int i=0; i<vec.length; i++) {
-            if (base - vec[i] != 1) {
-                for (int j=i; j<vec.length; j++) {
-                    if (vec[j] == base -1) {
-                        vec[j] = 0;
-                    } else {
-                        vec[j]++;
-                    }
-                }
-
+        // Iterate over all digits (from LSB to MSB) and nullify them if they reached the cap.
+        // Otherwise increase just the current digit, no need to increase the rest towards the MSB.
+        for (int i=vec.length -1; i>=0; i--) {
+            if (vec[i] == base -1) {
+                vec[i] = 0;
+            } else {
+                vec[i]++;
                 return true;
             }
         }
 
-        nullify(vec);
-		return false;
-	}		
-
-    // Assigns 0's to all elements of a 1-dimensional array.
-    public static void nullify(int[] arr) {
-        int i;
-        for (i=0; i<arr.length; i++) {
-            arr[i] = 0;
-        }
-    }
+        // If all digits were nullified, we reached the cap.
+        return false;
+	}
 
 	// Task 1.2
 	public static boolean increment(int[][] matrix, int base) {
-        int i;
-        for (i=0; i<matrix.length; i++) {
-            for (int j=0; j<matrix[i].length; j++) {
-                if (increment(matrix[i], base)) {
-                    return true;
+        // Iterate over all indices and increment them.
+        for (int i=matrix.length -1; i>=0; i--) {
+            if ( increment(matrix[i], base) ) {
+                return true;  // Return true if current index was incremented.
             }
         }
 
-        for (i=0; i<matrix.length; i++) {
-            nullify(matrix[i]);
-        }
-
+        // If all indices were nullified, we reached our cap.
         return false;
 	}
 	
@@ -114,7 +99,25 @@ public class Part1 {
 	/* ********************************** *
 	 * *  Main you may want to use      * *
 	 * ********************************** */
-    public static void main(String[] args) {}
+    public static void main(String[] args) {
+        /*int[] vec = {0,2,9,9,9};
+        System.out.println(increment(vec, 10));
+
+        for (int i=0; i<vec.length; i++) {
+            System.out.print(vec[i] + ",");
+        }*/
+
+        /*int[][] matrix = {{0,4},{9,8,3},{7,9,9,9}};
+        System.out.println(increment(matrix, 10));
+
+        for (int i=0; i<matrix.length; i++) {
+            for (int j=0; i<matrix[i].length; j++) {
+                System.out.print(matrix[i][j] + ",");
+            }
+
+            System.out.println();
+        }*/
+
         /*int n=4, m=4, c=3;
         long startTime=System.currentTimeMillis();
         int[][] sol=solver(n, m, c);
@@ -124,6 +127,6 @@ public class Part1 {
         System.out.println("Solution found: "+(sol!=null));
         if(sol!=null) {
             System.out.println("Valid solution: "+isValidSolution(sol,c));
-        }
-	}*/
+        }*/
+	}
 }
