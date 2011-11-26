@@ -116,9 +116,24 @@ public class Part1 {
 	 * *  Part 3 - Basic solver         * *
 	 * ********************************** */
 	public static int[][] solver(int n, int m, int c) {
-		int[][] board=null;
-		// YOUR CODE HERE
-		return board;
+		int[][] board = new int[n][m];
+        int i,j;
+
+        // Init the board.
+        for (i=0; i<board.length; i++) {
+            for (j=0; j<board.length; j++) {
+                board[i][j] = 0;
+            }
+        }
+        
+        // Increment board and test for rectangles.
+        do {
+            if (isValidSolution(board, c)) {
+                return board;
+            }
+        } while (increment(board, c));
+
+		return null;
 	}
 
 	/* ********************************** *
@@ -155,6 +170,20 @@ public class Part1 {
 	 * *  Main you may want to use      * *
 	 * ********************************** */
     public static void main(String[] args) {
+        int[][] board = solver(5,5,3);
+
+        if (board != null) {
+            for (int i=0; i<board.length; i++) {
+                for (int j=0; j<board.length; j++) {
+                    System.out.print(board[i][j] + " ");
+                }
+
+                System.out.println();
+            }
+        } else {
+            System.out.print("null");
+        }
+
         /*int n=4, m=4, c=3;
         long startTime=System.currentTimeMillis();
         int[][] sol=solver(n, m, c);
