@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class Part1 {
 	
 	/* ********************************** *
@@ -119,7 +121,7 @@ public class Part1 {
 		int[][] board = new int[n][m];
         int i,j;
 
-        // Special cases where board is 0x0 or any Nx0.
+        // Return uninitialized board for special cases where board is 0xN / Nx0.
         if (n == 0 || m == 0) {
             return board;
         }
@@ -146,28 +148,85 @@ public class Part1 {
 	 * ********************************** */
 	// Task 4.1
 	public static int[][] randomBoard(int n, int m, int c) {
-		int[][] board=null;
-		// YOUR CODE HERE
+		int[][] board = new int[n][m];
+
+        // Iterate over all cells and assign a legal color to each one.
+        Random random = new Random();
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<m; j++) {
+                board[i][j] = random.nextInt(c);
+            }
+        }
+
 		return board;
 	}
 	
 	// Task 4.2
 	public static void randomFix(int[][] board, int c, int[] twoCorners) {
-		// YOUR CODE HERE
+        int topRow    = twoCorners[0];
+        int bottomRow = twoCorners[2];
+
+        int leftColumn  = twoCorners[1];
+        int rightColumn = twoCorners[3];
+
+        int oldColor = board[topRow][leftColumn];
+        int newColor = oldColor;
+
+        Random random = new Random();
+
+        // Generate a new color, different from the original color.
+        if (c > 1) {
+            while (newColor == oldColor) {
+                newColor = random.nextInt(c);
+            }
+        } else { // If we've only got one color, there's nothing to generate.
+            newColor = 0; 
+        }
+
+        // Generate a random corner.
+        int row    = random.nextInt(bottomRow   - topRow +1)     + topRow;
+        int column = random.nextInt(rightColumn - leftColumn +1) + leftColumn;
+
+        // Assign the new color to the corner.
+        board[row][column] = newColor;
 	}
 	
 	// Task 4.3
 	public static int[][] randomSolver(int n, int m, int c, int numFixes) {
-		int[][] board=null;
-		// YOUR CODE HERE
-		return board;
+		int[][] board = randomBoard(n, m, c);
+        int[] rect;
+
+        // Test for rectangles until numFixes limit is reached, while testing and fixing one rectangle each iteration.
+        rect = findSameColorRec(board);
+        for (int fixes=0; fixes<numFixes; fixes++) {
+            if (rect == null) {
+                return board;
+            } else {
+                randomFix(board, c, rect);
+                rect = findSameColorRec(board);
+            }
+        }
+
+        if (rect == null) {
+            return board;
+        }
+
+        return null;
 	}
 	
 	// Task 4.3
 	public static int[][] randomSolver(int n, int m, int c, int numResets, int numFixes) {
-		int[][] board=null;
-		// YOUR CODE HERE
-		return board;
+		int[][] board;
+
+        for (int resets=0; resets<numResets; resets++) {
+            board = randomSolver(n, m, c, numFixes);
+
+            if (board != null) {
+                return board;
+            }
+        }
+
+		return null;
 	}
 
 	
@@ -175,12 +234,29 @@ public class Part1 {
 	 * *  Main you may want to use      * *
 	 * ********************************** */
     public static void main(String[] args) {
-        int[][] board = solver(3,3,2);
+        int n=15, m=15, c=7;
 
-        if (board != null) {
-            for (int i=0; i<board.length; i++) {
-                for (int j=0; j<board.length; j++) {
-                    System.out.print(board[i][j] + " ");
+        long startTime=System.currentTimeMillis();
+
+        //int[][] sol=solver(n, m, c);
+        int[][] sol=randomSolver(n, m, c, n*m, n*m);
+
+        long endTime=System.currentTimeMillis();
+
+
+        System.out.println("Solution time : "+(endTime-startTime)+" ms");
+        System.out.println("Solution found: "+(sol!=null));
+
+        if(sol!=null) {
+            System.out.println("Valid solution: "+isValidSolution(sol,c));
+        }
+
+        System.out.println();
+
+        if (sol != null) {
+            for (int i=0; i<sol.length; i++) {
+                for (int j=0; j<sol[i].length; j++) {
+                    System.out.print(sol[i][j] + " ");
                 }
 
                 System.out.println();
@@ -188,16 +264,5 @@ public class Part1 {
         } else {
             System.out.print("null");
         }
-
-        /*int n=4, m=4, c=3;
-        long startTime=System.currentTimeMillis();
-        int[][] sol=solver(n, m, c);
-        //int[][] sol=randomSolver(n, m, c, n*m, n*m);
-        long endTime=System.currentTimeMillis();
-        System.out.println("Solution time : "+(endTime-startTime)+" ms");
-        System.out.println("Solution found: "+(sol!=null));
-        if(sol!=null) {
-            System.out.println("Valid solution: "+isValidSolution(sol,c));
-        }*/
 	}
 }
