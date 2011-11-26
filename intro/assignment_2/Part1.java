@@ -38,9 +38,21 @@ public class Part1 {
 	 * ********************************** */
 	// Task 2.1
 	public static int[] findSameColorRec(int[][] board, int topRow, int leftColumn) {
-		int[] res=null;
-		// YOUR CODE HERE
-		return res;
+        int rows = board.length;  // Set row & column length
+        int columns = board[0].length;
+
+        int color = board[topRow][leftColumn];  // Set rectangle corner color.
+
+        for (int i=topRow +1; i<rows; i++) {
+            for (int j=leftColumn +1; j<columns; j++) {
+                if (board[topRow][j] == color && board[i][leftColumn] == color && board[i][j] == color) {
+                    int[] coords = {i,j};
+                    return coords;
+                }
+            }
+        }
+
+        return null;
 	}
 	
 	// Task 2.2
@@ -100,24 +112,6 @@ public class Part1 {
 	 * *  Main you may want to use      * *
 	 * ********************************** */
     public static void main(String[] args) {
-        /*int[] vec = {0,2,9,9,9};
-        System.out.println(increment(vec, 10));
-
-        for (int i=0; i<vec.length; i++) {
-            System.out.print(vec[i] + ",");
-        }*/
-
-        /*int[][] matrix = {{0,4},{9,8,3},{7,9,9,9}};
-        System.out.println(increment(matrix, 10));
-
-        for (int i=0; i<matrix.length; i++) {
-            for (int j=0; i<matrix[i].length; j++) {
-                System.out.print(matrix[i][j] + ",");
-            }
-
-            System.out.println();
-        }*/
-
         /*int n=4, m=4, c=3;
         long startTime=System.currentTimeMillis();
         int[][] sol=solver(n, m, c);
