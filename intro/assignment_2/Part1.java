@@ -38,7 +38,7 @@ public class Part1 {
 	 * ********************************** */
 	// Task 2.1
 	public static int[] findSameColorRec(int[][] board, int topRow, int leftColumn) {
-        int rows = board.length;  // Set row & column length
+        int rows = board.length;  // Set row & column length.
         int columns = board[0].length;
 
         int color = board[topRow][leftColumn];  // Set rectangle corner color.
@@ -58,18 +58,19 @@ public class Part1 {
 	
 	// Task 2.2
 	public static int[] findSameColorRec(int[][] board) {
-        int rows = board.length;
+        int rows = board.length;  // Set row & column length.
         int columns = board[0].length;
 
-        int[] line = null;
+        int[] coords = null;
 
+        // Iterate over all cells and test rectangles, where the current cell is the top-left corner.
         for (int i=0; i<rows; i++) {
             for (int j=0; j<columns; j++) {
-                line = findSameColorRec(board, i, j);
+                coords = findSameColorRec(board, i, j);
 
-                if (line != null) {
-                    int[] coords = {i, j, line[0], line[1]};
-                    return coords;
+                if (coords != null) {
+                    int[] rect = {i, j, coords[0], coords[1]};
+                    return rect;
                 }
             }
         }
@@ -79,9 +80,36 @@ public class Part1 {
 
 	// Task 2.3
 	public static boolean isValidSolution(int[][] board, int c) {
-		boolean res=false;
-		// YOUR CODE HERE
-		return res;
+        int rows = board.length;  // Set row & column length.
+        int columns = board[0].length;
+
+        int i,j;
+
+        // Verify the board.
+        if (board == null) {
+            return false;
+        }
+
+        // Test for legal row lengths.
+        for (i=0; i<rows; i++) {
+            if (board[i] == null || board[i].length != columns) {
+                return false;
+            }
+
+            // Test for legal colors.
+            for (j=0; j<columns; j++) {
+                if (board[i][j] >= c || board[i][j] < 0) {
+                    return false;
+                }
+            }
+        }
+
+        // Test for no rectangles.
+        if (findSameColorRec(board) != null) {
+            return false;
+        }
+
+        return true;
 	}
 	
 	/* ********************************** *
