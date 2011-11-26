@@ -119,6 +119,11 @@ public class Part1 {
 		int[][] board = new int[n][m];
         int i,j;
 
+        // Special cases where board is 0x0 or any Nx0.
+        if (n == 0 || m == 0) {
+            return board;
+        }
+
         // Init the board.
         for (i=0; i<board.length; i++) {
             for (j=0; j<board.length; j++) {
@@ -170,7 +175,7 @@ public class Part1 {
 	 * *  Main you may want to use      * *
 	 * ********************************** */
     public static void main(String[] args) {
-        int[][] board = solver(5,5,3);
+        int[][] board = solver(3,3,2);
 
         if (board != null) {
             for (int i=0; i<board.length; i++) {
