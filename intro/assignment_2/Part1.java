@@ -218,6 +218,7 @@ public class Part1 {
 	public static int[][] randomSolver(int n, int m, int c, int numResets, int numFixes) {
 		int[][] board;
 
+        // Generate a limited amount of random boards and try to solve them with limited amount of fixes for each one.
         for (int resets=0; resets<numResets; resets++) {
             board = randomSolver(n, m, c, numFixes);
 
