@@ -43,6 +43,7 @@ public class Part1 {
 
         int color = board[topRow][leftColumn];  // Set rectangle corner color.
 
+        // Iterate over all rows and columns, starting from {TopRow, LeftColumn}, and test all corners of the current rectangle.
         for (int i=topRow +1; i<rows; i++) {
             for (int j=leftColumn +1; j<columns; j++) {
                 if (board[topRow][j] == color && board[i][leftColumn] == color && board[i][j] == color) {
@@ -57,9 +58,23 @@ public class Part1 {
 	
 	// Task 2.2
 	public static int[] findSameColorRec(int[][] board) {
-		int[] res=null;
-		// YOUR CODE HERE
-		return res;
+        int rows = board.length;
+        int columns = board[0].length;
+
+        int[] line = null;
+
+        for (int i=0; i<rows; i++) {
+            for (int j=0; j<columns; j++) {
+                line = findSameColorRec(board, i, j);
+
+                if (line != null) {
+                    int[] coords = {i, j, line[0], line[1]};
+                    return coords;
+                }
+            }
+        }
+
+        return null;
 	}
 
 	// Task 2.3
