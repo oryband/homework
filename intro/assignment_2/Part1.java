@@ -179,7 +179,7 @@ public class Part1 {
             while (newColor == oldColor) {
                 newColor = random.nextInt(c);
             }
-        } else { // If we've only got one color, there's nothing to generate.
+        } else { // If we've got only one color, there's nothing to generate.
             newColor = 0; 
         }
 
@@ -218,7 +218,7 @@ public class Part1 {
 	public static int[][] randomSolver(int n, int m, int c, int numResets, int numFixes) {
 		int[][] board;
 
-        // Generate a limited amount of random boards and try to solve them with limited amount of fixes for each one.
+        // Generate a limited amount of random boards, and try to solve them with limited amount of fixes for each one.
         for (int resets=0; resets<numResets; resets++) {
             board = randomSolver(n, m, c, numFixes);
 
@@ -235,7 +235,8 @@ public class Part1 {
 	 * *  Main you may want to use      * *
 	 * ********************************** */
     public static void main(String[] args) {
-        int n=15, m=15, c=7;
+    }
+        /*int n=15, m=15, c=7;
 
         long startTime=System.currentTimeMillis();
 
@@ -252,6 +253,7 @@ public class Part1 {
             System.out.println("Valid solution: "+isValidSolution(sol,c));
         }
 
+        // Print the board.
         System.out.println();
 
         if (sol != null) {
@@ -265,5 +267,6 @@ public class Part1 {
         } else {
             System.out.print("null");
         }
-	}
+	}*/
 }
+
