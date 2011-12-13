@@ -18,6 +18,7 @@
 public class Ex0 {
 
 	public static int f(int x) {
+        // Function behaves like in function decleration in pdf.
         if (x <= 0) {
             return 1;
         } else if (x%3 == 0) {
