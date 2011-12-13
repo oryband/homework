@@ -19,9 +19,17 @@ public class Ex1 {
 
 	/******************** Task 1 ********************/
 	public static long tilesPack1a(int n) {
-		long res = 0;
-		// YOUR CODE HERE
-		return res;
+        long pairs = 0;
+
+        if (n == 0) {
+            return 1;
+        }
+
+        if (n >= 2) {
+            pairs = tilesPack1a(n-2);
+        }
+
+        return tilesPack1a(n-1) + pairs;
 	}
 	
 	public static long tilesPack1b(int n) {
