@@ -24,8 +24,7 @@ public class Ex1 {
         // Base case.
         if (n == 0 || n ==1) {
             return 1;
-        }
-        if (n == -1) {
+        } else if (n == -1) {
             return 0;
         }
 
@@ -35,10 +34,10 @@ public class Ex1 {
     }
 
     public static long tilesPack1b(int n) {
-        long[] mem = new long[n +1];
+        long[] mem = new long[n+1];
 
         // Initialize the array.
-        for (int i=0; i<n +1; i++) {
+        for (int i=0; i<n+1; i++) {
             mem[i] = -1;
         }
 
@@ -46,18 +45,17 @@ public class Ex1 {
     }
 
     public static long tilesPack1b(int n, long[] mem) {
+        // Base case.
+        if (n == 0 || n == 1) {
+            return 1;
+        } else if (n == -1) {
+            return 0;
+        }
+        
         // Don't re-calculate tiles.
         if (mem[n] == -1) {
-            // Base case.
-            if (n == 0 || n == 1) {
-                return 1;
-            } else if (n == -1) {
-                return 0;
-            } else {
-                // Calculate 1,2 tiles back,
-                // and save calculations for each square.
-                mem[n] = tilesPack1b(n-1, mem) + tilesPack1b(n-2, mem);
-            }
+            // Calculate 1,2 tiles back, and save calculations for each square.
+            mem[n] = tilesPack1b(n-1, mem) + tilesPack1b(n-2, mem);
         }
 
         return mem[n];
@@ -65,16 +63,43 @@ public class Ex1 {
 
     /******************** Task 2 ********************/
     public static long tilesPack2(int n) {
-        long res = 0;
-        // YOUR CODE HERE
-        return res;
+        // Calculate for 2 lines, tilesets of size 1,2.
+        return (long) Math.pow(tilesPack1b(n), 2);
     }
 
     /******************** Task 3 ********************/
+    public static long tilesPack1c(int n) {
+        long[] mem = new long[n+1];
+
+        // Initialize the array.
+        for (int i=0; i<n+1; i++) {
+            mem[i] = -1;
+        }
+
+        return tilesPack1c(n, mem);
+    }
+
+    public static long tilesPack1c(int n, long[] mem) {
+        // Base case.
+        if (n == 0 || n == 1) {
+            return 1;
+        } else if (n == -1 || n == -2) {
+            return 0;
+        }
+        
+        // Don't re-calculate tiles.
+        if (mem[n] == -1) {
+            // Calculate 1,2,3 tiles back,
+            // and save calculations for each square.
+            mem[n] = tilesPack1c(n-1, mem) + tilesPack1c(n-2, mem) + tilesPack1c(n-3, mem);
+        }
+
+        return mem[n];
+    }
+
     public static long tilesPack3(int n) {
-        long res = 0;
-        // YOUR CODE HERE
-        return res;
+        // Calculate for two lines, tilesets of size 1,2,3.
+        return (long) Math.pow(tilesPack1c(n), 2);
     }
 
     public static void main(String[] args) {
