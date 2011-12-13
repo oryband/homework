@@ -18,30 +18,49 @@
 public class Ex1 {
 
     /******************** Task 1 ********************/
+    // Return amount of different combinations to order
+    // tile sets of size 1,2 in a given "line" (array).
     public static long tilesPack1a(int n) {
-        long pairs = 0;
-
-        if (n == 0) {
+        // Base case.
+        if (n == 0 || n ==1) {
             return 1;
         }
-
-        if (n >= 2) {
-            pairs = tilesPack1a(n-2);
+        if (n == -1) {
+            return 0;
         }
 
-        return tilesPack1a(n-1) + pairs;
+        // Return all possible combinations from this tile backwards,
+        // taking into account sets of 1 & 2 in size.
+        return tilesPack1a(n-1) + tilesPack1a(n-2);
     }
 
     public static long tilesPack1b(int n) {
-        long[] mem = new long[n + 1];
-        // INITIALIZE THE LOOKUPTABLE mem
+        long[] mem = new long[n +1];
+
+        // Initialize the array.
+        for (int i=0; i<n +1; i++) {
+            mem[i] = -1;
+        }
+
         return tilesPack1b(n, mem);
     }
 
     public static long tilesPack1b(int n, long[] mem) {
-        long res = 0;
-        // YOUR CODE HERE
-        return res;
+        // Don't re-calculate tiles.
+        if (mem[n] == -1) {
+            // Base case.
+            if (n == 0 || n == 1) {
+                return 1;
+            } else if (n == -1) {
+                return 0;
+            } else {
+                // Calculate 1,2 tiles back,
+                // and save calculations for each square.
+                mem[n] = tilesPack1b(n-1, mem) + tilesPack1b(n-2, mem);
+            }
+        }
+
+        return mem[n];
     }
 
     /******************** Task 2 ********************/
