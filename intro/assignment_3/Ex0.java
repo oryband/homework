@@ -17,7 +17,7 @@
  
 public class Ex0 {
 
-	public static int f(int x) {
+    public static int f(int x) {
         // Function behaves like in function decleration in pdf.
         if (x <= 0) {
             return 1;
@@ -26,9 +26,9 @@ public class Ex0 {
         } else {
             return x + f(x -1);
         }
-	}
+    }
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         // Test cases in format of pairs <input, expected output>
         int[][] inputOutput = {{5, 21}, {12, 384}, {0, 1}, {20, 1767}};
         
@@ -45,5 +45,5 @@ public class Ex0 {
             else
                 System.out.println("failed! f(" + x + ") expected: " + exp + " actual: " + actual);
         }
-	}
+    }
 }
