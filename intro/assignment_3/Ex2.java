@@ -28,16 +28,135 @@ public class Ex2 {
 
 	/******************** Task 1 ********************/
 	public static int[][] findClosestSimple(int[][] points) {
-		int[][] res = null;
-		// YOUR CODE HERE
-		return res;
+        double distance,    // Temp variable.
+               min_d = -1;  // Minimal distance.
+
+        int[][] min_couple = new int[2][2];  // Pair of coords with minimal distance.
+
+        // Error handling.
+        if (points.length < 2) {
+            return null;
+        }
+
+        // Choose the shortest distance betweem all couples:
+        // Iterate over each pair,
+        // and test its distance with the pairs ahead -
+        // (the ones that hadn't been tested against it with it yet).
+        for (int i=0; i<points.length; i++) {
+            for (int j=i+1; j<points.length; j++) {
+                distance = distance(points[i], points[j]);
+
+                // Initialize the minimum pair with the first two coords.
+                if (min_d == -1) {
+                    min_d = distance;
+
+                    min_couple[0] = points[i];
+                    min_couple[1] = points[j];
+                // If the current distance is shorter than the ones found before,
+                // choose these two pairs as the minimal couple.
+                } else if (distance < min_d) {
+                    min_d = distance;
+
+                    min_couple[0] = points[i];
+                    min_couple[1] = points[j];
+                }
+            }
+        }
+
+        return min_couple;
 	}
 
 	/******************** Task 2 ********************/
+    public static int[][] split(boolean first_half, int[][] points) {
+        int l      = points.length,
+            half_l = points.length /2;
+
+        int[][] ans;
+
+        int i;
+
+        // Return 1st/2nd half of the original points array.
+        if (first_half) {
+            ans = new int[half_l][2];
+
+            for (i=0; i<half_l; i++) {
+                ans[i][0] = points[i][0];
+                ans[i][1] = points[i][1];
+            }
+        } else {  // 2nd half.
+            ans = new int[l - half_l][2];
+
+            for (i=half_l; i<l; i++) {
+                ans[i - half_l][0] = points[i][0];
+                ans[i - half_l][1] = points[i][1];
+            }
+        }
+
+        return ans;
+    }
+
+    public static int[][] sort(int [][] points) {
+        // Error handling.
+        if (points == null || points.length < 2) {
+            return points;
+        }
+
+        // "
+        for (int i=0; i<points.length; i++) {
+            if (points[i].length != 2) {
+                return points;
+            }
+        }
+
+        // Merge sort.
+        return merge(
+                sort(split(true,  points)),  // Left
+                sort(split(false, points))   // Right
+               );
+    }
+
+    public static int[][] merge(int[][] half1, int[][] half2) {
+        int len1 = half1.length,
+            len2 = half2.length;
+
+        int i  = 0,  // Result index.
+            i1 = 0,  // 1st half index.
+            i2 = 0;  // 2nd half index.
+
+        int[][] ans = new int[len1 + len2][2];
+
+        // Merge the two arrays while ordering them by point size:
+        // For {a,b} and {c,d} - order by [a>c then b>d] .
+        while(i1 < len1 && i2 < len2) {
+            if ( ! lexGreaterThan(half1[i1], half2[i2]) ) {  // {a,b} < {c,d} .
+                ans[i][0] = half1[i1][0];
+                ans[i][1] = half1[i1][1];
+                i1++;
+            } else {  // {a,b} > {c,d}  [Opposite case] .
+                ans[i][0] = half2[i2][0];
+                ans[i][1] = half2[i2][1];
+                i2++;
+            }
+
+            i++;
+        }
+
+        // Once one array (one half that is) was fully copied,
+        // we need to copy the rest of the second half afterwards.
+        for(; i1<len1 && i<ans.length; i1++, i++) {
+            ans[i][0] = half1[i1][0];
+            ans[i][1] = half1[i1][1];
+        }
+        for(; i2<len2 && i<ans.length; i2++, i++) {
+            ans[i][0] = half2[i2][0];
+            ans[i][1] = half2[i2][1];
+        }
+
+        return ans;
+    }
+
 	public static int[][] sortByLex(int[][] points) {
-		int[][] ans = null;
-		// YOUR CODE HERE
-		return ans;
+        return sort(points);
 	}
 
 	public static int[][] sortByY(int[][] points) {
