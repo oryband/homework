@@ -95,7 +95,7 @@ public class Ex2 {
         return ans;
     }
 
-    public static int[][] sort(int [][] points) {
+    public static int[][] sort(boolean byX, int [][] points) {
         // Error handling.
         if (points == null || points.length < 2) {
             return points;
@@ -109,13 +109,13 @@ public class Ex2 {
         }
 
         // Merge sort.
-        return merge(
-                sort(split(true,  points)),  // Left
-                sort(split(false, points))   // Right
+        return merge(byX,
+                sort(byX, split(true,  points)),  // Left
+                sort(byX, split(false, points))   // Right
                );
     }
 
-    public static int[][] merge(int[][] half1, int[][] half2) {
+    public static int[][] merge(boolean byX, int[][] half1, int[][] half2) {
         int len1 = half1.length,
             len2 = half2.length;
 
@@ -128,14 +128,26 @@ public class Ex2 {
         // Merge the two arrays while ordering them by point size:
         // For {a,b} and {c,d} - order by [a>c then b>d] .
         while(i1 < len1 && i2 < len2) {
-            if ( ! lexGreaterThan(half1[i1], half2[i2]) ) {  // {a,b} < {c,d} .
-                ans[i][0] = half1[i1][0];
-                ans[i][1] = half1[i1][1];
-                i1++;
-            } else {  // {a,b} > {c,d}  [Opposite case] .
-                ans[i][0] = half2[i2][0];
-                ans[i][1] = half2[i2][1];
-                i2++;
+            if (byX) {
+                if ( ! lexGreaterThan(half1[i1], half2[i2]) ) {  // {a,b} < {c,d} .
+                    ans[i][0] = half1[i1][0];
+                    ans[i][1] = half1[i1][1];
+                    i1++;
+                } else {  // {a,b} > {c,d}  [Opposite case] .
+                    ans[i][0] = half2[i2][0];
+                    ans[i][1] = half2[i2][1];
+                    i2++;
+                }
+            } else {  // by Y.
+                if ( ! lexGreaterThanByY(half1[i1], half2[i2]) ) {  // {a,b} < {c,d} .
+                    ans[i][0] = half1[i1][0];
+                    ans[i][1] = half1[i1][1];
+                    i1++;
+                } else {  // {a,b} > {c,d}  [Opposite case] .
+                    ans[i][0] = half2[i2][0];
+                    ans[i][1] = half2[i2][1];
+                    i2++;
+                }
             }
 
             i++;
@@ -156,13 +168,15 @@ public class Ex2 {
     }
 
 	public static int[][] sortByLex(int[][] points) {
-        return sort(points);
+        return sort(true, points);  // Sort by [X then Y] coord
 	}
 
+	public static boolean lexGreaterThanByY(int[] p1, int[] p2) {
+        // Same as lexGreaterThan, but sorts by [Y then X] coord instead of [X then Y].
+		return (p1[1] > p2[1]) || (p1[1] == p2[1] && p1[0] > p2[0]);
+	}
 	public static int[][] sortByY(int[][] points) {
-		int[][] ans = null;
-		// YOUR CODE HERE
-		return ans;
+        return sort(false, points);
 	}
 
 	public static int[] duplicates(int[][] points) {
