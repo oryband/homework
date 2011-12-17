@@ -38,10 +38,10 @@ public class Ex2 {
             return null;
         }
 
-        // Choose the shortest distance betweem all couples:
-        // Iterate over each pair,
-        // and test its distance with the pairs ahead -
-        // (the ones that hadn't been tested against it with it yet).
+        // Choose the shortest distance between all couples:
+        //     Iterate over each pair,
+        //     and test its distance with the pairs ahead -
+        //     (the ones that hadn't been tested against it with it yet).
         for (int i=0; i<points.length; i++) {
             for (int j=i+1; j<points.length; j++) {
                 distance = distance(points[i], points[j]);
@@ -126,9 +126,9 @@ public class Ex2 {
         int[][] ans = new int[len1 + len2][2];
 
         // Merge the two arrays while ordering them by point size:
-        // For {a,b} and {c,d} - order by [a>c then b>d] .
         while(i1 < len1 && i2 < len2) {
             if (byX) {
+                // For {a,b} and {c,d} - order by [a>c then b>d] .
                 if ( ! lexGreaterThan(half1[i1], half2[i2]) ) {  // {a,b} < {c,d} .
                     ans[i][0] = half1[i1][0];
                     ans[i][1] = half1[i1][1];
@@ -139,6 +139,7 @@ public class Ex2 {
                     i2++;
                 }
             } else {  // by Y.
+                // For {a,b} and {c,d} - order by [b>d then a>c] .
                 if ( ! lexGreaterThanByY(half1[i1], half2[i2]) ) {  // {a,b} < {c,d} .
                     ans[i][0] = half1[i1][0];
                     ans[i][1] = half1[i1][1];
@@ -175,21 +176,61 @@ public class Ex2 {
         // Same as lexGreaterThan, but sorts by [Y then X] coord instead of [X then Y].
 		return (p1[1] > p2[1]) || (p1[1] == p2[1] && p1[0] > p2[0]);
 	}
+
 	public static int[][] sortByY(int[][] points) {
         return sort(false, points);
 	}
 
+    public static int[] findDup(int[][] points, int c) {
+        // Base case - Stop if we reached the last coord.
+        if (c+1 == points.length -1) {
+            return null;
+        }
+
+        // Compare the current coord to the rest ahead of it in the list.
+        for (int j=c+1; j<points.length; j++) {
+            if (points[c][0] == points[j][0] && points[c][1] == points[j][1]) {
+                return points[c];
+            }
+        }
+
+        // If no duplicates were found for the current coord,
+        // Find duplicates for the next coord in the list.
+        return findDup(points, ++c);
+    }
+
 	public static int[] duplicates(int[][] points) {
-		int[] res = null;
-		// YOUR CODE HERE
-		return res;
+        return findDup(points, 0);
 	}
 
-	public static int[][] filterPointsByRange(double fromX, double toX,
-			int[][] points) {
-		int[][] res = null;
-		// YOUR CODE HERE
-		return res;
+	public static int[][] filterPointsByRange(double fromX, double toX, int[][] points) {
+        int size = 0;  // Determine size of filtered points array.
+        int x;         // Holds X coordinate of the currently inspected point.
+
+        for (int i=0; i<points.length; i++) {
+            x = points[i][0];
+            if (x >= fromX && x <= toX) {
+                size++;
+            }
+        }
+
+        int[][] filtered = new int[size][2];
+        int j=0;  // Filtered array's index.
+
+        // Re-run over the points and filter by X range.
+        if (size > 0) {
+            for (int i=0; i<points.length; i++) {
+                x = points[i][0];
+                if (x >= fromX && x <= toX) {
+                    filtered[j][0] = x;
+                    filtered[j][1] = points[i][1];
+                    j++;
+                }
+            }
+        }
+
+        // NOTE: If we were allowed to use lists, this would've been more efficient.
+        return filtered;
 	}
 
 	/******************** Task 3 ********************/
