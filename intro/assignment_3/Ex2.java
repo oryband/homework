@@ -181,26 +181,25 @@ public class Ex2 {
         return sort(false, points);
     }
 
-    public static int[] findDup(int[][] points, int c) {
-        // Base case - Stop if we reached the last coord.
-        if (c+1 == points.length -1) {
+    public static int[] duplicates(int[][] points) {
+        // Error handling:
+        // If we recieved only one coordinate, there's nothing to compare to.
+        if (points == null || points.length < 2) {
             return null;
         }
 
-        // Compare the current coord to the rest ahead of it in the list.
-        for (int j=c+1; j<points.length; j++) {
-            if (points[c][0] == points[j][0] && points[c][1] == points[j][1]) {
-                return points[c];
+        // Compare each coordinate to the rest ahead in the list.
+        int l = points.length;
+        for (int i=0; i<l; i++) {
+            for (int j=i+1; j<l; j++) {
+                if (points[i][0] == points[j][0] && points[i][1] == points[j][1]) {
+                    return points[i];
+                }
             }
         }
 
-        // If no duplicates were found for the current coord,
-        // Find duplicates for the next coord in the list.
-        return findDup(points, ++c);
-    }
-
-    public static int[] duplicates(int[][] points) {
-        return findDup(points, 0);
+        // If there're no duplicates...
+        return null;
     }
 
     public static int[][] filterPointsByRange(double fromX, double toX, int[][] points) {
