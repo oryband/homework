@@ -169,15 +169,20 @@ public class Ex2 {
     }
 
     public static int[][] sortByLex(int[][] points) {
-        return sort(true, points);  // Sort by [X then Y] coord
+        // For points array of {{x1,y1}..{xN,yN}},
+        // sort by [X then Y] coordinate.
+        return sort(true, points);
     }
 
     public static boolean lexGreaterThanByY(int[] p1, int[] p2) {
-        // Same as lexGreaterThan, but sorts by [Y then X] coord instead of [X then Y].
+        // For points array of {{x1,y1}..{xN,yN}},
+        // same as lexGreaterThan, but tests for [Y then X] coordinates instead of [X then Y].
         return (p1[1] > p2[1]) || (p1[1] == p2[1] && p1[0] > p2[0]);
     }
 
     public static int[][] sortByY(int[][] points) {
+        // For points array of {{x1,y1}..{xN,yN}},
+        // sort points by [Y then X], instead of [X then Y].
         return sort(false, points);
     }
 
