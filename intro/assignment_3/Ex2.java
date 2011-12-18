@@ -26,6 +26,7 @@ public class Ex2 {
         return (p1[0] > p2[0]) || (p1[0] == p2[0] && p1[1] > p2[1]);
     }
 
+
     /******************** Task 1 ********************/
     public static int[][] findClosestSimple(int[][] points) {
         double distance,    // Temp variable.
@@ -66,6 +67,7 @@ public class Ex2 {
         return min_couple;
     }
 
+
     /******************** Task 2 ********************/
     public static int[][] split(boolean first_half, int[][] points) {
         int l      = points.length,
@@ -80,15 +82,13 @@ public class Ex2 {
             ans = new int[half_l][2];
 
             for (i=0; i<half_l; i++) {
-                ans[i][0] = points[i][0];
-                ans[i][1] = points[i][1];
+                ans[i] = points[i];
             }
         } else {  // 2nd half.
             ans = new int[l - half_l][2];
 
             for (i=half_l; i<l; i++) {
-                ans[i - half_l][0] = points[i][0];
-                ans[i - half_l][1] = points[i][1];
+                ans[i - half_l] = points[i];
             }
         }
 
@@ -130,23 +130,19 @@ public class Ex2 {
             if (byX) {
                 // For {a,b} and {c,d} - order by [a>c then b>d] .
                 if ( ! lexGreaterThan(half1[i1], half2[i2]) ) {  // {a,b} < {c,d} .
-                    ans[i][0] = half1[i1][0];
-                    ans[i][1] = half1[i1][1];
+                    ans[i] = half1[i1];
                     i1++;
                 } else {  // {a,b} > {c,d}  [Opposite case] .
-                    ans[i][0] = half2[i2][0];
-                    ans[i][1] = half2[i2][1];
+                    ans[i] = half2[i2];
                     i2++;
                 }
             } else {  // by Y.
                 // For {a,b} and {c,d} - order by [b>d then a>c] .
                 if ( ! lexGreaterThanByY(half1[i1], half2[i2]) ) {  // {a,b} < {c,d} .
-                    ans[i][0] = half1[i1][0];
-                    ans[i][1] = half1[i1][1];
+                    ans[i] = half1[i1];
                     i1++;
                 } else {  // {a,b} > {c,d}  [Opposite case] .
-                    ans[i][0] = half2[i2][0];
-                    ans[i][1] = half2[i2][1];
+                    ans[i] = half2[i2];
                     i2++;
                 }
             }
@@ -157,12 +153,10 @@ public class Ex2 {
         // Once one array (one half that is) was fully copied,
         // we need to copy the rest of the second half afterwards.
         for(; i1<len1 && i<ans.length; i1++, i++) {
-            ans[i][0] = half1[i1][0];
-            ans[i][1] = half1[i1][1];
+            ans[i] = half1[i1];
         }
         for(; i2<len2 && i<ans.length; i2++, i++) {
-            ans[i][0] = half2[i2][0];
-            ans[i][1] = half2[i2][1];
+            ans[i] = half2[i2];
         }
 
         return ans;
@@ -237,6 +231,7 @@ public class Ex2 {
         return filtered;
     }
 
+
     /******************** Task 3 ********************/
     public static int[][] findClosest(int[][] points) {
         int[][] res;
@@ -252,10 +247,67 @@ public class Ex2 {
     }
 
     public static int[][] findClosestRecursive(int[][] points) {
-        int[][] res = null;
-        // YOUR CODE HERE
-        return res;
+        if (points == null || points.length <2) {
+            return null;
+        }
+
+        // Don't recurse if there're very few points.
+        int pl = points.length;
+        if (pl>=2 && pl<=4) {
+            return findClosestSimple(points);
+        }
+
+        int[][] half1 = split(true,  points),  // 1st half.
+                half2 = split(false, points);  // 2nd half.
+
+        int[][] couple1 = findClosestRecursive(half1),
+                couple2 = findClosestRecursive(half2);
+
+        double d1_1 = distance(couple1[0], couple1[1]),  // 2 points in 1st couple.
+               d2_2 = distance(couple2[0], couple2[1]),  // 2 points in 2nd couple.
+               d1_2 = distance(couple1[1], couple2[0]),  // 2nd point in 1st couple and 1st point in 2nd couple.
+
+               d = d1_2;  // (Default) Minimal distance between all possible couples.
+
+        // d1_2 is the minimal distance by DEFAULT.
+        int[][] ans = { couple1[1], couple2[0] };
+
+        // Test for closer points.
+        if (d1_1 < d2_2 && d1_1 < d1_2) {
+            d = d1_1;
+
+            ans[0] = couple1[0];
+            ans[1] = couple1[1];
+        } else if (d2_2 < d1_2) {
+            d = d2_2;
+
+            ans[0] = couple2[0];
+            ans[1] = couple2[1];
+        }
+
+        int Mx = couple2[0][0];  // X coordinate of middle point (1st point of 2nd half).
+
+        // Fetch all points with possible shorter distance than the above.
+        int[][] pointsByY = sortByY(points);
+        int[][] middle = filterPointsByRange(Mx-d, Mx+d, pointsByY);
+
+        // Test for shorter points - Testing only the Y coordinates in each couple.
+        for (int i=0; i<points.length; i++) {
+            for (int j=i+1; j<points.length; j++) {
+                if (points[j][1] - points[i][1] >= d) {
+                    return ans;
+                } else {  // Current distance is shorter that minimal distance found so far.
+                    d = distance(points[i], points[j]);  // Set new minimal distance.
+
+                    ans[0] = points[i];  // Assign new couple.
+                    ans[1] = points[j];
+                }
+            }
+        }
+
+        return ans;
     }
+
 
     /******************** Auxiliary functions ********************/
 
