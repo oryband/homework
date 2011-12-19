@@ -73,10 +73,10 @@ public class Ex3 {
 	public static int[][][] put(int[] tile, int x, int y, int[][][] board) {
 		int n = board.length;  // Board size in NxN (square).
 
-		int[][][] copy = new int[n][n][];
+		int[][][] copy = new int[n][n][];  // New board - Copy by value of the original board + new assigned tile.
 
-        // Iterate over board's tiles and copy the tiles by value (NOT by reference).
-        int a,b,c;  // x,y, tile color indexes.
+        // Iterate over board's tiles and copy them tiles by value (NOT by reference).
+        int a,b,c;  // x,y & tile indexes.
         for (a=0; a<n; a++) {
             for (b=0; b<n; b++) {
                 // If the current tile is occupied, copy it by value.
