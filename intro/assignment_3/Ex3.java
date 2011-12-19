@@ -36,11 +36,37 @@ public class Ex3 {
 
 	/******************** Task 1 ********************/
 	public static boolean canPut(int[]tile, int x, int y, int[][][] board) {
-		boolean ans = true;
-		// YOUR CODE HERE
-		return ans;
-	}
+        int n = board.length;  // Board size (NxN - square).
 
+        // Check vacancy in given coordinates.
+        if (x<0 || y<0 || x>n || y>n || board[x][y] != null) {
+            return false;
+        }
+
+        // Index difference (delta) of neighbouring tiles to test against, by order: North, East, South, West.
+        int[][] neighbours = { {0,-1}, {1,0}, {0,1}, {-1,0} };
+
+        int tx,ty;  // Temporary coordinates of current neighbour.
+        for (int i=0; i<neighbours.length; i++) {
+            tx = x + neighbours[i][0];
+            ty = y + neighbours[i][1];
+
+            // Test to if given tile is on the edges of the board:
+            // If current neighbouring tile is outside, we can conclude this.
+            if (ty == -1 || tx == n || ty == n || tx == -1) {
+                if (tile[i] != 0) {
+                    return false;
+                }
+            // Test if neighbour's side is the same color as the
+            // opposite side's color of our given tile.
+            } else if (board[tx][ty] != null  &&  board[tx][ty][(i+2) % 4] != tile[i]) {
+                return false;
+            }
+        }
+
+        // If all tests passed successfuly, we can put the given tile in the board.
+        return true;
+	}
 
 
 	/******************** Task 2 ********************/
