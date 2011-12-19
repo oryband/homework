@@ -38,7 +38,7 @@ public class Ex3 {
 	public static boolean canPut(int[]tile, int x, int y, int[][][] board) {
         int n = board.length;  // Board size (NxN - square).
 
-        // Check vacancy in given coordinates.
+        // Validate & test vacancy in given coordinates.
         if (x<0 || y<0 || x>n || y>n || board[x][y] != null) {
             return false;
         }
@@ -127,6 +127,10 @@ public class Ex3 {
 	public static int[] rotate(int j, int[] tile){
 		int[] t = new int[4];
 
+        if (j==0) {
+            return tile;
+        }
+
         // Build new tile, and assign colors to each index by difference of rotation (j).
         for (int i=0; i<4; i++) {
             t[(i+j) %4] = tile[i];
@@ -144,10 +148,35 @@ public class Ex3 {
 	}
 
 	public static int[][][] solve(int[][][] board, int[][] tiles){
-		int[][][] solution = null;
-		// YOUR CODE HERE
-		return solution;
-	}
+        int n = board.length;
+
+        // If no there're no tiles left, return the solved board.
+        if (tiles.length == 0) {
+            return board;
+        }
+
+        // Try to put a tile in any vacant square.
+        int[][][] solution;  // Solved board.
+        int[] rotated;  // Temporary rotated tile.
+        for (int x=0; x<n; x++) {
+            for (int y=0; y<n; y++) {
+                for (int k=0; k<4; k++) {
+                    rotated = rotate(k ,tiles[0]);
+                    // If the tile is valid for this square, put it, remove the tile from the list,
+                    // and try solving the board with the tiles left.
+                    if (canPut(rotated, x,y, board)) {
+                        solution = solve(put(rotated, x,y, board), delete(0, tiles));
+                        if (solution != null) {
+                            return solution;
+                        }
+                    }
+                }
+            }
+        }
+
+        // If the current solution isn't valid, return a false value, so other combinations will be tested.
+        return null;
+    }
 
 	/******************** Auxiliary functions ********************/
 	
@@ -230,7 +259,7 @@ public class Ex3 {
 
 		int[][] tiles3 = {{2,0,2,3},{3,3,3,4},{0,0,1,2},{1,4,1,0}};
 
-        int[][][] solution = solve(tiles1);
+        int[][][] solution = solve(tiles2);
         EternityPrint.showBoard(solution); // showing a game board
 	}
 }
