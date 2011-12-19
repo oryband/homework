@@ -101,17 +101,39 @@ public class Ex3 {
 
 	/******************** Task 3 ********************/
 	public static int[][] delete(int i, int[][] tiles) {
-		int[][] restTiles = null;
-		// YOUR CODE HERE
-		return restTiles;
+        int[][] filtered = new int[tiles.length -1][];
+        int len = tiles.length;
+
+        int j,c;  // Tile & color index.
+        // Build new filtered list UNTIL the given index.
+        for (j=0; j<i; j++) {
+            filtered[j] = new int[4];
+            for (c=0; c<4; c++) {
+                filtered[j][c] = tiles[j][c];
+            }
+        }
+
+        // Build the rest of the list from AFTER the given index until the end.
+        for (j=i; j<len -1; j++) {
+            filtered[j] = new int[4];
+            for (c=0; c<4; c++) {
+                filtered[j][c] = tiles[j+1][c];
+            }
+        }
+
+        return filtered;
 	}
 
 	public static int[] rotate(int j, int[] tile){
-		int[] nextTile = null;
-		// YOUR CODE HERE
-		return nextTile;
-	}
+		int[] t = new int[4];
 
+        // Build new tile, and assign colors to each index by difference of rotation (j).
+        for (int i=0; i<4; i++) {
+            t[(i+j) %4] = tile[i];
+        }
+
+        return t;
+	}
 
 
 	/******************** Task 4 ********************/
