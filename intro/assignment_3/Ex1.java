@@ -51,7 +51,7 @@ public class Ex1 {
         } else if (n == -1) {
             return 0;
         }
-        
+
         // Don't re-calculate tiles.
         if (mem[n] == -1) {
             // Calculate 1,2 tiles back, and save calculations for each square.
@@ -86,7 +86,7 @@ public class Ex1 {
         } else if (n == -1 || n == -2) {
             return 0;
         }
-        
+
         // Don't re-calculate tiles.
         if (mem[n] == -1) {
             // Calculate 1,2,3 tiles back,
