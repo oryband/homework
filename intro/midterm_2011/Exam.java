@@ -1,4 +1,5 @@
 public class Exam {
+    // Question 2.
     public static void primeFactors(int n) {
         int d=0,  // Current Divider.
             i=2;  // Smallest common divider possible.
@@ -23,6 +24,7 @@ public class Exam {
         return rec(a.length-1, a, value);
     }
 
+    // Question 4.
     public static boolean rec(int i, int[] a, int value) {
         boolean answer;
 
