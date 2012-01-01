@@ -1,5 +1,5 @@
 /**
- * Represents a varible's assignment.
+ * Represents a variable's assignment.
  *
  * Thus, a class implementing this interface,
  * represents a variable and its value (type double).
