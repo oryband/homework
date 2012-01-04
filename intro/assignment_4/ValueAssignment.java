@@ -3,8 +3,8 @@
  * @version 1.0
  */
 public class ValueAssignment implements Assignment {
-    Variable var;
-    double value;
+    private Variable var;
+    private double   value;
 
     /**
      * Assign initial values.
@@ -21,12 +21,25 @@ public class ValueAssignment implements Assignment {
 
     /** @return True if var instances and their values are equal. */
     public boolean equals(ValueAssignment other) {
-        return this.var.equals(other.var) && this.value == other.value;
+        return this.var.equals(other.getVar()) &&
+               this.value == other.getValue();
     }
 
     /** @return string in format "name=value" . */
     public String toString() {
         return var.getName + "=" + value;
+    }
+
+    public Variable getVar() {
+        return var;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setVaule(double value) {
+        this.value = value;
     }
 }
 
