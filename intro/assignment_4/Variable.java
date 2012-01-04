@@ -5,9 +5,7 @@
  * @version 1.0
  */
 public interface Variable {
-    /**
-     * @return the variable's name.
-     */
+    /** return the variable's name. */
     public char getName();
 }
 

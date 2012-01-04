@@ -8,19 +8,13 @@
  * @version 1.0
  */
 public interface Assignment {
-    /**
-     * @return the variable.
-     */
+    /** @return the variable. */
     public Variable getVar();
 
-    /**
-     * @return the variable's value.
-     */
+    /** @return the variable's value. */
     public double getValue();
 
-    /**
-     * Set the variable's value.
-     */
+    /** Sets the variable's value. */
     public void setVaule(double value);
 }
 
