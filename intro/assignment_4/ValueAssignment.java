@@ -14,20 +14,21 @@ public class ValueAssignment implements Assignment {
      *
      * @return New ValueAssignment object.
      */
-    public ValueAssignment(Variable var, double value) {
+    public ValueAssignment(Variable var, double val) {
         this.var   = var;
-        this.value = value;
+        this.value = val;
     }
 
     /** @return True if var instances and their values are equal. */
-    public boolean equals(ValueAssignment other) {
-        return this.var.equals(other.getVar()) &&
-               this.value == other.getValue();
+    public boolean equals(ValueAssignment o) {
+        return o != null &&
+               this.var.equals(o.getVar()) &&
+               this.value == o.getValue();
     }
 
     /** @return string in format "name=value" . */
     public String toString() {
-        return var.getName + "=" + value;
+        return var.getName() + "=" + value;
     }
 
     public Variable getVar() {
