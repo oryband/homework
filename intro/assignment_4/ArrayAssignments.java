@@ -1,9 +1,13 @@
+/**
+ * @author Ory Band
+ * @version 1.0
+ */
 public class ArrayAssignments implements Assignments {
     private Assignment[] assignments;
 
     /** @return new ArrayAssignment object with no assignments. */
     public ArrayAssignments() {
-        assignments = new Assignment[0];
+        this.assignments = new Assignment[0];
     }
 
     /**
@@ -12,38 +16,49 @@ public class ArrayAssignments implements Assignments {
      * @return new ArrayAssignment object with initial assignments given as argument.
      */
     public ArrayAssignments(Assignment[] as) {
-        // TODO: Check if you can have duplicates..
-        assignments = new Assignment[as.length];
+        // TODO: Ask dvir if we should copy `as` or assign itself to us.
+
+        this.assignments = new Assignment[as.length];
 
         for (int i=0; i < as.length; i++) {
-            assignments[i] = as[i];
+            this.assignments[i] = as[i];
         }
     }
 
     public double valueOf(Variable v) {
         // Validate argument.
-        if (var == null) {
-            // TODO: Throw exception.
+        if (v == null) {
+            throw new RuntimeException("Variable argument is null.");
         }
 
         // Search for var in the assignments list.
-        for (int i=0; i < assignments.length; i++) {
-            if (assignments[i].getVar().equals(v)) {
-                return assignments[i].getVar().getValue();
+        for (int i=0; i < this.assignments.length; i++) {
+            if (this.assignments[i].getVar().equals(v)) {
+                return this.assignments[i].getVar().getValue();
             }
         }
 
         // If var wasn't found, throw exception.
-        // TODO: Throw exception.
+        throw new RuntimeException("Variable " + v.getName() + " has no valid assignment!");
     }
 
     public void addAssignment(Assignment a) {
+        // Update assignment if it's already in the assignments' list.
+        int i;
+        boolean stop=false;
+        for (i=0; i < this.assignments.length && !stop; i++) {
+            if (this.assignments[i].equals(a)) {
+                this.assignments[i].setValue(a.getValue());
+                stop=true;
+            }
+        }
+
         // Creates a new list, and add a single new assignment to it.
         Assignment[] copy = new Assignment[assignments.length +1];
 
         // Copies the old assignments.
-        for (int i=0; i < assignments.length; i++) {
-            copy[i] = assignments[i];
+        for (i=0; i < this.assignments.length; i++) {
+            copy[i] = this.assignments[i];
         }
 
         // Add the new assignment to the end of the list.

@@ -6,9 +6,9 @@
  */
 public interface Expression {
     /**
-     * @param assignments The assignments to evaluate.
+     * @param assignments The assignments listst to evaluate the variable against.
      *
-     * @return the evaluated value.
+     * @return the Variable's value according to the assignments list.
      */
     public double evaluate(Assignments assignments);
 
