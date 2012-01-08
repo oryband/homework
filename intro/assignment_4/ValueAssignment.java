@@ -15,6 +15,10 @@ public class ValueAssignment implements Assignment {
      * @return New ValueAssignment object.
      */
     public ValueAssignment(Variable var, double val) {
+        if (var == null) {
+            throw new RuntimeException("Variable argument is null.");
+        }
+
         this.var   = var;
         this.value = val;
     }

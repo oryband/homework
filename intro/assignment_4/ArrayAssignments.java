@@ -15,13 +15,16 @@ public class ArrayAssignments implements Assignments {
      *
      * @return new ArrayAssignment object with initial assignments given as argument.
      */
-    public ArrayAssignments(Assignment[] as) {
+    public ArrayAssignments(Assignment[] s) {
+        if (s == null) {
+            throw new RuntimeException("Assignment[] argument is null.");
+        }
+
         // TODO: Ask dvir if we should copy `as` or assign itself to us.
+        this.assignments = new Assignment[s.length];
 
-        this.assignments = new Assignment[as.length];
-
-        for (int i=0; i < as.length; i++) {
-            this.assignments[i] = as[i];
+        for (int i=0; i < s.length; i++) {
+            this.assignments[i] = s[i];
         }
     }
 
@@ -31,18 +34,22 @@ public class ArrayAssignments implements Assignments {
             throw new RuntimeException("Variable argument is null.");
         }
 
-        // Search for var in the assignments list.
+        // Search for v in the assignments list.
         for (int i=0; i < this.assignments.length; i++) {
             if (this.assignments[i].getVar().equals(v)) {
                 return this.assignments[i].getVar().getValue();
             }
         }
 
-        // If var wasn't found, throw exception.
+        // If v wasn't found, throw exception.
         throw new RuntimeException("Variable " + v.getName() + " has no valid assignment!");
     }
 
     public void addAssignment(Assignment a) {
+        if (a == null) {
+            throw new RuntimeException("Assignment argument is null.");
+        }
+
         // Update assignment if it's already in the assignments' list.
         int i;
         boolean stop=false;

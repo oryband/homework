@@ -20,12 +20,20 @@ public class VariableExpression implements Variable, Expression {
         return this.name;
     }
 
-    public double evaluate(Assignments as) {
-        return as.valueOf(this)
+    public double evaluate(Assignments s) {
+        if (s == null) {
+            throw new RuntimeException("Assigments argument is null.");
+        }
+
+        return s.valueOf(this)
     }
 
-    public Expression derivative(Variable var) {
-        if (this.equals(var)) {
+    public Expression derivative(Variable v) {
+        if (v == null) {
+            throw new RuntimeException("Variable argument is null.");
+        }
+
+        if (this.equals(v)) {
             return new Constant(1);
         } else {
             return new Constant(0);

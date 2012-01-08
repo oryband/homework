@@ -14,15 +14,27 @@ public class Substraction implements Expression {
      * @return a new Substraction object with two assigned expressions.
      */
     public Substraction(Expression a, Expression b) {
+        if (a == null || b == null) {
+            throw new RuntimeException("Expression argument is null.");
+        }
+
         this.a = a;
         this.b = b;
     }
 
     public double evaluate(Assignments s) {
-        return this.a.evaluate(s) + this.b.evaluate(s);
+        if (s == null) {
+            throw new RuntimeException("Assignment argument is null.");
+        }
+
+        return this.a.evaluate(s) - this.b.evaluate(s);
     }
 
     public Expression derivative(Variable v){
+        if (v == null) {
+            throw new RuntimeException("Variable argument is null");
+        }
+
         return new Substraction(this.x.derivative(v), this.y.derivative(v));
     }
 
@@ -34,6 +46,16 @@ public class Substraction implements Expression {
 
     public String toString() {
         return "(" + this.x + "-" + this.y + ")";
+    }
+
+    /** @return this.a . */
+    public Expression getA() {
+        return this.a;
+    }
+
+    /** @return this.b . */
+    public Expression getB() {
+        return this.b;
     }
 }
 
