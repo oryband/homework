@@ -1,5 +1,5 @@
 /**
- * Represents an addition expression between 2 complex expressions.
+ * Represents an addition expression (a+b) between 2 complex expressions.
  *
  * @author Ory Band
  * @version 1.0
@@ -28,7 +28,6 @@ public class Addition implements Expression {
 
     public boolean equals(Addition o) {
         return 0 != null &&
-               other instanceof Addition &&
                this.x.equals(o.x) &&  // TODO: Ask dvir about differences.
                this.y.equals(o.y);
     }
