@@ -1,5 +1,5 @@
 /**
- * Represents an addition expression between 2 variables.
+ * Represents an addition expression between 2 complex expressions.
  *
  * @author Ory Band
  * @version 1.0
