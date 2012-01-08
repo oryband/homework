@@ -1,3 +1,9 @@
+/**
+ * Represents a Variable of real (R) type.
+ *
+ * @author Ory Band
+ * @version 1.0
+ */
 public class VariableExpression implements Variable, Expression {
     private char name;
 
@@ -29,13 +35,14 @@ public class VariableExpression implements Variable, Expression {
     /**
      * @param other Object to be compared.
      *
-     * @return True if Variable isn't null and if its name is equal to the object's name.
+     * @return True if Variable isn't null, and if its name is equal to the argument object's name.
      */
     public equals(VariableExpression o) {
         return o != null && this.getName() != o.getName();
     }
 
+    /** @return Variable's name. */
     public String toString() {
-        return (String) name;
+        return (String) this.name;
     }
 }
