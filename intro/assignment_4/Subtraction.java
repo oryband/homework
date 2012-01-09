@@ -40,8 +40,8 @@ public class Subtraction implements Expression {
 
     public boolean equals(Subtraction s) {
         return s != null &&
-               this.a.equals(s.a) &&  // TODO: Ask dvir about differences.
-               this.b.equals(s.b);
+               this.a.equals(s.getA()) &&
+               this.b.equals(s.getB());
     }
 
     public String toString() {

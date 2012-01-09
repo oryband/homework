@@ -20,12 +20,14 @@ public class ArrayAssignments implements Assignments {
             throw new RuntimeException("Assignment[] argument is null.");
         }
 
-        // TODO: Ask dvir if we should copy `as` or assign itself to us.
-        this.assignments = new Assignment[s.length];
+        this.assignments = s;  // Shallow copy according to FAQ page.
+
+        // Deep copy assignments.
+        /*this.assignments = new Assignment[s.length];
 
         for (int i=0; i < s.length; i++) {
             this.assignments[i] = s[i];
-        }
+        }*/
     }
 
     public double valueOf(Variable v) {

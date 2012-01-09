@@ -26,7 +26,11 @@ public class Constant implements Expression{
     }
 
     public Expression derivative(Variable var) {
-        return new Constant(0.0);
+        if (var == null) {
+            throw new RuntimeException("Variable argument is null.");
+        } else {
+            return new Constant(0.0);
+        }
     }
 
     public String toString() {
