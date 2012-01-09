@@ -31,7 +31,7 @@ public class ValueAssignment implements Assignment {
         return this.value;
     }
 
-    public void setVaule(double value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
@@ -39,10 +39,10 @@ public class ValueAssignment implements Assignment {
      * @param o Object to be compared.
      *
      * @return True if Varable instances and their values are equal. */
-    public boolean equals(ValueAssignment o) {
-        return o != null &&
-               this.var.equals(o.getVar()) &&
-               this.value == o.getValue();
+    public boolean equals(ValueAssignment a) {
+        return a != null &&
+               this.var.equals(a.getVar()) &&
+               this.value == a.getValue();
     }
 
     /** @return string in format "name=value" . */

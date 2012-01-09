@@ -4,16 +4,16 @@
  * @author Ory Band
  * @version 1.0
  */
-public class Substraction implements Expression {
+public class Subtraction implements Expression {
     private Expression a, b;
 
     /**
      * @param a First expression.
      * @param b Second expression.
      *
-     * @return a new Substraction object with two assigned expressions.
+     * @return a new Subtraction object with two assigned expressions.
      */
-    public Substraction(Expression a, Expression b) {
+    public Subtraction(Expression a, Expression b) {
         if (a == null || b == null) {
             throw new RuntimeException("Expression argument is null.");
         }
@@ -35,17 +35,17 @@ public class Substraction implements Expression {
             throw new RuntimeException("Variable argument is null");
         }
 
-        return new Substraction(this.x.derivative(v), this.y.derivative(v));
+        return new Subtraction(this.a.derivative(v), this.b.derivative(v));
     }
 
-    public boolean equals(Substraction o) {
-        return 0 != null &&
-               this.x.equals(o.x) &&  // TODO: Ask dvir about differences.
-               this.y.equals(o.y);
+    public boolean equals(Subtraction s) {
+        return s != null &&
+               this.a.equals(s.a) &&  // TODO: Ask dvir about differences.
+               this.b.equals(s.b);
     }
 
     public String toString() {
-        return "(" + this.x + "-" + this.y + ")";
+        return "(" + this.a + "-" + this.b + ")";
     }
 
     /** @return this.a . */

@@ -44,15 +44,15 @@ public class Power implements Expression {
         } else {
             // d[a^b] = d[a]*(b*(a^b-1))
             return new Multiplication(
-                        new Multiplication(this.exponent, new Power(this.base, ex)),
+                        new Multiplication(new Constant(this.exponent), new Power(this.base, ex)),
                         this.base.derivative(v));
         }
     }
 
-    public boolean equals(Power o) {
-        return o != null &&
-               this.base.equals(o.getBase()) &&
-               this.exponent == o.getExponent();
+    public boolean equals(Power p) {
+        return p != null &&
+               this.base.equals(p.getBase()) &&
+               this.exponent == p.getExponent();
     }
 
     public String toString() {
@@ -65,7 +65,7 @@ public class Power implements Expression {
     }
 
     /** @return this.exponent . */
-    public Expression getExponent() {
+    public double getExponent() {
         return this.exponent;
     }
 }

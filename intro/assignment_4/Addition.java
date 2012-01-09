@@ -38,10 +38,10 @@ public class Addition implements Expression {
         return new Addition(this.a.derivative(v), this.b.derivative(v));
     }
 
-    public boolean equals(Addition o) {
-        return 0 != null &&
-               this.a.equals(o.getA()) &&  // TODO: Ask dvir about differences.
-               this.b.equals(o.getB());
+    public boolean equals(Addition ad) {
+        return ad != null &&
+               this.a.equals(ad.getA()) &&
+               this.b.equals(ad.getB());
     }
 
     public String toString() {

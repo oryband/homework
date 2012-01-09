@@ -15,6 +15,6 @@ public interface Assignment {
     public double getValue();
 
     /** Sets the variable's value. */
-    public void setVaule(double value);
+    public void setValue(double value);
 }
 

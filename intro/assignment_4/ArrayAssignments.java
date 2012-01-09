@@ -37,7 +37,7 @@ public class ArrayAssignments implements Assignments {
         // Search for v in the assignments list.
         for (int i=0; i < this.assignments.length; i++) {
             if (this.assignments[i].getVar().equals(v)) {
-                return this.assignments[i].getVar().getValue();
+                return this.assignments[i].getValue();
             }
         }
 

@@ -40,10 +40,10 @@ public class Multiplication implements Expression {
                 new Multiplication(this.a.derivative(v), this.b));
     }
 
-    public boolean equals(Multiplication o) {
-        return 0 != null &&
-               this.a.equals(o.getA()) &&
-               this.b.equals(o.getB());
+    public boolean equals(Multiplication m) {
+        return m != null &&
+               this.a.equals(m.getA()) &&
+               this.b.equals(m.getB());
     }
 
     public String toString() {

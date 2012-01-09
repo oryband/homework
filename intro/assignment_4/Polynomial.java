@@ -14,10 +14,10 @@ public class Polynomial implements Expression {
      *
      * @return a new Power object with two assigned expressions.
      */
-    public Power(Expression v, double[] c) {
+    public Polynomial(Expression v, double[] c) {
         if (v == null) {
             throw new RuntimeException("Expression argument is null.");
-        } else if (c == nul) {
+        } else if (c == null) {
             throw new RuntimeException("double[] argument is null.");
         }
 
@@ -34,7 +34,7 @@ public class Polynomial implements Expression {
 		
         // a*x + b*x^2 + --- n*x^N .
 		for (int i=0; i < this.coefficients.length; i++) {
-			sum += coefficients[i] * Math.pow(s.valueOf(this.var), i);
+			sum += coefficients[i] * Math.pow(s.valueOf((Variable) this.var), i);
 		}
 		
 		return sum;
@@ -65,20 +65,20 @@ public class Polynomial implements Expression {
         }
     }
 
-    public boolean equals(Power o) {
-        return o != null &&
-               this.var.equals(o.getVariable()) &&
-               this.coefficients.equals(o.getCoefficients());
+    public boolean equals(Polynomial p) {
+        return p != null &&
+               this.var.equals(p.getVariable()) &&
+               this.coefficients.equals(p.getCoefficients());
     }
 
     public String toString() {
-        String s = ")";
+        String s = "(";
 
         for (int i=0; i < this.coefficients.length; i++) {
-            s += (String) coefficients[i];
+            s += "" +  this.coefficients[i];
 
             if (i>0) {
-                s += "x"
+                s += "x";
             }
 
             if (i>1) {
@@ -95,7 +95,7 @@ public class Polynomial implements Expression {
     }
 
     /** @return this.coefficients . */
-    public Expression getCoefficients() {
+    public double[] getCoefficients() {
         return this.coefficients;
     }
 }

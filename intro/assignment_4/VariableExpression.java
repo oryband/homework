@@ -25,7 +25,7 @@ public class VariableExpression implements Variable, Expression {
             throw new RuntimeException("Assigments argument is null.");
         }
 
-        return s.valueOf(this)
+        return s.valueOf(this);
     }
 
     public Expression derivative(Variable v) {
@@ -45,12 +45,12 @@ public class VariableExpression implements Variable, Expression {
      *
      * @return True if Variable isn't null, and if its name is equal to the argument object's name.
      */
-    public equals(VariableExpression o) {
-        return o != null && this.getName() != o.getName();
+    public boolean equals(VariableExpression v) {
+        return v != null && this.getName() == v.getName();
     }
 
     /** @return Variable's name. */
     public String toString() {
-        return (String) this.name;
+        return "" + this.name;
     }
 }
