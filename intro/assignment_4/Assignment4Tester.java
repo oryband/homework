@@ -549,10 +549,10 @@ public class Assignment4Tester {
 			System.out.println("Test #3 passed!");
 		}
 		assignments.addAssignment(new ValueAssignment(new VariableExpression('x'), 5));
-		if (assignments.valueOf(new VariableExpression('x')) != 5.0)
-			System.out.println("Test #4 failed!");
-		else
-			System.out.println("Test #4 passed!");
+        if (assignments.valueOf(new VariableExpression('x')) != 5.0)
+            System.out.println("Test #4 failed!");
+        else
+            System.out.println("Test #4 passed!");
 		try {
 			assignments.addAssignment(null);
 			System.out.println("Test #5 failed!");
@@ -574,16 +574,16 @@ public class Assignment4Tester {
 		Assignment y = new ValueAssignment(new VariableExpression('y'), -1);
 		assignments.addAssignment(y);
 		y.setValue(-2);
-		if (assignments.valueOf(new VariableExpression('y')) == -2.0)
-			System.out.println("Test #7 passed!");
-		else
-			System.out.println("Test #7 failed! (shallow copy required!)");
+        if (assignments.valueOf(new VariableExpression('y')) == -2.0)
+            System.out.println("Test #7 passed!");
+        else
+            System.out.println("Test #7 failed! (shallow copy required!)");
 		assignments = new ArrayAssignments(new Assignment[] { y });
 		y.setValue(-1);
-		if (assignments.valueOf(new VariableExpression('y')) == -1.0)
-			System.out.println("Test #8 passed!");
-		else
-			System.out.println("Test #8 failed! (shallow copy required!)");
+        if (assignments.valueOf(new VariableExpression('y')) == -1.0)
+            System.out.println("Test #8 passed!");
+        else
+            System.out.println("Test #8 failed! (shallow copy required!)");
 		try {
 			Assignment y2 = new ValueAssignment(y.getVar(), -2);
 			assignments = new ArrayAssignments(new Assignment[] { y, y2 });
