@@ -35,14 +35,14 @@ public class Polynomial implements Expression {
             throw new RuntimeException("Assignments argument is null.");
         }
 
-		double sum = 0;
-		
+        double sum = 0;
+
         // a*x + b*x^2 + --- n*x^N .
-		for (int i=0; i < this.coefficients.length; i++) {
-			sum += coefficients[i] * Math.pow(s.valueOf((Variable) this.var), i);
-		}
-		
-		return sum;
+        for (int i=0; i < this.coefficients.length; i++) {
+            sum += coefficients[i] * Math.pow(s.valueOf((Variable) this.var), i);
+        }
+
+        return sum;
     }
 
     public Expression derivative(Variable v){
@@ -51,20 +51,20 @@ public class Polynomial implements Expression {
         }
 
         // A derivative of the same argument = 0.
-		if ( ! this.var.equals(v)) {
-			return new Constant(0);
-		}
-		
-        // E(ax + bx^2 + --- nx^N) = a*x**a-1 + b*x**b-1 + --- nx^(N-1) .
-		if (this.coefficients.length > 1) {
-			double[] c = new double[this.coefficients.length -1];
+        if ( ! this.var.equals(v)) {
+            return new Constant(0);
+        }
 
-			for (int i=0; i < c.length; i++) {
-				c[i] = (i +1) * this.coefficients[i +1];
-			}
-			
-			return new Polynomial(this.var, c);
-		} else {
+        // E(ax + bx^2 + --- nx^N) = a*x**a-1 + b*x**b-1 + --- nx^(N-1) .
+        if (this.coefficients.length > 1) {
+            double[] c = new double[this.coefficients.length -1];
+
+            for (int i=0; i < c.length; i++) {
+                c[i] = (i +1) * this.coefficients[i +1];
+            }
+
+            return new Polynomial(this.var, c);
+        } else {
             // If coefficients = {} || var = R: derivative is var.
             return new Polynomial(this.var, new double[0]);
         }
