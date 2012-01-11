@@ -31,7 +31,9 @@ public class ArrayAssignments implements Assignments {
 
             // Test for duplicate variable names inside assignments.
             for (int j=i+1; j<s.length; j++) {
-                if (s[j].getVar().getName() == s[i].getVar().getName()) {
+                if (s[j] == null) {
+                    throw new RuntimeException("Assignment[" + i + "] is null.");
+                } else if (s[j].getVar().getName() == s[i].getVar().getName()) {
                     throw new RuntimeException("Assigment[" + i + "] and Assignment[" + j + "] " +
                                                "are using the same variable '" +
                                                s[i].getVar().getName() + " = " + s[i].getValue());
