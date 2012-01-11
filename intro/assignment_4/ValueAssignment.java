@@ -38,11 +38,11 @@ public class ValueAssignment implements Assignment {
     /**
      * @param o Object to be compared.
      *
-     * @return True if Varable instances and their values are equal. */
-    public boolean equals(ValueAssignment a) {
-        return a != null &&
-               this.var.equals(a.getVar()) &&
-               this.value == a.getValue();
+     * @return True if object is of type ValueAssignment and if Variable instances and their values are equal. */
+    public boolean equals(Object o) {
+        return o instanceof ValueAssignment &&
+               this.var.equals( ((ValueAssignment) o) .getVar()) &&
+               this.value ==    ((ValueAssignment) o) .getValue();
     }
 
     /** @return string in format "name=value" . */

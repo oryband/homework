@@ -16,8 +16,27 @@ public class ArrayAssignments implements Assignments {
      * @return new ArrayAssignment object with initial assignments given as argument.
      */
     public ArrayAssignments(Assignment[] s) {
+        // Basic validity tests.
         if (s == null) {
             throw new RuntimeException("Assignment[] argument is null.");
+        } else if (s.length == 0) {
+            throw new RuntimeException("Assignment[] argument is of length 0!");
+        }
+
+        // Test for valid assignments.
+        for (int i=0; i<s.length; i++) {
+            if (s[i] == null) {
+                throw new RuntimeException("Assignment[" + i + "] is null.");
+            }
+
+            // Test for duplicate variable names inside assignments.
+            for (int j=i+1; j<s.length; j++) {
+                if (s[j].getVar().getName() == s[i].getVar().getName()) {
+                    throw new RuntimeException("Assigment[" + i + "] and Assignment[" + j + "] " +
+                                               "are using the same variable '" +
+                                               s[i].getVar().getName() + " = " + s[i].getValue());
+                }
+            }
         }
 
         this.assignments = s;  // Shallow copy according to FAQ page.
@@ -25,9 +44,10 @@ public class ArrayAssignments implements Assignments {
         // Deep copy assignments.
         /*this.assignments = new Assignment[s.length];
 
-        for (int i=0; i < s.length; i++) {
-            this.assignments[i] = s[i];
-        }*/
+          for (i=0; i < s.length; i++) {
+          for (j=i+1; j<s.length;
+          this.assignments[i] = s[i];
+          }*/
     }
 
     public double valueOf(Variable v) {
@@ -54,11 +74,11 @@ public class ArrayAssignments implements Assignments {
 
         // Update assignment if it's already in the assignments' list.
         int i;
-        boolean stop=false;
-        for (i=0; i < this.assignments.length && !stop; i++) {
-            if (this.assignments[i].equals(a)) {
+        for (i=0; i < this.assignments.length; i++) {
+            if (this.assignments[i].getVar().getName() == (a.getVar().getName())) {
                 this.assignments[i].setValue(a.getValue());
-                stop=true;
+
+                return; // No need to extend the assignments list if we only needed to update one of its variables.
             }
         }
 

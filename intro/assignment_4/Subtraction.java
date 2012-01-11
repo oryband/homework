@@ -38,10 +38,15 @@ public class Subtraction implements Expression {
         return new Subtraction(this.a.derivative(v), this.b.derivative(v));
     }
 
-    public boolean equals(Subtraction s) {
-        return s != null &&
-               this.a.equals(s.getA()) &&
-               this.b.equals(s.getB());
+    /**
+     * @param o Object.
+     *
+     * @return True if object is of type Subtraction and if both (a, b) expressions are equal.
+     */
+    public boolean equals(Object o) {
+        return o instanceof Subtraction &&
+               this.a.equals( ((Subtraction) o) .getA()) &&
+               this.b.equals( ((Subtraction) o) .getB());
     }
 
     public String toString() {

@@ -49,10 +49,15 @@ public class Power implements Expression {
         }
     }
 
-    public boolean equals(Power p) {
-        return p != null &&
-               this.base.equals(p.getBase()) &&
-               this.exponent == p.getExponent();
+    /**
+     * @param o Object.
+     *
+     * @return True if object is of type Power and if base and exponent are equal.
+     */
+    public boolean equals(Object o) {
+        return o instanceof Power  &&
+               this.base.equals( ((Power) o) .getBase()) &&
+               this.exponent ==  ((Power) o) .getExponent();
     }
 
     public String toString() {

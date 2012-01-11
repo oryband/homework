@@ -38,10 +38,15 @@ public class Addition implements Expression {
         return new Addition(this.a.derivative(v), this.b.derivative(v));
     }
 
-    public boolean equals(Addition ad) {
-        return ad != null &&
-               this.a.equals(ad.getA()) &&
-               this.b.equals(ad.getB());
+    /**
+     * @param o Object.
+     *
+     * @return True if object is of type Addition and if both (a, b) expressions are equal.
+     */
+    public boolean equals(Object o) {
+        return o instanceof Addition &&
+               this.a.equals( ((Addition) o) .getA()) &&
+               this.b.equals( ((Addition) o) .getB());
     }
 
     public String toString() {

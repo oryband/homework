@@ -33,7 +33,7 @@ public class VariableExpression implements Variable, Expression {
             throw new RuntimeException("Variable argument is null.");
         }
 
-        if (this.equals(v)) {
+        else if (this.equals(v)) {
             return new Constant(1);
         } else {
             return new Constant(0);
@@ -43,10 +43,11 @@ public class VariableExpression implements Variable, Expression {
     /**
      * @param other Object to be compared.
      *
-     * @return True if Variable isn't null, and if its name is equal to the argument object's name.
+     * @return True if Variable is of type VariableExpression, and if its name is equal to the argument object's name.
      */
-    public boolean equals(VariableExpression v) {
-        return v != null && this.getName() == v.getName();
+    public boolean equals(Object o) {
+        return o instanceof VariableExpression &&
+               this.getName() == ((VariableExpression) o) .getName();
     }
 
     /** @return Variable's name. */
