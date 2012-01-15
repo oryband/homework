@@ -14,19 +14,19 @@ public abstract class Polygon implements Shape {
      */
     public Polygon(Point[] ps) {
         // Validity tests.
-        if (p == null) {
+        if (ps == null) {
             throw new RuntimeException("Point argument is null.");
-        } else if (p.length < 3) {
+        } else if (ps.length < 3) {
             throw new RuntimeException("Not enough points for Polygon (Minimum 3) - Point[] is too short.");
         }
 
-        this.points = new Point[p.length];
+        this.points = new Point[ps.length];
 
-        for (int i=0; i<p.length; i++) {
-            if (p == null) {
+        for (int i=0; i<ps.length; i++) {
+            if (ps[i] == null) {
                 throw new RuntimeException("Point[" + i + "] is null.");
             } else {
-                this.points[i] = new Point(p.getX(), p.getY());
+                this.points[i] = new Point(ps[i]);
             }
         }
     }
@@ -39,32 +39,19 @@ public abstract class Polygon implements Shape {
     /** @return sides' list. */
     public double[] getSides() {
         int l = this.points.length;
-
         double[] sides = new double[l];
-
-        double x1, x2,
-               y1, y2;
 
         // Iterate over points and calculate sides.
         for (int i=0; i<l; i++) {
-            x1 = this.points[i].getX();
-            y1 = this.points[i].getY();
-
-            // If we reached the last coord, calculate side against first point.
             if (i == l-1) {
-                x2 = this.points[0].getX();
-                y2 = this.points[0].getY();
+                // If we reached the last coord, calculate side against first point.
+                sides[i] = this.points[i].distance(this.point[0]);
             } else {
-                x2 = this.points[i+1].getX();
-                y2 = this.points[i+1].getY();
+                sides[i] = this.points[i].distance(this.point[i+1]);
             }
-
-            // Calculate distance between 2 points.
-            sides[i] = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
         }
 
-        return perimeter;
-
+        return sides;
     }
 
     /** @return Coordinate list. */
@@ -91,10 +78,9 @@ public abstract class Polygon implements Shape {
             throw new RuntimeException("Point argument is null.");
         }
 
-        // Shift coordinates according to point, given as argument.
+        // Shift coordinates according to Point object, given as argument.
         for (int i=0; i<this.points.length; i++) {
-            this.points[i].setX(this.points[i].getX() + p.getX());
-            this.points[i].setY(this.points[i].getY() + p.getY());
+            this.points[i].move(p.getX(), p.getY());
         }
     }
 
