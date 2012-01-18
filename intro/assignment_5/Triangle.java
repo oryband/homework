@@ -12,33 +12,23 @@ public class Triangle extends Polygon {
      *
      * @return an initialized Triangle object.
      */
-    public Triangle(Point p1, Point p2, Point p3) {
-        super( new Point[] {p1, p2, p3} );
-    }
+    public Triangle(Point p1, Point p2, Point p3) { super( new Point[] {p1, p2, p3} ); }
 
     /**
      * @param t Triangle to deep copy.
      *
      * @return an initialized Triangle object.
      */
-    public Triangle(Triangle t) {
-        super(t.getPoints());
-    }
+    public Triangle(Triangle t) { super(t.getPoints()); }
 
     /** @return a new copy of Triangle's 1st point */
-    public Point getP1() {
-        return new Point(this.points[0]);
-    }
+    public Point getP1() { return new Point(this.points[0]); }
 
     /** @return a new copy of Triangle's 2nd point */
-    public Point getP2() {
-        return new Point(this.points[1]);
-    }
+    public Point getP2() { return new Point(this.points[1]); }
 
     /** @return a new copy of Triangle's 3rd point */
-    public Point getP3() {
-        return new Point(this.points[2]);
-    }
+    public Point getP3() { return new Point(this.points[2]); }
 
     /**
      * @param o Object to compare against.
@@ -50,22 +40,14 @@ public class Triangle extends Polygon {
             return false;
         } else {
             Point[] other_ps = ((Triangle) o).getPoints(),
-                    ps = this.getPoints();
+                    ps       = this.getPoints();
 
-            boolean p_found;
-
-            // Compare each 3 points with each 3 points in other Triangle.
+            // Compare each point with respective point in other Triangle.
             for (int i=0; i<3; i++) {
-                p_found = false;
-
-                for (int j=0; j<3 && ! p_found; j++) {
-                    if (ps[i].equals(other_ps[i])) {
-                        p_found = true;
+                for (int j=0; j<3; j++) {
+                    if ( ! ps[i].equals(other_ps[i]) ) {
+                        return false;
                     }
-                }
-
-                if ( ! p_found ) {
-                    return false;
                 }
             }
 
@@ -78,7 +60,6 @@ public class Triangle extends Polygon {
 		return ( this.getP1().distance(this.getP2()) +
                  this.getP1().distance(this.getP3()) ) / 2;
     }
-
 
     public boolean contains(Point p) {
         if (p == null) {
