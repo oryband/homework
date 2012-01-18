@@ -45,9 +45,9 @@ public abstract class Polygon implements Shape {
         for (int i=0; i<l; i++) {
             if (i == l-1) {
                 // If we reached the last coord, calculate side against first point.
-                sides[i] = this.points[i].distance(this.point[0]);
+                sides[i] = this.points[i].distance(this.points[0]);
             } else {
-                sides[i] = this.points[i].distance(this.point[i+1]);
+                sides[i] = this.points[i].distance(this.points[i+1]);
             }
         }
 
@@ -60,7 +60,6 @@ public abstract class Polygon implements Shape {
     }
 
     public double getPerimeter() {
-        // Get sides length;
         double[] sides = this.getSides();
 
         // Sum sides.

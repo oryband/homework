@@ -25,6 +25,10 @@ public class Point {
      * @return new initialized Point object.
      */
     public Point(Point p) {
+        if (p == null) {
+            throw new RuntimeException("Point argument is null.");
+        }
+
         this.x = p.getX(); 
         this.y = p.getY(); 
     }
@@ -52,11 +56,15 @@ public class Point {
      * @param p Another Point object to add its coordinate's to the Point object in hand.
      */
     public void move(Point p) {
+        if (p == null) {
+            throw new RuntimeException("Point argument is null.");
+        }
+
         this.x += p.getX();
         this.y += p.getY();
     }
 
-    /** @return True if object is of type Point, and if coordinates are equal to the Point object in hand. */
+    /** @return true if object is of type Point, and if coordinates are equal to the Point object in hand. */
     public boolean equals(Object o) {
         return o instanceof Point &&
                this.x == ((Point) o).getX() &&
@@ -69,6 +77,10 @@ public class Point {
      * @return distance between points.
      */
     public double distance(Point p) {
+        if (p == null) {
+            throw new RuntimeException("Point argument is null.");
+        }
+
         return Math.sqrt(
                 Math.pow(p.getX() - this.x, 2) +
                 Math.pow(p.getY() - this.y, 2) );
