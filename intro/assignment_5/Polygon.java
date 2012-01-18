@@ -40,15 +40,12 @@ public abstract class Polygon implements Shape {
     public double[] getSides() {
         int l = this.points.length;
         double[] sides = new double[l];
+        int n = this.getNumOfPoints();
 
         // Iterate over points and calculate sides.
         for (int i=0; i<l; i++) {
-            if (i == l-1) {
-                // If we reached the last coord, calculate side against first point.
-                sides[i] = this.points[i].distance(this.points[0]);
-            } else {
-                sides[i] = this.points[i].distance(this.points[i+1]);
-            }
+            // This also handles case when dist(last, first).
+            sides[i] = this.points[i].distance(this.points[i%n]);
         }
 
         return sides;
@@ -79,10 +76,10 @@ public abstract class Polygon implements Shape {
 
         // Shift coordinates according to Point object, given as argument.
         for (int i=0; i<this.points.length; i++) {
-            this.points[i].move(p.getX(), p.getY());
+            this.points[i].move(p);
         }
     }
 
-    public double getArea();
-    public boolean contains(Point p);
+    public abstract double getArea();
+    public abstract boolean contains(Point p);
 }
