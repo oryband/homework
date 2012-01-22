@@ -36,18 +36,26 @@ public class Triangle extends Polygon {
      * @return true if object is of type Triangle, and if all coordinates are equal appropriately.
      */
     public boolean equals(Object o) {
+        // Validity test.
         if ( ! (o instanceof Triangle) ) {
             return false;
         } else {
             Point[] other_ps = ((Triangle) o).getPoints(),
                     ps       = this.getPoints();
 
-            // Compare each point with respective point in other Triangle.
+            // Compare each point with all points in other Triangle.
+            boolean found;
             for (int i=0; i<3; i++) {
-                for (int j=0; j<3; j++) {
-                    if ( ! ps[i].equals(other_ps[i]) ) {
-                        return false;
+                found = false;
+
+                for (int j=0; j<3 && ! found; j++) {
+                    if ( ps[i].equals(other_ps[j]) ) {
+                        found = true;
                     }
+                }
+
+                if ( ! found ) {
+                    return false;
                 }
             }
 

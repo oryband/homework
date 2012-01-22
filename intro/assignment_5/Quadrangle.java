@@ -40,6 +40,7 @@ public class Quadrangle extends Polygon {
      * @return true if object is of type Quadrangle, and if all coordinates are equal appropriately.
      */
     public boolean equals(Object o) {
+        // Validity test.
         if ( ! (o instanceof Quadrangle) ) {
             return false;
         } else {
@@ -47,11 +48,18 @@ public class Quadrangle extends Polygon {
                     ps       = this.getPoints();
 
             // Compare each point with respective point in other Quadrangle.
+            boolean found;
             for (int i=0; i<4; i++) {
-                for (int j=0; j<4; j++) {
-                    if ( ! ps[i].equals(other_ps[i]) ) {
-                        return false;
+                found = false;
+
+                for (int j=0; j<4 && ! found; j++) {
+                    if ( ps[i].equals(other_ps[j]) ) {
+                        found = true;
                     }
+                }
+
+                if ( ! found ) {
+                    return false;
                 }
             }
 
