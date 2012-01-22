@@ -32,7 +32,7 @@ public class Quadrangle extends Polygon {
     public Point getP3() { return new Point(this.points[2]); }
 
     /** @return a new copy of Quadrangle's 4th point */
-    public Point getP4() { return new Point(this.points[4]); }
+    public Point getP4() { return new Point(this.points[3]); }
 
     /**
      * @param o Object to compare against.
