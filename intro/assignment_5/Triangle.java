@@ -65,8 +65,14 @@ public class Triangle extends Polygon {
 
     public double getArea() {
         // Using Heron's formulae.
-		return ( this.getP1().distance(this.getP2()) +
-                 this.getP1().distance(this.getP3()) ) / 2;
+        double d = this.getPerimeter() / 2;
+        double f = d;
+
+        for (int i=0; i<this.getSides().length; i++) {
+            f *= (d - this.getSides()[i]);
+        }
+
+        return Math.sqrt(f);
     }
 
     public boolean contains(Point p) {
