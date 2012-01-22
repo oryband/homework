@@ -43,22 +43,25 @@ public class ShapesContainer {
     public boolean add(Shape s) {
         // Validity test.
         if (s == null) {
-            throw new RuntimeException("Shape argument is null.");
+            //throw new RuntimeException("Shape argument is null.");
+            return false;  // Forum says to return false instead of throwing exceptions for invalid arguments in add/remove.
         }
-
         double a = s.getArea();
 
         // Place shape in list.
         for (int i=0; i < this.shapes.length; i++) {
-            if (shapes[i] == null) {  // If current cell is vacant - place shape here.
-                shapes[i] = s;
+            // If current cell is vacant - place shape here.
+            if (this.shapes[i] == null) {
+                this.shapes[i] = s;
 
                 return true;
 
-            } else if (shapes[i].equals(s)) {  // Check for duplicates.
+            // Check for duplicates.
+            } else if (this.shapes[i].equals(s)) {
                 return false;
 
-            } else if (shapes[i].getArea() < a) {  // Test for smaller shapes to prepend current shape before in line.
+            // Test for smaller shapes to prepend current shape before in line.
+            } else if (this.shapes[i].getArea() < a) {
                 Shape[] old = this.shapes;
 
                 // Resize if container is full.
@@ -80,10 +83,12 @@ public class ShapesContainer {
                 for (j=i+1; j<old.length +1; j++) {
                     this.shapes[j] = old[j-1];
                 }
+
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
 
@@ -95,10 +100,10 @@ public class ShapesContainer {
     public boolean remove(int i) {
         if (i<0 || i >= this.shapes.length || this.shapes[i] == null) {
             //throw new RuntimeException("Index argument out of bounds.");
-            return false;  // Forum says to return false instead of throwing exceptions.
+            return false;  // Forum says to return false instead of throwing exceptions for invalid arguments in add/remove.
         //} else if (this.shapes[i] == null) {
             //throw new RuntimeException("Shape[" + i +"] is null.");
-            //return false;  // Forum says to return false instead of throws exceptions.
+            //return false;  // Forum says to return false instead of throws exceptions for invalid arguments in add/remove.
         }
 
         Shape[] old = this.shapes;
@@ -127,7 +132,7 @@ public class ShapesContainer {
         // Validity test.
         if (s == null) {
             //throw new RuntimeException("Shape argument is null.");
-            return false;  // Forum says to return false instead of throwing exceptions.
+            return false;  // Forum says to return false instead of throwing exceptions for invalid arguments in add/remove.
         }
 
         // Search for shape.
@@ -176,7 +181,7 @@ public class ShapesContainer {
     public double sumArea() {
         double areas = 0.0;
 
-        for (int i=0; i<this.shapes.length; i++) {
+        for (int i=0; i<this.getShapesNum(); i++) {
             areas += this.shapes[i].getArea();
         }
 
@@ -187,7 +192,7 @@ public class ShapesContainer {
     public double sumPerimeter() {
         double perimeters = 0.0;
 
-        for (int i=0; i<this.shapes.length; i++) {
+        for (int i=0; i<this.getShapesNum(); i++) {
             perimeters += this.shapes[i].getPerimeter();
         }
 
