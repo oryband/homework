@@ -40,12 +40,11 @@ public abstract class Polygon implements Shape {
     public double[] getSides() {
         int l = this.points.length;
         double[] sides = new double[l];
-        int n = this.getNumOfPoints();
 
         // Iterate over points and calculate sides.
         for (int i=0; i<l; i++) {
             // This also handles case when dist(last, first).
-            sides[i] = this.points[i].distance(this.points[i%n]);
+            sides[i] = this.points[i].distance(this.points[(i+1) % l]);
         }
 
         return sides;
