@@ -85,4 +85,8 @@ public class Point {
                 Math.pow(p.getX() - this.x, 2) +
                 Math.pow(p.getY() - this.y, 2) );
     }
+
+    public String toString() {
+        return "(" + this.x + "," + this.y + ")";
+    }
 }
