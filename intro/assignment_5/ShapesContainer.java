@@ -36,6 +36,8 @@ public class ShapesContainer {
     }
 
     /**
+     * Inserts shape ordered by area (largest first).
+     *
      * @param s Shape to add.
      *
      * @return true if shape was added successfully, otherwise false (e.g. was already in container).
@@ -46,49 +48,41 @@ public class ShapesContainer {
             //throw new RuntimeException("Shape argument is null.");
             return false;  // Forum says to return false instead of throwing exceptions for invalid arguments in add/remove.
         }
+
+        // Search for insert index. 
         double a = s.getArea();
-
-        // Place shape in list.
-        for (int i=0; i < this.shapes.length; i++) {
-            // If current cell is vacant - place shape here.
-            if (this.shapes[i] == null) {
-                this.shapes[i] = s;
-
-                return true;
+        int i,
+            insert = -1;  // Insert index.
+        for (i=0; i < this.getShapesNum(); i++) {
+            if (this.shapes[i].getArea() > a) {
+                insert = i;
+            }
 
             // Check for duplicates.
-            } else if (this.shapes[i].equals(s)) {
+            if (this.shapes[i].equals(s)) {
                 return false;
-
-            // Test for smaller shapes to prepend current shape before in line.
-            } else if (this.shapes[i].getArea() < a) {
-                Shape[] old = this.shapes;
-
-                // Resize if container is full.
-                if (i == old.length -1) {
-                    this.shapes = new Shape[old.length + this.RESIZE];
-                } else {
-                    this.shapes = new Shape[old.length +1];
-                }
-
-                // Prepend bigger shapes before shape given as argument.
-                int j;
-                for (j=0; j<i; j++) {
-                    this.shapes[j] = old[j];
-                }
-
-                this.shapes[i] = s;
-
-                // Append smaller shapes after shape given as argument.
-                for (j=i+1; j<old.length +1; j++) {
-                    this.shapes[j] = old[j-1];
-                }
-
-                return true;
             }
         }
 
-        return false;
+        // Resize if container is full.
+        if (this.getShapesNum() == this.shapes.length) {
+            Shape[] newShapes = new Shape[this.shapes.length + this.RESIZE];
+
+			for (i=0; i < this.shapes.length; i++) {
+				newShapes[i] = this.shapes[i];
+			}
+
+            this.shapes = newShapes;
+        }
+
+        // Please new shape in its place, ordered by size.
+        for (i = this.getShapesNum() -1; i > insert; i--) {
+            this.shapes[i+1] = this.shapes[i];
+        }
+
+        this.shapes[insert +1] = s;
+
+        return true;
     }
 
 
@@ -106,19 +100,13 @@ public class ShapesContainer {
             //return false;  // Forum says to return false instead of throws exceptions for invalid arguments in add/remove.
         }
 
-        Shape[] old = this.shapes;
-        this.shapes = new Shape[old.length];
-
-        // Prepend bigger shapes before shape given as argument.
-        int j;
-        for (j=0; j<i; j++) {
-            this.shapes[j] = old[j];
-        }
-
-        // Append smaller shapes after shape given as argument.
-        for (j=i; j<old.length -1; j++) {
-            this.shapes[j] = old[j+1];
-        }
+        // Shrink container.
+		for (; i < this.shapes.length -2; i++) {
+			this.shapes[i] = this.shapes[i+1];
+		}
+		
+        // Removed the last duplicate shape.
+		this.shapes[this.shapes.length -1] = null;
 
         return true;
     }
