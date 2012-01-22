@@ -68,9 +68,9 @@ public class ShapesContainer {
         if (this.getShapesNum() == this.shapes.length) {
             Shape[] newShapes = new Shape[this.shapes.length + this.RESIZE];
 
-			for (i=0; i < this.shapes.length; i++) {
-				newShapes[i] = this.shapes[i];
-			}
+            for (i=0; i < this.shapes.length; i++) {
+                newShapes[i] = this.shapes[i];
+            }
 
             this.shapes = newShapes;
         }
@@ -101,12 +101,12 @@ public class ShapesContainer {
         }
 
         // Shrink container.
-		for (; i < this.shapes.length -2; i++) {
-			this.shapes[i] = this.shapes[i+1];
-		}
-		
+        for (; i < this.shapes.length -2; i++) {
+            this.shapes[i] = this.shapes[i+1];
+        }
+
         // Removed the last duplicate shape.
-		this.shapes[this.shapes.length -1] = null;
+        this.shapes[this.shapes.length -1] = null;
 
         return true;
     }

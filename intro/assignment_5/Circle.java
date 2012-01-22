@@ -57,9 +57,9 @@ public class Circle implements Shape {
     }
 
     public void move(Point p) {
-		if (p == null) {
-			throw new RuntimeException("Point argument is null.");
-		}
+        if (p == null) {
+            throw new RuntimeException("Point argument is null.");
+        }
 
         this.c.move(p);
     }
@@ -74,12 +74,12 @@ public class Circle implements Shape {
 
     public boolean contains(Point p) {
         // Validity Test.
-		if (p == null) {
-			throw new RuntimeException("Point argument is null.");
-		}
-		
+        if (p == null) {
+            throw new RuntimeException("Point argument is null.");
+        }
+
         // Test if point is in radius distance from the center.
-		return (p.distance(this.c) <= this.r);
+        return (p.distance(this.c) <= this.r);
     }
 }
 
