@@ -52,7 +52,7 @@ public class Circle implements Shape {
      */
     public boolean equals(Object o) {
         return o instanceof Circle &&
-               this.c == ((Circle) o) .getCenter() &&
+               this.c.equals( ((Circle) o) .getCenter() ) &&
                this.r == ((Circle) o) .getRadius();
     }
 
