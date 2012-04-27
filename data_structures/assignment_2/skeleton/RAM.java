@@ -47,6 +47,41 @@ public class RAM {
         this.tail = this.ram[ramSize];
     }
 
+
+    /**
+     * Loads page into RAM, and returns old head Page.
+     * Distinguishes between FIFO/LRU.
+     *
+     * @param key Page's key in hard-disk.
+     */
+    public Page load(int key, boolean lru) {
+        Page p = this.ram[key];
+
+        // Load data to RAM if not present, and return old head Page.
+        if (p.prev == null && p.next == null) {
+            return this.enqueue(p);
+        // If data already in RAM and LRU is on,
+        // Relocate data to RAM's end of the line, and get old
+        // head Page.
+        } else if (lru) {
+            this.remove(p);
+            return this.enqueue(p);
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * @param key Page's key in hard-disk.
+     *
+     * @return Page by key given as argument.
+     */
+    public Page getPage(int key) {
+        return this.ram[key];
+    }
+
+
     /**
      * Removes Page received as argument from list.
      *
