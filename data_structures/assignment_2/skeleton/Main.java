@@ -16,7 +16,7 @@ public class Main {
     }
 
     public static void read_From_File(
-            tring inputFilename,
+            String inputFilename,
             String outputFileName,
             MemoryManagementSystem memory) {
         try {
