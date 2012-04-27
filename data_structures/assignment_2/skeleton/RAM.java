@@ -6,7 +6,7 @@
  */
 public class RAM {
     private Page[] ram;
-    private Page   first, last;
+    private Page   head, tail;
 
     /**
      * @param hdSize Hard-disk size.
@@ -42,9 +42,9 @@ public class RAM {
             }
         }
 
-        // Set first and last pages.
-        this.first = this.ram[0];
-        this.last  = this.ram[ramSize];
+        // Set head and tail pages.
+        this.head = this.ram[0];
+        this.tail = this.ram[ramSize];
     }
 
     /**
@@ -56,9 +56,13 @@ public class RAM {
         if (p.prev != null) {
             p.prev.next = p.next;
         }
+
         if (p.next != null) {
             p.next.prev = p.prev;
         }
+
+        p.next = null;
+        p.prev = null;
     }
 
 
@@ -67,8 +71,8 @@ public class RAM {
      *
      * @return RAM's head page. */
     public Page dequeue() {
-        Page oldHead = this.first;
-        this.first = this.first.next;
+        Page oldHead = this.head;
+        this.head = this.head.next;
         this.remove(oldHead);
         return oldHead;
     }
@@ -85,13 +89,13 @@ public class RAM {
         if (p.prev != null || p.next != null) {  // Poll if Page is already in RAM.
             throw new RuntimeException("Page already in RAM.");
         } else {
-            // Enqueue as last Page.
-            p.prev = this.last;
+            // Enqueue as tail Page.
+            p.prev = this.tail;
             p.next = null;
 
-            // Set as last in queue.
-            this.last.next = p;
-            this.last = p;
+            // Set as tail in queue.
+            this.tail.next = p;
+            this.tail = p;
 
             return this.dequeue();
         }
