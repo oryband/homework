@@ -1,43 +1,88 @@
 import java.util.Arrays;
 
 
+/**
+ * Implements a memory management system.
+ *
+ * @author Ory Band
+ * @version 1.0
+ */
 public class MemoryManagementSystem {
-	private String[] secondaryMemory;	//This array will hold the secondary memory
-	private boolean useLRU; 				// true if LRU is used, false if FIFO is used
-	/*
-	 * You can add more fields here
-	 */	
+    private RAM      ram;
+    private String[] hd;
+	private boolean  lru;
 
-	public MemoryManagementSystem(boolean useLRU) {
-		secondaryMemory = new String[1000];	
-		this.useLRU = useLRU;
-		/*
-		 * Your code comes next
-		 */
+
+    /**
+     * @param lru Use LRU implementation.
+     *
+     * @return a new initialized MemoryManagementSystem object.
+     */
+	public MemoryManagementSystem(boolean lru) {
+        this.ram = new RAM(1000, 50);
+		this.hd  = new String[1000];
+		this.lru = lru;
+
+        for (int i=0; i<1000; i++) {
+            this.hd[i] = "";
+        }
+
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+
+	/** @see java.lang.Object#toString() */
 	public String toString() {
-		return "secondaryMemory=" + Arrays.toString(secondaryMemory);
-	}
-	
-	//This method returns the data you read. Notice that this data is not used by our main, but you can use it for testing your code.
-	public String read(int index) {
-		/*
-		 * Your code here
-		 */
+		return "secondaryMemory=" + Arrays.toString(this.hd);
 	}
 
-	public void write(int index, char c) {
-		/*
-		 * Your code here
-		 */
+
+    /**
+     * Loads data from hard-disk to RAM, and flushes old head Page.
+     *
+     * @param key Page's key in hard-disk.
+     */
+    private void load (int key) {
+        Page oldHead = this.ram.load(key, this.lru);
+
+        // Update (flush) data on hard-disk if page was thrown out of RAM.
+        if (oldHead != null) {
+            flush(oldHead);
+        }
+    }
+
+
+    /**
+     * Updates Page's data to hard-disk.
+     *
+     * @param p Page whose data is to be flushed.
+     */
+    private void flush(Page p) {
+        this.hd[p.getIndex()] = p.getData();
+    }
+
+
+    /**
+     * Reads Page from RAM, and updates old head page in hard-disk, if thrown out of RAM.
+     *
+     * @param key Page key in hard-disk.
+     *
+     * @return Page's data.
+     */
+	public String read(int key) {
+        this.load(key);
+        return this.ram.getPage(key).getData();
+    }
+
+
+    /**
+     * Appends a character to the Page in RAM.
+     *
+     * @param key Page's key in hard-disk.
+     * @param c Character to append to Page.
+     */
+    public void write(int key, char c) {
+        this.load(key);
+        this.ram.getPage(key).appendChar(c);
 	}
-	
-	/*
-	 * You can add more methods here
-	 */
 }
+
