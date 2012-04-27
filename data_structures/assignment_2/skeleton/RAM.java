@@ -27,7 +27,7 @@ public class RAM {
 
         // Init data.
         for (int i=0; i<hdSize; i++) {
-            this.ram[i] = new Page("", null, null);
+            this.ram[i] = new Page("", i, null, null);
         }
 
         for (int i=0; i<ramSize -1; i++) {
