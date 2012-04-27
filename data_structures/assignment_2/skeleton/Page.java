@@ -13,7 +13,7 @@ public class Page {
      * @param next The next (towards the last, newest) page in RAM.
      * @param prev The previous (towdrds the first, oldest) page in RAM.
      *
-     * @return a new initialized Page object.
+     * @return A new initialized Page object.
      */
     public Page(String data, Page next, Page prev) {
         this.data = new String(data);
