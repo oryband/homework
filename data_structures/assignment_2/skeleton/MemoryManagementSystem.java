@@ -37,16 +37,30 @@ public class MemoryManagementSystem {
 
 
     /**
-     * Loads data from hard-disk to RAM, and flushes old head Page.
+     * Loads page into RAM, and flushes old head Page.
+     * Distinguishes between FIFO/LRU.
      *
      * @param key Page's key in hard-disk.
      */
-    private void load (int key) {
-        Page oldHead = this.ram.load(key, this.lru);
+    public void load(int key) {
+        Page p       = this.ram.getPage(key),
+             oldHead = null;
+
+        // Load data to RAM if not present, and return old head Page.
+        if (p.prev == null && p.next == null) {
+            p.setData(this.hd[key]);  // Load data from hard-disk.
+            oldHead = this.ram.enqueue(p);
+        // If data already in RAM and LRU is on,
+        // Relocate data to RAM's end of the line, and get old
+        // head Page.
+        } else if (lru) {
+            this.ram.remove(p);
+            oldHead = this.ram.enqueue(p);
+        }
 
         // Update (flush) data on hard-disk if page was thrown out of RAM.
         if (oldHead != null) {
-            flush(oldHead);
+            this.flush(oldHead);
         }
     }
 
