@@ -5,8 +5,9 @@
  * @version 1.0
  */
 public class Page {
+    private int   index;  // Immutable Hard-disk index (set during init).
+
     public String data;
-    public int    index;  // Hard-disk index.
     public Page   next, prev;
 
     /**
@@ -18,10 +19,17 @@ public class Page {
      * @return A new initialized Page object.
      */
     public Page(String data, int index, Page next, Page prev) {
-        this.data  = new String(data);
         this.index = index;
+
+        this.data  = new String(data);
         this.next  = next;
         this.prev  = prev;
+    }
+
+
+    /** @return Hard-disk index. */
+    public getIndex() {
+        return this.index;
     }
 }
 
