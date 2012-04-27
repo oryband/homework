@@ -6,7 +6,7 @@
  */
 public class RAM {
     private Page[] ram;
-    private int    first, last;
+    private Page   first, last;
 
     public RAM(int hdSize, int ramSize) {
         if (ramSize <= 1) {
@@ -21,7 +21,7 @@ public class RAM {
 
         // Init data.
         for (int i=0; i<hdSize; i++) {
-            this.ram[i] = new Page("", -1, null, null);
+            this.ram[i] = new Page("", null, null);
         }
 
         for (int i=0; i<ramSize -1; i++) {
@@ -38,7 +38,7 @@ public class RAM {
 
         // Set first and last pages.
         this.first = this.ram[0];
-        this.last  = this.ram[ramSize]
+        this.last  = this.ram[ramSize];
     }
 }
 
