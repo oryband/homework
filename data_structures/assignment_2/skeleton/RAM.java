@@ -6,7 +6,7 @@
  */
 public class RAM {
     private Page[] ram;
-    private Page   head, tail;
+    private Page head, tail;
 
     /**
      * @param hdSize Hard-disk size.
@@ -93,10 +93,8 @@ public class RAM {
      * Adds page to end of list, if not already present.
      *
      * @param key Page key in hard-disk.
-     *
-     * @return Oldest page (Page in head).
      */
-    public Page enqueue(Page p) {
+    public void enqueue(Page p) {
         if (p.prev != null || p.next != null) {  // Poll if Page is already in RAM.
             throw new RuntimeException("Page already in RAM.");
         } else {
@@ -107,8 +105,6 @@ public class RAM {
             // Set as tail in queue.
             this.tail.next = p;
             this.tail = p;
-
-            return this.dequeue();
         }
     }
 }

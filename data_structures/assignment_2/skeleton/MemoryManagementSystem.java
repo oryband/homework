@@ -26,7 +26,6 @@ public class MemoryManagementSystem {
         for (int i=0; i<1000; i++) {
             this.hd[i] = "";
         }
-
 	}
 
 
@@ -49,13 +48,19 @@ public class MemoryManagementSystem {
         // Load data to RAM if not present, and return old head Page.
         if (p.prev == null && p.next == null) {
             p.setData(this.hd[key]);  // Load data from hard-disk.
-            oldHead = this.ram.enqueue(p);
+            this.ram.enqueue(p);
+            oldHead = this.ram.dequeue();
         // If data already in RAM and LRU is on,
         // Relocate data to RAM's end of the line, and get old
         // head Page.
         } else if (lru) {
-            this.ram.remove(p);
-            oldHead = this.ram.enqueue(p);
+            if (p.prev == null) {  // This is the head Page.
+                this.ram.dequeue();
+                this.ram.enqueue(p);
+            } else if (p.next != null) {  // This is NOT the tail Page.
+                this.ram.remove(p);
+                this.ram.enqueue(p);
+            }
         }
 
         // Update (flush) data on hard-disk if page was thrown out of RAM.
