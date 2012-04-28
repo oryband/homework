@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class MemoryManagementSystem {
     private RAM      ram;
     private String[] hd;
-	private boolean  lru;
+    private boolean  lru;
 
 
     /**
@@ -18,21 +18,21 @@ public class MemoryManagementSystem {
      *
      * @return a new initialized MemoryManagementSystem object.
      */
-	public MemoryManagementSystem(boolean lru) {
+    public MemoryManagementSystem(boolean lru) {
         this.ram = new RAM(1000, 50);
-		this.hd  = new String[1000];
-		this.lru = lru;
+        this.hd  = new String[1000];
+        this.lru = lru;
 
         for (int i=0; i<1000; i++) {
             this.hd[i] = "";
         }
-	}
+    }
 
 
-	/** @see java.lang.Object#toString() */
-	public String toString() {
-		return "secondaryMemory=" + Arrays.toString(this.hd);
-	}
+    /** @see java.lang.Object#toString() */
+    public String toString() {
+        return "secondaryMemory=" + Arrays.toString(this.hd);
+    }
 
 
     /**
@@ -87,7 +87,7 @@ public class MemoryManagementSystem {
      *
      * @return Page's data.
      */
-	public String read(int key) {
+    public String read(int key) {
         this.load(key);
         return this.ram.getPage(key).getData();
     }
@@ -102,6 +102,6 @@ public class MemoryManagementSystem {
     public void write(int key, char c) {
         this.load(key);
         this.ram.getPage(key).appendChar(c);
-	}
+    }
 }
 
