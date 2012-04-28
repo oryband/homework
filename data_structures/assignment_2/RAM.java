@@ -1,6 +1,6 @@
 /**
  * Implements a linked-list array, to be used as runtime-efficient RAM:
- * The array is practically the hard-disk's mirror, so fetching will take O(1).
+ * The array is practically the hard-disk's working copy, so fetching will take O(1).
  * This class also implements a linked-list in some elements of the array,
  * that represent the RAM. This way we can track the virtual RAM queue.
  *
@@ -8,7 +8,7 @@
  * @Version 1.0
  */
 public class RAM {
-    private Page[] pages;     // Hard-disk mirror.
+    private Page[] pages;     // Hard-disk working copy.
     private Page head, tail;  // Tracks both ends of the virtual RAM queue.
 
     /**
@@ -28,19 +28,24 @@ public class RAM {
 
         this.pages = new Page[hdSize];
 
-        // Init data.
-        for (int i=0; i<hdSize; i++) {
+        // Init RAM elements.
+        int i;
+        for (i=0; i<ramSize; i++) {
             this.pages[i] = new Page("", i, null, null);
         }
 
-        for (int i=0; i<ramSize -1; i++) {
-            // Set backwards order.
-            if (i >= 1) {
+        // Init unused RAM elements.
+        for (i=ramSize; i<hdSize; i++) {
+            this.pages[i] = null;
+        }
+
+        // Init data.
+        for (i=0; i<ramSize; i++) {
+            if (i >= 1) {  // Set backward order.
                 this.pages[i].prev = this.pages[i-1];
             }
 
-            // Set advancing order.
-            if (i <= ramSize -2) {
+            if (i <= ramSize -2) {  // Set advancing order.
                 this.pages[i].next = this.pages[i+1];
             }
         }
@@ -65,11 +70,17 @@ public class RAM {
         Page p = this.pages[key];
 
         // Load data to RAM queue if not present, and return old head Page.
+        if (p == null) {
+            p = new Page(hd[key], key, null, null);  // Load from hard-disk.
+            this.pages[key] = p;
+        }
+
         if (p.prev == null && p.next == null) {
-            p.setData(hd[key]);  // Load data from hard-disk.
-            this.enqueue(p);
-            return this.dequeue();
-        // If data already in RAM and LRU is on,
+            this.enqueue(p);                        // Push to end of RAM queue.
+            Page oldHead = this.dequeue();          // Remove old head from RAM queue.
+            this.pages[oldHead.getIndex()] = null;  // Remove from RAM working copy.
+            return oldHead;
+        // If data is already in RAM and LRU is on,
         // Relocate data to RAM's queue end.
         } else if (lru) {
             if (p.prev == null) {  // This is the head Page.
