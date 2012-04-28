@@ -36,41 +36,6 @@ public class MemoryManagementSystem {
 
 
     /**
-     * Loads page into RAM, and flushes old head Page.
-     * Distinguishes between FIFO/LRU.
-     *
-     * @param key Page's key in hard-disk.
-     */
-    public void load(int key) {
-        Page p       = this.ram.getPage(key),
-             oldHead = null;
-
-        // Load data to RAM if not present, and return old head Page.
-        if (p.prev == null && p.next == null) {
-            p.setData(this.hd[key]);  // Load data from hard-disk.
-            this.ram.enqueue(p);
-            oldHead = this.ram.dequeue();
-        // If data already in RAM and LRU is on,
-        // Relocate data to RAM's end of the line, and get old
-        // head Page.
-        } else if (lru) {
-            if (p.prev == null) {  // This is the head Page.
-                this.ram.dequeue();
-                this.ram.enqueue(p);
-            } else if (p.next != null) {  // This is NOT the tail Page.
-                this.ram.remove(p);
-                this.ram.enqueue(p);
-            }
-        }
-
-        // Update (flush) data on hard-disk if page was thrown out of RAM.
-        if (oldHead != null) {
-            this.flush(oldHead);
-        }
-    }
-
-
-    /**
      * Updates Page's data to hard-disk.
      *
      * @param p Page whose data is to be flushed.
@@ -88,7 +53,12 @@ public class MemoryManagementSystem {
      * @return Page's data.
      */
     public String read(int key) {
-        this.load(key);
+        Page oldHead = this.ram.load(key, this.hd, this.lru);  // Load to RAM if necessary.
+
+        if (oldHead != null) {  // Flush if a new Page was loaded to RAM.
+            this.flush(oldHead);
+        }
+
         return this.ram.getPage(key).getData();
     }
 
@@ -100,7 +70,12 @@ public class MemoryManagementSystem {
      * @param c Character to append to Page.
      */
     public void write(int key, char c) {
-        this.load(key);
+        Page oldHead = this.ram.load(key, this.hd, this.lru);  // Load to RAM if necessary.
+
+        if (oldHead != null) {  // Flush if a new Page was loaded to RAM.
+            this.flush(oldHead);
+        }
+
         this.ram.getPage(key).appendChar(c);
     }
 }

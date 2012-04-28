@@ -1,12 +1,15 @@
 /**
- * Implements a linked-list array, to be used as runtime-efficient RAM.
+ * Implements a linked-list array, to be used as runtime-efficient RAM:
+ * The array is practically the hard-disk's mirror, so fetching will take O(1).
+ * This class also implements a linked-list in some elements of the array,
+ * that represent the RAM. This way we can track the virtual RAM queue.
  *
  * @author Ory Band
  * @Version 1.0
  */
 public class RAM {
-    private Page[] ram;
-    private Page head, tail;
+    private Page[] pages;     // Hard-disk mirror.
+    private Page head, tail;  // Tracks both ends of the virtual RAM queue.
 
     /**
      * @param hdSize Hard-disk size.
@@ -23,28 +26,62 @@ public class RAM {
             throw new RuntimeException("HD size smaller than RAM size.");
         }
 
-        this.ram = new Page[hdSize];
+        this.pages = new Page[hdSize];
 
         // Init data.
         for (int i=0; i<hdSize; i++) {
-            this.ram[i] = new Page("", i, null, null);
+            this.pages[i] = new Page("", i, null, null);
         }
 
         for (int i=0; i<ramSize -1; i++) {
-            // Set previous order.
+            // Set backwards order.
             if (i >= 1) {
-                this.ram[i].prev = this.ram[i-1];
+                this.pages[i].prev = this.pages[i-1];
             }
 
             // Set advancing order.
             if (i <= ramSize -2) {
-                this.ram[i].next = this.ram[i+1];
+                this.pages[i].next = this.pages[i+1];
             }
         }
 
-        // Set head and tail pages.
-        this.head = this.ram[0];
-        this.tail = this.ram[ramSize -1];
+        // Set head and tail queue Pages.
+        this.head = this.pages[0];
+        this.tail = this.pages[ramSize -1];
+    }
+
+
+    /**
+     * Loads page into RAM, and returns old head Page.
+     * Distinguishes between FIFO/LRU.
+     *
+     * @param key Page's key in hard-disk.
+     * @param hd Hard-disk String array.
+     * @param lru FIFO/LRU switch.
+     * 
+     * @return Old head Page, if a new Page was loaded onto RAM.
+     */
+    public Page load(int key, String[] hd, boolean lru) {
+        Page p = this.pages[key];
+
+        // Load data to RAM queue if not present, and return old head Page.
+        if (p.prev == null && p.next == null) {
+            p.setData(hd[key]);  // Load data from hard-disk.
+            this.enqueue(p);
+            return this.dequeue();
+        // If data already in RAM and LRU is on,
+        // Relocate data to RAM's queue end.
+        } else if (lru) {
+            if (p.prev == null) {  // This is the head Page.
+                this.dequeue();  // Like `remove()`, but sets new head Page.
+                this.enqueue(p);
+            } else if (p.next != null) {  // This is NOT the tail Page.
+                this.remove(p);
+                this.enqueue(p);
+            }
+        }
+
+        return null;
     }
 
 
@@ -54,12 +91,12 @@ public class RAM {
      * @return Page by key given as argument.
      */
     public Page getPage(int key) {
-        return this.ram[key];
+        return this.pages[key];
     }
 
 
     /**
-     * Removes Page received as argument from list.
+     * Removes (detahces) Page received as argument from RAM queue.
      *
      * @param key Page key in hard-disk.
      */
@@ -90,7 +127,7 @@ public class RAM {
 
 
     /**
-     * Adds page to end of list, if not already present.
+     * Adds page to end of queue, if not already present.
      *
      * @param key Page key in hard-disk.
      */
