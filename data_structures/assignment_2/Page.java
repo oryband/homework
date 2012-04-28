@@ -34,7 +34,7 @@ public class Page {
     }
 
 
-    /** @return Copy of data. */
+    /** @return Clone of data. */
     public String getData() {
         return new String(this.data);
     }
