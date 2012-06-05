@@ -1,42 +1,103 @@
-import java.util.*;
-import java.io.*;
-
+/**
+ * Main flight-managing class.
+ *
+ * @author Liran Oz, Ory Band
+ * @version 1.0
+ */
 public class FlightManager{
-    private int hs1 (int id,int n){
+    /**
+     * Main hash function.
+     *
+     * @param id ID to hash.
+     * @param n Amount of IDs.
+     *
+     * @return Hash result of ID given as argument.
+     */
+    private int hash1(int id, int n){
         return id % (n/3);
     }
-    private int hs2 (int id,int n){
+
+    /**
+     * Secondary (skip) hash function.
+     *
+     * @param id ID to hash.
+     * @param n Amount of IDs.
+     *
+     * @return Hash result of ID given as argument.
+     */
+    private int hash2(int id, int n){
         return id % (n);
     }
-    private int reverse(int n){ // reverse the int!
-        int ans=0;
-        int temp;
-        while (n!=0){
-            ans=ans*10;
-            temp=n%10;
-            ans=ans+temp;
-            n=n/10;
-        }
-        return ans;
-    }
-    public static void main(String[] args){
 
-        String str = read_From_File_Example("input1.dat");//read the file to a string
-        String[] ids = str.split(",");//now you have an array of ids as strings (but they contain spaces
-        int N = ids.length;//this is N - the amount of ids
-        int[] idsint = new int[N];
-        for(int i = 0; i <N ;i++)
-        {
-            ids[i] = ids[i].trim();//remove spaces
-            idsint[i]=Integer.parseInt(ids[i]);
+    /**
+     * Third (2nd skip) hash function.
+     *
+     * @param id ID to hash.
+     * @param n Amount of IDs.
+     *
+     * @return Hash result of ID given as argument.
+     */
+    private int hash3(int id, int n) {
+        return hash2(reverse(id), n);
+    }
+
+    /**
+     * @param n Integer to reverse.
+     *
+     * @return Reversed integer given as argument.
+     */
+    private int reverse(int n) {
+        int res = 0,
+            temp;
+
+        // Shift all digits.
+        while (n!=0) {
+            res  *= 10;      // Shift all digits left.
+            temp  = n % 10;  // Fetch left digit.
+            res  += temp;    // Insert it at the beginning.
+            n    /= 10;      // Removed (not shifted) leftmost digits.
         }
-        AvlTree[] reg = new AvlTree[N/3]; // creating the array with the reg people.
-        for (int i=0;i<N;i=i+1) // inserting
-            reg[hs1(idsint[i],N)].insert(idsint[i]);    
-        for(int j=0;j<N/3-1;j=j+1) // printing row number 1 using AvlTree.size & AvlTree height.
-            System.out.print(reg[j].height+" "+reg[j].size+" "); // Row number 1
-        System.out.print(reg[N/3-1].height+" "+reg[N/3-1].size);
-        System.out.println(); // Row number 1
+
+        return res;
+    }
+
+    private int[] getIds(String path) {
+        String s = Files.read("input1.dat");
+        String[] ss = s.split(",");
+
+        int l = ids.length;
+        int[] ids = new int[l];
+
+        // Convert string IDs to int.
+        for(int i=0; i<l; i++) {
+            ss[i] = s[i].trim();
+            ids[i] = Integer.parseInt(ss[i]);
+        }
+    }
+
+    private AvlTree[] buildAVLs(int[] ids) {
+        int l = ids.length;
+        AvlTree[] t = new AvlTree[l/3];
+
+        // Build tree.
+        int i;
+        for (i=0 ; i<l; i++) { 
+            t[ hash1(ids[i], l) ].insert(ids[i]);    
+        }
+
+        // Print row 1: Trees' height and size.
+        for(i=0; i < l/3 -1; i++) {
+            System.out.print(t[i].height + " " + t[i].size + " ");
+        }
+
+        System.out.println(t[l/3 -1].height + " " + t[l/3 -1].size);
+    }
+
+    public static void stage1(String path) {
+        int ids[] = getIds(path);
+        AvlTree[] t = buildAVLs(ids);
+    }
+
         // lvl 2
         String str2 = read_From_File_Example("input2.dat");//read the file to a string
         String[] ids2 = str.split(",");//now you have an array of ids as strings (but they contain spaces
