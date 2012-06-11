@@ -84,7 +84,7 @@ public class Files {
      *
      * @return Quicksorted array.
      */
-    public void quickSort(int a[], int l, int r) {
+    static public void quickSort(int a[], int l, int r) {
         int index = partition(a, l, r);
         if (l < index - 1) {
             quickSort(a, l, index - 1);
