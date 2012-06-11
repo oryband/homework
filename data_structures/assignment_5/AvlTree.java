@@ -1,22 +1,20 @@
-    package DataStructures;
-
     // BinarySearchTree class
     //
     // CONSTRUCTION: with no initializer
     //
     // ******************PUBLIC OPERATIONS*********************
-    // void insert( x )       --> Insert x
-    // void remove( x )       --> Remove x (unimplemented)
-    // Comparable find( x )   --> Return item that matches x
-    // Comparable findMin( )  --> Return smallest item
-    // Comparable findMax( )  --> Return largest item
-    // boolean isEmpty( )     --> Return true if empty; else false
-    // void makeEmpty( )      --> Remove all items
-    // void printTree( )      --> Print tree in sorted order
+    // void insert( x )    --> Insert x
+    // void remove( x )    --> Remove x (unimplemented)
+    // int find( x )       --> Return item that matches x
+    // int findMin( )      --> Return smallest item
+    // int findMax( )      --> Return largest item
+    // boolean isEmpty( )  --> Return true if empty; else false
+    // void makeEmpty( )   --> Remove all items
+    // void printTree( )   --> Print tree in sorted order
 
     /**
      * Implements an AVL tree.
-     * Note that all "matching" is based on the compareTo method.
+     * Note that all "matching" is based on the compareTo method.  // Ory: This is no changed to primitive int so Comparable is no longer necessary.
      * @author Mark Allen Weiss
      */
     public class AvlTree
@@ -33,7 +31,7 @@
          * Insert into the tree; duplicates are ignored.
          * @param x the item to insert.
          */
-        public void insert( Comparable x )
+        public void insert( int x )
         {
             root = insert( x, root );
         }
@@ -42,7 +40,7 @@
          * Remove from the tree. Nothing is done if x is not found.
          * @param x the item to remove.
          */
-        public void remove( Comparable x )
+        public void remove( int x )
         {
             System.out.println( "Sorry, remove unimplemented" );
         }
@@ -51,7 +49,7 @@
          * Find the smallest item in the tree.
          * @return smallest item or null if empty.
          */
-        public Comparable findMin( )
+        public int findMin( )
         {
             return elementAt( findMin( root ) );
         }
@@ -60,7 +58,7 @@
          * Find the largest item in the tree.
          * @return the largest item of null if empty.
          */
-        public Comparable findMax( )
+        public int findMax( )
         {
             return elementAt( findMax( root ) );
         }
@@ -70,7 +68,7 @@
          * @param x the item to search for.
          * @return the matching item or null if not found.
          */
-        public Comparable find( Comparable x )
+        public int find( int x )
         {
             return elementAt( find( x, root ) );
         }
@@ -108,7 +106,7 @@
          * @param t the node.
          * @return the element field or null if t is null.
          */
-        private Comparable elementAt( AvlNode t )
+        private int elementAt( AvlNode t )
         {
             return t == null ? null : t.element;
         }
@@ -119,24 +117,24 @@
          * @param t the node that roots the tree.
          * @return the new root.
          */
-        private AvlNode insert( Comparable x, AvlNode t )
+        private AvlNode insert( int x, AvlNode t )
         {
             if( t == null )
                 t = new AvlNode( x, null, null );
-            else if( x.compareTo( t.element ) < 0 )
+            else if( x < t.element )
             {
                 t.left = insert( x, t.left );
                 if( height( t.left ) - height( t.right ) == 2 )
-                    if( x.compareTo( t.left.element ) < 0 )
+                    if( x < t.left.element )
                         t = rotateWithLeftChild( t );
                     else
                         t = doubleWithLeftChild( t );
             }
-            else if( x.compareTo( t.element ) > 0 )
+            else if( x > t.element )
             {
                 t.right = insert( x, t.right );
                 if( height( t.right ) - height( t.left ) == 2 )
-                    if( x.compareTo( t.right.element ) > 0 )
+                    if( x > t.right.element )
                         t = rotateWithRightChild( t );
                     else
                         t = doubleWithRightChild( t );
@@ -183,12 +181,12 @@
          * @param t the node that roots the tree.
          * @return node containing the matched item.
          */
-        private AvlNode find( Comparable x, AvlNode t )
+        private AvlNode find( int x, AvlNode t )
         {
             while( t != null )
-                if( x.compareTo( t.element ) < 0 )
+                if( x < t.element )
                     t = t.left;
-                else if( x.compareTo( t.element ) > 0 )
+                else if( x > t.element )
                     t = t.right;
                 else
                     return t;    // Match
@@ -294,16 +292,16 @@
             System.out.println( "Checking... (no more output means success)" );
 
             for( int i = GAP; i != 0; i = ( i + GAP ) % NUMS )
-                t.insert( new MyInteger( i ) );
+                t.insert( i );
 
             if( NUMS < 40 )
                 t.printTree( );
-            if( ((MyInteger)(t.findMin( ))).intValue( ) != 1 ||
-                ((MyInteger)(t.findMax( ))).intValue( ) != NUMS - 1 )
+            if( t.findMin( ) != 1 ||
+                t.findMax( ) != NUMS - 1 )
                 System.out.println( "FindMin or FindMax error!" );
 
             for( int i = 1; i < NUMS; i++ )
-                 if( ((MyInteger)(t.find( new MyInteger( i ) ))).intValue( ) != i )
+                 if( t.find( i ) != i )
                      System.out.println( "Find error1!" );
     }
 }
