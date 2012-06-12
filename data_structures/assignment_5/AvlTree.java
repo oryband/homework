@@ -25,6 +25,7 @@
         public AvlTree( )
         {
             root = null;
+            size = 0;
         }
 
         /**
@@ -34,6 +35,7 @@
         public void insert( int x )
         {
             root = insert( x, root );
+            size++;
         }
 
         /**
@@ -61,6 +63,41 @@
         public int findMax( )
         {
             return elementAt( findMax( root ) );
+        }
+
+        /**
+         * @param int AVL node to find.
+         *
+         * @return Integer array of [found, steps taken]. If found != 0 then node wasn't found.
+         */
+        public int[] steps(int x) {
+            AvlNode t = root;
+            int steps;
+
+            if (t == null) {  // If tree is empty;
+                int[] result = {0, 1};  // 1 step for polling root node.
+                return result;
+            } else {
+                steps = 0;
+
+                while(t != null) {
+                    if (x < t.element) {
+                        t = t.left;
+                        steps++;  // Node entry equals 1 step.
+                    } else if (x > t.element) {
+                        t = t.right;
+                        steps++;
+                    }
+                    else {
+                        steps++;  // Node polling equals 1 step.
+                        int[] result = {1, steps};
+                        return result;    // Match
+                    }
+                }
+            }
+
+            int[] result = {0, steps};
+            return result;   // No match
         }
 
         /**
@@ -209,6 +246,20 @@
         }
 
         /**
+         * @return Amount of nodes in tree.
+         */
+        public int size() {
+            return this.size;
+        }
+
+        /**
+         * @return Tree's height.
+         */
+        public int height() {
+            return height(root);
+        }
+
+        /**
          * Return the height of node t, or -1, if null.
          */
         private static int height( AvlNode t )
@@ -280,6 +331,7 @@
 
           /** The tree root. */
         private AvlNode root;
+        private int size;
 
 
             // Test program
