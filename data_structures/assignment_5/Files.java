@@ -50,7 +50,7 @@ public class Files {
      *
      * @return Quick-sort-partitioned array.
      */
-    private int partition(int[] a, int l, int r) {
+    private static int partition(int[] a, int l, int r) {
         int i = l,
             j = r,
             tmp,
@@ -79,12 +79,21 @@ public class Files {
 
     /**
      * @param a Array to quicksort.
+     *
+     * @return Quicksorted array.
+     */
+    static public void quickSort(int a[]) {
+        quickSort(a, 0, a.length -1);
+    }
+
+    /**
+     * @param a Array to quicksort.
      * @param l Left helper.
      * @param r Right helper.
      *
      * @return Quicksorted array.
      */
-    static public void quickSort(int a[], int l, int r) {
+    static private void quickSort(int a[], int l, int r) {
         int index = partition(a, l, r);
         if (l < index - 1) {
             quickSort(a, l, index - 1);
