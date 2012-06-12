@@ -91,21 +91,23 @@ public class FlightManager {
         int l = ids.length,
             al = l/3;
 
-        AvlTree[] t = new AvlTree[al];
+        AvlTree[] trees = new AvlTree[al];
 
         // Build tree.
         int i, slot;
         for (i=0 ; i<l; i++) { 
             slot = hash1(ids[i], l);
-            t[slot].insert(ids[i]);    
+            trees[slot].insert(ids[i]);
         }
 
         // Print row 1 - Trees' height and size.
         for(i=0; i < al -1; i++) {
-            System.out.print(t[i].height() + " " + t[i].size() + " ");  // TODO: Add height() / size() implementations.
+            System.out.print(trees[i].height() + " " + trees[i].size() + " ");
         }
 
-        System.out.println(t[al -1].height() + " " + t[al -1].size());
+        System.out.println(trees[al -1].height() + " " + trees[al -1].size());
+
+        return trees;
     }
 
 
@@ -124,20 +126,27 @@ public class FlightManager {
 
         int c_boardees = 0,  // counters.
             c_standby = 0,
-            steps = 0,       // Statistics calcs.
+            totalSteps = 0,  // Statistics calcs.
 
             slot,            // Tree slot (index).
             customer,        // ID.
+            steps,           // Total steps taken for each search.
             i;
 
+        boolean found;       // Indicates whether a node was found in tree.
+
+        int[] result;
         for (i=0; i < al; i++) {  // Load registered arrivals.
             customer = arrivals[i];
             slot = hash1(customer, rl);
 
-            int[] result = trees[slot] . find(customer);  // TODO: Fix this.
-            steps += 2 + result[0];  // Sum the steps required to find each arrival.
+            result = trees[slot].steps(customer);
+            found = result[0] != 0;
+            steps = result[1];
 
-            if ( result[1] ) {  // Load passenger if registered.
+            totalSteps += 1 + steps;  // Sum the steps required to find each arrival. +1 for hashing.
+
+            if (found) {  // Load passenger if registered.
                 boardees[c_boardees++] = customer;
             } else {  // Else put him on standby.
                 standby[c_standby++] = customer;
@@ -148,7 +157,7 @@ public class FlightManager {
             boardees[i] = standby[i - c_boardees];
         }
 
-        System.out.println(steps / al);  // Print row 2 - Average search-steps per arrival.
+        System.out.println(totalSteps / al);  // Print row 2 - Average search-steps per arrival.
         printSortedBoardees(boardees);   // Row 3.
     }
 
@@ -167,7 +176,7 @@ public class FlightManager {
             sorted[i] = boardees[i];
         }
 
-        Files.quickSort(sorted);  // TODO: Fix this/
+        Files.quickSort(sorted);
 
         for (i=0; i<l-1; i++) {
             System.out.print(sorted[i] + " ");  // Row 3
