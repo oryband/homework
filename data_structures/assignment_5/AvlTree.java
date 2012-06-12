@@ -264,7 +264,7 @@
          */
         private static int height( AvlNode t )
         {
-            return t == null ? -1 : t.height;
+            return t == null ? 0 : t.height;
         }
 
         /**
