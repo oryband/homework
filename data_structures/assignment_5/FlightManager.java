@@ -91,13 +91,19 @@ public class FlightManager {
         int l = ids.length,
             al = l/3;
 
+        // Init trees.
         AvlTree[] trees = new AvlTree[al];
+        int i;
+        for (i=0; i<al; i++) {
+            trees[i] = new AvlTree();
+        }
 
-        // Build tree.
-        int i, slot;
+        // Build trees;
+        int id, slot;
         for (i=0 ; i<l; i++) { 
-            slot = hash1(ids[i], l);
-            trees[slot].insert(ids[i]);
+            id = ids[i];
+            slot = hash1(id, l);
+            trees[slot].insert(id);
         }
 
         // Print row 1 - Trees' height and size.
