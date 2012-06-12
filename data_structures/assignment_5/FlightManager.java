@@ -13,7 +13,7 @@ public class FlightManager {
      *
      * @return Hash result of ID given as argument.
      */
-    private int hash1(int id, int n){
+    private int treeHash(int id, int n){
         return id % (n/3);
     }
 
@@ -25,7 +25,7 @@ public class FlightManager {
      *
      * @return Hash result of ID given as argument.
      */
-    private int hash2(int id, int n){
+    private int seatHash1(int id, int n){
         return id % (n);
     }
 
@@ -37,8 +37,8 @@ public class FlightManager {
      *
      * @return Hash result of ID given as argument.
      */
-    private int hash3(int id, int n) {
-        return hash2(reverse(id), n);
+    private int seatHash2(int id, int n) {
+        return seatHash1(reverse(id), n);
     }
 
     /**
@@ -102,7 +102,7 @@ public class FlightManager {
         int id, slot;
         for (i=0 ; i<l; i++) { 
             id = ids[i];
-            slot = hash1(id, l);
+            slot = treeHash(id, l);
             trees[slot].insert(id);
         }
 
@@ -118,11 +118,15 @@ public class FlightManager {
 
 
     /**
+     * Decides who's boarding the flight, taking registerations and availble seats in mind.
+     *
      * @param trees Customer AVL trees array.
      * @param registered Registered customers.
      * @param arrivals Arrived customers - not necesseriarely registered.
+     *
+     * @return Boarding customer list.
      */
-    private void processArrivals(AvlTree[] trees, int[] registered, int[] arrivals) {
+    private int[] processArrivals(AvlTree[] trees, int[] registered, int[] arrivals) {
         int rl = registered.length,
             al = arrivals.length;
 
@@ -131,7 +135,7 @@ public class FlightManager {
               standby  = new int[al];
 
         int c_boardees = 0,  // counters.
-            c_standby = 0,
+            c_standby  = 0,
             totalSteps = 0,  // Statistics calcs.
 
             slot,            // Tree slot (index).
@@ -144,7 +148,7 @@ public class FlightManager {
         int[] result;
         for (i=0; i < al; i++) {  // Load registered arrivals.
             customer = arrivals[i];
-            slot = hash1(customer, rl);
+            slot = treeHash(customer, rl);
 
             result = trees[slot].steps(customer);
             found = result[0] != 0;
@@ -165,10 +169,14 @@ public class FlightManager {
 
         System.out.println(totalSteps / al);  // Print row 2 - Average search-steps per arrival.
         printSortedBoardees(boardees);   // Row 3.
+
+        return boardees;
     }
 
 
     /**
+     * Prints boardees list.
+     *
      * @param boardees Boardees list.
      */
     private void printSortedBoardees(int[] boardees) { 
@@ -192,15 +200,162 @@ public class FlightManager {
     }
 
 
+    /**
+     * Seats boardees.
+     *
+     * @param boardees People boarding the flight.
+     *
+     * @return Step list, stating how many steps were needed to seat each boardee.
+     */
+    public int[] seatBoardees(int[] boardees, boolean first) {
+        int l = boardees.length,
+            customer,
+            slot,        // Hash results.
+            supplement,  // Seat supplement.
+            slotUp,
+            slotDown,
+            i;
+
+        boolean seated,  // Switch, stating if customer was seated.
+                pos,     // Search seat in monotonic increasing order ONLY.
+                neg;     // Monotonic decreasing.
+
+        int[] seats = new int[l],
+              steps = new int[l];  // Statistics calcs.
+
+        // Init seats.
+        for(i=0; i<l; i++) {
+            seats[i] = -1;
+            steps[i] = 1;
+        }
+
+        for (i=0; i<l; i++) {
+            customer = boardees[i];
+
+            if (first) {
+                slot = seatHash1(customer, l);
+            } else {
+                slot = seatHash2(customer, l);
+            }
+
+            seated     = false;
+            supplement = 0;
+            pos        = false;  // For monotonic checking - only slot + supplement.
+            neg        = false;  // Same, but for slot - supplement.
+
+            // Seat customer.
+            while ( ! seated ) {
+                if (supplement == 0 && seats[slot] == -1) {  // First try.
+                    seats[slot] = customer;
+                    seated      = true;
+                } else {
+                    supplement++;
+                    steps[i] += 2;
+
+                    slotUp   = slot + supplement;
+                    slotDown = slot - supplement;
+
+                    // Test if we're out of bounds.
+                    if ( ! pos && slotDown < 0) {
+                        pos = true;
+                    }
+                    if ( ! neg && slotUp >= l) {
+                        neg = true;
+                    }
+
+                    // Check available seats according, if necessary in monotonic order.
+                    if ( ! neg && seats[slotUp] == -1 ) {  // TODO Fix steps counting.
+                        seats[slotUp] = customer;
+                        steps[i]--;
+                        seated = true;
+                    } else if ( ! pos && seats[slotDown] == -1 ) {
+                        seats[slotDown] = customer;
+                        seated = true;
+                    }
+                }
+            }
+        }
+
+        System.out.println();
+        for (int j=0; j<seats.length; j++) {
+            System.out.println(seats[j]);
+        }
+        System.out.println();
+        return steps;
+    }
+
+
+    /**
+     * @param steps Step list stating how many steps were needed to seat each boardee.
+     */
+    public void printSeatSteps(int[] steps) {
+        int l = steps.length,
+            t, c, i;
+
+        c = 0;
+        t = l/2;
+        for (i=0; i<t; i++) {
+            c += steps[i];
+        }
+        System.out.print( (c/t) + " ");
+
+        c = 0;
+        t = 3*l/4;
+        for (i=0; i<t; i++) {
+            c += steps[i];
+        }
+        System.out.print( (c/t) + " ");
+
+        c = 0;
+        t = l - (int) Math.sqrt(l);
+        for (i=0; i<t; i++) {
+            c += steps[i];
+        }
+        System.out.print( (c/t) + " ");
+
+        c = 0;
+        t = (int) Math.sqrt(l);
+        for (i=l-t-1; i<l; i++) {
+            c += steps[i];
+        }
+        System.out.println( (c/t) + " ");
+    }
+
+
     public void processFlight(String registered_path, String arrivals_path) {
         int[] registered = getIds(registered_path),
-              arrivals   = getIds(arrivals_path);
+              arrivals   = getIds(arrivals_path),
+              boardees,
+              seatSteps1,
+              seatSteps2;
 
         // Stage 1.
         AvlTree[] trees = buildAVLs(registered);
 
         // Stage 2
-        processArrivals(trees, registered, arrivals);
+        boardees = processArrivals(trees, registered, arrivals);
+
+        System.out.println();
+        for(int i=0; i<boardees.length; i++) {
+            System.out.println(boardees[i]);
+        }
+
+        seatSteps1 = seatBoardees(boardees, true);
+        seatSteps2 = seatBoardees(boardees, false);
+
+        printSeatSteps(seatSteps1);
+        printSeatSteps(seatSteps2);
+
+        //System.out.print("\n\n\n\n");
+        //for (int i=0; i<seatSteps1.length; i++) {
+            //System.out.println(seatSteps1[i]);
+        //}
+
+        //System.out.print("\n\n\n\n");
+        //for (int i=0; i<seatSteps2.length; i++) {
+            //System.out.println(seatSteps2[i]);
+        //}
+        //System.out.print("\n\n\n\n");
     }
 
     //write_To_File_Example("output1.dat","number of ids = " + N);//write N to the output file
