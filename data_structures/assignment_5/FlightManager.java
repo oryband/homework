@@ -211,14 +211,14 @@ public class FlightManager {
         int l = boardees.length,
             customer,
             slot,        // Hash results.
-            supplement,  // Seat supplement.
-            slotUp,
-            slotDown,
+            radius,  // Seat radius.
+            //slotUp,
+            //slotDown,
             i;
 
         boolean seated,  // Switch, stating if customer was seated.
-                pos,     // Search seat in monotonic increasing order ONLY.
-                neg;     // Monotonic decreasing.
+                up,      // Search seat in monotonic increasing order ONLY.
+                down;    // Monotonic decreasing.
 
         int[] seats = new int[l],
               steps = new int[l];  // Statistics calcs.
@@ -239,48 +239,64 @@ public class FlightManager {
             }
 
             seated     = false;
-            supplement = 0;
-            pos        = false;  // For monotonic checking - only slot + supplement.
-            neg        = false;  // Same, but for slot - supplement.
+            radius     = 1;
+            up         = false;  // For monotonic checking - only slot + radius.
+            down       = false;  // Same, but for slot - radius.
 
-            // Seat customer.
-            while ( ! seated ) {
-                if (supplement == 0 && seats[slot] == -1) {  // First try.
-                    seats[slot] = customer;
-                    seated      = true;
+            // First try.
+            if (seats[slot] == -1) {
+                seats[slot] = customer;
+                seated = true;
+            // Test until we're out of bounds from one direction.
+            } else while ( ! seated && ! up && ! down ) {
+                // Test if we can check upwards.
+                if (slot + radius >= l) {
+                    down = true;
                 } else {
-                    supplement++;
-                    steps[i] += 2;
-
-                    slotUp   = slot + supplement;
-                    slotDown = slot - supplement;
-
-                    // Test if we're out of bounds.
-                    if ( ! pos && slotDown < 0) {
-                        pos = true;
-                    }
-                    if ( ! neg && slotUp >= l) {
-                        neg = true;
-                    }
-
-                    // Check available seats according, if necessary in monotonic order.
-                    if ( ! neg && seats[slotUp] == -1 ) {  // TODO Fix steps counting.
-                        seats[slotUp] = customer;
-                        steps[i]--;
-                        seated = true;
-                    } else if ( ! pos && seats[slotDown] == -1 ) {
-                        seats[slotDown] = customer;
+                    steps[i]++;
+                    if (seats[slot + radius] == -1) {
+                        seats[slot + radius] = customer;
                         seated = true;
                     }
+                }
+
+                // Test downwards.
+                if (slot - radius < 0) {
+                    up = true;
+                } else if ( ! seated ) {
+                    steps[i]++;
+                    if (seats[slot - radius] == -1) {
+                        seats[slot - radius] = customer;
+                        seated = true;
+                    }
+                }
+
+                radius++;
+            }
+
+            if (up) {
+                while ( ! seated ) {
+                    steps[i]++;
+                    if (seats[slot + radius] == -1) {
+                        seats[slot + radius] = customer;
+                        seated = true;
+                    }
+
+                    radius++;
+                }
+            } else {
+                while ( ! seated ) {
+                    steps[i]++;
+                    if (seats[slot - radius] == -1) {
+                        seats[slot - radius] = customer;
+                        seated = true;
+                    }
+
+                    radius++;
                 }
             }
         }
 
-        System.out.println();
-        for (int j=0; j<seats.length; j++) {
-            System.out.println(seats[j]);
-        }
-        System.out.println();
         return steps;
     }
 
@@ -297,31 +313,34 @@ public class FlightManager {
         for (i=0; i<t; i++) {
             c += steps[i];
         }
-        System.out.print( (c/t) + " ");
+        System.out.print(c + " ");
 
         c = 0;
         t = 3*l/4;
         for (i=0; i<t; i++) {
             c += steps[i];
         }
-        System.out.print( (c/t) + " ");
+        System.out.print(c + " ");
 
         c = 0;
         t = l - (int) Math.sqrt(l);
         for (i=0; i<t; i++) {
             c += steps[i];
         }
-        System.out.print( (c/t) + " ");
+        System.out.print(c + " " );
 
         c = 0;
         t = (int) Math.sqrt(l);
-        for (i=l-t-1; i<l; i++) {
+        for (i=l-t; i<l; i++) {
             c += steps[i];
         }
-        System.out.println( (c/t) + " ");
+        System.out.println(c + " ");
     }
 
 
+    /**
+     * Processes all flight - stages 1 to 3.
+     */
     public void processFlight(String registered_path, String arrivals_path) {
         int[] registered = getIds(registered_path),
               arrivals   = getIds(arrivals_path),
@@ -335,27 +354,14 @@ public class FlightManager {
         // Stage 2
         boardees = processArrivals(trees, registered, arrivals);
 
-        System.out.println();
-        for(int i=0; i<boardees.length; i++) {
-            System.out.println(boardees[i]);
-        }
-
         seatSteps1 = seatBoardees(boardees, true);
         seatSteps2 = seatBoardees(boardees, false);
 
         printSeatSteps(seatSteps1);
         printSeatSteps(seatSteps2);
-
-        //System.out.print("\n\n\n\n");
-        //for (int i=0; i<seatSteps1.length; i++) {
-            //System.out.println(seatSteps1[i]);
-        //}
-
-        //System.out.print("\n\n\n\n");
-        //for (int i=0; i<seatSteps2.length; i++) {
-            //System.out.println(seatSteps2[i]);
-        //}
-        //System.out.print("\n\n\n\n");
+        // TODO: READ WRITE FORM FILES.
+        // TODO: COMMAS BETWEEN SOME NUMBERS.
+        // TODO: DOCS.
     }
 
     //write_To_File_Example("output1.dat","number of ids = " + N);//write N to the output file
