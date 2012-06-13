@@ -1,10 +1,14 @@
 public class Main {
     public static void main(String[] args) {
-        String stage1 = "input1_2.dat";
-        String stage2 = "input2_2.dat";
+        // Fetch file paths.
+        String registered = args[0];
+        String arrivals   = args[1];
+        String results    = args[2];
 
+        // Process flight and print results to file.
         FlightManager f = new FlightManager();
-        f.processFlight(stage1, stage2);
+
+        f.processFlight(registered, arrivals, results);
     }
 }
 

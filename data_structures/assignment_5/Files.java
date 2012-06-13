@@ -43,6 +43,28 @@ public class Files {
         return ids;
     }
 
+
+    /**
+     * Writes string to file.
+     *
+     * @param path File to write into.
+     * @param s String to write.
+     */
+    public static void write(String path, String s) {
+        try {
+            File out      = new File(path);
+            FileWriter fw = new FileWriter(out, true);
+
+            fw.append(s + "\r\n");
+            fw.close();
+        } catch (Exception e) {
+            System.out.println("Error \"" + e.toString() + "\" on file " + path);
+            e.printStackTrace();
+            System.exit(-1) ; // Hard exit.
+        }
+    }
+
+
     /**
      * @param a ID array to fill.
      * @param l Left-side pivot.
@@ -77,6 +99,7 @@ public class Files {
         return i;
     }
 
+
     /**
      * @param a Array to quicksort.
      *
@@ -85,6 +108,7 @@ public class Files {
     static public void quickSort(int a[]) {
         quickSort(a, 0, a.length -1);
     }
+
 
     /**
      * @param a Array to quicksort.
@@ -101,26 +125,6 @@ public class Files {
 
         if (index < r) {
             quickSort(a, index, r);
-        }
-    }
-
-    /**
-     * Writes string to file.
-     *
-     * @param path File to write into.
-     * @param s String to write.
-     */
-    public static void write(String path, String s) {
-        try {
-            File out      = new File(path);
-            FileWriter fw = new FileWriter(out, true);
-
-            fw.append(s + "\r\n");
-            fw.close();
-        } catch (Exception e) {
-            System.out.println("Error \"" + e.toString() + "\" on file " + path);
-            e.printStackTrace();
-            System.exit(-1) ; // Hard exit.
         }
     }
 }

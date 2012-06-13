@@ -5,6 +5,17 @@
  * @version 1.0
  */
 public class FlightManager {
+    private String output;  // Results.
+
+
+    /**
+     * @return an initialized FlightManager object.
+     */
+    public FlightManager() {
+        output = "";
+    }
+
+
     /**
      * Main hash function.
      *
@@ -17,8 +28,9 @@ public class FlightManager {
         return id % (n/3);
     }
 
+
     /**
-     * Secondary (skip) hash function.
+     * 1st seat hash function.
      *
      * @param id ID to hash.
      * @param n Amount of IDs.
@@ -29,8 +41,9 @@ public class FlightManager {
         return id % (n);
     }
 
+
     /**
-     * Third (2nd skip) hash function.
+     * 2nd seat hash function.
      *
      * @param id ID to hash.
      * @param n Amount of IDs.
@@ -40,6 +53,7 @@ public class FlightManager {
     private int seatHash2(int id, int n) {
         return seatHash1(reverse(id), n);
     }
+
 
     /**
      * @param n Integer to reverse.
@@ -52,7 +66,7 @@ public class FlightManager {
 
         // Shift all digits.
         while (n != 0) {
-            res  *= 10;      // Shift all digits left and add a zero at the end (first digit).
+            res  *= 10;      // Shift all digits left, and add a zero at the end (first digit).
             temp  = n % 10;  // Fetch left digit.
             res  += temp;    // Insert it at the beginning (where the zero was at).
             n    /= 10;      // Remove (non-shifted) leftmost digits.
@@ -60,6 +74,7 @@ public class FlightManager {
 
         return res;
     }
+
 
     /**
      * @param path ID string read from file.
@@ -75,12 +90,13 @@ public class FlightManager {
 
         // Convert string IDs to int.
         for(int i=0; i<l; i++) {
-            ss[i] = ss[i].trim();
+            ss[i]  = ss[i].trim();
             ids[i] = Integer.parseInt(ss[i]);
         }
 
         return ids;
     }
+
 
     /**
      * @param ids ID list.
@@ -101,17 +117,17 @@ public class FlightManager {
         // Build trees;
         int id, slot;
         for (i=0 ; i<l; i++) { 
-            id = ids[i];
+            id   = ids[i];
             slot = treeHash(id, l);
             trees[slot].insert(id);
         }
 
         // Print row 1 - Trees' height and size.
         for(i=0; i < al -1; i++) {
-            System.out.print(trees[i].height() + " " + trees[i].size() + " ");
+            output += trees[i].height() + "," + trees[i].size() + " ";
         }
 
-        System.out.println(trees[al -1].height() + " " + trees[al -1].size());
+        output += trees[al -1].height() + "," + trees[al -1].size() + "\r\n";
 
         return trees;
     }
@@ -148,27 +164,28 @@ public class FlightManager {
         int[] result;
         for (i=0; i < al; i++) {  // Load registered arrivals.
             customer = arrivals[i];
-            slot = treeHash(customer, rl);
+            slot     = treeHash(customer, rl);
 
             result = trees[slot].steps(customer);
-            found = result[0] != 0;
-            steps = result[1];
+            found  = result[0] != 0;
+            steps  = result[1];
 
             totalSteps += 1 + steps;  // Sum the steps required to find each arrival. +1 for hashing.
 
-            if (found) {  // Load passenger if registered.
+            if (found) {  // Board customer if registered.
                 boardees[c_boardees++] = customer;
             } else {  // Else put him on standby.
                 standby[c_standby++] = customer;
             }
         }
 
-        for (i=c_boardees; i<rl; i++) {  // Fill available standby seats.
+        for (i=c_boardees; i<rl; i++) {  // Board standby customer according to available seats.
             boardees[i] = standby[i - c_boardees];
         }
 
-        System.out.println(totalSteps / al);  // Print row 2 - Average search-steps per arrival.
-        printSortedBoardees(boardees);   // Row 3.
+        output += totalSteps / al + "\r\n";  // Print row 2 - Average search-steps per arrival.
+
+        printSortedBoardees(boardees);       // Row 3.
 
         return boardees;
     }
@@ -193,10 +210,10 @@ public class FlightManager {
         Files.quickSort(sorted);
 
         for (i=0; i<l-1; i++) {
-            System.out.print(sorted[i] + " ");  // Row 3
+            output += sorted[i] + ", ";  // Row 3
         }
 
-        System.out.println(sorted[l-1]);
+        output += sorted[l-1] + "\r\n";
     }
 
 
@@ -210,10 +227,8 @@ public class FlightManager {
     public int[] seatBoardees(int[] boardees, boolean first) {
         int l = boardees.length,
             customer,
-            slot,        // Hash results.
+            slot,    // Hash results.
             radius,  // Seat radius.
-            //slotUp,
-            //slotDown,
             i;
 
         boolean seated,  // Switch, stating if customer was seated.
@@ -239,7 +254,7 @@ public class FlightManager {
             }
 
             seated     = false;
-            radius     = 1;
+            radius     = 1;      // Slot supplement.
             up         = false;  // For monotonic checking - only slot + radius.
             down       = false;  // Same, but for slot - radius.
 
@@ -302,6 +317,8 @@ public class FlightManager {
 
 
     /**
+     * Prints Row 4/5 statistics.
+     *
      * @param steps Step list stating how many steps were needed to seat each boardee.
      */
     public void printSeatSteps(int[] steps) {
@@ -313,37 +330,37 @@ public class FlightManager {
         for (i=0; i<t; i++) {
             c += steps[i];
         }
-        System.out.print(c + " ");
+        output += c + ", ";
 
         c = 0;
         t = 3*l/4;
         for (i=0; i<t; i++) {
             c += steps[i];
         }
-        System.out.print(c + " ");
+        output += c + ", ";
 
         c = 0;
         t = l - (int) Math.sqrt(l);
         for (i=0; i<t; i++) {
             c += steps[i];
         }
-        System.out.print(c + " " );
+        output += c + ", ";
 
         c = 0;
         t = (int) Math.sqrt(l);
         for (i=l-t; i<l; i++) {
             c += steps[i];
         }
-        System.out.println(c + " ");
+        output += c + "\r\n";
     }
 
 
     /**
      * Processes all flight - stages 1 to 3.
      */
-    public void processFlight(String registered_path, String arrivals_path) {
-        int[] registered = getIds(registered_path),
-              arrivals   = getIds(arrivals_path),
+    public void processFlight(String registeredPath, String arrivalsPath, String outputPath) {
+        int[] registered = getIds(registeredPath),
+              arrivals   = getIds(arrivalsPath),
               boardees,
               seatSteps1,
               seatSteps2;
@@ -354,19 +371,16 @@ public class FlightManager {
         // Stage 2
         boardees = processArrivals(trees, registered, arrivals);
 
+        // Stage 3.
         seatSteps1 = seatBoardees(boardees, true);
         seatSteps2 = seatBoardees(boardees, false);
 
+        // Print row 4+5.
         printSeatSteps(seatSteps1);
         printSeatSteps(seatSteps2);
-        // TODO: READ WRITE FORM FILES.
-        // TODO: COMMAS BETWEEN SOME NUMBERS.
-        // TODO: DOCS.
-    }
 
-    //write_To_File_Example("output1.dat","number of ids = " + N);//write N to the output file
-    //for(int i = 0; i <N ;i++) {
-        //write_To_File_Example("output1.dat","id number " + i + " : " + ids[i]);//write ids[i] to the output file
-    //}
+        // Print results.
+        Files.write(outputPath, output);
+    }
 }
 
