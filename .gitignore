@@ -1,3 +1,6 @@
+# Binaries.
+bin/
+
 # Mac OS X Finder config files.
 .DS_Store
 
@@ -9,4 +12,3 @@
 
 # Archives.
 *.zip
-
