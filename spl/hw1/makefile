@@ -17,7 +17,7 @@ base2:
 	@echo 'Invoking: C++ Linker'
 	mkdir -p $(BINDIR)
 	$(CC) $(CPPFLAGS) base2.cpp -o $(BINDIR)base2
-	@echo 'Finished building target: base'
+	@echo 'Finished building target: base2'
 	@echo ' '
 
 print_words:
