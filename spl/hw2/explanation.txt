@@ -1,0 +1,20 @@
+This is dangerous since:
+
+1. The area `pPointer` is pointing towards is deallocated once
+SomeFunction() is done being executed. This is because nNumber is a local
+variable, meaning it's allocated on the stack, and is deleted when leaving
+its scope.
+
+2. Also, the memory isn't freed after use. Safe-delete is recommended since
+the pointer is shared in two functions.
+
+A better idea would be:
+
+1. Have SomeFunction() allocate memory for an int* locally and return its
+address.
+
+2. Declare `pPointer` locally inside main(), and assign its value from the
+return value of SomeFunction(). This means it won't be used inside
+SomeFunction().
+
+3. Don't forget to safe-delete after printing.
