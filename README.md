@@ -1,2 +1,1 @@
-spl-assignments
-===============
+# My SPL course assignments.
