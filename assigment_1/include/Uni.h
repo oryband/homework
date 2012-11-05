@@ -5,21 +5,24 @@
 #include "Student.h"
 
 #include <string>
+#include <vector>
+#include <iostream>
+#include <fstream>
 
 
 class Uni {
     public:
-        Uni(string coursesPath, string studentsPath);
+        Uni(std::string coursesPath, std::string studentsPath);
         ~Uni();
 
         void assignStudents();
         void printAssignment();
     private:
-        vector<Course> courses;
-        vector<Student> unassignedStudents;
+        std::vector<Course> courses;
+        std::vector<Student> unassignedStudents;
 
-        vector<Course>* readCourses();
-        vector<Student>* readStudents();
+        std::vector<Course>* readCourses();
+        std::vector<Student>* readStudents();
 
 };
 
