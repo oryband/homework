@@ -8,10 +8,16 @@
 
 class Course {
     public:
-        unsigned short id;
+        Course(unsigned short cweekday, std::string cid, unsigned short cspace) {
+            weekday = cweekday;
+            id = cid;
+            space = cspace;
+        }
+
+        std::string id;
         unsigned short space;
         unsigned short weekday;
-        vector<Student> assignedStudents;
+        std::vector<Student> assignedStudents;
 };
 
 #endif

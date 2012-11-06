@@ -7,11 +7,11 @@
 
 class Student {
     public:
-        string name;
-        vector<string> courses;
+        std::string name;
+        std::vector<std::string> courses;
     
-        Student(string newName, vector<string> *newCourses) {
-            name = string(newName);
+        Student(std::string newName, std::vector<std::string> *newCourses) {
+            name = std::string(newName);
             courses = *newCourses;
         }
 };
