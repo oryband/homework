@@ -13,6 +13,19 @@ Uni::Uni(string coursesPath, string studentsPath) {
         fstream fileCourses;
 
         fileCourses.open(coursesPath);
+
+        if(coursesPath.is_open()){
+
+        
+
+
+
+
+        }
+        else{
+        cout << "Unable to open file courses.conf!!"<<endl;
+        }
+
 }
 
 /*void Uni::assignStudents() {
