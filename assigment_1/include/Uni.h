@@ -21,13 +21,18 @@ class Uni {
         Uni(std::string coursesPath, std::string studentsPath);
 
         void assignStudents();
-        void printAssignment();
+        void printAssignment(
+                std::string coursesOutputPath,
+                std::string studentsOutputPath);
     private:
         std::vector<Course> courses;
         std::vector<Student> unassignedStudents;
 
         void readCoursesFile(std::string coursesPath);
         void readStudentsFile(std::string studentsPath);
+
+        void printCoursesToFile(std::string coursesOutputPath);
+        void printStudentsToFile(std::string studentsOutputPath);
 
         std::vector< std::vector<std::string> >*
             getLines(std::string filePath);

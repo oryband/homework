@@ -13,45 +13,6 @@ Uni::Uni(string coursesPath, string studentsPath) {
 }
 
 
-/* Iterate over each student's applied courses,
- * and assign them to available courses.
- */
-void Uni::assignStudents() {
-
-    vector<Student>::iterator student;
-    vector<string>::iterator cid;  // Course id.
-
-    vector< vector<Course> >::iterator day;
-    vector<Course>::iterator course;
-
-    // Assign students to course.
-    for (student = this->unassignedStudents.begin();
-            student != this->unassignedStudents.end(); ++student) {
-
-        cout << student->name << endl;
-
-        // Assign each applied course to course in week.
-        for (cid = student->courses.begin();
-                cid != student->courses.end(); ++cid) {
-
-			// Iterate in each day the current course
-			for (course = this->courses.begin();
-					course != this->courses.end(); ++course) {
-
-				cout << *cid << endl;
-
-				if (course->id.compare(*cid) && course->space > 0) {
-					cout << "found!" << endl;
-
-					course->assignedStudents.push_back(*student);
-					course->space--;
-				}
-			}
-        }
-    }
-}
-
-
 vector< vector<string> >* Uni::getLines(string filePath) {
 
     string line;
@@ -70,8 +31,8 @@ vector< vector<string> >* Uni::getLines(string filePath) {
     while (file >> line) {
         vector<string> words;
 
-        unsigned int b = 0,  // Begin index.
-        		e = line.find(',');  // End index.
+        int b = 0,  // Begin index.
+            e = line.find(',');  // End index.
         while (e != string::npos) {
             words.push_back(line.substr(b, e - b));
 
@@ -126,14 +87,136 @@ void Uni::readStudentsFile(string studentPath) {
     for(unsigned int l=0; l < length; l++) {
 
         vector<string> line = (*lines)[l];  // Get line.
-        vector<string>* courses = new vector<string>;  // New applied course list.
+        vector<string>* appliedCourses = new vector<string>;  // New applied course list.
+        vector<unsigned short>* weekdays = new vector<unsigned short>;
 
-        string name = line[0];
+        string name = line[0];  // Student's name.
+
         size_t size = line.size();
         for(unsigned int word=1; word < size; word++){
-            courses->push_back(line[word]);
+            appliedCourses->push_back(line[word]);
         }
 
-        this->unassignedStudents.push_back(*new Student(name, courses));
+        this->unassignedStudents.push_back(
+                *new Student(name, appliedCourses));
     }
+}
+
+
+/* Iterate over each student's applied courses,
+ * and assign them to available courses.
+ */
+void Uni::assignStudents() {
+
+    vector<Student>::iterator student;
+    vector<string>::iterator cid;  // Course id.
+    int cidIndex;
+
+    vector< vector<Course> >::iterator day;
+    vector<Course>::iterator course;
+
+    bool found;
+
+    // Assign students to course.
+    for (student = this->unassignedStudents.begin();
+            student != this->unassignedStudents.end(); ++student) {
+
+        // Assign each applied course to course in week.
+        for (cid = student->courses.begin(), cidIndex = 0;
+                cid != student->courses.end(); ++cid, cidIndex++) {
+            
+            found = false;
+
+			// Iterate in each day the current course
+			for (course = this->courses.begin();
+					!found && course != this->courses.end(); ++course) {
+
+                // TODO: Replace compare and '!'
+				if ( ! course->id.compare(*cid) && course->space > 0) {
+                    found = true;
+
+                    student->weekdays[cidIndex] = course->weekday;
+                    course->assignedStudents.push_back(*student);
+                    course->space--;
+				}
+			}
+        }
+    }
+}
+
+
+void Uni::printAssignment(
+        string coursesOutputPath, string studentsOutputPath) {
+
+    printCoursesToFile(coursesOutputPath);
+    printStudentsToFile(studentsOutputPath);
+}
+
+
+void Uni::printCoursesToFile(string coursesOutputPath) {
+
+    ofstream coursesFile;
+    coursesFile.open(coursesOutputPath.c_str());
+    
+    vector<Student>::iterator student;
+    vector<Course>::iterator uniCourse;
+
+    for (int day = 1 ; day <= 7 ; day++) {
+        for (uniCourse = this->courses.begin(); 
+                uniCourse != this->courses.end(); ++uniCourse) {
+
+            if (uniCourse->weekday == day) {
+
+                coursesFile << uniCourse->weekday << "\t" << uniCourse->id << endl;
+
+                for (student = uniCourse->assignedStudents.begin();
+                        student != uniCourse->assignedStudents.end(); 
+                        ++student) {
+
+                    coursesFile << "\t" << student->name << endl;
+                }
+
+                coursesFile << endl;
+            }
+        }
+    }
+
+    coursesFile.close();
+}
+
+
+void Uni::printStudentsToFile(string studentsOutputPath) {
+
+    ofstream studentsFile;
+    studentsFile.open(studentsOutputPath.c_str());
+
+    vector<Student>::iterator student;
+    vector<string>::iterator appliedCourse;
+    int cIndex;  // Course index.
+
+    for (student = this->unassignedStudents.begin();
+            student != this->unassignedStudents.end(); ++student) {
+
+        studentsFile << student->name << endl;
+
+        for (int day = 1 ; day <= 7 ; day++) {
+
+            for (appliedCourse = student->courses.begin(), cIndex = 0;
+                    appliedCourse != student->courses.end();
+                    ++appliedCourse, cIndex++) {
+
+                if (student->weekdays[cIndex] == day) {
+                    studentsFile << "\t" <<
+                        student->weekdays[cIndex] << " " <<
+                        *appliedCourse << endl;
+                }
+
+            }
+
+        }
+
+        studentsFile << endl;
+    }
+
+    studentsFile.close();
 }
