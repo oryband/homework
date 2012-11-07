@@ -8,12 +8,10 @@
 class Student {
     public:
         std::string name;
-        std::vector<std::string> courses;
+        std::vector<std::string>* courses;
     
-        Student(std::string newName, std::vector<std::string> *newCourses) {
-            name = std::string(newName);
-            courses = *newCourses;
-        }
+        Student(std::string sname, std::vector<std::string> *scourses);
+        ~Student();
 };
 
 #endif
