@@ -1,6 +1,8 @@
 #include "Uni.h"
 
 
+#include <typeinfo>
+
 using namespace std;
 
 
@@ -51,6 +53,8 @@ void Uni::assignStudents() {
     for (student = this->unassignedStudents.begin();
             student != this->unassignedStudents.end(); ++student) {
 
+        cout << student->name << endl;
+
         // Assign each applied course to course in week.
         for (cid = student->courses->begin();
                 cid != student->courses->end(); ++cid) {
@@ -62,8 +66,12 @@ void Uni::assignStudents() {
                 // Iterate in each day the current course
                 for (course = (*day)->begin();
                         course != (*day)->end(); ++course) {
+                    
+                    //cout << typeid(*cid).name() << endl;
                   
                     if (course->id.compare(*cid) && course->space > 0) {
+                        cout << "found!" << endl;
+
                         course->assignedStudents->push_back(*student);
                         course->space--;
                     }
@@ -82,7 +90,7 @@ vector< vector<string> >* Uni::getLines(string filePath) {
     file.open(filePath.c_str());
 
     if (!file) {
-        cout << "Unable to open " << filePath << "file";
+        cout << "Unable to open " << filePath <<  endl;
         exit(1);  // Terminate with error.
     }
 
@@ -90,24 +98,23 @@ vector< vector<string> >* Uni::getLines(string filePath) {
     vector< vector<string> >* lines = new vector< vector<string> >;
 
     while (file >> line) {
-        
-        int size = line.length();
         vector<string>* words = new vector<string>;
 
-        for (int c=0; c <= size;) {
+        int b = 0,  // Begin index.
+            e = line.find(',');  // End index.
+        while (e != string::npos) {
+            words->push_back(line.substr(b, e - b));
 
-            string word = "";
-            while(line[c] != ',' && c <= size) {
-                word += line[c];
-                c++;
-            }
-
-            (*words).push_back(word);
+            b = e+1;
+            e = line.find(',', b);
         }
 
-        (*lines).push_back(*words);
+        words->push_back(line.substr(b, line.size() - b));
+
+        lines->push_back(*words);
     }
-    
+
+    file.close();
     return lines;
 }
 
@@ -117,7 +124,7 @@ void Uni::readCoursesFile(string coursesPath) {
     vector< vector<string> >* lines = getLines(coursesPath);
 
     // Iterate over lines and copy data.
-    size_t length = (*lines).size();
+    size_t length = lines->size();
     for(int l=0; l < length; l++) {
 
         vector<string> line = (*lines)[l];  // Get line
@@ -145,18 +152,18 @@ void Uni::readStudentsFile(string coursesPath) {
     vector< vector<string> >* lines = getLines(coursesPath);
 
     // Iterate over lines and copy data.
-    size_t length = (*lines).size();
+    size_t length = lines->size();
     for(int l=0; l < length; l++) {
 
-        vector<string> line = (*lines)[l];  // Get line
-        vector<string>* stuCourses = new vector<string>;
-        
-        string name = line[0]; 
-        size_t lineSize = line.size();
+        vector<string> line = (*lines)[l];  // Get line.
+        vector<string>* cid = new vector<string>;  // New applied course list.
 
-            for(int i=1; i < lineSize ;i++){
-                    (*stuCourses).push_back(line[i]);
-            }
-        unassignedStudents.push_back(*new Student(name,stuCourses));
+        string name = line[0]; 
+        size_t size = line.size();
+        for(int i=1; i < size; i++){
+            cid->push_back(line[i]);  // FIXME.
+        }
+
+        unassignedStudents.push_back(*new Student(name, cid));
     }
 }

@@ -1,12 +1,12 @@
-#include "uni.h"
+#include "Uni.h"
+
+
+using namespace std;
 
 
 int main(int argc, char *argv[]) {
-    bgu = new Uni("./courses.conf", "./students.conf");
+    Uni* bgu = new Uni("../bin/courses.conf", "../bin/students.conf");
 
-    bgu.readCourses();
-    bgu.readStudents();
-
-    bgu.assignStudents();
-    bgu.printAssignment("./courses.out", "./students.out");
+    bgu->assignStudents();
+    //bgu->printAssignment("./courses.out", "./students.out");
 }
