@@ -6,12 +6,12 @@
 
 class Course {
     public:
-        Course(std::string cid, unsigned short cspace);
-        ~Course();
+        Course(unsigned short cweekday, std::string cid, unsigned short cspace);
 
         std::string id;
         unsigned short space;
-        std::vector<Student>* assignedStudents;
+        unsigned short weekday;
+        std::vector<Student> assignedStudents;
 };
 
 #endif

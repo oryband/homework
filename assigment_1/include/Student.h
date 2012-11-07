@@ -8,10 +8,10 @@
 class Student {
     public:
         std::string name;
-        std::vector<std::string>* courses;
-    
+        std::vector<std::string> courses;
+
         Student(std::string sname, std::vector<std::string>* scourses);
-        ~Student();
+
 };
 
 #endif

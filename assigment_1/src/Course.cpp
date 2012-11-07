@@ -4,13 +4,11 @@
 using namespace std;
 
 
-Course::Course(string cid, unsigned short cspace) {
+Course::Course(unsigned short cweekday, string cid, unsigned short cspace) {
     id = cid;
     space = cspace;
-    assignedStudents = new vector<Student>;
+    weekday = cweekday;
+    //assignedStudents;
 }
 
 
-Course::~Course() {
-    delete assignedStudents;
-}

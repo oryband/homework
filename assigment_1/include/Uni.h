@@ -19,12 +19,11 @@
 class Uni {
     public:
         Uni(std::string coursesPath, std::string studentsPath);
-        ~Uni();
 
         void assignStudents();
         void printAssignment();
     private:
-        std::vector<std::vector<Course>* >* weekdays;
+        std::vector<Course> courses;
         std::vector<Student> unassignedStudents;
 
         void readCoursesFile(std::string coursesPath);
