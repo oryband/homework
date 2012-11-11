@@ -5,9 +5,8 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
-    // TODO: Change file paths.
-    Uni bgu = Uni("../bin/courses.conf", "../bin/students.conf");
+    Uni bgu = Uni("courses.conf", "students.conf");
 
     bgu.assignStudents();
-    bgu.printAssignment("../bin/courses.out", "../bin/students.out");
+    bgu.printAssignment("courses.out", "students.out");
 }
