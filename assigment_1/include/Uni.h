@@ -20,6 +20,8 @@ class Uni {
     public:
         Uni(std::string coursesPath, std::string studentsPath);
 
+        // FIXME: No descrutor needed, right? Please check.
+
         void assignStudents();
         void printAssignment(
                 std::string coursesOutputPath,

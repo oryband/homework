@@ -6,7 +6,11 @@
 
 class Course {
     public:
-        Course(unsigned short cweekday, std::string cid, unsigned short cspace);
+        Course(unsigned short cweekday,
+                std::string cid,
+                unsigned short cspace);
+
+        // FIXME: No descrutor needed, right? Please check.
 
         std::string id;
         unsigned short space;

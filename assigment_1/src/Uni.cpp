@@ -6,7 +6,8 @@
 using namespace std;
 
 
-Uni::Uni(string coursesPath, string studentsPath) {
+Uni::Uni(string coursesPath, string studentsPath):
+    courses(), unassignedStudents() {
 
     readCoursesFile(coursesPath);
     readStudentsFile(studentsPath);
@@ -33,7 +34,7 @@ vector< vector<string> >* Uni::getLines(string filePath) {
 
         int b = 0,  // Begin index.
             e = line.find(',');  // End index.
-        while (e != string::npos) {
+        while (e != string::npos) {  // WARNING: Setting e to unsigned causes a wierd index bug.
             words.push_back(line.substr(b, e - b));
 
             b = e+1;
@@ -45,6 +46,8 @@ vector< vector<string> >* Uni::getLines(string filePath) {
         lines->push_back(words);
     }
 
+    // FIXME: Delete `lines` and its inner objects.
+
     file.close();
     return lines;
 }
@@ -53,7 +56,6 @@ vector< vector<string> >* Uni::getLines(string filePath) {
 void Uni::readCoursesFile(string coursesPath) {
 
     vector< vector<string> >* lines = getLines(coursesPath);
-
 
     // Iterate over lines and copy data.
     size_t length = lines->size();
@@ -75,6 +77,8 @@ void Uni::readCoursesFile(string coursesPath) {
         // Push course to appropriate weekday.
         this->courses.push_back(*new Course(weekday, id, space));
     }
+
+    // FIXME: Delete `lines` and its inner objects.
 }
 
 
@@ -88,7 +92,6 @@ void Uni::readStudentsFile(string studentPath) {
 
         vector<string> line = (*lines)[l];  // Get line.
         vector<string>* appliedCourses = new vector<string>;  // New applied course list.
-        vector<unsigned short>* weekdays = new vector<unsigned short>;
 
         string name = line[0];  // Student's name.
 
@@ -100,6 +103,8 @@ void Uni::readStudentsFile(string studentPath) {
         this->unassignedStudents.push_back(
                 *new Student(name, appliedCourses));
     }
+
+    // FIXME: Delete all pointers but check if its data is copied in the constructor.
 }
 
 
