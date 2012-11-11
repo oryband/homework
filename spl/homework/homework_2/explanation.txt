@@ -10,11 +10,6 @@ the pointer is shared in two functions.
 
 A better idea would be:
 
-1. Have SomeFunction() allocate memory for an int* locally and return its
-address.
-
-2. Declare `pPointer` locally inside main(), and assign its value from the
-return value of SomeFunction(). This means it won't be used inside
-SomeFunction().
-
-3. Don't forget to safe-delete after printing.
+1. Allocate memory for int* outside SomeFunction() - Inside main().
+2. Have SomeFunction() receieve the initialized int* pointer, and update its value.
+4. Don't forget to safe-delete after printing.

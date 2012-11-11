@@ -5,17 +5,14 @@
 using namespace std;
 
 
-int* SomeFunction() {
-    int* pPointer = new int;  // Allocate memory.
-
-    *pPointer = 25;  // Assign value.
-
-    return pPointer;  // Return address.
+void updateValue(int* nNumber) {
+    *nNumber = 25;  // Assign value.
 }
 
 
 int main(int argc, char* argv[]) {
-    int* pPointer = SomeFunction();  // Make pPointer point to the int.
+    int* pPointer = new int();  // Allocate memory.
+    updateValue(pPointer);  // Update int that pPointer points towards.
 
     cout << "Value of *pPointer: "<< *pPointer << endl;
 
