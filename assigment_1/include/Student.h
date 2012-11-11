@@ -12,8 +12,6 @@ class Student {
         std::vector<unsigned short> weekdays;  // Corresponding courses' weekdays.
 
         Student(std::string sname, std::vector<std::string>* scourses);
-
-        // FIXME: No descrutor needed, right? Please check.
 };
 
 #endif
