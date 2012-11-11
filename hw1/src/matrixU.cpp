@@ -1,3 +1,10 @@
+/** SPL Assignment #1
+ * http://www.cs.bgu.ac.il/~spl131/Assignments/Assignment_1
+ *
+ * Eldar Damari damariel@post.bgu.ac.il
+ * Ory Band oryb@post.bgu.acil
+ */
+
 #include "Uni.h"
 
 
