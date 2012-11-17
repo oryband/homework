@@ -4,16 +4,11 @@ CsCourse :: CsCourse( std::string courseName,unsigned short semesterNum,
 								   unsigned short minimumGrade ){
 
 	this->_courseName.assign(courseName);
-	this->_semester.assign(semesterNum);
-	this->_minimumGrade.assign(minimumGrade);
+	this->_semester = semesterNum;
+	this->_minimumGrade = minimumGrade;
 }
-/*
-CsCourse :: CsCourse( std::string courseName,unsigned short semesterNum,
-								   unsigned short minimumGrade )
-		  : Course( courseName, semesterNum, minimumGrade ){}
 
-*/
-
+//  Huge issue with logic..need to clear it out!!!
 virtual void CsCourse :: reg(Student &s){
 
 	// Check if student had finished its previous semester
@@ -22,8 +17,11 @@ virtual void CsCourse :: reg(Student &s){
 
 		this->students.push_back(s);
 
-		// PRINT TO random.log  the assigned student whos here
+		// PRINT TO random.log  the assigned student who is here
 		// STUD-ID "is taking" COURSE-ID "from" DEPARTMENT
+	}
+	if ( this->_semester == s._currentSemester &&){
+
 	}
 
 }

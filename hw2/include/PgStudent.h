@@ -6,7 +6,7 @@
 class PgStudent : public Student {
 
 public:
-		PgStudent(string studentId, String imagePath);
+		PgStudent(std::string studentId, std::string imagePath);
 		virtual void study(Course &c);
 };
 

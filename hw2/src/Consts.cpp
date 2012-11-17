@@ -1,10 +1,10 @@
 #include "../include/Consts.h"
+#include "../include/Uni.h"
 
 #include <typeinfo>
 
 using namespace std;
 
-//not to forget to copy the while mess from uni.cpp in hw1 with the new and delete
 
 vector< vector<string> >* Consts :: getLines(string filePath) {
 
@@ -45,7 +45,7 @@ vector< vector<string> >* Consts :: getLines(string filePath) {
 
 void Consts :: readCoursesFile(string coursesPath, Department &cs,
 												   Department &pg,
-												   Department &el) { //to fix 1st
+												   Department &el) {
 
     vector< vector<string> >* lines = getLines(coursesPath);
 
@@ -76,7 +76,7 @@ void Consts :: readCoursesFile(string coursesPath, Department &cs,
 
         if( _departmentName.compare("CS") == 0 ) {
 
-        	if ( _activAtSemester%2 == 1 ) {   //  Its autumn course
+        	if ( _activAtSemester%(2) == 1 ) {   //  Its autumn course
 
         		cs._autumnCourses.push_back(*new CsCourse(_courseName,_activAtSemester,_minGrade));
         	}
@@ -107,53 +107,87 @@ void Consts :: readCoursesFile(string coursesPath, Department &cs,
     }
 }
 
+void Consts :: readStudentsFile(string studentPath,Department &cs,
+												 Department &pg,
+												 Department &el) { // to fix
+	vector< vector<string> >* lines = getLines(studentPath);
 
-/*
-void Uni::readStudentsFile(string studentPath) { // to fix
 
-    vector< vector<string> >* lines = getLines(studentPath);
+	    // Iterate over lines and copy data.
+	    size_t length = lines->size();
+	    for(unsigned int l=0; l < length; l++) {
 
-    // Iterate over lines and copy data.
-    size_t length = lines->size();
-    for(unsigned int l=0; l < length; l++) {
+	        vector<string> line = (*lines)[l];  // Get line
 
-        vector<string> line = (*lines)[l];  // Get line.
-        vector<string>* appliedCourses = new vector<string>;  // New applied course list.
-        vector<unsigned short>* weekdays = new vector<unsigned short>;
+	        // Fetch words and cast to appropriate type.
+			string _departmentName;
+	        string _stuId;
+			string _imgPath;
 
-        string name = line[0];  // Student's name.
+			istringstream oss1(line[0]);  // Cast department day.
+			oss1 >> _stuId;
 
-        size_t size = line.size();
-        for(unsigned int word=1; word < size; word++){
-            appliedCourses->push_back(line[word]);
-        }
+			istringstream oss2(line[1]);  // Cast department day.
+			oss2 >> _departmentName;
 
-        this->unassignedStudents.push_back(
-                *new Student(name, appliedCourses));
-    }
+			istringstream oss3(line[2]);  // Cast department day.
+			oss3 >> _imgPath;
+
+
+	        if( _departmentName.compare("CS") == 0 ) {
+
+	        	cs._students.push_back(*new CsStudent(_stuId, _imgPath));
+	        }
+
+	        if( _departmentName.compare("PG") == 0 ) {
+
+	        	pg._students.push_back(*new PgStudent(_stuId, _imgPath));
+
+			}
+	    }
 }
 
-void Consts :: readCurriculumFile(string studentPath) { // to fix
+void Consts :: readCurriculumFile(string curriculumPath, Department &cs,
+														 Department &pg,
+														 Uni &u){
 
-    vector< vector<string> >* lines = getLines(studentPath);
+	vector< vector<string> >* lines = getLines(curriculumPath);
 
-    // Iterate over lines and copy data.
-    size_t length = lines->size();
-    for(unsigned int l=0; l < length; l++) {
+			vector<string> line = (*lines)[0];  // Get line
 
-        vector<string> line = (*lines)[l];  // Get line.
-        vector<string>* appliedCourses = new vector<string>;  // New applied course list.
-        vector<unsigned short>* weekdays = new vector<unsigned short>;
+			// Fetch the number of semester
+			string _numberOfSemesters;
 
-        string name = line[0];  // Student's name.
+			istringstream oss1(line[0]);  // Cast department day.
+			oss1 >> _numberOfSemesters;
 
-        size_t size = line.size();
-        for(unsigned int word=1; word < size; word++){
-            appliedCourses->push_back(line[word]);
-        }
+			//here 19:34 need to finish convert the char to unsigned int!!!!
+			u.setNumberOfSemeter( (unsigned int)_numberOfSemesters[20]);
 
-        this->unassignedStudents.push_back(
-                *new Student(name, appliedCourses));
-    }
+
+		    // Iterate over lines and copy data.
+		    size_t length = lines->size();
+		    for(unsigned int l=1; l < length; l++) {
+
+		        vector<string> line = (*lines)[l];  // Get line
+
+		        // Fetch words and cast to appropriate type.
+		        string _departmentName;
+		        string _numManElective;
+
+				istringstream oss2(line[0]);  // Cast department day.
+				oss2 >> _departmentName;
+
+				istringstream oss3(line[1]);  // Cast number of electives.
+				oss3 >> _numManElective;
+
+		        if( _departmentName.compare("CS") == 0 ) {
+
+		        	cs.setMandatoryElectiveCourses( atoi(_numManElective.c_str()) );
+		        }
+		        else {
+
+		        	pg.setMandatoryElectiveCourses( atoi(_numManElective.c_str()) );
+		        }
+		    }
 }
-*/

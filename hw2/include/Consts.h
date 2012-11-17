@@ -2,6 +2,7 @@
 #define CONSTS_H_
 
 #include "Department.h"
+#include "Uni.h"
 
 #include <iostream>
 #include <fstream>
@@ -21,12 +22,14 @@ public:
 
 
 	void readCoursesFile(std::string coursesPath, Department &cs,
-									  	     Department &pg,
-										     Department &el);
-	/*
-	void readStudentsFile(string studentPath, Department &cs,
-									  		  Department &pg,
-											  Department &el);
-*/
+											  	  Department &pg,
+												  Department &el);
+
+	void readStudentsFile(std::string studentPath, Department &cs,
+												   Department &pg,
+												   Department &el);
+	void readCurriculumFile(std::string curriculumPath, Department &cs,
+												   Department &pg,
+												   Uni &u);
 };
 #endif

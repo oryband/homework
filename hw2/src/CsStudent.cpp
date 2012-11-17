@@ -1,6 +1,6 @@
 #include "../include/CsStudent.h"
 
-CsStudent :: CsStudent(string studentId, String imagePath){
+CsStudent :: CsStudent(std::string studentId, std::string imagePath){
 
 
 		this->_studentId.assign(studentId);
@@ -14,8 +14,6 @@ virtual void CsStudent :: study(Course &c){
 
 	if ( rand()%100 >= c.getMinGrade() && rand()%100 >= 25 ) {
 
-
-		this->finishCourse();
-}
-
+		this->finishCourse(&c);
+	}
 }

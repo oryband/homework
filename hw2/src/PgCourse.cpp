@@ -1,9 +1,12 @@
 #include "../include/PgCourse.h"
 
 PgCourse :: PgCourse( std::string courseName,unsigned short semesterNum,
-								   unsigned short minimumGrade )
-		  : Course( courseName, semesterNum, minimumGrade ){}
+								   unsigned short minimumGrade ){
 
+	this->_courseName.assign(courseName);
+	this->_semester = semesterNum;
+	this->_minimumGrade = minimumGrade;
+}
 
 virtual void PgCourse :: reg(Student &s){
 
@@ -12,5 +15,8 @@ virtual void PgCourse :: reg(Student &s){
 			s._unfinishedSemesterCourses == 0) {
 
 		this->students.push_back(s);
+
+		// PRINT TO random.log  the assigned student who is here
+		// STUD-ID "is taking" COURSE-ID "from" DEPARTMENT
 	}
 }

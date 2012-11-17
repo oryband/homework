@@ -10,6 +10,8 @@
 #include "CsCourse.h"
 #include "PgCourse.h"
 #include "ElCourse.h"
+#include "CsStudent.h"
+#include "PgStudent.h"
 
 class Department {
 
@@ -25,6 +27,7 @@ public:
 		void registerStudents(unsigned short semester);
 		void teach(unsigned short semester);
 		void gruduate(unsigned short numOfsemesters);
+		void setMandatoryElectiveCourses(unsigned short);
 		friend class Consts;
 
 };

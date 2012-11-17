@@ -85,6 +85,9 @@ void Department :: gruduate(unsigned short numOfsemesters) {
 				// NEED TO GENERATE GRAY SCALE IMAGE!!!!!
 				// And save CS.jpg/PG.jpg into root
 			}
+		}
+}
 
-
+void Department :: setMandatoryElectiveCourses(unsigned short mandatoryNum){
+	this->_mandatoryElectiveCourses = mandatoryNum;
 }
