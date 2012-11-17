@@ -12,6 +12,14 @@
 *.a
 
 bin/
+bin
+.metadata
 
 # Vim files.
 *.swp
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+

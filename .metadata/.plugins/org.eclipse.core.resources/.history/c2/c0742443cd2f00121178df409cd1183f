@@ -1,7 +1,0 @@
-#include "../include/Student"
-
-void Studnet :: finishcourse(){
-
-	// What the purpose of this function?
-
-}

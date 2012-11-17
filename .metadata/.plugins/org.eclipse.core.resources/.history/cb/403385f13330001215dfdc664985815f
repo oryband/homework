@@ -1,6 +1,0 @@
-#include "../include/Student.h"
-
-void Studnet :: finishcourse(){
-
-	this->_unfinishedSemesterCourses -= 1;
-}

@@ -1,6 +1,0 @@
-virtual void CsCourse :: reg(Student &s){
-
-	// Check if student had finished its previous semester
-
-	if (this.)
-}
