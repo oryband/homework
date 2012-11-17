@@ -1,0 +1,10 @@
+#ifndef CSCOURSE_H_
+#define CSCOURSE_H_
+
+class CsCourse : Course{
+
+public:
+		virtual void reg(Student &s);
+};
+
+#endif

@@ -1,5 +1,10 @@
 #include "../include/CsCourse.h"
 
+CsCourse :: CsCourse( std::string courseName,unsigned short semesterNum,
+								   unsigned short minimumGrade )
+		  : Course( courseName, semesterNum, minimumGrade ){}
+
+
 virtual void CsCourse :: reg(Student &s){
 
 	// Check if student had finished its previous semester

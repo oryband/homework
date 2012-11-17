@@ -12,7 +12,11 @@ private:
 
 public:
 		Uni(bool flag); // Constructor
-		void simulate() // Start Uni life Cycle
+		void simulate(); // Start Uni life Cycle
 		void graduate(); // Output all graduated students
+		Department& getCs()const;
+		Department& getPg()const;
+		Department& getEl()const;
+
 };
 #endif

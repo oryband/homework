@@ -22,7 +22,7 @@ public:
 		void registerStudents(unsigned short semester);
 		void teach(unsigned short semester);
 		void gruduate(unsigned short numOfsemesters);
-
+		friend class Consts;
 };
 
 #endif

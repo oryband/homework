@@ -1,0 +1,5 @@
+unsigned short Course :: getMinGrade()const{
+
+	return this._minimumGrade;
+
+}

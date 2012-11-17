@@ -1,0 +1,43 @@
+#include "../include/Department.h"
+
+Department :: Department(std::string depName){
+	this->_name.assign(depname);
+}
+
+void Department :: registerStudents(unsigned short semester){
+
+	std::vector<Student::Student>::iterator student;
+	vector<Course>::iterator course;
+
+	// Iterating Autumn Course list
+	if (semerster == 1) {
+
+		// All courses at autumn
+		for ( course = this->_autumnCourses.begin() ;
+				course != this->_autumnCourses.end() ; ++course) {
+
+			// All students at specific autumn course
+			for (student = course->students.begin() ;
+					student != course->students.end() ; ++ student) {
+
+				course.reg(student); // Registering the student to the course!
+			}
+		}
+	}
+	// Iterating Spring Course list
+	if (semester == 0) {
+
+		// All courses at spring
+		for ( course = this->_springCourses.begin() ;
+				course != this->_springCourses.end() ; ++course) {
+
+			// All students in specific autumn course
+			for (student = course->students.begin() ;
+					student != course->students.end() ; ++ student) {
+
+				course.reg(student); // Registering the student to the course!
+			}
+		}
+
+	}
+}

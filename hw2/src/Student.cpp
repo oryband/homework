@@ -1,7 +1,7 @@
 #include "../include/Student.h"
 
-void Studnet :: finishcourse(){
+void Studnet :: finishcourse(Course &c){
 
-	// What the purpose of this function?
-
+	this->_unfinishedSemesterCourses -= 1;
+	c.erase(this); // copy constructor??
 }

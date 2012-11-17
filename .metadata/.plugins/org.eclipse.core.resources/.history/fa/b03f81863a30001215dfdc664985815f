@@ -1,0 +1,12 @@
+#ifndef UNI_H_
+#define UNI_H_
+
+#define COURSES_FILE "courses.conf"
+
+class Consts {
+
+public:
+	vector< vector<string> >* getLines(string filePath);
+
+};
+#endif

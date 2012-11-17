@@ -18,7 +18,7 @@ protected:
 		Student(){};
 
 public:
-		void finishcourse();
+		void finishcourse(Course &c);
 		virtual void study(Course &c)=0;
 		virtual ~Student(){ std::cout << "Student is dead!" << std::endl;}
 

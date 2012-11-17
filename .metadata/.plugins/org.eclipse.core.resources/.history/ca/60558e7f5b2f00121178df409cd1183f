@@ -1,0 +1,13 @@
+#ifndef STUDEND_H_
+#define STUDEND_H_
+
+class student(){
+
+
+
+
+
+
+};
+
+#endif /* STUDEND_H_ */

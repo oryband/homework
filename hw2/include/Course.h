@@ -18,7 +18,8 @@ protected:
 		unsigned short _semester;
 		unsigned short _minimumGrade;
 
-		Course(){};
+		Course(string courseName,unsigned short semesterNum,
+								 unsigned short minimumGrad);
 public:
 		virtual void teach();
 		virtual void reg(Student &s)=0;

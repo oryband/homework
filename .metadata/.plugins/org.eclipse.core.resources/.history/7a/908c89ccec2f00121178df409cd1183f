@@ -1,0 +1,6 @@
+#ifndef UNI_H_
+#define UNI_H_
+
+#include "Department.h"
+
+#endif /* UNI_H_ */

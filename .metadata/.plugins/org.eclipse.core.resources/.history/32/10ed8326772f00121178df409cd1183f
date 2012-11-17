@@ -1,0 +1,8 @@
+void PgStudent :: study(Course &c){
+
+	if ( rand()%100 >= c.getMinGrade() && rand()%100 >= 20 ) {
+
+		this->finishCourse();
+	}
+
+}
