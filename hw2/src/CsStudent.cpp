@@ -2,10 +2,11 @@
 
 CsStudent :: CsStudent(string studentId, String imagePath){
 
-		_studentId.assign(studentId);
-		_imagePath.assign(imagePath);
-		_unfinishedSemesterCourses = 0;
-		_electiveCoursesUnfinished = 0;
+
+		this->_studentId.assign(studentId);
+		this->_imagePath.assign(imagePath);
+		this->_unfinishedSemesterCourses = 0;
+		this->_electiveCoursesUnfinished = 0;
 
 }
 

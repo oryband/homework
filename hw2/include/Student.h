@@ -9,8 +9,8 @@ class Course;
 class Student{
 
 protected:
-		const std::string _studentId;
-		const std::string _imagePath;
+		std::string _studentId; // rm const
+		std::string _imagePath; // rm const
 		unsigned short _unfinishedSemesterCourses;
 		unsigned short _currentSemester;
 		unsigned short _electiveCoursesUnfinished;
@@ -20,7 +20,7 @@ protected:
 public:
 		void finishcourse(Course &c);
 		virtual void study(Course &c)=0;
-		virtual ~Student(){ std::cout << "Student is dead!" << std::endl;}
+		virtual ~Student() { std::cout << "Student is dead!" << std::endl;}
 
 };
 

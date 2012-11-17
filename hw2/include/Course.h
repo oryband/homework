@@ -14,12 +14,17 @@ class Course {
 
 protected:
 		std::vector< Student > students;
-		const std::string _courseName;
+		std::string _courseName; 			// Delete const ...doing some crazy  problems
 		unsigned short _semester;
 		unsigned short _minimumGrade;
 
-		Course(string courseName,unsigned short semesterNum,
-								 unsigned short minimumGrad);
+
+		Course(){};
+		/*
+		Course(std::string courseName,unsigned short semesterNum,
+								 unsigned short minimumGrad)
+		: _courseName(courseName),_semester(semesterNum), _minimumGrade(minimumGrad) {}
+		*/
 public:
 		virtual void teach();
 		virtual void reg(Student &s)=0;

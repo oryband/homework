@@ -1,9 +1,18 @@
 #include "../include/CsCourse.h"
 
 CsCourse :: CsCourse( std::string courseName,unsigned short semesterNum,
+								   unsigned short minimumGrade ){
+
+	this->_courseName.assign(courseName);
+	this->_semester.assign(semesterNum);
+	this->_minimumGrade.assign(minimumGrade);
+}
+/*
+CsCourse :: CsCourse( std::string courseName,unsigned short semesterNum,
 								   unsigned short minimumGrade )
 		  : Course( courseName, semesterNum, minimumGrade ){}
 
+*/
 
 virtual void CsCourse :: reg(Student &s){
 

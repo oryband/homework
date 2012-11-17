@@ -1,4 +1,4 @@
-#include "Consts.h"
+#include "../include/Consts.h"
 
 #include <typeinfo>
 
@@ -57,51 +57,58 @@ void Consts :: readCoursesFile(string coursesPath, Department &cs,
         vector<string> line = (*lines)[l];  // Get line
 
         // Fetch words and cast to appropriate type.
-        string _departmentName;
-        string _courseName;
-        unsigned short _activAtSemester;
-        unsigned short _minGrade;
-				//string id = line[1];
-				//unsigned short space;
+		string _departmentName;
+		string _courseName;
+		unsigned short _activAtSemester;
+		unsigned short _minGrade;
 
-        istringstream oss1(line[0]);  // Cast department day.
-        oss1 >> _departmentName;
+		istringstream oss1(line[0]);  // Cast department day.
+		oss1 >> _departmentName;
+
+		istringstream oss2(line[1]);  // Cast department day.
+		oss2 >> _courseName;
+
+		istringstream oss3(line[2]);  // Cast department day.
+		oss3 >> _activAtSemester;
+
+		istringstream oss4(line[3]);  // Cast department day.
+		oss4 >> _minGrade;
 
         if( _departmentName.compare("CS") == 0 ) {
 
-        	if ( line[2]%(2) == 1 ) {   //  Its autumn course
+        	if ( _activAtSemester%2 == 1 ) {   //  Its autumn course
 
-        		cs._autumnCourses.push_back(*new CsCourse(line[1],line[2],line[3]));
+        		cs._autumnCourses.push_back(*new CsCourse(_courseName,_activAtSemester,_minGrade));
         	}
         	else {						//  Its spring course
-        		cs._springCourses.push_back(*new CsCourse(line[1],line[2],line[3]));
+        		cs._springCourses.push_back(*new CsCourse(_courseName,_activAtSemester,_minGrade));
         	}
         }
         if( _departmentName.compare("PG") == 0 ) {
 
-			if ( line[2]%(2) == 1 ) {   //  Its autumn course
+			if ( _activAtSemester%(2) == 1 ) {   //  Its autumn course
 
-				pg._autumnCourses.push_back(*new PgCourse(line[1],line[2],line[3]));
+				pg._autumnCourses.push_back(*new PgCourse(_courseName,_activAtSemester,_minGrade));
 			}
 			else {						//  Its spring course
-				pg._springCourses.push_back(*new PgCourse(line[1],line[2],line[3]));
+				pg._springCourses.push_back(*new PgCourse(_courseName,_activAtSemester,_minGrade));
 			}
 		}
         if( _departmentName.compare("ELECTIVE") == 0 ) {
 
-			if ( line[2]%(2) == 1 ) {   //  Its autumn course
+			if ( _activAtSemester%(2) == 1 ) {   //  Its autumn course
 
-				pg._autumnCourses.push_back(*new ElCourse(line[1],line[2],line[3]));
+				el._autumnCourses.push_back(*new ElCourse(_courseName,_activAtSemester,_minGrade));
 			}
 			else {						//  Its spring course
-				pg._springCourses.push_back(*new ElCourse(line[1],line[2],line[3]));
+				el._springCourses.push_back(*new ElCourse(_courseName,_activAtSemester,_minGrade));
 			}
 		}
-
     }
 }
 
 
+/*
 void Uni::readStudentsFile(string studentPath) { // to fix
 
     vector< vector<string> >* lines = getLines(studentPath);
@@ -149,4 +156,4 @@ void Consts :: readCurriculumFile(string studentPath) { // to fix
                 *new Student(name, appliedCourses));
     }
 }
-
+*/

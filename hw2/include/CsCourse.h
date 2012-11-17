@@ -4,7 +4,7 @@
 class CsCourse : public Course{ // fix the constructor
 
 public:
-		CsCourse( string courseName,unsigned short semesterNum,
+		CsCourse(std::string courseName,unsigned short semesterNum,
 								   unsigned short minimumGrade );
 		virtual void reg(Student &s);
 

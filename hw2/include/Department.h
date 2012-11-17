@@ -7,13 +7,16 @@
 
 #include "Course.h"
 #include "Student.h"
+#include "CsCourse.h"
+#include "PgCourse.h"
+#include "ElCourse.h"
 
 class Department {
 
 private:
-		std::vector< Student::Student > _students;   // Do i need the Student::?
-		std::vector< Course::Course >  _autumnCourses; // "
-		std::vector< Course::Course >  _springCourses;
+		std::vector< Student > _students;   // Do i need the Student::?
+		std::vector< Course >  _autumnCourses; // "
+		std::vector< Course >  _springCourses;
 		const std::string _name;
 		const unsigned short _mandatoryElectiveCourses;
 
@@ -23,6 +26,6 @@ public:
 		void teach(unsigned short semester);
 		void gruduate(unsigned short numOfsemesters);
 		friend class Consts;
-};
 
+};
 #endif
