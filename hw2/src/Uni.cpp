@@ -22,10 +22,7 @@ Uni :: Uni(bool flag) {
 
 	}
 	else { // PG department don't register and prints to file
-
-
 	}
-
 }
 
 
@@ -43,18 +40,18 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
     // Iterate over all students, and register those who finished their
     // last semester succesfully.
-	vector<Student>::iterator it_student;
+	vector<StudentPointer>::iterator it_student;
 
     for (it_student = this->_students.begin();
             it_student != this->_students.end(); ++it_student) {
         
-        if (it_student->getUnfinishedSemesterCourses() == 0) {
+        if ((**it_student).getUnfinishedSemesterCourses() == 0) {
             registerStudentToMandatoryCourses(
                     *mandatorySemesterCourses, *it_student);
         }
 
         // If student needs to register to elective courses, do so.
-        if (it_student->getUnfinishedElectiveCourses() > 0) {
+        if ((**it_student).getUnfinishedElectiveCourses() > 0) {
             registerStudentToElectiveCourses(
                     *electiveSemesterCourses, *it_student);
 
@@ -64,7 +61,8 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
 
 void Uni :: registerStudentToMandatoryCourses(
-        vector<Course> &mandatorySemesterCourses, Student &student) {
+        vector<Course> &mandatorySemesterCourses,
+        StudentPointer &student) {
 
 	vector<Course>::iterator it_mandatoryCourse;
 
@@ -73,7 +71,7 @@ void Uni :: registerStudentToMandatoryCourses(
             ++it_mandatoryCourse) {
 
         // TODO: Check if this condition is even necessary.
-        if ( ! studentInCourse(*it_mandatoryCourse, student) ) {
+        if ( ! isStudentInCourse(*it_mandatoryCourse, student) ) {
             it_mandatoryCourse->reg(student);
         }
     }
@@ -81,7 +79,8 @@ void Uni :: registerStudentToMandatoryCourses(
 
 
 void Uni :: registerStudentToElectiveCourses(
-        vector<Course> &electiveSemesterCourses, Student &student) {
+        vector<Course> &electiveSemesterCourses,
+        StudentPointer &student) {
 
 	vector<Course>::iterator it_electiveCourse;
 
@@ -90,7 +89,7 @@ void Uni :: registerStudentToElectiveCourses(
             ++it_electiveCourse) {
 
         // Only register if student isn't already registered.
-        if ( ! studentInCourse(*it_electiveCourse, student) ) {
+        if ( ! isStudentInCourse(*it_electiveCourse, student) ) {
 
             it_electiveCourse->reg(student);
         }
@@ -98,23 +97,14 @@ void Uni :: registerStudentToElectiveCourses(
 }
 
 
-unsigned short Uni :: getUnfinishedSemesterCourses() {
-    return this->_unfinishedSemesterCourses;
-}
-
-
-unsigned short Uni :: getUnfinishedElectiveCourses() {
-    return this->_unfinishedElectiveCourses;
-}
-
-
 /**
  * Returns true if student is already registered to course.
  */
-bool Uni :: studentInCourse(Course &course, Student &student) {
-    vector<Student>::iterator it_student;
-    for (it_student = course.begin(); it_student != course.end();
-            ++it_student) {
+bool Uni :: isStudentInCourse(Course &course, StudentPointer &student) {
+
+    vector<StudentPointer>::iterator it_student;
+    for (it_student = course.students.begin();
+            it_student != course.students.end(); ++it_student) {
 
         if (compare(it_student.getStudentId(), s.id) == 0) {
             return true;
@@ -125,7 +115,7 @@ bool Uni :: studentInCourse(Course &course, Student &student) {
 }
 
 
-void Department ::  teach(unsigned short semester) {
+void Uni :: teach(unsigned short semester) {
 
 	vector<Course>::iterator course;
 

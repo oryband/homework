@@ -1,3 +1,7 @@
+#ifndef UTIL_H_
+#define UTIL_H_
+
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -45,3 +49,5 @@ vector< vector<string> >* getLines(string filePath) {
     file.close();
     return lines;
 }
+
+#endif
