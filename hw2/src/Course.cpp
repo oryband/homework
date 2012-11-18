@@ -1,20 +1,19 @@
-#include "../include/Course.h"
+#include "Course.h"
 
-void Course :: teach(){
+void Course :: teach() {
+	std::vector<StudentPointer>::iterator it_student;
 
-	std::vector<Student>::iterator student;
+	for (it_student = this->_students.begin();
+            it_student != this->_students.end(); ++it_student) {
 
-	// Activate in each student in this course the study() function.
-	for (student = this->students.begin();
-			student != this->students.end(); ++student) {
-
-		student->study(this);
-
+		(**it_student).study(*this);
 	}
 }
 
-unsigned short Course :: getMinGrade()const{
+unsigned short Course :: getMinimumGrade()const{
+    return this->_minimumGrade;
+}
 
-	return this->_minimumGrade;
-
+std::vector<StudentPointer>* Course :: getStudents() {
+    return &(this->_students);
 }

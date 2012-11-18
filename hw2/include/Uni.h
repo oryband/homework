@@ -1,15 +1,20 @@
 #ifndef UNI_H_
 #define UNI_H_
 
+
 #include "Student.h"
 #include "Course.h"
+
+#include "typedefs.h"
+#include "consts.h"
+
 
 class Uni {
     private:
         unsigned short _semesters;
-        bool _pgOn;  // Malag approved PG courses.
+        bool _pgOn;  // Has MALAG approved PG courses?
 
-        std::vector<Student> _students;  // TODO: Shared pointer.
+        std::vector<StudentPointer> _students;
 
         std::vector<Course> _mandatoryAutumnCourses;
         std::vector<Course> _mandatorySpringCourses;
@@ -19,13 +24,13 @@ class Uni {
 
         void registerStudentToMandatoryCourses(
                 std::vector<Course> &mandatorySemesterCourses,
-                Student &student);
+                StudentPointer &student);
 
         void registerStudentToElectiveCourses(
                 std::vector<Course> &electiveSemesterCourses,
-                Student &student);
+                StudentPointer &student);
 
-        bool studentInCourse(Course &course, Student &student);
+        bool isStudentInCourse(Course &course, StudentPointer &student);
 
     public:
         Uni(bool pgOn);
