@@ -5,6 +5,7 @@
 
 # Compiled Dynamic libraries
 *.so
+*.dylib
 
 # Compiled Static libraries
 *.lai
@@ -12,14 +13,12 @@
 *.a
 
 bin/
-bin
+
+# Eclipse.
+Debug/
 .metadata
+.cproject
+.project
 
-# Vim files.
+# Vim.
 *.swp
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-
