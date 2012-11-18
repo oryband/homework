@@ -3,39 +3,22 @@
 
 using namespace std;
 
-
 Uni :: Uni(bool flag) {
 
-	Department Cs,Pg,El;
-
-	Consts reader;
-
-	// Read courses.conf and assign data
-	vector< vector<string> >* coursesLines = new vector< vector<string> >;
-
-	reader.getLines("../courses.conf", coursesLines);
-	reader.readCoursesFile(coursesLines);
+    // Read curriculm.conf and assign data
+    readCurriculumFile();
 
 	// Read students.conf and assign data
-	vector< vector<string> >* studentsLines = new vector< vector<string> >;
+    readStudentsFile(this->_CsNumOfElctiveCourses, 
+                     this-> _PgNumOfElctiveCourses);
 
-	reader.getLines("../students.conf", studentsLines);
-    reader.readStudentsFile(studentsLines);
+	// Read courses.conf and assign data
+	readCoursesFile();
 
-    // Read curriculm.conf and assign data
-    vector< vector<string> >* curriculumLines = new vector< vector<string> >;
-
-    reader.getLines("../curriculum.conf", curriculumLines);
-    reader.readCurriculumFile(curriculumLines);
-
-
-	delete coursesLines;
-	delete studentsLines;
-	delete curriculumLines;
 
 
 	if (flag) { // according to plan
-
+    
 
 	}
 	else { // PG department don't register and prints to file
@@ -43,77 +26,6 @@ Uni :: Uni(bool flag) {
 
 	}
 
-}
-
-
-void Uni :: setNumberOfSemeter(unsigned int numberOfSemesters){
-
-	this->_numOfSemesters = numberOfSemesters;
-}
-
-
-void Consts :: readCoursesFile(string coursesPath, Department &cs,
-												   Department &pg,
-												   Department &el) {
-
-    vector< vector<string> >* lines = getLines(coursesPath);
-
-
-    // Iterate over lines and copy data.
-    size_t length = lines->size();
-    for(unsigned int l=0; l < length; l++) {
-
-        vector<string> line = (*lines)[l];  // Get line
-
-        // Fetch words and cast to appropriate type.
-		string _departmentName;
-		string _courseName;
-		unsigned short _activAtSemester;
-		unsigned short _minGrade;
-
-		istringstream oss1(line[0]);  // Cast department day.
-		oss1 >> _departmentName;
-
-		istringstream oss2(line[1]);  // Cast department day.
-		oss2 >> _courseName;
-
-		istringstream oss3(line[2]);  // Cast department day.
-		oss3 >> _activAtSemester;
-
-		istringstream oss4(line[3]);  // Cast department day.
-		oss4 >> _minGrade;
-
-        if( _departmentName.compare("CS") == 0 ) {
-
-        	if ( _activAtSemester%(2) == 1 ) {   //  Its autumn course
-
-        		cs._autumnCourses.push_back(*new CsCourse(_courseName,_activAtSemester,_minGrade));
-        	}
-        	else {						//  Its spring course
-        		cs._springCourses.push_back(*new CsCourse(_courseName,_activAtSemester,_minGrade));
-        	}
-        }
-        if( _departmentName.compare("PG") == 0 ) {
-
-			if ( _activAtSemester%(2) == 1 ) {   //  Its autumn course
-
-				pg._autumnCourses.push_back(*new PgCourse(_courseName,_activAtSemester,_minGrade));
-			}
-			else {						//  Its spring course
-				pg._springCourses.push_back(*new PgCourse(_courseName,_activAtSemester,_minGrade));
-			}
-		}
-        if( _departmentName.compare("ELECTIVE") == 0 ) {
-
-			if ( _activAtSemester%(2) == 1 ) {   //  Its autumn course
-
-				el._autumnCourses.push_back(*new ElCourse(_courseName,_activAtSemester,_minGrade));
-			}
-			else {						//  Its spring course
-				el._springCourses.push_back(*new ElCourse(_courseName,_activAtSemester,_minGrade));
-			}
-		}
-    }
 }
 
 
@@ -237,63 +149,20 @@ void Department ::  teach(unsigned short semester) {
 	}
 }
 
-void Consts :: readStudentsFile(string studentPath,Department &cs,
-												 Department &pg,
-												 Department &el) { // to fix
-	vector< vector<string> >* lines = getLines(studentPath);
 
+void Uni :: readCurriculumFile() {
 
-	    // Iterate over lines and copy data.
-	    size_t length = lines->size();
-	    for(unsigned int l=0; l < length; l++) {
-
-	        vector<string> line = (*lines)[l];  // Get line
-
-	        // Fetch words and cast to appropriate type.
-			string _departmentName;
-	        string _stuId;
-			string _imgPath;
-
-			istringstream oss1(line[0]);  // Cast department day.
-			oss1 >> _stuId;
-
-			istringstream oss2(line[1]);  // Cast department day.
-			oss2 >> _departmentName;
-
-			istringstream oss3(line[2]);  // Cast department day.
-			oss3 >> _imgPath;
-
-
-	        if( _departmentName.compare("CS") == 0 ) {
-
-	        	cs._students.push_back(*new CsStudent(_stuId, _imgPath));
-	        }
-
-	        if( _departmentName.compare("PG") == 0 ) {
-
-	        	pg._students.push_back(*new PgStudent(_stuId, _imgPath));
-
-			}
-	    }
-}
-
-void Consts :: readCurriculumFile(string curriculumPath, Department &cs,
-														 Department &pg,
-														 Uni &u){
-
-	vector< vector<string> >* lines = getLines(curriculumPath);
+	vector< vector<string> >* lines = getLines(CURRICULUM_FILE);
 
 			vector<string> line = (*lines)[0];  // Get line
 
 			// Fetch the number of semester
-			string _numberOfSemesters;
+			string numberOfSemesters;
 
 			istringstream oss1(line[0]);  // Cast department day.
-			oss1 >> _numberOfSemesters;
+			oss1 >> numberOfSemesters;
 
-			//here 19:34 need to finish convert the char to unsigned int!!!!
-			u.setNumberOfSemeter( (unsigned int)_numberOfSemesters[20]);
-
+			this->_semesters =(unsigned short)numberOfSemesters[20];
 
 		    // Iterate over lines and copy data.
 		    size_t length = lines->size();
@@ -302,22 +171,133 @@ void Consts :: readCurriculumFile(string curriculumPath, Department &cs,
 		        vector<string> line = (*lines)[l];  // Get line
 
 		        // Fetch words and cast to appropriate type.
-		        string _departmentName;
-		        string _numManElective;
+		        string departmentName, numManElective;
 
 				istringstream oss2(line[0]);  // Cast department day.
-				oss2 >> _departmentName;
+				oss2 >> departmentName;
 
 				istringstream oss3(line[1]);  // Cast number of electives.
-				oss3 >> _numManElective;
+				oss3 >> numManElective;
 
-		        if( _departmentName.compare("CS") == 0 ) {
+		        if(departmentName.compare(CS) == 0 ) {
 
-		        	cs.setMandatoryElectiveCourses( atoi(_numManElective.c_str()) );
+		        	this->_CsNumOfElctiveCourses = 
+                        atoi(numManElective.c_str());
 		        }
 		        else {
 
-		        	pg.setMandatoryElectiveCourses( atoi(_numManElective.c_str()) );
+		        	this->_PgNumOfElctiveCourses = 
+                        atoi(numManElective.c_str());
 		        }
 		    }
+}
+
+void Uni :: readStudentsFile(
+        unsigned short CsNumOfElc,
+        unsigned short PgNumOfElc) {
+
+	vector< vector<string> >* lines = getLines(STUDENTS_FILE);
+
+
+	    // Iterate over lines and copy data.
+	    size_t length = lines->size();
+	    for (unsigned int l=0; l < length; l++) {
+
+	        vector<string> line = (*lines)[l];  // Get line
+
+	        // Fetch words and cast to appropriate type.
+			string departmentName, stuId, imgPath;
+
+			istringstream oss1(line[0]);  // Cast department day.
+			oss1 >> stuId;
+
+			istringstream oss2(line[1]);  // Cast department day.
+			oss2 >> departmentName;
+
+			istringstream oss3(line[2]);  // Cast department day.
+			oss3 >> imgPath;
+
+            StudentPointer s;
+	        if (dbepartmentName.compare(CS) == 0) {
+
+                s = StudentPointer(
+                        new CsStudent(stuId, imgPath, CsNumOfElc));
+
+	        } else {  // PG
+
+                s = StudentPointer(
+                        new PgStudent(stuId, imgPath, PgNumOfElc));
+            }
+
+            this->_students.push_back(s);
+	    }
+}
+
+void Uni :: readCoursesFile() {
+
+    vector< vector<string> >* lines = getLines(COURSES_FILE);
+
+
+    // Iterate over lines and copy data.
+    size_t length = lines->size();
+    for(unsigned int l=0; l < length; l++) {
+
+        vector<string> line = (*lines)[l];  // Get line
+
+        // Fetch words and cast to appropriate type.
+		string departmentName, courseName;
+		unsigned short activAtSemester;
+		unsigned short minGrade;
+
+		istringstream oss1(line[0]);  // Cast department day.
+		oss1 >> departmentName;
+
+		istringstream oss2(line[1]);  // Cast department day.
+		oss2 >> courseName;
+
+		istringstream oss3(line[2]);  // Cast department day.
+		oss3 >> activAtSemester;
+
+		istringstream oss4(line[3]);  // Cast department day.
+		oss4 >> minGrade;
+
+
+        if(departmentName.compare("ELECTIVE") == 0) {
+
+			if (activAtSemester%(2) == 1) {   //  Its autumn course
+
+		    	this->_electiveAutumnCourses.push_back(
+                        *new ElCourse(
+                            courseName, activAtSemester, minGrade));
+			}
+			else {				        		//  Its spring course
+				this->_electiveSpringCourses.push_back(*new ElCourse
+                        ( courseName, activAtSemester, minGrade));
+			}
+		}
+        else if (departmentName.compare("CS") == 0) {
+
+        	if (activAtSemester%(2) == 1) {   //  Its autumn course
+
+        		this->_mandatoryAutumnCourses.push_back(*new CsCourse
+                        (courseName, activAtSemester, minGrade));
+        	}
+        	else {		        				//  Its spring course
+        		this->_mandatorySpringCourses.push_back(*new CsCourse
+                        (courseName, activAtSemester, minGrade));
+        	}
+        }
+        else if (departmentName.compare("PG") == 0) {
+
+			if (activAtSemester%(2) == 1) {   //  Its autumn course
+
+				this->_mandatoryAutumnCourses.push_back(*new PgCourse
+                        (courseName, activAtSemester, minGrade));
+			}
+			else {						//  Its spring course
+				this->_mandatorySpringCourses.push_back(*new PgCourse
+                        (courseName, activAtSemester, minGrade));
+			}
+		}
+    }
 }

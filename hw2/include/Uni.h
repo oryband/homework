@@ -2,12 +2,21 @@
 #define UNI_H_
 
 #include "Student.h"
+#include "CsStudent.h"
+#include "PgStudent"
 #include "Course.h"
+
+#include "consts.cpp"
+#include "util.cpp"
+
 
 class Uni {
     private:
         unsigned short _semesters;
         bool _pgOn;  // Malag approved PG courses.
+
+        unsigned short _CsNumOfElctiveCourses;
+        unsigned short _PgNumOfElctiveCourses;
 
         std::vector<Student> _students;  // TODO: Shared pointer.
 
@@ -34,6 +43,13 @@ class Uni {
         void registerStudentsToCourses(unsigned short currentSemester);
         void teach(unsigned short currentSemester);
         void gruduate();
+
+        void readStudentsFile(
+                unsigned short CsNumOfElc,
+                unsigned short PgNumOfElc);
+
+        void readCurriculumFile();
+        void readCoursesFile();
 };
 
 #endif
