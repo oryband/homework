@@ -1,20 +1,39 @@
 #ifndef UNI_H_
 #define UNI_H_
 
-#include "Department.h"
+#include "Student.h"
+#include "Course.h"
 
 class Uni {
+    private:
+        unsigned short _semesters;
+        bool _pgOn;  // Malag approved PG courses.
 
-private:
-		Department Cs,Pg,El;
-		unsigned int _numOfSemesters;
-		bool _malag;
+        std::vector<Student> _students;  // TODO: Shared pointer.
 
-public:
-		Uni(bool flag); // Constructor
-		void simulate(); // Start Uni life Cycle
-		void graduate(); // Output all graduated students
-		void setNumberOfSemeter(unsigned int numberOfSemesters);
-		friend class Consts;
+        std::vector<Course> _mandatoryAutumnCourses;
+        std::vector<Course> _mandatorySpringCourses;
+
+        std::vector<Course> _electiveAutumnCourses;
+        std::vector<Course> _electiveSpringCourses;
+
+        void registerStudentToMandatoryCourses(
+                std::vector<Course> &mandatorySemesterCourses,
+                Student &student);
+
+        void registerStudentToElectiveCourses(
+                std::vector<Course> &electiveSemesterCourses,
+                Student &student);
+
+        bool studentInCourse(Course &course, Student &student);
+
+    public:
+        Uni(bool pgOn);
+
+        void simulate();
+        void registerStudentsToCourses(unsigned short currentSemester);
+        void teach(unsigned short currentSemester);
+        void gruduate();
 };
+
 #endif

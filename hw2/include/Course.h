@@ -6,30 +6,25 @@
 #include <iterator>
 #include <string>
 
-#include "Student.h"
+
 class Student;
 
 
 class Course {
 
-protected:
-		std::vector< Student > students;
-		std::string _courseName; 			// Delete const ...doing some crazy  problems
-		unsigned short _semester;
-		unsigned short _minimumGrade;
+    protected:
+        std::vector< Student > students;  // TODO: Shared pointer
+        std::string _name;  // Delete const ...doing some crazy  problems
 
+        unsigned short _semester;
+        unsigned short _minimumGrade;
 
-		Course(){};
-		/*
-		Course(std::string courseName,unsigned short semesterNum,
-								 unsigned short minimumGrad)
-		: _courseName(courseName),_semester(semesterNum), _minimumGrade(minimumGrad) {}
-		*/
-public:
-		virtual void teach();
-		virtual void reg(Student &s)=0;
-		unsigned short getMinGrade()const;
-		virtual ~Course(){ std::cout << "Now the Course is dead!" << std::endl; }
+    public:
+        virtual void teach();
+        virtual void reg(Student &s)=0;
+        unsigned short getMinGrade()const;
 
+        virtual ~Course();
 };
+
 #endif

@@ -1,4 +1,8 @@
-#include "../include/Uni.h"
+#include "Uni.h"
+
+
+using namespace std;
+
 
 Uni :: Uni(bool flag) {
 
@@ -110,6 +114,127 @@ void Consts :: readCoursesFile(string coursesPath, Department &cs,
 			}
 		}
     }
+}
+
+
+void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
+
+    vector<Course> *mandatorySemesterCourses, *electiveSemesterCourses;
+
+    if (currentSemester % 2 == 1) {  // Autumn semester.
+        mandatorySemesterCourses = &(this->_mandatoryAutumnCourses);
+        electiveSemesterCourses = &(this->_electiveAutumnCourses);
+    } else {  // Spring Semester
+        mandatorySemesterCourses = &(this->_mandatorySpringCourses);
+        electiveSemesterCourses = &(this->_electiveSpringCourses);
+    }
+
+    // Iterate over all students, and register those who finished their
+    // last semester succesfully.
+	vector<Student>::iterator it_student;
+
+    for (it_student = this->_students.begin();
+            it_student != this->_students.end(); ++it_student) {
+        
+        if (it_student->getUnfinishedSemesterCourses() == 0) {
+            registerStudentToMandatoryCourses(
+                    *mandatorySemesterCourses, *it_student);
+        }
+
+        // If student needs to register to elective courses, do so.
+        if (it_student->getUnfinishedElectiveCourses() > 0) {
+            registerStudentToElectiveCourses(
+                    *electiveSemesterCourses, *it_student);
+
+        }
+    }
+}
+
+
+void Uni :: registerStudentToMandatoryCourses(
+        vector<Course> &mandatorySemesterCourses, Student &student) {
+
+	vector<Course>::iterator it_mandatoryCourse;
+
+    for (it_mandatoryCourse = mandatorySemesterCourses.begin();
+            it_mandatoryCourse != mandatorySemesterCourses.end();
+            ++it_mandatoryCourse) {
+
+        // TODO: Check if this condition is even necessary.
+        if ( ! studentInCourse(*it_mandatoryCourse, student) ) {
+            it_mandatoryCourse->reg(student);
+        }
+    }
+}
+
+
+void Uni :: registerStudentToElectiveCourses(
+        vector<Course> &electiveSemesterCourses, Student &student) {
+
+	vector<Course>::iterator it_electiveCourse;
+
+    for (it_electiveCourse = electiveSemesterCourses.begin();
+            it_electiveCourse != electiveSemesterCourses.end();
+            ++it_electiveCourse) {
+
+        // Only register if student isn't already registered.
+        if ( ! studentInCourse(*it_electiveCourse, student) ) {
+
+            it_electiveCourse->reg(student);
+        }
+    }
+}
+
+
+unsigned short Uni :: getUnfinishedSemesterCourses() {
+    return this->_unfinishedSemesterCourses;
+}
+
+
+unsigned short Uni :: getUnfinishedElectiveCourses() {
+    return this->_unfinishedElectiveCourses;
+}
+
+
+/**
+ * Returns true if student is already registered to course.
+ */
+bool Uni :: studentInCourse(Course &course, Student &student) {
+    vector<Student>::iterator it_student;
+    for (it_student = course.begin(); it_student != course.end();
+            ++it_student) {
+
+        if (compare(it_student.getStudentId(), s.id) == 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+void Department ::  teach(unsigned short semester) {
+
+	vector<Course>::iterator course;
+
+	// Iterating Autumn Course list and teach!
+	if (semerster == 1) {
+
+		for ( course = this->_autumnCourses.begin() ;
+				course != this->_autumnCourses.end() ; ++course) {
+
+			course.teach();
+		}
+	}
+	// Iterating Spring Course list and teach!
+	if (semester == 0) {
+
+		for ( course = this->_springCourses.begin() ;
+				course != this->_springCourses.end() ; ++course) {
+
+			course.teach();
+		}
+	}
 }
 
 void Consts :: readStudentsFile(string studentPath,Department &cs,
