@@ -4,11 +4,14 @@
 
 #include "Student.h"
 #include "CsStudent.h"
-#include "PgStudent"
+#include "PgStudent.h"
 #include "Course.h"
 
+#include "util.h"
 #include "typedefs.h"
 #include "consts.h"
+
+//#include <string>
 
 
 class Uni {
