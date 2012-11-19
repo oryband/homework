@@ -1,7 +1,10 @@
 #ifndef PGSTUDENT_H_
 #define PGSTUDENT_H_
 
+
 #include "Student.h"
+#include "Course.h"
+
 
 class PgStudent : public Student {
 

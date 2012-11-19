@@ -1,11 +1,15 @@
 #ifndef STUDENT_H_
 #define STUDENT_H_
 
+#include "Course.h"
+
+#include "typedefs.h"
+#include "consts.h"
+
 #include <iostream>
 #include <string>
-
-
-class Course;
+#include <cstdlib>
+#include <vector>
 
 
 class Student {
@@ -38,7 +42,9 @@ class Student {
         unsigned short getCurrentSemester();
 
         // Setters
-        void incrementUnfinishedCourses();  // _unfinishedSemesterCourses++;
+        // _unfinishedSemesterCourses++/--;
+        void increaseUnfinishedSemesterCourses();
+        void decreaseUnfinishedElectiveCourses();
 };
 
 #endif

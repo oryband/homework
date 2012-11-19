@@ -3,6 +3,8 @@
 
 
 #include "Course.h"
+#include "typedefs.h"
+#include "consts.h"
 
 #include "typedefs.h"
 
@@ -18,7 +20,7 @@ class CsCourse : public Course {
 
         virtual ~CsCourse();
 
-        virtual void reg(StudentPointer &s) {/*TODO*/};
+        virtual void reg(StudentPointer &s);
 };
 
 #endif

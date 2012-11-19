@@ -1,19 +1,14 @@
-#include "../include/CsStudent.h"
+#include "CsStudent.h"
 
-CsStudent :: CsStudent(std::string studentId, std::string imagePath){
+void CsStudent :: study(Course &c){
 
+	if (rand()%100 >= c.getMinimumGrade() && rand()%100 >= 25) {
 
-		this->_studentId.assign(studentId);
-		this->_imagePath.assign(imagePath);
-		this->_unfinishedSemesterCourses = 0;
-		this->_electiveCoursesUnfinished = 0;
-
-}
-
-virtual void CsStudent :: study(Course &c){
-
-	if ( rand()%100 >= c.getMinGrade() && rand()%100 >= 25 ) {
-
-		this->finishCourse(&c);
+		this->finishcourse(c);
+        writeToFileStudents(this->_id, c.getCourseName(), "", 2);
 	}
+    else {
+
+        writeToFileStudents(this->_id, c.getCourseName(), "", 3);
+    }
 }

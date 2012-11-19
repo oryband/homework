@@ -18,7 +18,7 @@ class ElCourse : public Course {
 
         virtual ~ElCourse();
 
-        virtual void reg(StudentPointer &s) {/*TODO*/};
+        virtual void reg(StudentPointer &s);
 };
 
 #endif

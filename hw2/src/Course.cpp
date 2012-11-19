@@ -7,7 +7,7 @@ using namespace std;
 Course :: Course(
         std::string name,
         unsigned short semester,
-        unsigned short minimumGrade) :
+        unsigned short minimumGrade) :  // TODO Init department.
 
     _name(name),
     _semester(semester),
@@ -16,12 +16,12 @@ Course :: Course(
 
 
 void Course :: teach() {
-	std::vector<StudentPointer>::iterator it_student;
+	vector<StudentPointer>::iterator it_student;
 
 	for (it_student = this->_students.begin();
             it_student != this->_students.end(); ++it_student) {
 
-		(**it_student).study(*this);
+		(*it_student)->study(*this);
 	}
 }
 
@@ -29,6 +29,25 @@ unsigned short Course :: getMinimumGrade()const{
     return this->_minimumGrade;
 }
 
-std::vector<StudentPointer>* Course :: getStudents() {
+vector<StudentPointer>* Course :: getStudents() {
     return &(this->_students);
+}
+
+
+void  Course :: pushToCourse(StudentPointer &student) {
+
+    this->_students.push_back(student);
+    
+    if (this->getCourseDepartment() == CS ||
+        this->getCourseDepartment() == PG) {
+        student->increaseUnfinishedSemesterCourses();
+    }
+}
+
+string Course :: getCourseName()const {
+    return this->_name;
+}
+
+string Course :: getCourseDepartment()const {
+    return this->_departmentName;
 }

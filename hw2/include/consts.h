@@ -5,6 +5,7 @@
 #define COURSES_FILE "courses.conf"
 #define STUDENTS_FILE "students.conf"
 #define CURRICULUM_FILE "curriculum.conf"
+#define RANDOM_FILE "random.log"
 
 #define CS "CS"
 #define PG "PG"
