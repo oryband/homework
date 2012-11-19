@@ -276,19 +276,11 @@ void Uni :: teach(unsigned short currentSemester) {
 void Uni :: generateGraduationImage(
         vector<StudentPointer> &students) {
 
-    vector<StudentPointer>::iterator it_student;
-
-    function<bool (
-            StudentPointer &s1,
-            StudentPointer &s2)>
-        compareStudentsFunctor(&compareStudents);
-
-    sort(
-            students.begin(),
-            students.end(),
-            compareStudentsFunctor);
+    sort(students.begin(), students.end(), CompareStudentsFunctor);
 
     // Iterate all students in vector and printing
+    vector<StudentPointer>::iterator it_student;
+
     for (it_student = students.begin();
             it_student != students.end(); ++it_student) {
 

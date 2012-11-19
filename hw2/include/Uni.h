@@ -7,12 +7,11 @@
 #include "PgStudent.h"
 #include "Course.h"
 
-#include "util.h"
 #include "typedefs.h"
 #include "consts.h"
+#include "util.h"
 
 #include <algorithm>
-#include <boost/function.hpp>
 
 
 class Uni {

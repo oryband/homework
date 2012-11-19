@@ -3,16 +3,17 @@
 
 
 #include "Student.h"
-#include "CsStudent.h"
-#include "PgStudent.h"
+//#include "CsStudent.h"
+//#include "PgStudent.h"
 //#include "Course.h"
 
 #include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
 
 
 typedef boost::shared_ptr<Student> StudentPointer;
-typedef boost::shared_ptr<CsStudent> CsStudentPointer;
-typedef boost::shared_ptr<PgStudent> PgStudentPointer;
+//typedef boost::shared_ptr<CsStudent> CsStudentPointer;
+//typedef boost::shared_ptr<PgStudent> PgStudentPointer;
 //typedef boost::shared_ptr<Course> CoursePointer;
 
 
@@ -24,6 +25,10 @@ bool compareStudents (
             atoi(s1->getStudentId().c_str()) < 
             atoi(s2->getStudentId().c_str()));
 }
+
+
+boost::function<bool (const StudentPointer &s1, const StudentPointer &s2)>
+    CompareStudentsFunctor(&compareStudents);
 
 
 #endif
