@@ -16,3 +16,8 @@ unsigned short Student :: getUnfinishedSemesterCourses() {
 unsigned short Student :: getUnfinishedElectiveCourses() {
     return this->_unfinishedElectiveCourses;
 }
+
+
+unsigned short Student :: getCurrentSemester() {
+    return this->_currentSemester;
+}
