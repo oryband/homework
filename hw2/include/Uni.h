@@ -29,6 +29,7 @@ class Uni {
         std::vector<StudentPointer> _students;
 
         // Note we have to use <Course *> because Course is ABSTRACT.
+        // TODO: Do we need to delete inner members in dtor?
         std::vector<Course *> _mandatoryAutumnCourses;
         std::vector<Course *> _mandatorySpringCourses;
 
@@ -36,11 +37,11 @@ class Uni {
         std::vector<Course *> _electiveSpringCourses;
 
         void registerStudentToMandatoryCourses(
-                std::vector<Course> &mandatorySemesterCourses,
+                std::vector<Course *> &mandatorySemesterCourses,
                 StudentPointer &student);
 
         void registerStudentToElectiveCourses(
-                std::vector<Course> &electiveSemesterCourses,
+                std::vector<Course *> &electiveSemesterCourses,
                 StudentPointer &student);
 
         bool isStudentInCourse(Course &course, StudentPointer &student);

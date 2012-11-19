@@ -64,7 +64,7 @@ void Uni :: readCurriculumFile() {
         oss2 >> unfinishedElectiveCourses;
 
         int electiveCourses = atoi(unfinishedElectiveCourses.c_str());
-        if (department.compare(CS) == 0 ) {  // CS department.
+        if (department.compare(CS) == 0) {  // CS department.
             this->_CsNumOfElctiveCourses = electiveCourses;
         } else {  // PG department.
             this->_PgNumOfElctiveCourses = electiveCourses;
@@ -179,7 +179,7 @@ void Uni :: readCoursesFile() {
 
 void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
-    vector<Course> *mandatorySemesterCourses, *electiveSemesterCourses;
+    vector<Course *> *mandatorySemesterCourses, *electiveSemesterCourses;
 
     if (currentSemester % 2 == 1) {  // Autumn semester.
         mandatorySemesterCourses = &(this->_mandatoryAutumnCourses);
@@ -212,37 +212,37 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
 
 void Uni :: registerStudentToMandatoryCourses(
-        vector<Course> &mandatorySemesterCourses,
+        vector<Course *> &mandatorySemesterCourses,
         StudentPointer &student) {
 
-    vector<Course>::iterator it_mandatoryCourse;
+    vector<Course *>::iterator it_mandatoryCourse;
 
     for (it_mandatoryCourse = mandatorySemesterCourses.begin();
             it_mandatoryCourse != mandatorySemesterCourses.end();
             ++it_mandatoryCourse) {
 
         // TODO: Check if this condition is even necessary.
-        if ( ! isStudentInCourse(*it_mandatoryCourse, student) ) {
-            it_mandatoryCourse->reg(student);
+        if ( ! isStudentInCourse(**it_mandatoryCourse, student) ) {
+            (**it_mandatoryCourse).reg(student);
         }
     }
 }
 
 
 void Uni :: registerStudentToElectiveCourses(
-        vector<Course> &electiveSemesterCourses,
+        vector<Course *> &electiveSemesterCourses,
         StudentPointer &student) {
 
-    vector<Course>::iterator it_electiveCourse;
+    vector<Course *>::iterator it_electiveCourse;
 
     for (it_electiveCourse = electiveSemesterCourses.begin();
             it_electiveCourse != electiveSemesterCourses.end();
             ++it_electiveCourse) {
 
         // Only register if student isn't already registered.
-        if ( ! isStudentInCourse(*it_electiveCourse, student) ) {
+        if ( ! isStudentInCourse(**it_electiveCourse, student) ) {
 
-            it_electiveCourse->reg(student);
+            (**it_electiveCourse).reg(student);
         }
     }
 }
@@ -259,6 +259,7 @@ bool Uni :: isStudentInCourse(Course &course, StudentPointer &student) {
 
         if ((**it_student).getStudentId().compare(
                     student->getStudentId()) == 0) {
+
             return true;
         }
     }
@@ -268,8 +269,8 @@ bool Uni :: isStudentInCourse(Course &course, StudentPointer &student) {
 
 void Uni :: teach(unsigned short currentSemester) {
 
-    vector<Course> *mandatorySemesterCourses, *electiveSemesterCourses;
-	vector<Course>::iterator it_mandatoryCourse, it_electiveCourse;
+    vector<Course *> *mandatorySemesterCourses, *electiveSemesterCourses;
+	vector<Course *>::iterator it_mandatoryCourse, it_electiveCourse;
 
     if (currentSemester % 2 == 1) {  // Autumn semester.
         mandatorySemesterCourses = &(this->_mandatoryAutumnCourses);
@@ -280,14 +281,14 @@ void Uni :: teach(unsigned short currentSemester) {
             it_mandatoryCourse != mandatorySemesterCourses->end();
             ++it_mandatoryCourse) {
 
-        it_mandatoryCourse->teach();
+        (**it_mandatoryCourse).teach();
     }
 
     for (it_electiveCourse = electiveSemesterCourses->begin();
             it_electiveCourse != electiveSemesterCourses->end();
             ++it_electiveCourse) {
 
-        it_electiveCourse->teach();
+        (**it_electiveCourse).teach();
     }
 }
 
