@@ -26,7 +26,7 @@ class Uni {
         unsigned short _CsNumOfElctiveCourses;
         unsigned short _PgNumOfElctiveCourses;
 
-        std::vector<StudentPointer> _students;
+        std::vector<Student *> _students;
 
         // Note we have to use <Course *> because Course is ABSTRACT.
         // TODO: Do we need to delete inner members in dtor?
@@ -66,6 +66,7 @@ class Uni {
 
         void SaveColorImage(StudentPointer &student);  // TODO
         void SaveGreyscaleImage(StudentPointer &student);  // TODO
+        void promoteStudents();
 };
 
 #endif
