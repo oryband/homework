@@ -5,17 +5,11 @@ using namespace std;
 
 Uni :: Uni(bool pgOn) {
 
-    // Read curriculm.conf and assign data
     readCurriculumFile();
-
-
-    // Read students.conf and assign data
-    readStudentsFile(this->_CsNumOfElctiveCourses, 
+    readStudentsFile(
+            this->_CsNumOfElctiveCourses,
             this-> _PgNumOfElctiveCourses);
-
-    // Read courses.conf and assign data
-    readCoursesFile();
-
+	readCoursesFile();
 }
 
 
@@ -96,10 +90,11 @@ void Uni :: registerStudentToElectiveCourses(
 bool Uni :: isStudentInCourse(Course &course, StudentPointer &student) {
 
     vector<StudentPointer>::iterator it_student;
-    for (it_student = course.students.begin();
-            it_student != course.students.end(); ++it_student) {
+    for (it_student = course.getStudents()->begin();
+            it_student != course.getStudents()->end(); ++it_student) {
 
-        if (compare(it_student.getStudentId(), s.id) == 0) {
+        if ((**it_student).getStudentId().compare(
+                    student->getStudentId()) == 0) {
             return true;
         }
     }
@@ -108,27 +103,28 @@ bool Uni :: isStudentInCourse(Course &course, StudentPointer &student) {
 }
 
 
-void Uni :: teach(unsigned short semester) {
+void Uni :: teach(unsigned short currentSemester) {
 
-    vector<Course>::iterator course;
+    vector<Course> *mandatorySemesterCourses, *electiveSemesterCourses;
+	vector<Course>::iterator it_mandatoryCourse, it_electiveCourse;
 
-    // Iterating Autumn Course list and teach!
-    if (semerster == 1) {
-
-        for ( course = this->_autumnCourses.begin() ;
-                course != this->_autumnCourses.end() ; ++course) {
-
-            course.teach();
-        }
+    if (currentSemester % 2 == 1) {  // Autumn semester.
+        mandatorySemesterCourses = &(this->_mandatoryAutumnCourses);
+        electiveSemesterCourses = &(this->_electiveAutumnCourses);
     }
-    // Iterating Spring Course list and teach!
-    if (semester == 0) {
 
-        for ( course = this->_springCourses.begin() ;
-                course != this->_springCourses.end() ; ++course) {
+    for (it_mandatoryCourse = mandatorySemesterCourses->begin();
+            it_mandatoryCourse != mandatorySemesterCourses->end();
+            ++it_mandatoryCourse) {
 
-            course.teach();
-        }
+        it_mandatoryCourse->teach();
+    }
+
+    for (it_electiveCourse = electiveSemesterCourses->begin();
+            it_electiveCourse != electiveSemesterCourses->end();
+            ++it_electiveCourse) {
+
+        it_electiveCourse->teach();
     }
 }
 
@@ -137,43 +133,45 @@ void Uni :: readCurriculumFile() {
 
     vector< vector<string> >* lines = getLines(CURRICULUM_FILE);
 
-    vector<string> line = (*lines)[0];  // Get line
+    vector<string> line = (*lines)[0];
 
-    // Fetch the number of semester
+    // Fetch the number of semester.
     string numberOfSemesters;
+    int seperatorIndex = line[0].find('=');
 
-    istringstream oss1(line[0]);  // Cast department day.
-    oss1 >> numberOfSemesters;
+    // Cast to unsigned short.
+    istringstream oss1(
+            numberOfSemesters.substr(
+                seperatorIndex,
+                numberOfSemesters.size() - seperatorIndex));
 
-    this->_semesters =(unsigned short)numberOfSemesters[20];
+    oss1 >> this->_semesters;
 
-    // Iterate over lines and copy data.
+
+    // Iterate over the other lines and copy data.
     size_t length = lines->size();
-    for(unsigned int l=1; l < length; l++) {
+    for (unsigned int l=1; l < length; l++) {
 
-        vector<string> line = (*lines)[l];  // Get line
+        vector<string> line = (*lines)[l];
 
-        // Fetch words and cast to appropriate type.
-        string departmentName, numManElective;
+        // Fetch department name,
+        // and amount of necessary elective courses each student must take
+        // for each department.
+        string departmentName(line[0]),
+               unfinishedElectiveCourses;
 
-        istringstream oss2(line[0]);  // Cast department day.
-        oss2 >> departmentName;
+        istringstream oss2(line[1]);  // Cast number of electives.
+        oss2 >> unfinishedElectiveCourses;
 
-        istringstream oss3(line[1]);  // Cast number of electives.
-        oss3 >> numManElective;
-
-        if(departmentName.compare(CS) == 0 ) {
-
-            this->_CsNumOfElctiveCourses = 
-                atoi(numManElective.c_str());
-        }
-        else {
-
-            this->_PgNumOfElctiveCourses = 
-                atoi(numManElective.c_str());
+        int electiveCourses = atoi(unfinishedElectiveCourses.c_str());
+        if (departmentName.compare(CS) == 0 ) {
+            this->_CsNumOfElctiveCourses = electiveCourses;
+        } else {  // PG.
+            this->_PgNumOfElctiveCourses = electiveCourses;
         }
     }
 }
+
 
 void Uni :: readStudentsFile(
         unsigned short CsNumOfElc,
