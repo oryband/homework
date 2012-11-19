@@ -13,7 +13,7 @@ class PgCourse : public Course {
                 unsigned short minimumGrade) :
             Course(name, semester, minimumGrade) {}
 
-        virtual void reg(Student &s);
+        virtual void reg(StudentPointer &s);
 };
 
 #endif

@@ -3,9 +3,12 @@
 
 
 #include "Course.h"
+#include "typedefs.h"
+#include "consts.h"
 
 
-class CsCourse : public Course {
+class CsCourse : public Course {   
+
     public:
         CsCourse(
                 std::string name,
@@ -13,7 +16,7 @@ class CsCourse : public Course {
                 unsigned short minimumGrade) :
             Course(name, semester, minimumGrade) {}
 
-        virtual void reg(Student &s);
+        virtual void reg(StudentPointer &s);
 };
 
 #endif
