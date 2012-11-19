@@ -57,14 +57,14 @@ void Uni :: readCurriculumFile() {
 
         vector<string> line = (*lines)[l];
 
-        string departmentName(line[0]),
+        string department(line[0]),
                unfinishedElectiveCourses;
 
         istringstream oss2(line[1]);  // Cast number of electives.
         oss2 >> unfinishedElectiveCourses;
 
         int electiveCourses = atoi(unfinishedElectiveCourses.c_str());
-        if (departmentName.compare(CS) == 0 ) {  // CS department.
+        if (department.compare(CS) == 0 ) {  // CS department.
             this->_CsNumOfElctiveCourses = electiveCourses;
         } else {  // PG department.
             this->_PgNumOfElctiveCourses = electiveCourses;
@@ -203,9 +203,9 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
         // If student needs to register to elective courses, do so.
         if ((**it_student).getUnfinishedElectiveCourses() > 0) {
+
             registerStudentToElectiveCourses(
                     *electiveSemesterCourses, *it_student);
-
         }
     }
 }
