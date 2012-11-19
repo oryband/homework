@@ -36,6 +36,9 @@ class Student {
         unsigned short getUnfinishedSemesterCourses();
         unsigned short getUnfinishedElectiveCourses();
         unsigned short getCurrentSemester();
+
+        // Setters
+        void incrementUnfinishedCourses();  // _unfinishedSemesterCourses++;
 };
 
 #endif

@@ -25,9 +25,36 @@ Uni :: Uni(bool pgOn) :
 
     readStudentsFile(
             this->_CsNumOfElctiveCourses,
-            this-> _PgNumOfElctiveCourses);
+            this->_PgNumOfElctiveCourses);
 
 	readCoursesFile();
+}
+
+
+void Uni :: simulate() {
+
+    for (unsigned short currentSemester = 1;
+            currentSemester <= this->_semesters;
+            currentSemester++) {
+
+        // Registers, teaches and promotes students for this semester.
+        this->registerStudentsToCourses(currentSemester);
+        this->teach(currentSemester);
+    }
+}
+
+
+void Uni :: promoteStudents() {
+
+    vector<StudentPointer>::iterator it_student;
+    vector<Course *>::iterator it_course;
+
+    for (it_student = this->_students.begin();
+            it_student != this->_students.end(); ++it_student) {
+
+        if ((**it_student).getUnfinishedSemesterCourses() == 0) {
+            (**it_student).
+    }
 }
 
 
