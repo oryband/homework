@@ -13,11 +13,11 @@ class PgCourse : public Course {
                 std::string name,
                 unsigned short semester,
                 unsigned short minimumGrade) :
-            Course(name, semester, minimumGrade) {}
+            Course(name, PG, semester, minimumGrade) {}
 
         virtual ~PgCourse();
 
-        virtual void reg(StudentPointer &s);
+        virtual void reg(Student &student);
 };
 
 #endif

@@ -21,16 +21,16 @@ Student :: Student(
 //FIXME !!!
 void Student :: finishcourse(Course &course){
 
-    vector<StudentPointer>::iterator it_student;
+    vector<Student *>::iterator it_student;
 
-    for (it_student = course.getStudents()->begin();
-            it_student != course.getStudents()->end(); ++it_student) {
+    for (it_student = course.getStudents().begin();
+            it_student != course.getStudents().end(); ++it_student) {
 
         // Found the Student in the course,increse/decrease the 
         // number of unfinished courses & delete from course.
         StudentPointer stp = *it_student;
         //Student st = *stp;
-        string s = stp->getStudentId();
+        string s = (*stp).getStudentId();
         if (s.compare(
                     this->getStudentId()) == 0) {
 

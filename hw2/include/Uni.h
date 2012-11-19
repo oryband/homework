@@ -26,7 +26,7 @@ class Uni {
         unsigned short _CsNumOfElctiveCourses;
         unsigned short _PgNumOfElctiveCourses;
 
-        std::vector<StudentPointer> _students;
+        std::vector<Student *> _students;
 
         // Note we have to use <Course *> because Course is ABSTRACT.
         // TODO: Do we need to delete inner members in dtor?
@@ -38,13 +38,13 @@ class Uni {
 
         void registerStudentToMandatoryCourses(
                 std::vector<Course *> &mandatorySemesterCourses,
-                StudentPointer &student);
+                Student &student);
 
         void registerStudentToElectiveCourses(
                 std::vector<Course *> &electiveSemesterCourses,
-                StudentPointer &student);
+                Student &student);
 
-        bool isStudentInCourse(Course &course, StudentPointer &student);
+        bool isStudentInCourse(Course &course, Student &student);
 
     public:
         Uni(bool pgOn);
@@ -62,10 +62,10 @@ class Uni {
         void readCoursesFile();
 
         void generateGraduationImage(
-                vector<StudentPointer> &students);
+                vector<Student *> &students);
 
-        void SaveColorImage(StudentPointer &student);  // TODO
-        void SaveGreyscaleImage(StudentPointer &student);  // TODO
+        void SaveColorImage(Student &student);  // TODO
+        void SaveGreyscaleImage(Student &student);  // TODO
 };
 
 #endif

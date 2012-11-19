@@ -2,8 +2,11 @@
 #define CSSTUDENT_H_
 
 
+#include <string>
+
 #include "Student.h"
 #include "Course.h"
+
 
 class CsStudent : public Student {
 
@@ -14,7 +17,7 @@ class CsStudent : public Student {
                 unsigned short electiveCourses) :
             Student(studentId, CS, imagePath, electiveCourses) {}
 
-        virtual void study(Course &c);
+        virtual void study(Course &course);
 };
 
 #endif

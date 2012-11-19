@@ -46,14 +46,15 @@ void Uni :: simulate() {
 
 void Uni :: promoteStudents() {
 
-    vector<StudentPointer>::iterator it_student;
+    vector<Student *>::iterator it_student;
     vector<Course *>::iterator it_course;
 
     for (it_student = this->_students.begin();
             it_student != this->_students.end(); ++it_student) {
 
         if ((**it_student).getUnfinishedSemesterCourses() == 0) {
-            (**it_student).
+            //(**it_student). // TODO finish.
+        }
     }
 }
 
@@ -117,21 +118,19 @@ void Uni :: readStudentsFile(
                imagePath = string(line[1]),
                department = string(line[2]);
 
-        StudentPointer s;
+        Student *ptr_student;
         if (department.compare(CS) == 0) {
 
-            s = StudentPointer(
-                    new CsStudent(
-                        id, imagePath, department, csElectiveCourses));
+            ptr_student = new CsStudent(
+                    id, imagePath, csElectiveCourses);
 
         } else {  // PG
 
-            s = StudentPointer(
-                    new PgStudent(
-                        id, imagePath, department, pgElectiveCourses));
+            ptr_student = new PgStudent(
+                    id, imagePath, pgElectiveCourses);
         }
 
-        this->_students.push_back(s);
+        this->_students.push_back(ptr_student);
     }
 }
 
@@ -218,7 +217,7 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
     // Iterate over all students, and register those who finished their
     // last semester succesfully.
-    vector<StudentPointer>::iterator it_student;
+    vector<Student *>::iterator it_student;
 
     for (it_student = this->_students.begin();
             it_student != this->_students.end(); ++it_student) {
@@ -240,7 +239,7 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
 void Uni :: registerStudentToMandatoryCourses(
         vector<Course *> &mandatorySemesterCourses,
-        StudentPointer &student) {
+        Student *ptr_student) {
 
     vector<Course *>::iterator it_mandatoryCourse;
 
@@ -250,7 +249,7 @@ void Uni :: registerStudentToMandatoryCourses(
 
         // TODO: Check if this condition is even necessary.
         if ( ! isStudentInCourse(**it_mandatoryCourse, student) ) {
-            (**it_mandatoryCourse).reg(student);
+            (**it_mandatoryCourse).reg(ptr_student);
         }
     }
 }
@@ -258,7 +257,7 @@ void Uni :: registerStudentToMandatoryCourses(
 
 void Uni :: registerStudentToElectiveCourses(
         vector<Course *> &electiveSemesterCourses,
-        StudentPointer &student) {
+        Student *ptr_student) {
 
     vector<Course *>::iterator it_electiveCourse;
 
@@ -269,7 +268,7 @@ void Uni :: registerStudentToElectiveCourses(
         // Only register if student isn't already registered.
         if ( ! isStudentInCourse(**it_electiveCourse, student) ) {
 
-            (**it_electiveCourse).reg(student);
+            (**it_electiveCourse).reg(ptr_student);
         }
     }
 }
@@ -278,9 +277,9 @@ void Uni :: registerStudentToElectiveCourses(
 /**
  * Returns true if student is already registered to course.
  */
-bool Uni :: isStudentInCourse(Course &course, StudentPointer &student) {
+bool Uni :: isStudentInCourse(Course &course, Student *ptr_student) {
 
-    vector<StudentPointer>::iterator it_student;
+    vector<Student *>::iterator it_student;
     for (it_student = course.getStudents()->begin();
             it_student != course.getStudents()->end(); ++it_student) {
 
@@ -321,12 +320,12 @@ void Uni :: teach(unsigned short currentSemester) {
 
 
 void Uni :: generateGraduationImage(
-        vector<StudentPointer> &students) {
+        vector<Student *> &students) {
 
     sort(students.begin(), students.end(), CompareStudentsFunctor);
 
     // Iterate all students in vector and printing
-    vector<StudentPointer>::iterator it_student;
+    vector<Student *>::iterator it_student;
 
     for (it_student = students.begin();
             it_student != students.end(); ++it_student) {

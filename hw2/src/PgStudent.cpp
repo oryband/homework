@@ -1,14 +1,11 @@
 #include "PgStudent.h"
 
-void PgStudent :: study(Course &c){
+void PgStudent :: study(Course &course) {
 
-	if (rand()%100 >= c.getMinimumGrade() && rand()%100 >= 25) {
-
-		this->finishcourse(c);
-        writeToFileStudents(this->_id, c.getCourseName(), "", 2);
-	}
-    else {
-
-        writeToFileStudents(this->_id, c.getCourseName(), "", 3);
+	if (rand() % 100 >= course.getMinimumGrade() && rand() % 100 >= 25) {
+		this->finishcourse(course);
+        writeToFileStudents(this->_id, course.getCourseName(), "", 2);
+	} else {
+        writeToFileStudents(this->_id, course.getCourseName(), "", 3);
     }
 }

@@ -2,15 +2,22 @@
 #define PGSTUDENT_H_
 
 
+#include <string>
+
 #include "Student.h"
 #include "Course.h"
 
 
 class PgStudent : public Student {
 
-public:
-		PgStudent(std::string studentId, std::string imagePath);
-		virtual void study(Course &c);
+    public:
+        PgStudent(
+                std::string studentId,
+                std::string imagePath,
+                unsigned short electiveCourses) :
+            Student(studentId, PG, imagePath, electiveCourses) {}
+
+        virtual void study(Course &course);
 };
 
 #endif

@@ -14,11 +14,11 @@ class ElCourse : public Course {
                 std::string name,
                 unsigned short semester,
                 unsigned short minimumGrade) :
-            Course(name, semester, minimumGrade) {}
+            Course(name, ELECTIVE, semester, minimumGrade) {}
 
         virtual ~ElCourse();
 
-        virtual void reg(StudentPointer &s);
+        virtual void reg(Student &student);
 };
 
 #endif
