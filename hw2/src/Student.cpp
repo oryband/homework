@@ -72,3 +72,7 @@ void  Student :: increaseUnfinishedSemesterCourses() {
 void  Student :: decreaseUnfinishedElectiveCourses() {
     this->_unfinishedSemesterCourses--;
 }
+
+void Student :: increaseCurrentSemster() {
+    this->_currentSemester++;
+}

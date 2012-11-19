@@ -37,6 +37,9 @@ void Uni :: simulate() {
             currentSemester <= this->_semesters;
             currentSemester++) {
 
+        //  Write to head of file random.log - Semster Title
+        writeToFileNumOfSemester(currentSemester);
+        
         // Registers, teaches and promotes students for this semester.
         this->registerStudentsToCourses(currentSemester);
         this->teach(currentSemester);
@@ -53,11 +56,11 @@ void Uni :: promoteStudents() {
             it_student != this->_students.end(); ++it_student) {
 
         if ((**it_student).getUnfinishedSemesterCourses() == 0) {
-            //(**it_student). // TODO finish.
-        }
-    }
-}
 
+            (**it_student).increaseCurrentSemster();
+        }
+    }   
+}
 
 void Uni :: readCurriculumFile() {
 
@@ -223,6 +226,7 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
             it_student != this->_students.end(); ++it_student) {
 
         if ((**it_student).getUnfinishedSemesterCourses() == 0) {
+
             registerStudentToMandatoryCourses(
                     *mandatorySemesterCourses, *it_student);
         }
@@ -247,7 +251,7 @@ void Uni :: registerStudentToMandatoryCourses(
             it_mandatoryCourse != mandatorySemesterCourses.end();
             ++it_mandatoryCourse) {
 
-        // TODO: Check if this condition is even necessary.
+        // TODO: Ha Ha Check if this condition is even necessary.
         if ( ! isStudentInCourse(**it_mandatoryCourse, student) ) {
             (**it_mandatoryCourse).reg(ptr_student);
         }

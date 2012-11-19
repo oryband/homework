@@ -45,6 +45,7 @@ class Student {
         // _unfinishedSemesterCourses++/--;
         void increaseUnfinishedSemesterCourses();
         void decreaseUnfinishedElectiveCourses();
+        void increaseCurrentSemster();
 };
 
 #endif

@@ -49,11 +49,6 @@ class Uni {
     public:
         Uni(bool pgOn);
 
-        void simulate();
-        void registerStudentsToCourses(unsigned short currentSemester);
-        void teach(unsigned short currentSemester);
-        void gruduate();
-
         void readStudentsFile(
                 unsigned short CsNumOfElc,
                 unsigned short PgNumOfElc);
@@ -61,11 +56,18 @@ class Uni {
         void readCurriculumFile();
         void readCoursesFile();
 
+        void simulate();
+
+        void registerStudentsToCourses(unsigned short currentSemester);
+        void teach(unsigned short currentSemester);
+        void gruduate();
+        void promoteStudents();
         void generateGraduationImage(
                 vector<Student *> &students);
 
         void SaveColorImage(Student &student);  // TODO
         void SaveGreyscaleImage(Student &student);  // TODO
+
 };
 
 #endif
