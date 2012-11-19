@@ -35,6 +35,7 @@ class Student {
         std::string getStudentId();
         unsigned short getUnfinishedSemesterCourses();
         unsigned short getUnfinishedElectiveCourses();
+        unsigned short getCurrentSemester();
 };
 
 #endif

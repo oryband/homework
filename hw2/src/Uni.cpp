@@ -2,6 +2,8 @@
 
 
 using namespace std;
+using namespace boost;
+
 
 Uni :: Uni(bool pgOn) {
 
@@ -241,7 +243,6 @@ bool Uni :: isStudentInCourse(Course &course, StudentPointer &student) {
             return true;
         }
     }
-
     return false;
 }
 
@@ -268,5 +269,38 @@ void Uni :: teach(unsigned short currentSemester) {
             ++it_electiveCourse) {
 
         it_electiveCourse->teach();
+    }
+}
+
+
+void Uni :: generateGraduationImage(
+        vector<StudentPointer> &students) {
+
+    vector<StudentPointer>::iterator it_student;
+
+    function<bool (
+            StudentPointer &s1,
+            StudentPointer &s2)>
+        compareStudentsFunctor(&compareStudents);
+
+    sort(
+            students.begin(),
+            students.end(),
+            compareStudentsFunctor);
+
+    // Iterate all students in vector and printing
+    for (it_student = students.begin();
+            it_student != students.end(); ++it_student) {
+
+        if ((**it_student).getUnfinishedSemesterCourses() == 0 &&
+            (**it_student).getUnfinishedElectiveCourses() == 0 &&
+            (**it_student).getCurrentSemester() == _semesters) {
+
+            SaveColorImage(**it_student);  // TODO
+
+        } else {
+
+            SaveGreyscaleImage(**it_student);  // TODO
+        }
     }
 }

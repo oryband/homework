@@ -11,7 +11,8 @@
 #include "typedefs.h"
 #include "consts.h"
 
-//#include <string>
+#include <algorithm>
+#include <boost/function.hpp>
 
 
 class Uni {
@@ -54,6 +55,12 @@ class Uni {
 
         void readCurriculumFile();
         void readCoursesFile();
+
+        void generateGraduationImage(
+                vector<StudentPointer> &students);
+
+        void SaveColorImage(StudentPointer &student);  // TODO
+        void SaveGreyscaleImage(StudentPointer &student);  // TODO
 };
 
 #endif
