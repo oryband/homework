@@ -8,6 +8,7 @@
 
 #define CS "CS"
 #define PG "PG"
+#define ELECTIVE "ELECTIVE"
 
 
 #endif

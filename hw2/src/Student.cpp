@@ -1,10 +1,28 @@
 #include "Student.h"
 
 
-void Studnet :: finishcourse(Course &c){
+using namespace std;
 
-	this->_unfinishedSemesterCourses -= 1;
-	c.erase(this); // copy constructor??
+
+Student :: Student(
+        string id,
+        string department,
+        string imagePath,
+        unsigned short electiveCourses) :
+
+    _id(id),
+    _department(department),
+    _imagePath(imagePath),
+    _unfinishedSemesterCourses(0),
+    _unfinishedElectiveCourses(electiveCourses),
+    _currentSemester(0) {
+}
+
+
+void Student :: finishcourse(Course &course){
+
+	course.getStudents().erase(this);  // TODO
+	this->_unfinishedSemesterCourses --;
 }
 
 

@@ -9,9 +9,10 @@ class ElCourse : public Course {
 
     public:
         ElCourse(
-                std::string courseName,
-                unsigned short semesterNum,
-                unsigned short minimumGrade);
+                std::string name,
+                unsigned short semester,
+                unsigned short minimumGrade) :
+            Course(name, semester, minimumGrade) {}
 
         virtual void reg(Student &s);
 };

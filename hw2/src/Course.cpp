@@ -1,5 +1,20 @@
 #include "Course.h"
 
+
+using namespace std;
+
+
+Course :: Course(
+        std::string name,
+        unsigned short semester,
+        unsigned short minimumGrade) :
+
+    _name(name),
+    _semester(semester),
+    _minimumGrade(minimumGrade),
+    _students() {}
+
+
 void Course :: teach() {
 	std::vector<StudentPointer>::iterator it_student;
 

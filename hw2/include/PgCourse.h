@@ -1,12 +1,19 @@
 #ifndef PGCOURSE_H_
 #define PGCOURSE_H_
 
-class PgCourse : public Course{
 
-public:
-	PgCourse(std::string courseName,unsigned short semesterNum,
-									   unsigned short minimumGrade );
-		virtual void reg(Student &s);
+#include "Course.h"
+
+
+class PgCourse : public Course {
+    public:
+        PgCourse(
+                std::string name,
+                unsigned short semester,
+                unsigned short minimumGrade) :
+            Course(name, semester, minimumGrade) {}
+
+        virtual void reg(Student &s);
 };
 
 #endif
