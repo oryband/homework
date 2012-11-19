@@ -5,7 +5,11 @@
 #include "Student.h"
 #include "CsStudent.h"
 #include "PgStudent.h"
+
 #include "Course.h"
+#include "CsCourse.h"
+#include "PgCourse.h"
+#include "ElCourse.h"
 
 #include "typedefs.h"
 #include "consts.h"
@@ -24,11 +28,12 @@ class Uni {
 
         std::vector<StudentPointer> _students;
 
-        std::vector<Course> _mandatoryAutumnCourses;
-        std::vector<Course> _mandatorySpringCourses;
+        // Note we have to use <Course *> because Course is ABSTRACT.
+        std::vector<Course *> _mandatoryAutumnCourses;
+        std::vector<Course *> _mandatorySpringCourses;
 
-        std::vector<Course> _electiveAutumnCourses;
-        std::vector<Course> _electiveSpringCourses;
+        std::vector<Course *> _electiveAutumnCourses;
+        std::vector<Course *> _electiveSpringCourses;
 
         void registerStudentToMandatoryCourses(
                 std::vector<Course> &mandatorySemesterCourses,

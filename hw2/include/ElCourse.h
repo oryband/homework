@@ -4,6 +4,8 @@
 
 #include "Course.h"
 
+#include "typedefs.h"
+
 
 class ElCourse : public Course {
 
@@ -14,7 +16,9 @@ class ElCourse : public Course {
                 unsigned short minimumGrade) :
             Course(name, semester, minimumGrade) {}
 
-        virtual void reg(Student &s);
+        virtual ~ElCourse();
+
+        virtual void reg(StudentPointer &s) {/*TODO*/};
 };
 
 #endif

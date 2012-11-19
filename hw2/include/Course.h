@@ -26,7 +26,7 @@ class Course {
                 unsigned short semester,
                 unsigned short minimumGrade);
 
-        ~Course();
+        virtual ~Course();
 
         virtual void teach();
         virtual void reg(StudentPointer &s)=0;

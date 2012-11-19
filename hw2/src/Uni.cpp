@@ -5,7 +5,21 @@ using namespace std;
 using namespace boost;
 
 
-Uni :: Uni(bool pgOn) {
+Uni :: Uni(bool pgOn) :
+        _semesters(0),
+
+        _pgOn(pgOn),
+
+        _CsNumOfElctiveCourses(0),
+        _PgNumOfElctiveCourses(0),
+
+        _students(),
+
+        _mandatoryAutumnCourses(),
+        _mandatorySpringCourses(),
+
+        _electiveAutumnCourses(),
+         _electiveSpringCourses() {
 
     readCurriculumFile();
 
@@ -120,38 +134,43 @@ void Uni :: readCoursesFile() {
 
         if (department.compare(ELECTIVE) == 0) {
 
-            if (semester % 2 == 1) {  // Autumn course.
+            if (semester % 2 == 1) {  // Autumn elective course.
 
                 this->_electiveAutumnCourses.push_back(
-                        *new ElCourse(
+                        new ElCourse(name, semester, minimumGrade));
+
+            } else { // Spring elective course.
+
+                this->_electiveSpringCourses.push_back(
+                        new ElCourse (name, semester, minimumGrade));
+            }
+        } else if (department.compare(CS) == 0) {
+
+            if (semester % 2 == 1) {  // Autumn mandatory course.
+
+                this->_mandatoryAutumnCourses.push_back(
+                        new CsCourse(name, semester, minimumGrade));
+
+            } else {  // Spring mandatory course.
+
+                this->_mandatorySpringCourses.push_back(
+                        new CsCourse(name, semester, minimumGrade));
+
+            }
+        }
+        else if (name.compare(PG) == 0) {
+
+            if (semester % 2 == 1) {  // Autumn course.
+
+                this->_mandatoryAutumnCourses.push_back(
+                        new PgCourse(
                             name, semester, minimumGrade));
-            } else { // Spring course.
-                this->_electiveSpringCourses.push_back(*new ElCourse
-                        ( courseName, activAtSemester, minGrade));
-            }
-        }
-        else if (departmentName.compare("CS") == 0) {
 
-            if (activAtSemester%(2) == 1) {   //  Its autumn course
+            } else {  // Spring course.
 
-                this->_mandatoryAutumnCourses.push_back(*new CsCourse
-                        (courseName, activAtSemester, minGrade));
-            }
-            else {		        				//  Its spring course
-                this->_mandatorySpringCourses.push_back(*new CsCourse
-                        (courseName, activAtSemester, minGrade));
-            }
-        }
-        else if (departmentName.compare("PG") == 0) {
-
-            if (activAtSemester%(2) == 1) {   //  Its autumn course
-
-                this->_mandatoryAutumnCourses.push_back(*new PgCourse
-                        (courseName, activAtSemester, minGrade));
-            }
-            else {						//  Its spring course
-                this->_mandatorySpringCourses.push_back(*new PgCourse
-                        (courseName, activAtSemester, minGrade));
+                this->_mandatorySpringCourses.push_back(
+                        new PgCourse (
+                            name, semester, minimumGrade));
             }
         }
     }

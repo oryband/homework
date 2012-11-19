@@ -4,6 +4,8 @@
 
 #include "Course.h"
 
+#include "typedefs.h"
+
 
 class PgCourse : public Course {
     public:
@@ -13,7 +15,9 @@ class PgCourse : public Course {
                 unsigned short minimumGrade) :
             Course(name, semester, minimumGrade) {}
 
-        virtual void reg(Student &s);
+        virtual ~PgCourse();
+
+        virtual void reg(StudentPointer &s) {/*TODO*/}
 };
 
 #endif
