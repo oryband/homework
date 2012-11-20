@@ -43,6 +43,7 @@ void Uni :: simulate() {
         // Registers, teaches and promotes students for this semester.
         this->registerStudentsToCourses(currentSemester);
         this->teach(currentSemester);
+        this->promoteStudents();
     }
 }
 
@@ -167,6 +168,7 @@ void Uni :: readCoursesFile() {
 
                 this->_electiveAutumnCourses.push_back(
                         new ElCourse(name, semester, minimumGrade));
+
 
             } else { // Spring elective course.
 
@@ -327,7 +329,7 @@ void Uni :: generateGraduationImage(
         vector<Student *> &students) {
 
     sort(students.begin(), students.end(), CompareStudentsFunctor);
-
+    
     // Iterate all students in vector and printing
     vector<Student *>::iterator it_student;
 
@@ -337,11 +339,16 @@ void Uni :: generateGraduationImage(
         if ((**it_student).getUnfinishedSemesterCourses() == 0 &&
             (**it_student).getUnfinishedElectiveCourses() == 0 &&
             (**it_student).getCurrentSemester() == _semesters) {
-
+            
+            //  Write to random.log file - Student graduated
+            writeToFileStudents((**it_student).getStudentId(),
+                                 "", "", 4);
             SaveColorImage(**it_student);  // TODO
 
         } else {
 
+            writeToFileStudents((**it_student).getStudentId(),
+                                 "", "", 5);
             SaveGreyscaleImage(**it_student);  // TODO
         }
     }
