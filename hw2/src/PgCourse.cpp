@@ -1,7 +1,12 @@
 #include "PgCourse.h"
 
 
-void PgCourse :: reg(Student &student){
-    this->pushToCourse(&student);
-    writeToFileStudents(student.getStudentId(), this->_name, PG, 1);
+void PgCourse :: reg(Student &s){
+    this->pushToCourse(&s);
+
+    writeToStudentsLogFile(
+            s.getStudentId(),
+            this->_name,
+            PG,
+            TAKING_COURSE);
 }

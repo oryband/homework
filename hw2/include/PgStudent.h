@@ -5,7 +5,11 @@
 #include <string>
 
 #include "Student.h"
-#include "Course.h"
+
+#include "util.h"
+
+
+class Course;
 
 
 class PgStudent : public Student {
@@ -17,7 +21,7 @@ class PgStudent : public Student {
                 unsigned short electiveCourses) :
             Student(studentId, PG, imagePath, electiveCourses) {}
 
-        virtual void study(Course &course);
+        void study(Course &course);
 };
 
 #endif

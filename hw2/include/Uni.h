@@ -2,6 +2,8 @@
 #define UNI_H_
 
 
+#include <algorithm>
+
 #include "Student.h"
 #include "CsStudent.h"
 #include "PgStudent.h"
@@ -14,8 +16,6 @@
 #include "typedefs.h"
 #include "consts.h"
 #include "util.h"
-
-#include <algorithm>
 
 
 class Uni {
@@ -44,10 +44,11 @@ class Uni {
                 std::vector<Course *> &electiveSemesterCourses,
                 Student &student);
 
-        bool isStudentInCourse(Course &course, Student &student);
+        const bool isStudentInCourse(Course &course, Student &student) const;
 
     public:
         Uni(bool pgOn);
+        ~Uni();  // TODO
 
         void readStudentsFile(
                 unsigned short CsNumOfElc,
@@ -60,14 +61,12 @@ class Uni {
 
         void registerStudentsToCourses(unsigned short currentSemester);
         void teach(unsigned short currentSemester);
-        void gruduate();
         void promoteStudents();
-        void generateGraduationImage(
-                vector<Student *> &students);
+        void graduate();
+        void generateGraduationImage(vector<Student *> &students);
 
         void SaveColorImage(Student &student);  // TODO
         void SaveGreyscaleImage(Student &student);  // TODO
-
 };
 
 #endif

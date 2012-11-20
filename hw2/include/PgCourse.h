@@ -3,8 +3,9 @@
 
 
 #include "Course.h"
+#include "Student.h"
 
-#include "typedefs.h"
+#include "util.h"
 
 
 class PgCourse : public Course {
@@ -15,9 +16,9 @@ class PgCourse : public Course {
                 unsigned short minimumGrade) :
             Course(name, PG, semester, minimumGrade) {}
 
-        virtual ~PgCourse();
+        ~PgCourse();
 
-        virtual void reg(Student &student);
+        void reg(Student &s);
 };
 
 #endif

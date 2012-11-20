@@ -1,5 +1,7 @@
 #include "Student.h"
 
+#include "Course.h"
+
 
 using namespace std;
 
@@ -13,66 +15,66 @@ Student :: Student(
     _id(id),
     _department(department),
     _imagePath(imagePath),
-    _unfinishedSemesterCourses(0),
-    _unfinishedElectiveCourses(electiveCourses),
-    _currentSemester(0) {
-}
+    _unfinishedSemesterMandatoryCourses(0),
+    _unfinishedSemesterElectiveCourses(0),
+    _necessaryElectiveCourses(electiveCourses),
+    _currentSemester(0) {}
 
-//FIXME !!!
-void Student :: finishcourse(Course &course){
 
+void Student :: finishcourse(Course &course) {
+
+    if (course.getDepartment() != ELECTIVE) {  // CS or PG course.
+        this->_unfinishedSemesterMandatoryCourses --;
+    } else {  // Elective course.
+        this->_unfinishedSemesterElectiveCourses --;
+        this->_necessaryElectiveCourses --;
+    }
+
+    // Remove student from course.
     vector<Student *>::iterator it_student;
-
     for (it_student = course.getStudents().begin();
             it_student != course.getStudents().end(); ++it_student) {
 
-        // Found the Student in the course,increse/decrease the 
-        // number of unfinished courses & delete from course.
-        StudentPointer stp = *it_student;
-        //Student st = *stp;
-        string s = (*stp).getStudentId();
-        if (s.compare(
+        if ((**it_student).getStudentId().compare(
                     this->getStudentId()) == 0) {
 
-            if (course.getCourseDepartment() == CS ||
-                    course.getCourseDepartment() == PG) {
-
-                this->_unfinishedSemesterCourses--;
-            }
-            else {
-                this->_unfinishedElectiveCourses--;
-            }
-
-            vector<StudentPointer>* v = course.getStudents();
-            v->erase(*it_student);
+            course.getStudents().erase(it_student);
+            return;
         }
     }
 }
 
 
-unsigned short Student :: getUnfinishedSemesterCourses() {
-    return this->_unfinishedSemesterCourses;
+const unsigned short Student :: getUnfinishedSemesterMandatoryCourses() const {
+    return this->_unfinishedSemesterMandatoryCourses;
 }
 
 
-unsigned short Student :: getUnfinishedElectiveCourses() {
-    return this->_unfinishedElectiveCourses;
+const unsigned short Student :: getUnfinishedSemesterElectiveCourses() const {
+    return this->_unfinishedSemesterElectiveCourses;
 }
 
 
-unsigned short Student :: getCurrentSemester() {
+const unsigned short Student :: getNecessaryElectiveCourses() const {
+    return this->_necessaryElectiveCourses;
+}
+
+
+const unsigned short Student :: getCurrentSemester() const {
     return this->_currentSemester;
 }
 
 
-void  Student :: increaseUnfinishedSemesterCourses() {
-    this->_unfinishedSemesterCourses++;
+void Student :: incrementUnfinishedSemesterMandatoryCourses() {
+    this->_unfinishedSemesterMandatoryCourses ++;
 }
 
-void  Student :: decreaseUnfinishedElectiveCourses() {
-    this->_unfinishedSemesterCourses--;
+
+void Student :: incrementUnfinishedSemesterElectiveCourses() {
+    this->_unfinishedSemesterElectiveCourses ++;
 }
 
-void Student :: increaseCurrentSemster() {
-    this->_currentSemester++;
+
+void Student :: promoteToNextSemster() {
+    this->_currentSemester ++;    
 }

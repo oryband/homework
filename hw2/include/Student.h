@@ -1,15 +1,17 @@
 #ifndef STUDENT_H_
 #define STUDENT_H_
 
-#include "Course.h"
+
+#include <string>
+#include <vector>
+#include <cstdlib>
+#include <iostream>
 
 #include "typedefs.h"
 #include "consts.h"
 
-#include <iostream>
-#include <string>
-#include <cstdlib>
-#include <vector>
+
+class Course;
 
 
 class Student {
@@ -19,8 +21,10 @@ class Student {
         std::string _department;
         std::string _imagePath;
 
-        unsigned short _unfinishedSemesterCourses;
-        unsigned short _unfinishedElectiveCourses;
+        unsigned short _unfinishedSemesterMandatoryCourses;
+        unsigned short _unfinishedSemesterElectiveCourses;
+
+        unsigned short _necessaryElectiveCourses;
 
         unsigned short _currentSemester;
 
@@ -32,20 +36,20 @@ class Student {
 
         virtual ~Student();
 
-        virtual void study(Course &course)=0;  // TODO
-        void finishcourse(Course &course);  // TODO
+        virtual void study(Course &course)=0;
+        void finishcourse(Course &course);
 
         // Getters.
         std::string getStudentId();
-        unsigned short getUnfinishedSemesterCourses();
-        unsigned short getUnfinishedElectiveCourses();
-        unsigned short getCurrentSemester();
+        const unsigned short getUnfinishedSemesterMandatoryCourses() const;
+        const unsigned short getUnfinishedSemesterElectiveCourses() const;
+        const unsigned short getNecessaryElectiveCourses() const;
+        const unsigned short getCurrentSemester() const;
 
         // Setters
-        // _unfinishedSemesterCourses++/--;
-        void increaseUnfinishedSemesterCourses();
-        void decreaseUnfinishedElectiveCourses();
-        void increaseCurrentSemster();
+        void incrementUnfinishedSemesterMandatoryCourses(); 
+        void incrementUnfinishedSemesterElectiveCourses(); 
+        void promoteToNextSemster();
 };
 
 #endif

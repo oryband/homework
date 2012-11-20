@@ -1,11 +1,23 @@
 #include "PgStudent.h"
 
-void PgStudent :: study(Course &course) {
+#include "Course.h"
 
-	if (rand() % 100 >= course.getMinimumGrade() && rand() % 100 >= 25) {
+
+void PgStudent :: study(Course &course) {
+	if (rand() % GRADE_RANGE >= course.getMinimumGrade() &&
+            rand() % GRADE_RANGE >= PG_QUIT_CHANCE) {
+
 		this->finishcourse(course);
-        writeToFileStudents(this->_id, course.getCourseName(), "", 2);
+        writeToStudentsLogFile(
+                this->_id,
+                course.getName(),
+                this->_department,
+                FINISHED_COURSE);
 	} else {
-        writeToFileStudents(this->_id, course.getCourseName(), "", 3);
+        writeToStudentsLogFile(
+                this->_id,
+                course.getName(),
+                this->_department,
+                FAILED_COURSE);
     }
 }

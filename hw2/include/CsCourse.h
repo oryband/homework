@@ -3,26 +3,24 @@
 
 
 #include "Course.h"
+#include "Student.h"
 
-#include "typedefs.h"
+#include "util.h"
 #include "consts.h"
 
 
 class CsCourse : public Course {
 
     public:
-        CsCourse() : Course("", CS, 0, 0) {}
         CsCourse(
                 std::string name,
                 unsigned short semester,
                 unsigned short minimumGrade) :
             Course(name, CS, semester, minimumGrade) {}
 
-        virtual ~CsCourse();
+        ~CsCourse();
 
-        virtual void teach();
-        virtual void reg(Student &student);
-        virtual void teachStudent(Student &student);
+        void reg(Student &s);
 };
 
 #endif
