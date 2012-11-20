@@ -46,9 +46,11 @@ class Uni {
 
         const bool isStudentInCourse(Course &course, Student &student) const;
 
+        void deleteCourses(std::vector<Course *> &courses);
+
     public:
         Uni(bool pgOn);
-        ~Uni();  // TODO
+        ~Uni();
 
         void readStudentsFile(
                 unsigned short CsNumOfElc,
