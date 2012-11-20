@@ -353,8 +353,8 @@ void Uni :: generateGraduationImage(
     for (it_student = students.begin();
             it_student != students.end(); ++it_student) {
 
-        if ((**it_student).getUnfinishedSemesterCourses() == 0 &&
-            (**it_student).getUnfinishedElectiveCourses() == 0 &&
+        if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0 &&
+            (**it_student).getNecessaryElectiveCourses() == 0 &&
             (**it_student).getCurrentSemester() == _semesters) {
             
             //  Write to random.log file - Student graduated
@@ -368,5 +368,40 @@ void Uni :: generateGraduationImage(
                                  "", "", 5);
             SaveGreyscaleImage(**it_student);  // TODO
         }
+    }
+}
+
+
+void Uni :: deleteVectorCourses(vector<Course *>* vectorCourses) {
+
+    std::vector<Course *>::iterator it_course;
+
+    for (it_course = vectorCourses->begin();
+            it_course != vectorCourses->end();
+            ++it_course) {
+
+        delete (*it_course);
+        (*it_course) = 0;
+    }
+}
+
+
+Uni :: ~Uni() {
+
+    //  Delete all Courses vectors 
+    this->deleteVectorCourses(&_mandatoryAutumnCourses);
+    this->deleteVectorCourses(&_mandatorySpringCourses);
+    this->deleteVectorCourses(&_electiveAutumnCourses);
+    this->deleteVectorCourses(&_electiveSpringCourses);
+
+    //  Delete students vector
+    std::vector<Student *>::iterator it_student;
+
+    for (it_student = this->_students.begin();
+            it_student != this->_students.end();
+            ++it_student) {
+
+        delete (*it_student);
+        *it_student = 0;
     }
 }
