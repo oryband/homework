@@ -1,7 +1,12 @@
 #include "ElCourse.h"
 
 
-void ElCourse :: reg(Student &student) {
-    this->pushToCourse(&student);
-    writeToFileStudents(student.getStudentId(), this->_name, ELECTIVE, 1);
+void ElCourse :: reg(Student &s) {
+    this->pushToCourse(&s);
+
+    writeToStudentsLogFile(
+            s.getStudentId(),
+            this->_name,
+            ELECTIVE,
+            TAKING_COURSE);
 }

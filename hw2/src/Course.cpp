@@ -1,5 +1,7 @@
 #include "Course.h"
 
+#include "Student.h"
+
 
 using namespace std;
 
@@ -22,39 +24,38 @@ void Course :: teach() {
 	for (it_student = this->_students.begin();
             it_student != this->_students.end(); ++it_student) {
 
-        this->teachStudent(**it_student);  // TODO Implement in child classes.
+        (**it_student).study(*this);
 	}
 }
 
 
-
-unsigned short Course :: getMinimumGrade() const{
+const unsigned short Course :: getMinimumGrade() const{
     return this->_minimumGrade;
 }
 
 
-const vector<Student *>& Course :: getStudents() {
+vector<Student *>& Course :: getStudents() {
     return this->_students;
 }
 
 
-void  Course :: pushToCourse(Student *ptr_student) {
+void Course :: pushToCourse(Student *ptr_student) {
 
     this->_students.push_back(ptr_student);
-    
-    if (this->getCourseDepartment() == CS ||
-            this->getCourseDepartment() == PG) {
 
-        ptr_student->increaseUnfinishedSemesterCourses();
+    if (this->getDepartment() != ELECTIVE) {
+        ptr_student->incrementUnfinishedSemesterMandatoryCourses();
+    } else {
+        ptr_student->incrementUnfinishedSemesterElectiveCourses();
     }
 }
 
 
-string Course :: getCourseName() const {
+const string Course :: getName() const {
     return this->_name;
 }
 
 
-string Course :: getCourseDepartment() const {
+const string Course :: getDepartment() const {
     return this->_department;
 }

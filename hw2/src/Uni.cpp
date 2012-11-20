@@ -44,6 +44,7 @@ void Uni :: simulate() {
         this->registerStudentsToCourses(currentSemester);
         this->teach(currentSemester);
         this->promoteStudents();
+        // TODO Graduate().
     }
 }
 
@@ -56,16 +57,18 @@ void Uni :: promoteStudents() {
     for (it_student = this->_students.begin();
             it_student != this->_students.end(); ++it_student) {
 
-        if ((**it_student).getUnfinishedSemesterCourses() == 0) {
+        if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0) {
 
-            (**it_student).increaseCurrentSemster();
+            (**it_student).promoteToNextSemster();
         }
     }   
 }
 
+
 void Uni :: readCurriculumFile() {
 
-    vector< vector<string> >* lines = getLines(CURRICULUM_FILE);
+    vector< vector<string> > *lines = new vector< vector<string> >;
+    getLines(CURRICULUM_FILE, *lines);
 
     vector<string> line = (*lines)[0];
 
@@ -102,6 +105,8 @@ void Uni :: readCurriculumFile() {
             this->_PgNumOfElctiveCourses = electiveCourses;
         }
     }
+
+    delete lines;
 }
 
 
@@ -109,8 +114,8 @@ void Uni :: readStudentsFile(
         unsigned short csElectiveCourses,
         unsigned short pgElectiveCourses) {
 
-    vector< vector<string> >* lines = getLines(STUDENTS_FILE);
-
+    vector< vector<string> > *lines = new vector< vector<string> >;
+    getLines(STUDENTS_FILE, *lines);
 
     // Iterate over lines and copy data.
     size_t length = lines->size();
@@ -136,12 +141,15 @@ void Uni :: readStudentsFile(
 
         this->_students.push_back(ptr_student);
     }
+
+    delete lines;
 }
 
 
 void Uni :: readCoursesFile() {
 
-    vector< vector<string> >* lines = getLines(COURSES_FILE);
+    vector< vector<string> > *lines = new vector< vector<string> >;
+    getLines(COURSES_FILE, *lines);
 
     // Iterate over lines and copy data.
     size_t length = lines->size();
@@ -188,8 +196,7 @@ void Uni :: readCoursesFile() {
                         new CsCourse(name, semester, minimumGrade));
 
             }
-        }
-        else if (name.compare(PG) == 0) {
+        } else if (name.compare(PG) == 0) {
 
             if (semester % 2 == 1) {  // Autumn course.
 
@@ -205,6 +212,8 @@ void Uni :: readCoursesFile() {
             }
         }
     }
+
+    delete lines;
 }
 
 
@@ -227,17 +236,17 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
     for (it_student = this->_students.begin();
             it_student != this->_students.end(); ++it_student) {
 
-        if ((**it_student).getUnfinishedSemesterCourses() == 0) {
+        if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0) {
 
             registerStudentToMandatoryCourses(
-                    *mandatorySemesterCourses, *it_student);
+                    *mandatorySemesterCourses, **it_student);
         }
 
         // If student needs to register to elective courses, do so.
-        if ((**it_student).getUnfinishedElectiveCourses() > 0) {
+        if ((**it_student).getNecessaryElectiveCourses() > 0) {
 
             registerStudentToElectiveCourses(
-                    *electiveSemesterCourses, *it_student);
+                    *electiveSemesterCourses, **it_student);
         }
     }
 }
@@ -245,7 +254,7 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
 void Uni :: registerStudentToMandatoryCourses(
         vector<Course *> &mandatorySemesterCourses,
-        Student *ptr_student) {
+        Student &student) {
 
     vector<Course *>::iterator it_mandatoryCourse;
 
@@ -253,17 +262,14 @@ void Uni :: registerStudentToMandatoryCourses(
             it_mandatoryCourse != mandatorySemesterCourses.end();
             ++it_mandatoryCourse) {
 
-        // TODO: Ha Ha Check if this condition is even necessary.
-        if ( ! isStudentInCourse(**it_mandatoryCourse, student) ) {
-            (**it_mandatoryCourse).reg(ptr_student);
-        }
+        (**it_mandatoryCourse).reg(student);
     }
 }
 
 
 void Uni :: registerStudentToElectiveCourses(
         vector<Course *> &electiveSemesterCourses,
-        Student *ptr_student) {
+        Student &student) {
 
     vector<Course *>::iterator it_electiveCourse;
 
@@ -271,10 +277,17 @@ void Uni :: registerStudentToElectiveCourses(
             it_electiveCourse != electiveSemesterCourses.end();
             ++it_electiveCourse) {
 
-        // Only register if student isn't already registered.
-        if ( ! isStudentInCourse(**it_electiveCourse, student) ) {
+        // Register student to minimum number of elective courses necessary to graduate.
+        if (
+                student.getUnfinishedSemesterElectiveCourses() <
+                student.getNecessaryElectiveCourses()) {
 
-            (**it_electiveCourse).reg(ptr_student);
+            if ( ! isStudentInCourse(**it_electiveCourse, student) ) {
+
+                (**it_electiveCourse).reg(student);
+            }
+        } else {
+            return;
         }
     }
 }
@@ -283,14 +296,14 @@ void Uni :: registerStudentToElectiveCourses(
 /**
  * Returns true if student is already registered to course.
  */
-bool Uni :: isStudentInCourse(Course &course, Student *ptr_student) {
+const bool Uni :: isStudentInCourse(Course &course, Student &student) const {
 
     vector<Student *>::iterator it_student;
-    for (it_student = course.getStudents()->begin();
-            it_student != course.getStudents()->end(); ++it_student) {
+    for (it_student = course.getStudents().begin();
+            it_student != course.getStudents().end(); ++it_student) {
 
         if ((**it_student).getStudentId().compare(
-                    student->getStudentId()) == 0) {
+                    student.getStudentId()) == 0) {
 
             return true;
         }
@@ -322,12 +335,16 @@ void Uni :: teach(unsigned short currentSemester) {
 
         (**it_electiveCourse).teach();
     }
+
+    mandatorySemesterCourses = 0;
+    electiveSemesterCourses = 0;
 }
 
 
 void Uni :: generateGraduationImage(
         vector<Student *> &students) {
 
+    // FIXME
     sort(students.begin(), students.end(), CompareStudentsFunctor);
     
     // Iterate all students in vector and printing

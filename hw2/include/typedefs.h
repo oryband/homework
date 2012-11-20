@@ -2,24 +2,12 @@
 #define TYPEDEFS_H_
 
 
-#include "Student.h"
-//#include "CsStudent.h"
-//#include "PgStudent.h"
-//#include "Course.h"
-
-#include <boost/shared_ptr.hpp>
 #include <boost/function.hpp>
 
-
-typedef boost::shared_ptr<Student> StudentPointer;
-//typedef boost::shared_ptr<CsStudent> CsStudentPointer;
-//typedef boost::shared_ptr<PgStudent> PgStudentPointer;
-//typedef boost::shared_ptr<Course> CoursePointer;
+#include "Student.h"
 
 
-bool compareStudents (
-        const StudentPointer &s1,
-        const StudentPointer &s2) {
+bool compareStudents (Student *s1, Student *s2) {
 
     return (
             atoi(s1->getStudentId().c_str()) < 
@@ -27,7 +15,7 @@ bool compareStudents (
 }
 
 
-boost::function<bool (const StudentPointer &s1, const StudentPointer &s2)>
+boost::function<bool (Student *s1, Student *s2)>
     CompareStudentsFunctor(&compareStudents);
 
 

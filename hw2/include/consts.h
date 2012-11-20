@@ -11,5 +11,21 @@
 #define PG "PG"
 #define ELECTIVE "ELECTIVE"
 
+#define GRADE_RANGE 101
+
+#define CS_QUIT_CHANCE 25
+#define PG_QUIT_CHANCE 20
+
+// 1 - Student is taking a course.
+// 2 - Student took and finish course successfully.
+// 3 - Student took and finish course unsuccessfully.
+// 4 - Student has graduated.
+// 5 - Student has not graduated.
+#define TAKING_COURSE 1
+#define FINISHED_COURSE 2
+#define FAILED_COURSE 3
+#define GRADUATED 4
+#define NOT_GRADUATED 5
+
 
 #endif
