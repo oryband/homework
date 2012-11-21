@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "consts.h"
-
+#include "util.h"
 
 using namespace std;
 
@@ -57,9 +57,9 @@ void writeToFileNumOfSemester(int semester) {
     if (semester == 1) {
         randomFile << "1st Semester Of The Random U." << endl;
     } else if (semester == 2) {
-        randomFile << "2st Semester Of The Random U." << endl;
+        randomFile << "2nd Semester Of The Random U." << endl;
     } else if (semester == 3) {
-        randomFile << "3st Semester Of The Random U." << endl;
+        randomFile << "3rd Semester Of The Random U." << endl;
     } else {
         randomFile << semester << "th Semester Of The Random U." << endl;
     }
@@ -105,6 +105,10 @@ void writeToStudentsLogFile(
     if (status == NOT_GRADUATED) {
     
         randomFile << studentId << " has not graduated" << endl;
+    }
+    if (status == DENIED) {
+        
+        randomFile << studentId << " is being denied his education" << endl;
     }
 }
 

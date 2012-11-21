@@ -78,3 +78,8 @@ void Student :: incrementUnfinishedSemesterElectiveCourses() {
 void Student :: promoteToNextSemster() {
     this->_currentSemester ++;    
 }
+
+
+const string Student :: getDepartmentName() const {
+    return this->_department;
+}

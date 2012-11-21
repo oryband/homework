@@ -26,6 +26,7 @@
 #define FAILED_COURSE 3
 #define GRADUATED 4
 #define NOT_GRADUATED 5
-
+#define DENIED 6
+ 
 
 #endif

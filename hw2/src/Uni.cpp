@@ -6,45 +6,60 @@ using namespace boost;
 
 
 Uni :: Uni(bool pgOn) :
-        _semesters(0),
+    _semesters(0),
 
-        _pgOn(pgOn),
+    _pgOn(pgOn),
 
-        _CsNumOfElctiveCourses(0),
-        _PgNumOfElctiveCourses(0),
+    _CsNumOfElctiveCourses(0),
+    _PgNumOfElctiveCourses(0),
 
-        _students(),
+    _students(),
 
-        _mandatoryAutumnCourses(),
-        _mandatorySpringCourses(),
+    _mandatoryAutumnCourses(),
+    _mandatorySpringCourses(),
 
-        _electiveAutumnCourses(),
-         _electiveSpringCourses() {
+    _electiveAutumnCourses(),
+    _electiveSpringCourses() {
 
-    readCurriculumFile();
+        readCurriculumFile();
 
-    readStudentsFile(
-            this->_CsNumOfElctiveCourses,
-            this->_PgNumOfElctiveCourses);
+        readStudentsFile(
+                this->_CsNumOfElctiveCourses,
+                this->_PgNumOfElctiveCourses);
 
-	readCoursesFile();
-}
+        readCoursesFile();
+    }
 
 
 void Uni :: simulate() {
 
-    for (unsigned short currentSemester = 1;
-            currentSemester <= this->_semesters;
-            currentSemester++) {
+    //  Upon MALAG flag, we will print to file PG students first
+    //  as denied of education.
+    if (this->_pgOn) {
 
-        //  Write to head of file random.log - Semster Title
-        writeToFileNumOfSemester(currentSemester);
-        
-        // Registers, teaches and promotes students for this semester.
-        this->registerStudentsToCourses(currentSemester);
-        this->teach(currentSemester);
-        this->promoteStudents();
-        // TODO Graduate().
+        vector<Student *>::iterator it_student;
+
+        for (it_student = this->_students.begin();
+                it_student != this->_students.end();
+                ++it_student) {
+
+            writeToStudentsLogFile((**it_student).getStudentId(),"","",6);
+        }
+    } else {
+
+        for (unsigned short currentSemester = 1;
+                currentSemester <= this->_semesters;
+                currentSemester++) {
+
+            //  Write to head of file random.log - Semster Title
+            writeToFileNumOfSemester(currentSemester);
+
+            // Registers, teaches and promotes students for this semester.
+            this->registerStudentsToCourses(currentSemester);
+            this->teach(currentSemester);
+            this->promoteStudents();
+            // TODO Graduate().
+        }
     }
 }
 
@@ -155,6 +170,9 @@ void Uni :: readCoursesFile() {
     size_t length = lines->size();
     for(unsigned int l=0; l < length; l++) {
 
+
+
+
         vector<string> line = (*lines)[l];
 
         string department = string(line[0]),
@@ -230,7 +248,8 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
     }
 
     // Iterate over all students, and register those who finished their
-    // last semester succesfully.
+    // last semester succesfully. Not registering Pg Students to any course
+    // if MALAG did not approve their studies.
     vector<Student *>::iterator it_student;
 
     for (it_student = this->_students.begin();
@@ -238,15 +257,20 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
         if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0) {
 
-            registerStudentToMandatoryCourses(
-                    *mandatorySemesterCourses, **it_student);
-        }
+            if (!this->_pgOn &&
+                    (**it_student).getDepartmentName().compare(PG)==0) {
+                // Dont register PgStudent to any course
+            } else {
+                registerStudentToMandatoryCourses(
+                        *mandatorySemesterCourses, **it_student);
 
-        // If student needs to register to elective courses, do so.
-        if ((**it_student).getNecessaryElectiveCourses() > 0) {
+                // If student needs to register to elective courses, do so.
+                if ((**it_student).getNecessaryElectiveCourses() > 0) {
 
-            registerStudentToElectiveCourses(
-                    *electiveSemesterCourses, **it_student);
+                    registerStudentToElectiveCourses(
+                            *electiveSemesterCourses, **it_student);
+                }
+            }
         }
     }
 }

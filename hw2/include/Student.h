@@ -45,7 +45,7 @@ class Student {
         const unsigned short getUnfinishedSemesterElectiveCourses() const;
         const unsigned short getNecessaryElectiveCourses() const;
         const unsigned short getCurrentSemester() const;
-
+        const std::string getDepartmentName() const;
         // Setters
         void incrementUnfinishedSemesterMandatoryCourses(); 
         void incrementUnfinishedSemesterElectiveCourses(); 
