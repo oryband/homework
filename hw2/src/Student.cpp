@@ -83,3 +83,8 @@ void Student :: promoteToNextSemster() {
 const string Student :: getDepartmentName() const {
     return this->_department;
 }
+
+
+string Student :: getImagePath() const {
+    return this->_imagePath;
+}

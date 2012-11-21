@@ -46,6 +46,7 @@ class Student {
         const unsigned short getNecessaryElectiveCourses() const;
         const unsigned short getCurrentSemester() const;
         const std::string getDepartmentName() const;
+        std::string getImagePath() const; 
         // Setters
         void incrementUnfinishedSemesterMandatoryCourses(); 
         void incrementUnfinishedSemesterElectiveCourses(); 

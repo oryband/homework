@@ -14,6 +14,12 @@ Uni :: Uni(bool pgOn) :
     _PgNumOfElctiveCourses(0),
 
     _students(),
+    
+    _numOfCsStudents(0),
+    _numOfPgStudents(0),
+
+    _numOfCsStuInImage(0),
+    _numOfPgStuInImage(0),
 
     _mandatoryAutumnCourses(),
     _mandatorySpringCourses(),
@@ -28,6 +34,10 @@ Uni :: Uni(bool pgOn) :
                 this->_PgNumOfElctiveCourses);
 
         readCoursesFile();
+
+        //  Create two blank pictures at the size of each department students
+        this->_csPicture(100,_numOfCsStudents*100);
+        this->_pgPicture(100,_numOfPgStudents*100);
     }
 
 
@@ -147,11 +157,14 @@ void Uni :: readStudentsFile(
 
             ptr_student = new CsStudent(
                     id, imagePath, csElectiveCourses);
+            this->_numOfCsStudents++;
 
         } else {  // PG
 
             ptr_student = new PgStudent(
                     id, imagePath, pgElectiveCourses);
+
+            this->_numOfPgStudents++;
         }
 
         this->_students.push_back(ptr_student);
@@ -339,7 +352,7 @@ const bool Uni :: isStudentInCourse(Course &course, Student &student) const {
 void Uni :: teach(unsigned short currentSemester) {
 
     vector<Course *> *mandatorySemesterCourses, *electiveSemesterCourses;
-	vector<Course *>::iterator it_mandatoryCourse, it_electiveCourse;
+    vector<Course *>::iterator it_mandatoryCourse, it_electiveCourse;
 
     if (currentSemester % 2 == 1) {  // Autumn semester.
         mandatorySemesterCourses = &(this->_mandatoryAutumnCourses);
@@ -370,7 +383,7 @@ void Uni :: generateGraduationImage(
 
     // FIXME
     sort(students.begin(), students.end(), CompareStudentsFunctor);
-    
+
     // Iterate all students in vector and printing
     vector<Student *>::iterator it_student;
 
@@ -378,23 +391,75 @@ void Uni :: generateGraduationImage(
             it_student != students.end(); ++it_student) {
 
         if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0 &&
-            (**it_student).getNecessaryElectiveCourses() == 0 &&
-            (**it_student).getCurrentSemester() == _semesters) {
-            
+                (**it_student).getNecessaryElectiveCourses() == 0 &&
+                (**it_student).getCurrentSemester() == _semesters-1) {
+
             //  Write to random.log file - Student graduated
-            writeToFileStudents((**it_student).getStudentId(),
-                                 "", "", 4);
-            SaveColorImage(**it_student);  // TODO
+            writeToStudentsLogFile((**it_student).getStudentId(),
+                    "", "", 4);
+            saveColorImage(**it_student); 
 
         } else {
 
-            writeToFileStudents((**it_student).getStudentId(),
-                                 "", "", 5);
-            SaveGreyscaleImage(**it_student);  // TODO
+            writeToStudentsLogFile((**it_student).getStudentId(),
+                    "", "", 5);
+            saveGreyscaleImage(**it_student); 
         }
+    }
+    //TODO save images on root project folder
+}
+
+void Uni :: saveColorImage(Student& student) {
+
+    ImageOperations opr;
+
+    ImageLoader studentImg(student.getImagePath());
+    ImageLoader studentImgResized(100,100);
+
+    opr.resize(studentImg.getImage(), studentImgResized.getImage());
+
+    if (student.getDepartmentName().compare(CS) == 0) {
+
+        opr.copy_paste_image(studentImgResized.getImage(),
+                this->_csPicture.getImage(),
+                this->_numOfCsStuInImage*100);
+        this->_numOfCsStuInImage++;
+    } else {
+        opr.copy_paste_image(studentImgResized.getImage(),
+                this->_pgPicture.getImage(),
+                this->_numOfPgStuInImage*100);
+        this->_numOfPgStuInImage++;
     }
 }
 
+
+void Uni :: saveGreyscaleImage(Student& student) {
+
+    ImageOperations opr;
+
+    ImageLoader studentImg(student.getImagePath());
+    ImageLoader studentImgResized(100,100);
+
+    opr.resize(studentImg.getImage(), studentImgResized.getImage());
+
+    opr.rgb_to_greyscale(studentImgResized.getImage(),
+            studentImgResized.getImage()); //working! checked!
+
+
+            if (student.getDepartmentName().compare(CS) == 0) {
+
+            opr.copy_paste_image(studentImgResized.getImage(),
+                this->_csPicture.getImage(),
+                this->_numOfCsStuInImage*100);
+            this->_numOfCsStuInImage++;
+            } else {
+
+            opr.copy_paste_image(studentImgResized.getImage(),
+                this->_pgPicture.getImage(),
+                this->_numOfPgStuInImage*100);
+            this->_numOfPgStuInImage++;
+            }
+}         
 
 void Uni :: deleteCourses(vector<Course *> &courses) {
 

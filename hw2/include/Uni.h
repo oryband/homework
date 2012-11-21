@@ -12,6 +12,8 @@
 #include "CsCourse.h"
 #include "PgCourse.h"
 #include "ElCourse.h"
+#include "ImageLoader.h"
+#include "ImageOperations.h"
 
 #include "typedefs.h"
 #include "consts.h"
@@ -27,6 +29,11 @@ class Uni {
         unsigned short _PgNumOfElctiveCourses;
 
         std::vector<Student *> _students;
+        unsigned short _numOfCsStudents;
+        unsigned short _numOfPgStudents;
+        
+        unsigned short _numOfCsStuInImage;
+        unsigned short _numOfPgStuInImage;
 
         // Note we have to use <Course *> because Course is ABSTRACT.
         // TODO: Do we need to delete inner members in dtor?
@@ -35,6 +42,10 @@ class Uni {
 
         std::vector<Course *> _electiveAutumnCourses;
         std::vector<Course *> _electiveSpringCourses;
+
+        //  Pictures CS,PG
+        ImageLoader _csPicture;
+        ImageLoader _pgPicture;
 
         void registerStudentToMandatoryCourses(
                 std::vector<Course *> &mandatorySemesterCourses,
@@ -67,10 +78,11 @@ class Uni {
         void graduate();
         void generateGraduationImage(vector<Student *> &students);
 
-        void SaveColorImage(Student &student);  // TODO
-        void SaveGreyscaleImage(Student &student);  // TODO
+        void saveColorImage(Student &student);
+        void saveGreyscaleImage(Student &student);
 
         void deleteVectorCourses(vector<Course *>* vectorCourses);
+
 };
 
 #endif
