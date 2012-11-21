@@ -372,27 +372,27 @@ void Uni :: generateGraduationImage(
 }
 
 
-void Uni :: deleteVectorCourses(vector<Course *>* vectorCourses) {
+void Uni :: deleteCourses(vector<Course *> &courses) {
 
     std::vector<Course *>::iterator it_course;
 
-    for (it_course = vectorCourses->begin();
-            it_course != vectorCourses->end();
+    for (it_course = courses.begin();
+            it_course != courses.end();
             ++it_course) {
 
-        delete (*it_course);
-        (*it_course) = 0;
+        delete *it_course;
+        *it_course = 0;
     }
 }
 
 
 Uni :: ~Uni() {
 
-    //  Delete all Courses vectors 
-    this->deleteVectorCourses(&_mandatoryAutumnCourses);
-    this->deleteVectorCourses(&_mandatorySpringCourses);
-    this->deleteVectorCourses(&_electiveAutumnCourses);
-    this->deleteVectorCourses(&_electiveSpringCourses);
+    //  Delete all Courses vectors
+    this->deleteCourses(this->_mandatoryAutumnCourses);
+    this->deleteCourses(this->_mandatorySpringCourses);
+    this->deleteCourses(this->_electiveAutumnCourses);
+    this->deleteCourses(this->_electiveSpringCourses);
 
     //  Delete students vector
     std::vector<Student *>::iterator it_student;
