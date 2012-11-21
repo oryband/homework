@@ -16,8 +16,6 @@ class PgCourse : public Course {
                 unsigned short minimumGrade) :
             Course(name, PG, semester, minimumGrade) {}
 
-        ~PgCourse();
-
         void reg(Student &s);
 };
 

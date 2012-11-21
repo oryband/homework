@@ -67,6 +67,8 @@ class Uni {
 
         void SaveColorImage(Student &student);  // TODO
         void SaveGreyscaleImage(Student &student);  // TODO
+
+        void deleteVectorCourses(vector<Course *>* vectorCourses);
 };
 
 #endif

@@ -18,8 +18,6 @@ class CsCourse : public Course {
                 unsigned short minimumGrade) :
             Course(name, CS, semester, minimumGrade) {}
 
-        ~CsCourse();
-
         void reg(Student &s);
 };
 

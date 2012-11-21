@@ -17,8 +17,6 @@ class ElCourse : public Course {
                 unsigned short minimumGrade) :
             Course(name, ELECTIVE, semester, minimumGrade) {}
 
-        ~ElCourse();
-
         void reg(Student &s);
 };
 
