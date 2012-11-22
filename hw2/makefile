@@ -26,8 +26,17 @@ $(BINDIR)CsStudent.o: $(SRCDIR)CsStudent.cpp
 $(BINDIR)PgStudent.o: $(SRCDIR)CsStudent.cpp
 	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)PgStudent.o $(SRCDIR)CsStudent.cpp $(SRCDIR)Student.o
 
-$(BINDIR)run.o: $(SRCDIR)run.cpp
-	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)run.o $(SRCDIR)run.cpp
+$(BINDIR)Course.o: $(SRCDIR)Course.cpp
+	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)Course.o $(SRCDIR)Course.cpp
+
+$(BINDIR)CsCourse.o: $(SRCDIR)CsCourse.cpp $(BINDIR)Course.o 
+	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)CsCourse.o $(BINDIR)Course.o $(SRCDIR)CsCourse.cpp
+
+$(BINDIR)PgCourse.o: $(SRCDIR)PgCourse.cpp $(BINDIR)Course.o 
+	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)PgCourse.o $(BINDIR)Course.o $(SRCDIR)PgCourse.cpp
+
+$(BINDIR)Uni.o: $(SRCDIR)Uni.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o
+	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)Uni.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(SRCDIR)Uni.cpp
 
 
 .PHONY: clean
