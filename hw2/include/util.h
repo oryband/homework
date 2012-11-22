@@ -29,8 +29,8 @@ void getLines(string filePath, vector< vector<string> > &lines) {
     while (file >> line) {
         vector<string> words;
 
-        int b = 0,  // Begin index.
-            e = line.find(',');  // End index.
+        unsigned int b = 0;  // Begin index.
+        size_t e = line.find(',');  // End index.
         while (e != string::npos) {  // FIXME - DONT CAST IT CAUSES BUGS.
             words.push_back(line.substr(b, e - b));
 
