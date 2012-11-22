@@ -1,21 +1,27 @@
 #include "ImageOperations.h"
- 
-void ImageOperations::rgb_to_greyscale(const cv::Mat& src, cv::Mat& dst)
-{    
-    cv::cvtColor(src,dst,CV_RGB2GRAY);
+
+
+using namespace cv;
+
+
+void ImageOperations :: rgbToGreyscale(const Mat &src, Mat &dst) {
+    cvtColor(src, dst, CV_RGB2GRAY);
 }
- 
- 
-void ImageOperations::resize(const cv::Mat& src, cv::Mat& dst)
-{
+
+
+void ImageOperations :: resize(const Mat &src, Mat &dst) {
     cv::resize(src,dst,dst.size());
 }
- 
-void ImageOperations::copy_paste_image(const cv::Mat& original, cv::Mat& destination, int xLocation)
-{
-    if(original.size().height > destination.size().height)         
-        throw ("original image is higher that destination image");
-    cv::Rect roi(xLocation, 0, original.size().width, original.size().height);
-    cv::Mat imageROI (destination, roi);
+
+
+void ImageOperations :: copyPasteImage(
+        const Mat &original, Mat &destination, int xLocation) {
+
+    if (original.size().height > destination.size().height) {
+        throw ("Error: Original image is higher that destination image.");
+    }
+
+    Rect roi(xLocation, 0, original.size().width, original.size().height);
+    Mat imageROI (destination, roi);
     original.copyTo(imageROI);
 }
