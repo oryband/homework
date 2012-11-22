@@ -21,6 +21,8 @@ class CsStudent : public Student {
                 unsigned short electiveCourses) :
             Student(studentId, CS, imagePath, electiveCourses) {}
 
+        //~CsStudent() {}
+
         void study(Course &course);
 };
 

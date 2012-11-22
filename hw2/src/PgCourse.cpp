@@ -1,5 +1,7 @@
 #include "PgCourse.h"
 
+#include "Student.h"
+
 
 void PgCourse :: reg(Student &s){
     this->pushToCourse(&s);

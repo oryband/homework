@@ -3,19 +3,23 @@
 
 
 #include "Course.h"
-#include "Student.h"
 
 #include "util.h"
+#include "consts.h"
+
+
+class Student;
 
 
 class ElCourse : public Course {
-
     public:
         ElCourse(
                 std::string name,
                 unsigned short semester,
-                unsigned short minimumGrade) :
-            Course(name, ELECTIVE, semester, minimumGrade) {}
+                unsigned short minimumGrade);
+
+
+        ~Elcourse();
 
         void reg(Student &s);
 };

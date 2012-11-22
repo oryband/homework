@@ -28,7 +28,7 @@ class Course {
                 unsigned short semester,
                 unsigned short minimumGrade);
 
-        virtual ~Course() {}
+        virtual ~Course();
 
         virtual void reg(Student &s)=0;
         virtual void teach();
@@ -38,6 +38,7 @@ class Course {
         std::vector<Student *> &getStudents();
         const std::string getName() const;
         const std::string getDepartment() const;
+
 };
 
 #endif

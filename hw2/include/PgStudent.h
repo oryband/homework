@@ -21,6 +21,8 @@ class PgStudent : public Student {
                 unsigned short electiveCourses) :
             Student(studentId, PG, imagePath, electiveCourses) {}
 
+        //~PgStudent() {}
+
         void study(Course &course);
 };
 

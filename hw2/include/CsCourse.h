@@ -3,20 +3,23 @@
 
 
 #include "Course.h"
-#include "Student.h"
 
 #include "util.h"
 #include "consts.h"
 
 
-class CsCourse : public Course {
+class Student;
 
+
+class CsCourse : public Course {
     public:
         CsCourse(
                 std::string name,
                 unsigned short semester,
                 unsigned short minimumGrade) :
             Course(name, CS, semester, minimumGrade) {}
+
+        //~CsCourse() {}
 
         void reg(Student &s);
 };
