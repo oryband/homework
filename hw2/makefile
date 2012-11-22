@@ -20,11 +20,11 @@ all: $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Cours
 $(BINDIR)Student.o: $(SRCDIR)Student.cpp
 	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)Student.o $(SRCDIR)Student.cpp
 
-$(BINDIR)CsStudent.o: $(SRCDIR)CsStudent.cpp
+$(BINDIR)CsStudent.o: $(SRCDIR)CsStudent.cpp $(BINDIR)Student.o
 	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)CsStudent.o $(SRCDIR)CsStudent.cpp $(SRCDIR)Student.o
 
-$(BINDIR)PgStudent.o: $(SRCDIR)CsStudent.cpp
-	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)PgStudent.o $(SRCDIR)CsStudent.cpp $(SRCDIR)Student.o
+$(BINDIR)PgStudent.o: $(SRCDIR)PgStudent.cpp $(BINDIR)Student.o
+	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)PgStudent.o $(SRCDIR)PgStudent.cpp $(SRCDIR)Student.o
 
 $(BINDIR)Course.o: $(SRCDIR)Course.cpp
 	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)Course.o $(SRCDIR)Course.cpp
@@ -37,6 +37,9 @@ $(BINDIR)PgCourse.o: $(SRCDIR)PgCourse.cpp $(BINDIR)Course.o
 
 $(BINDIR)Uni.o: $(SRCDIR)Uni.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o
 	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)Uni.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(SRCDIR)Uni.cpp
+
+$(BINDIR)RandomU.o: $(SRCDIR)Random.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o
+	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)RandomU.o $(SRCDIR)RandomU.cpp Student.o CsStudent.o PgStudent.o Course.o CsCourse.o PgCourse.o
 
 
 .PHONY: clean
