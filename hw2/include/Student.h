@@ -7,7 +7,6 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "typedefs.h"
 #include "consts.h"
 
 
