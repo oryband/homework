@@ -2,7 +2,6 @@
 
 
 using namespace std;
-using namespace boost;
 
 
 Uni :: Uni(bool pgOn) :
