@@ -4,6 +4,7 @@
 
 
 void CsStudent :: study(Course &course){
+    // If Student finished course succesfully:
 	if (rand() % GRADE_RANGE >= course.getMinimumGrade() &&
             rand() % GRADE_RANGE >= CS_QUIT_CHANCE) {
 

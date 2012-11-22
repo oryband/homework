@@ -21,12 +21,12 @@ class Student {
         std::string _department;
         std::string _imagePath;
 
+        unsigned short _currentSemester;
+
         unsigned short _unfinishedSemesterMandatoryCourses;
         unsigned short _unfinishedSemesterElectiveCourses;
 
         unsigned short _necessaryElectiveCourses;
-
-        unsigned short _currentSemester;
 
     public:
         Student(std::string id,
@@ -40,13 +40,14 @@ class Student {
         void finishcourse(Course &course);
 
         // Getters.
-        std::string getStudentId();
+        const std::string getStudentId() const;
+        const std::string getDepartment() const;
+        const std::string getImagePath() const; 
+        const unsigned short getCurrentSemester() const;
         const unsigned short getUnfinishedSemesterMandatoryCourses() const;
         const unsigned short getUnfinishedSemesterElectiveCourses() const;
         const unsigned short getNecessaryElectiveCourses() const;
-        const unsigned short getCurrentSemester() const;
-        const std::string getDepartmentName() const;
-        std::string getImagePath() const; 
+
         // Setters
         void incrementUnfinishedSemesterMandatoryCourses(); 
         void incrementUnfinishedSemesterElectiveCourses(); 

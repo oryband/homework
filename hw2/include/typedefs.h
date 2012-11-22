@@ -8,7 +8,6 @@
 
 
 bool compareStudents (Student *s1, Student *s2) {
-
     return (
             atoi(s1->getStudentId().c_str()) < 
             atoi(s2->getStudentId().c_str()));

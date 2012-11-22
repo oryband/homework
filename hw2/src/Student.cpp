@@ -15,10 +15,10 @@ Student :: Student(
     _id(id),
     _department(department),
     _imagePath(imagePath),
+    _currentSemester(0),
     _unfinishedSemesterMandatoryCourses(0),
     _unfinishedSemesterElectiveCourses(0),
-    _necessaryElectiveCourses(electiveCourses),
-    _currentSemester(0) {}
+    _necessaryElectiveCourses(electiveCourses) {}
 
 
 void Student :: finishcourse(Course &course) {
@@ -45,6 +45,26 @@ void Student :: finishcourse(Course &course) {
 }
 
 
+const string Student :: getStudentId() const {
+    return this->_id;
+}
+
+
+const string Student :: getDepartment() const {
+    return this->_department;
+}
+
+
+const string Student :: getImagePath() const {
+    return this->_imagePath;
+}
+
+
+const unsigned short Student :: getCurrentSemester() const {
+    return this->_currentSemester;
+}
+
+
 const unsigned short Student :: getUnfinishedSemesterMandatoryCourses() const {
     return this->_unfinishedSemesterMandatoryCourses;
 }
@@ -60,11 +80,6 @@ const unsigned short Student :: getNecessaryElectiveCourses() const {
 }
 
 
-const unsigned short Student :: getCurrentSemester() const {
-    return this->_currentSemester;
-}
-
-
 void Student :: incrementUnfinishedSemesterMandatoryCourses() {
     this->_unfinishedSemesterMandatoryCourses ++;
 }
@@ -77,14 +92,4 @@ void Student :: incrementUnfinishedSemesterElectiveCourses() {
 
 void Student :: promoteToNextSemster() {
     this->_currentSemester ++;    
-}
-
-
-const string Student :: getDepartmentName() const {
-    return this->_department;
-}
-
-
-string Student :: getImagePath() const {
-    return this->_imagePath;
 }

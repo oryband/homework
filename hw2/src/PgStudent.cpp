@@ -4,10 +4,12 @@
 
 
 void PgStudent :: study(Course &course) {
+    // If Student finished course succesfully:
 	if (rand() % GRADE_RANGE >= course.getMinimumGrade() &&
             rand() % GRADE_RANGE >= PG_QUIT_CHANCE) {
 
 		this->finishcourse(course);
+
         writeToStudentsLogFile(
                 this->_id,
                 course.getName(),

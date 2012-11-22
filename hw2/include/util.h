@@ -4,14 +4,12 @@
 
 #include <iostream>
 #include <fstream>
-#include <sstream>
-#include <iomanip>
-#include <cstdlib>
 #include <string>
 #include <vector>
 
 #include "consts.h"
 #include "util.h"
+
 
 using namespace std;
 
@@ -49,19 +47,26 @@ void getLines(string filePath, vector< vector<string> > &lines) {
 }
 
 
-void writeToFileNumOfSemester(int semester) {
+void writeNumOfSemesterToFile(int semester) {
     
     ofstream randomFile;
     randomFile.open(RANDOM_FILE, fstream::in | fstream::app);
 
-    if (semester == 1) {
-        randomFile << "1st Semester Of The Random U." << endl;
-    } else if (semester == 2) {
-        randomFile << "2nd Semester Of The Random U." << endl;
-    } else if (semester == 3) {
-        randomFile << "3rd Semester Of The Random U." << endl;
-    } else {
-        randomFile << semester << "th Semester Of The Random U." << endl;
+    string tail = "Semester Of The Random U.";
+
+    switch (semester) {
+        case 1:
+            randomFile << "1st" << tail << endl;
+            break;
+        case 2:
+            randomFile << "2nd" << tail << endl;
+            break;
+        case 3:
+            randomFile << "3rd" << tail << endl;
+            break;
+        default:
+            randomFile << semester << "th" << tail << endl;
+            break;
     }
 
     randomFile.close();
@@ -77,38 +82,29 @@ void writeToStudentsLogFile(
     ofstream randomFile;
     randomFile.open(RANDOM_FILE, fstream::in | fstream::app);
 
-    // TODO Use ENUM instead of status integers.
-    //  Student is taking course.
-    if (status == TAKING_COURSE) {
-    
-        randomFile << studentId << " is taking " << courseName 
-                   << " from " << department << endl;
-    }
-    //  Student took and finish course successfully.
-    if (status == FINISHED_COURSE) {
-    
-        randomFile << studentId << " took " << courseName 
-                   << " and finished SUCCESSFULLY" << endl;
-    }
-    //  Student took and finish course unsuccessfully.
-    if (status == FAILED_COURSE) {
-    
-        randomFile << studentId << " took " << courseName 
-                   << " and finished UNSUCCESSFULLY" << endl;
-    }
-    //  Student has graduated.
-    if (status == GRADUATED) {
-    
-        randomFile << studentId << " has graduated" << endl;
-    }
-    //  Student has not graduated.
-    if (status == NOT_GRADUATED) {
-    
-        randomFile << studentId << " has not graduated" << endl;
-    }
-    if (status == DENIED) {
-        
-        randomFile << studentId << " is being denied his education" << endl;
+    switch (status) {
+        case TAKING_COURSE:
+            randomFile << studentId << " is taking " << courseName <<
+                " from " << department << endl;
+            break;
+        case FINISHED_COURSE:
+            randomFile << studentId << " took " << courseName <<
+                " and finished SUCCESSFULLY" << endl;
+            break;
+        case FAILED_COURSE:
+            randomFile << studentId << " took " << courseName <<
+                " and finished UNSUCCESSFULLY" << endl;
+            break;
+        case GRADUATED:
+            randomFile << studentId << " has graduated" << endl;
+            break;
+        case NOT_GRADUATED:
+            randomFile << studentId << " has not graduated" << endl;
+            break;
+        case DENIED:
+            randomFile << studentId <<
+                " is being denied his education" << endl;
+            break;
     }
 }
 
