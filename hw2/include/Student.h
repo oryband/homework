@@ -53,4 +53,11 @@ class Student {
         void promoteToNextSemster();
 };
 
+
+struct compareStudents {
+    bool operator()(Student const *s1, Student const *s2) const {
+        return s1->getStudentId().c_str() < s2->getStudentId().c_str();
+    }
+};
+
 #endif

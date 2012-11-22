@@ -17,7 +17,6 @@
 //#include "ImageLoader.h"
 //#include "ImageOperations.h"
 
-#include "typedefs.h"
 #include "consts.h"
 #include "util.h"
 

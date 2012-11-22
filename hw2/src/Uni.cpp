@@ -308,8 +308,10 @@ void Uni :: teach(unsigned short currentSemester) {
 
 void Uni :: graduate() {
 
-    // FIXME
-    sort(this->_students.begin(), this->_students.end(), CompareStudentsFunctor);
+    sort(
+            this->_students.begin(),
+            this->_students.end(),
+            compareStudents());
 
     /*ImageLoader
         csGraduationImage(
