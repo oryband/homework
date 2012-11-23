@@ -7,7 +7,7 @@ ElCourse :: ElCourse(
                 std::string name,
                 unsigned short semester,
                 unsigned short minimumGrade) :
-            Course(name, "ELECTIVE", semester, minimumGrade){} 
+            Course(name, "ELECTIVE", semester, minimumGrade) {} 
 
 
 void ElCourse :: reg(Student &s) {
