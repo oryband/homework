@@ -33,7 +33,7 @@ class Student {
                 std::string imagePath,
                 unsigned short electiveCourses);
 
-        virtual ~Student();
+        inline virtual ~Student() {}
 
         virtual void study(Course &course)=0;
         void finishcourse(Course &course);

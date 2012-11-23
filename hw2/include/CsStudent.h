@@ -13,15 +13,12 @@ class Course;
 
 
 class CsStudent : public Student {
-
     public:
         CsStudent(
                 std::string studentId,
                 std::string imagePath,
                 unsigned short electiveCourses) :
             Student(studentId, CS, imagePath, electiveCourses) {}
-
-        //~CsStudent() {}
 
         void study(Course &course);
 };

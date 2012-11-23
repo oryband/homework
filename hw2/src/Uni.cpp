@@ -37,14 +37,13 @@ Uni :: Uni(bool pgOn) :
 
 
 Uni :: ~Uni() {
-
-    //  Delete all Courses vectors
+    // Delete all Courses.
     this->deleteCourses(this->_mandatoryAutumnCourses);
     this->deleteCourses(this->_mandatorySpringCourses);
     this->deleteCourses(this->_electiveAutumnCourses);
     this->deleteCourses(this->_electiveSpringCourses);
 
-    //  Delete students vector
+    // Delete all students.
     std::vector<Student *>::iterator it_student;
 
     for (it_student = this->_students.begin();
@@ -150,7 +149,7 @@ void Uni :: readCoursesFile() {
 
     // Iterate over lines and copy data.
     size_t length = lines->size();
-    for(unsigned int l=0; l < length; l++) {
+    for (unsigned int l=0; l < length; l++) {
 
         vector<string> line = (*lines)[l];
 
@@ -165,32 +164,38 @@ void Uni :: readCoursesFile() {
         istringstream oss2(line[4]);
         oss2 >> minimumGrade;
 
-
         if (department.compare(ELECTIVE) == 0) {
             if (semester % 2 == 1) {  // Autumn elective course.
+
                 this->_electiveAutumnCourses.push_back(
                         new ElCourse(name, semester, minimumGrade));
+
             } else { // Spring elective course.
+
                 this->_electiveSpringCourses.push_back(
-                        new ElCourse (name, semester, minimumGrade));
+                        new ElCourse(name, semester, minimumGrade));
             }
         } else if (department.compare(CS) == 0) {
             if (semester % 2 == 1) {  // Autumn mandatory course.
+
                 this->_mandatoryAutumnCourses.push_back(
                         new CsCourse(name, semester, minimumGrade));
+
             } else {  // Spring mandatory course.
+
                 this->_mandatorySpringCourses.push_back(
-                        new CsCourse(name, semester, minimumGrade));
+                    new CsCourse(name, semester, minimumGrade));
             }
         } else if (name.compare(PG) == 0) {
             if (semester % 2 == 1) {  // Autumn course.
+
                 this->_mandatoryAutumnCourses.push_back(
-                        new PgCourse(
-                            name, semester, minimumGrade));
+                    new PgCourse(name, semester, minimumGrade));
+
             } else {  // Spring course.
+
                 this->_mandatorySpringCourses.push_back(
-                        new PgCourse (
-                            name, semester, minimumGrade));
+                    new PgCourse(name, semester, minimumGrade));
             }
         }
     }
@@ -243,10 +248,10 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
         electiveSemesterCourses = &(this->_electiveSpringCourses);
     }
 
-    // Iterate over all students, and register those who finished their
-    // last semester succesfully.
-    // NOTE: Doesn't register Pg Students to any course if MALAG did not
-    // approve their studies.
+    /* Iterate over all students, and register those who finished their
+     * last semester succesfully.
+     * NOTE: Doesn't register Pg Students to any course if MALAG did not
+     * approve their studies. */
     vector<Student *>::iterator it_student;
 
     for (it_student = this->_students.begin();
@@ -320,9 +325,9 @@ void Uni :: graduate() {
             PROFILE_IMAGE_SIZE,
             numOfStudents*PROFILE_IMAGE_SIZE);*/
 
-    // Iterate all students in vector,
-    // log their graduations status to file,
-    // and generate their profile image.
+    /* Iterate all students in vector,
+     * log their graduations status to file,
+     * and generate their profile image. */
     vector<Student *>::iterator it_student;
 
     for (it_student = this->_students.begin();
@@ -354,9 +359,9 @@ void Uni :: graduate() {
                 saveGreyscaleImage(pgGraduationImage, **it_student); 
             }*/
         }
+    }
 
     // TODO save images on root project folder
-    }
 }
 
 

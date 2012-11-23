@@ -5,6 +5,7 @@
 #include "Course.h"
 
 #include "util.h"
+#include "consts.h"
 
 
 class Student;
@@ -17,8 +18,6 @@ class PgCourse : public Course {
                 unsigned short semester,
                 unsigned short minimumGrade) :
             Course(name, PG, semester, minimumGrade) {}
-
-        //~PgCourse() {}
 
         void reg(Student &s);
 };

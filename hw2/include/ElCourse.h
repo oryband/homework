@@ -18,9 +18,6 @@ class ElCourse : public Course {
                 unsigned short semester,
                 unsigned short minimumGrade);
 
-
-        ~Elcourse();
-
         void reg(Student &s);
 };
 

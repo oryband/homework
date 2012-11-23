@@ -21,9 +21,6 @@ Student :: Student(
     _necessaryElectiveCourses(electiveCourses) {}
 
 
-Student :: ~Student() {}
-
-
 void Student :: finishcourse(Course &course) {
 
     if (course.getDepartment() != ELECTIVE) {  // CS or PG course.

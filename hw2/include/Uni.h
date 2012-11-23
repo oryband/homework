@@ -77,5 +77,4 @@ class Uni {
         void promoteStudents();
         void graduate();
 };
-
 #endif

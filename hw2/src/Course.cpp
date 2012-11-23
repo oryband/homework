@@ -18,9 +18,6 @@ Course :: Course(
     _students() {}
 
 
-Course :: ~Course() {}
-
-
 void Course :: teach() {
 	vector<Student *>::iterator it_student;
 
