@@ -59,10 +59,15 @@ Uni :: ~Uni() {
 void Uni :: readCurriculumFile(
         unsigned short &numOfCsElectiveCourses,
         unsigned short &numOfPgElectiveCourses) {
+    
+    // TODO print_tests 
+    cout << "I'm in CURRICULUM_FILE " << endl;
 
     vector< vector<string> > *lines = new vector< vector<string> >;
-    Util::getLines(CURRICULUM_FILE, *lines);
-
+    cout << "Getting into getlines" << endl;
+    Util::getLines(CURRICULUM_FILE, lines);
+    //TODO print_testr
+    cout << "Back from getlines "<< endl;
     vector<string> line = (*lines)[0];
 
     // Read number of semesters.
@@ -76,6 +81,9 @@ void Uni :: readCurriculumFile(
                 numberOfSemesters.size() - seperatorIndex));
 
     oss1 >> this->_semesters;
+    
+    //TODO print_tests
+    cout << "Print Number Of semesters: " << this->_semesters << endl;
 
 
     // Read department name, and amount of necessary elective courses each
@@ -92,6 +100,10 @@ void Uni :: readCurriculumFile(
         oss2 >> unfinishedElectiveCourses;
         int electiveCourses = atoi(unfinishedElectiveCourses.c_str());
 
+        //TODO print_tests
+        cout << "Print Department: " << department << endl;
+        cout << "Print electiveCourses: " << electiveCourses << endl;
+
         if (department.compare(CS) == 0) {  // CS department.
             numOfCsElectiveCourses = electiveCourses;
         } else {  // PG department.
@@ -100,6 +112,8 @@ void Uni :: readCurriculumFile(
     }
 
     delete lines;
+    //TODO print_tests
+    cout << "end of CURRICULUM_FILE reading " << endl;
 }
 
 
@@ -108,7 +122,7 @@ void Uni :: readStudentsFile(
         unsigned short &pgElectiveCourses) {
 
     vector< vector<string> > *lines = new vector< vector<string> >;
-    Util::getLines(STUDENTS_FILE, *lines);
+    Util::getLines(STUDENTS_FILE, lines);
 
     // Iterate over lines and copy data.
     size_t length = lines->size();
@@ -145,7 +159,7 @@ void Uni :: readStudentsFile(
 void Uni :: readCoursesFile() {
 
     vector< vector<string> > *lines = new vector< vector<string> >;
-    Util::getLines(COURSES_FILE, *lines);
+    Util::getLines(COURSES_FILE, lines);
 
     // Iterate over lines and copy data.
     size_t length = lines->size();

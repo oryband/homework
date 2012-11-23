@@ -15,7 +15,7 @@ using namespace std;
 
 namespace Util
 {
-inline void getLines(string filePath, vector< vector<string> > &lines) {
+inline void getLines(string filePath, vector< vector<string> >* lines) {
 
     string line;
     ifstream file;
@@ -24,14 +24,15 @@ inline void getLines(string filePath, vector< vector<string> > &lines) {
 
     if (!file) {
         cout << "Unable to open " << filePath <<  endl;
-        exit(0);  // Terminate with error.
+        exit(1);  // Terminate with error.
     }
-
+    //TODO print_tests
+    cout << " in get lines before npos " << endl;
     while (file >> line) {
         vector<string> words;
 
         unsigned int b = 0;  // Begin index.
-        size_t e = line.find(',');  // End index.
+        int e = line.find(',');  // End index.
         while (e != string::npos) {  // FIXME - DONT CAST IT CAUSES BUGS.
             words.push_back(line.substr(b, e - b));
 
@@ -39,12 +40,16 @@ inline void getLines(string filePath, vector< vector<string> > &lines) {
             e = line.find(',', b);
         }
 
+     //TODO print_tests
+     cout << " in get lines after npos " << endl;
         words.push_back(line.substr(b, line.size() - b));
 
-        lines.push_back(words);
+       (*lines).push_back(words);
     }
-
+    //TODO print_tests
+    cout << " about to close file" << endl;
     file.close();
+    cout << "file is closed" << endl;
 }
 
 
