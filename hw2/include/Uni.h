@@ -68,6 +68,7 @@ class Uni {
 
     public:
         Uni(bool pgOn);
+        ~Uni();
 
         void simulate();
 
@@ -75,7 +76,5 @@ class Uni {
         void teach(unsigned short currentSemester);
         void promoteStudents();
         void graduate();
-
-        ~Uni();
 };
 #endif

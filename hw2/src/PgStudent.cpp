@@ -10,18 +10,16 @@ void PgStudent :: study(Course &course) {
 
 		this->finishcourse(course);
 
-        Util::writeToStudentsLogFile(
+        writeToStudentsLogFile(
                 this->_id,
                 course.getName(),
                 this->_department,
                 FINISHED_COURSE);
 	} else {
-        Util::writeToStudentsLogFile(
+        writeToStudentsLogFile(
                 this->_id,
                 course.getName(),
                 this->_department,
                 FAILED_COURSE);
     }
 }
-
-PgStudent :: ~PgStudent() { cout << "PgStudent dead" << endl;}

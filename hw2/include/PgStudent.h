@@ -7,12 +7,13 @@
 #include "Student.h"
 
 #include "util.h"
+#include "consts.h"
+
 
 class Course;
 
 
 class PgStudent : public Student {
-
     public:
         PgStudent(
                 std::string studentId,
@@ -21,7 +22,6 @@ class PgStudent : public Student {
             Student(studentId, PG, imagePath, electiveCourses) {}
 
         void study(Course &course);
-        ~PgStudent();
 };
 
 #endif

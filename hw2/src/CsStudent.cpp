@@ -10,17 +10,14 @@ void CsStudent :: study(Course &course){
 
         this->finishcourse(course);
 
-        Util::writeToStudentsLogFile(this->_id,
+        writeToStudentsLogFile(this->_id,
                 course.getName(),
                 this->_department,
                 FINISHED_COURSE);
 	} else {
-        Util::writeToStudentsLogFile(this->_id,
+        writeToStudentsLogFile(this->_id,
                 course.getName(),
                 this->_department,
                 FAILED_COURSE);
     }
 }
-
-
-CsStudent:: ~CsStudent() { cout << "CsStudent dead" << endl; }

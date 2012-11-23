@@ -3,9 +3,12 @@
 
 
 #include "Course.h"
-#include "Student.h"
 
 #include "util.h"
+#include "consts.h"
+
+
+class Student;
 
 
 class PgCourse : public Course {
@@ -17,7 +20,6 @@ class PgCourse : public Course {
             Course(name, PG, semester, minimumGrade) {}
 
         void reg(Student &s);
-        ~PgCourse();
 };
 
 #endif
