@@ -8,17 +8,18 @@ using namespace std;
 
 Student :: Student(
         string id,
-        string department,
         string imagePath,
-        unsigned short electiveCourses) :
+        unsigned short electiveCourses,
+        string department) :
 
     _id(id),
-    _department(department),
     _imagePath(imagePath),
+    _necessaryElectiveCourses(electiveCourses),
+    _department(department),
     _currentSemester(0),
     _unfinishedSemesterMandatoryCourses(0),
-    _unfinishedSemesterElectiveCourses(0),
-    _necessaryElectiveCourses(electiveCourses) {}
+    _unfinishedSemesterElectiveCourses(0)
+    {}
 
 
 void Student :: finishcourse(Course &course) {

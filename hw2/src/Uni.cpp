@@ -119,28 +119,28 @@ void Uni :: readStudentsFile(
         vector<string> line = (*lines)[l];
 
         string id = string(line[0]),
-               imagePath = string(line[1]),
-               department = string(line[2]);
+            department = string(line[1]),
+               imagePath = string(line[2]);
 
         Student *ptr_student;
         if (department.compare(CS) == 0) {
-
             ptr_student = new CsStudent(
                     id, imagePath, csElectiveCourses);
             this->_numOfCsStudents ++;
 
         } else {  // PG
-
             ptr_student = new PgStudent(
                     id, imagePath, pgElectiveCourses);
 
             this->_numOfPgStudents ++;
         }
-
         this->_students.push_back(ptr_student);
     }
+    
 
     delete lines;
+
+    cout << "end of student file " << endl;
 }
 
 

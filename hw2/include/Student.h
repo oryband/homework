@@ -29,9 +29,9 @@ class Student {
 
     public:
         Student(std::string id,
-                std::string department,
                 std::string imagePath,
-                unsigned short electiveCourses);
+                unsigned short electiveCourses,
+                std::string department);
 
         inline virtual ~Student() {}
 

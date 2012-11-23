@@ -19,7 +19,7 @@ class PgStudent : public Student {
                 std::string studentId,
                 std::string imagePath,
                 unsigned short electiveCourses) :
-            Student(studentId, PG, imagePath, electiveCourses) {}
+            Student(studentId, imagePath, electiveCourses, PG) {}
 
         void study(Course &course);
 };
