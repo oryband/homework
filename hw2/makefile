@@ -14,9 +14,9 @@ SRCDIR = ./src/
 BINDIR = ./bin/
 
 
-all: $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o
+all: $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o
 	@echo 'Building target: all'
-	$(CC) -o $(BINDIR)RandomU $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o -L/usr/lib -L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
+	$(CC) -o $(BINDIR)RandomU $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o -L/usr/lib -L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
 
 $(BINDIR)Student.o: $(SRCDIR)Student.cpp
 	@echo 'Building target: Student.o'
@@ -42,13 +42,17 @@ $(BINDIR)PgCourse.o: $(SRCDIR)PgCourse.cpp $(BINDIR)Course.o
 	@echo 'Building target: PgCourse.o'
 	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)PgCourse.o $(SRCDIR)PgCourse.cpp $(BINDIR)Course.o 
 
-$(BINDIR)Uni.o: $(SRCDIR)Uni.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o
-	@echo 'Building target: Uni.o'
-	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)Uni.o $(SRCDIR)Uni.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o
+$(BINDIR)ElCourse.o: $(SRCDIR)ElCourse.cpp $(BINDIR)Course.o 
+	@echo 'Building target: ElCourse.o'
+	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)ElCourse.o $(SRCDIR)ElCourse.cpp $(BINDIR)Course.o 
 
-$(BINDIR)RandomU.o: $(SRCDIR)RandomU.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o
+$(BINDIR)Uni.o: $(SRCDIR)Uni.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o
+	@echo 'Building target: Uni.o'
+	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)Uni.o $(SRCDIR)Uni.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o
+
+$(BINDIR)RandomU.o: $(SRCDIR)RandomU.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o  $(BINDIR)ElCourse.o 
 	@echo 'Building target: RandomU.o'
-	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)RandomU.o $(SRCDIR)RandomU.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o
+	$(CC) $(CPPFLAGS) $(INCLUDES) -o $(BINDIR)RandomU.o $(SRCDIR)RandomU.cpp $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o  
 
 
 .PHONY: clean

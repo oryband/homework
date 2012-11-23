@@ -7,14 +7,15 @@
 #include <string>
 #include <vector>
 
+#include <cstdlib>
 #include "consts.h"
-#include "util.h"
 
 
 using namespace std;
 
-
-void getLines(string filePath, vector< vector<string> > &lines) {
+namespace Util
+{
+inline void getLines(string filePath, vector< vector<string> > &lines) {
 
     string line;
     ifstream file;
@@ -23,7 +24,7 @@ void getLines(string filePath, vector< vector<string> > &lines) {
 
     if (!file) {
         cout << "Unable to open " << filePath <<  endl;
-        exit(1);  // Terminate with error.
+        exit(0);  // Terminate with error.
     }
 
     while (file >> line) {
@@ -47,12 +48,12 @@ void getLines(string filePath, vector< vector<string> > &lines) {
 }
 
 
-void writeNumOfSemesterToFile(int semester) {
+inline void writeNumOfSemesterToFile(int semester) {
     
     ofstream randomFile;
     randomFile.open(RANDOM_FILE, fstream::in | fstream::app);
 
-    string tail = "Semester Of The Random U.";
+    string tail = " Semester Of The Random U.";
 
     switch (semester) {
         case 1:
@@ -73,7 +74,7 @@ void writeNumOfSemesterToFile(int semester) {
 }
 
 
-void writeToStudentsLogFile(
+inline void writeToStudentsLogFile(
         string studentId,
         string courseName,
         string department,
@@ -107,5 +108,5 @@ void writeToStudentsLogFile(
             break;
     }
 }
-
+}
 #endif

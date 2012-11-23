@@ -93,3 +93,5 @@ void Student :: incrementUnfinishedSemesterElectiveCourses() {
 void Student :: promoteToNextSemster() {
     this->_currentSemester ++;    
 }
+
+Student :: ~Student() { cout << "Student dead" << endl; }

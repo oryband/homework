@@ -1,6 +1,5 @@
 #include "Uni.h"
 
-
 using namespace std;
 
 
@@ -62,7 +61,7 @@ void Uni :: readCurriculumFile(
         unsigned short &numOfPgElectiveCourses) {
 
     vector< vector<string> > *lines = new vector< vector<string> >;
-    getLines(CURRICULUM_FILE, *lines);
+    Util::getLines(CURRICULUM_FILE, *lines);
 
     vector<string> line = (*lines)[0];
 
@@ -109,7 +108,7 @@ void Uni :: readStudentsFile(
         unsigned short &pgElectiveCourses) {
 
     vector< vector<string> > *lines = new vector< vector<string> >;
-    getLines(STUDENTS_FILE, *lines);
+    Util::getLines(STUDENTS_FILE, *lines);
 
     // Iterate over lines and copy data.
     size_t length = lines->size();
@@ -146,11 +145,11 @@ void Uni :: readStudentsFile(
 void Uni :: readCoursesFile() {
 
     vector< vector<string> > *lines = new vector< vector<string> >;
-    getLines(COURSES_FILE, *lines);
+    Util::getLines(COURSES_FILE, *lines);
 
     // Iterate over lines and copy data.
     size_t length = lines->size();
-    for(unsigned int l=0; l < length; l++) {
+    for (unsigned int l=0; l < length; l++) {
 
         vector<string> line = (*lines)[l];
 
@@ -165,32 +164,40 @@ void Uni :: readCoursesFile() {
         istringstream oss2(line[4]);
         oss2 >> minimumGrade;
 
+        Course* ptr_course;
 
         if (department.compare(ELECTIVE) == 0) {
             if (semester % 2 == 1) {  // Autumn elective course.
-                this->_electiveAutumnCourses.push_back(
-                        new ElCourse(name, semester, minimumGrade));
+
+                ptr_course = new ElCourse(name, semester, minimumGrade);
+                this->_electiveAutumnCourses.push_back(ptr_course);
+
             } else { // Spring elective course.
-                this->_electiveSpringCourses.push_back(
-                        new ElCourse (name, semester, minimumGrade));
+
+                ptr_course = new ElCourse(name, semester, minimumGrade);
+                this->_electiveSpringCourses.push_back(ptr_course);
             }
         } else if (department.compare(CS) == 0) {
             if (semester % 2 == 1) {  // Autumn mandatory course.
-                this->_mandatoryAutumnCourses.push_back(
-                        new CsCourse(name, semester, minimumGrade));
+
+                ptr_course = new CsCourse(name, semester, minimumGrade);
+                this->_mandatoryAutumnCourses.push_back(ptr_course);
+
             } else {  // Spring mandatory course.
-                this->_mandatorySpringCourses.push_back(
-                        new CsCourse(name, semester, minimumGrade));
+
+                ptr_course = new CsCourse(name, semester, minimumGrade);
+                this->_mandatorySpringCourses.push_back(ptr_course);
             }
         } else if (name.compare(PG) == 0) {
             if (semester % 2 == 1) {  // Autumn course.
-                this->_mandatoryAutumnCourses.push_back(
-                        new PgCourse(
-                            name, semester, minimumGrade));
+
+                ptr_course = new PgCourse(name, semester, minimumGrade);
+                this->_mandatoryAutumnCourses.push_back(ptr_course);
+
             } else {  // Spring course.
-                this->_mandatorySpringCourses.push_back(
-                        new PgCourse (
-                            name, semester, minimumGrade));
+
+                ptr_course = new PgCourse(name, semester, minimumGrade);
+                this->_mandatorySpringCourses.push_back(ptr_course);
             }
         }
     }
@@ -210,7 +217,7 @@ void Uni :: simulate() {
                 it_student != this->_students.end();
                 ++it_student) {
 
-            writeToStudentsLogFile(
+            Util::writeToStudentsLogFile(
                     (**it_student).getStudentId(), "", "", DENIED);
         }
     }
@@ -220,7 +227,7 @@ void Uni :: simulate() {
             currentSemester++) {
 
         // Log semester number.
-        writeNumOfSemesterToFile(currentSemester);
+        Util::writeNumOfSemesterToFile(currentSemester);
 
         // Registers, teaches and promotes students for this semester.
         this->registerStudentsToCourses(currentSemester);
@@ -334,7 +341,7 @@ void Uni :: graduate() {
                 (**it_student).getCurrentSemester() == _semesters -1) {
 
             // Log to file.
-            writeToStudentsLogFile(
+            Util::writeToStudentsLogFile(
                     (**it_student).getStudentId(), "", "", GRADUATED); 
 
             /*if ((**it_student).getDepartment() == CS) {
@@ -345,7 +352,7 @@ void Uni :: graduate() {
         } else {
 
             // Log to file.
-            writeToStudentsLogFile(
+            Util::writeToStudentsLogFile(
                     (**it_student).getStudentId(), "", "", NOT_GRADUATED);
 
             /*if ((**it_student).getDepartment() == CS) {

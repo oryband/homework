@@ -8,7 +8,6 @@
 
 #include "util.h"
 
-
 class Course;
 
 
@@ -22,6 +21,7 @@ class PgStudent : public Student {
             Student(studentId, PG, imagePath, electiveCourses) {}
 
         void study(Course &course);
+        ~PgStudent();
 };
 
 #endif

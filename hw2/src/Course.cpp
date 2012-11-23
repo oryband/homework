@@ -59,3 +59,5 @@ const string Course :: getName() const {
 const string Course :: getDepartment() const {
     return this->_department;
 }
+
+Course :: ~Course(){cout << "course dead" << endl; }

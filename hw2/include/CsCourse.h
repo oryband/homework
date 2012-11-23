@@ -19,6 +19,7 @@ class CsCourse : public Course {
             Course(name, CS, semester, minimumGrade) {}
 
         void reg(Student &s);
+        ~CsCourse();
 };
 
 #endif

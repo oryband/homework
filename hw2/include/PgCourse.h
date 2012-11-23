@@ -17,6 +17,7 @@ class PgCourse : public Course {
             Course(name, PG, semester, minimumGrade) {}
 
         void reg(Student &s);
+        ~PgCourse();
 };
 
 #endif

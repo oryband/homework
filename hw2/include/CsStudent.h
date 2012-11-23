@@ -22,6 +22,7 @@ class CsStudent : public Student {
             Student(studentId, CS, imagePath, electiveCourses) {}
 
         void study(Course &course);
+        ~CsStudent();
 };
 
 #endif

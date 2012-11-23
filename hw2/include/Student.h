@@ -9,7 +9,6 @@
 
 #include "consts.h"
 
-
 class Course;
 
 
