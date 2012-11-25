@@ -1,5 +1,5 @@
 #include "util.h"
-
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 
@@ -15,30 +15,14 @@ void getLines(string filePath, vector< vector<string> > *lines) {
         cout << "Unable to open " << filePath <<  endl;
         exit(1);  // Terminate with error.
     }
-    //TODO print_tests
-    cout << " in get lines before npos " << endl;
-    while (file >> line) {
+
+        while(getline(file,line)) {
         vector<string> words;
+        boost::split(words,line, boost::is_any_of(","));
 
-        unsigned int b = 0;  // Begin index.
-        int e = line.find(',');  // End index.
-        while (e != string::npos) {  // FIXME - DONT CAST IT CAUSES BUGS.
-            words.push_back(line.substr(b, e - b));
-
-            b = e+1;
-            e = line.find(',', b);
-        }
-
-     //TODO print_tests
-     cout << " in get lines after npos " << endl;
-        words.push_back(line.substr(b, line.size() - b));
-
-       (*lines).push_back(words);
+        (*lines).push_back(words);
     }
-    //TODO print_tests
-    cout << " about to close file" << endl;
     file.close();
-    cout << "file is closed" << endl;
 }
 
 

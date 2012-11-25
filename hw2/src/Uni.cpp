@@ -139,16 +139,14 @@ void Uni :: readStudentsFile(
     
 
     delete lines;
-
-    cout << "end of student file " << endl;
 }
 
 
 void Uni :: readCoursesFile() {
 
     vector< vector<string> > *lines = new vector< vector<string> >;
-    
-   getLines(COURSES_FILE, lines);
+
+    getLines(COURSES_FILE, lines);
 
     // Iterate over lines and copy data.
     size_t length = lines->size();
@@ -156,15 +154,15 @@ void Uni :: readCoursesFile() {
 
         vector<string> line = (*lines)[l];
 
-        string department = string(line[0]),
-               name = string(line[1]);
+        string department = string(line[0]);
+        string name = string(line[1]);
 
         unsigned short semester, minimumGrade;
 
-        istringstream oss1(line[3]);
+        istringstream oss1(line[2]);
         oss1 >> semester;
 
-        istringstream oss2(line[4]);
+        istringstream oss2(line[3]);
         oss2 >> minimumGrade;
 
         if (department.compare(ELECTIVE) == 0) {
@@ -178,7 +176,8 @@ void Uni :: readCoursesFile() {
                 this->_electiveSpringCourses.push_back(
                         new ElCourse(name, semester, minimumGrade));
             }
-        } else if (department.compare(CS) == 0) {
+        } 
+        if (department.compare(CS) == 0) {
             if (semester % 2 == 1) {  // Autumn mandatory course.
 
                 this->_mandatoryAutumnCourses.push_back(
@@ -189,7 +188,8 @@ void Uni :: readCoursesFile() {
                 this->_mandatorySpringCourses.push_back(
                     new CsCourse(name, semester, minimumGrade));
             }
-        } else if (name.compare(PG) == 0) {
+        } 
+        if (department.compare(PG) == 0) {
             if (semester % 2 == 1) {  // Autumn course.
 
                 this->_mandatoryAutumnCourses.push_back(
