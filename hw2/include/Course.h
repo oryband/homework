@@ -38,6 +38,7 @@ class Course {
         std::vector<Student *> &getStudents();
         const std::string getName() const;
         const std::string getDepartment() const;
+        const unsigned short getSemester() const;
 };
 
 #endif

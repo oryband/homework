@@ -85,5 +85,7 @@ void writeToStudentsLogFile(
                 " is being denied his education" << endl;
             break;
     }
+
+    randomFile.close();
 }
 

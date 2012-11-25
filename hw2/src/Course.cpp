@@ -43,9 +43,9 @@ void Course :: pushToCourse(Student *ptr_student) {
 
     this->_students.push_back(ptr_student);
 
-    if (this->getDepartment() != ELECTIVE) {
+    if (this->getDepartment() != ELECTIVE) {  // Mandatory course.
         ptr_student->incrementUnfinishedSemesterMandatoryCourses();
-    } else {
+    } else {  // Elective course.
         ptr_student->incrementUnfinishedSemesterElectiveCourses();
     }
 }
@@ -60,3 +60,7 @@ const string Course :: getDepartment() const {
     return this->_department;
 }
 
+
+const unsigned short Course :: getSemester() const {
+    return this->_semester;
+}

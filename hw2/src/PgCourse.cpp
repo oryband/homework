@@ -3,7 +3,7 @@
 #include "Student.h"
 
 
-void PgCourse :: reg(Student &s){
+void PgCourse :: reg(Student &s) {
     this->pushToCourse(&s);
 
     writeToStudentsLogFile(

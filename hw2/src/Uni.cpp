@@ -119,7 +119,7 @@ void Uni :: readStudentsFile(
         vector<string> line = (*lines)[l];
 
         string id = string(line[0]),
-            department = string(line[1]),
+               department = string(line[1]),
                imagePath = string(line[2]);
 
         Student *ptr_student;
@@ -136,7 +136,6 @@ void Uni :: readStudentsFile(
         }
         this->_students.push_back(ptr_student);
     }
-    
 
     delete lines;
 }
@@ -155,7 +154,7 @@ void Uni :: readCoursesFile() {
         vector<string> line = (*lines)[l];
 
         string department = string(line[0]);
-        string name = string(line[1]);
+        string name = string(line[1]);  // FIXME delete double `string` after tests.
 
         unsigned short semester, minimumGrade;
 
@@ -176,7 +175,8 @@ void Uni :: readCoursesFile() {
                 this->_electiveSpringCourses.push_back(
                         new ElCourse(name, semester, minimumGrade));
             }
-        } 
+        } // FIXME use if/elif/elif ?
+
         if (department.compare(CS) == 0) {
             if (semester % 2 == 1) {  // Autumn mandatory course.
 
@@ -189,6 +189,7 @@ void Uni :: readCoursesFile() {
                     new CsCourse(name, semester, minimumGrade));
             }
         } 
+
         if (department.compare(PG) == 0) {
             if (semester % 2 == 1) {  // Autumn course.
 
@@ -218,14 +219,19 @@ void Uni :: simulate() {
                 it_student != this->_students.end();
                 ++it_student) {
 
-            writeToStudentsLogFile(
-                    (**it_student).getStudentId(), "", "", DENIED);
+            if ((**it_student).getDepartment().compare(PG) == 0) {
+                writeToStudentsLogFile(
+                        (**it_student).getStudentId(), "", "", DENIED);
+            }
         }
     }
 
     for (unsigned short currentSemester = 1;
             currentSemester <= this->_semesters;
+            //currentSemester <= 1;
             currentSemester++) {
+
+        cout << "----- NEW SEMESTER -----" << currentSemester << endl << endl << endl;
 
         // Log semester number.
         writeNumOfSemesterToFile(currentSemester);
@@ -233,8 +239,11 @@ void Uni :: simulate() {
         // Registers, teaches and promotes students for this semester.
         this->registerStudentsToCourses(currentSemester);
         this->teach(currentSemester);
+
+        /*
         this->promoteStudents();
         this->graduate();
+        */
     }
 }
 
@@ -265,9 +274,9 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
         if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0) {
 
             // Register if CS student,
-            // OR if MALAG is on and PG student.
+            // OR if MALAG is on and PG studentl.
             if ( (**it_student).getDepartment().compare(CS) == 0 ||
-                    ! this->_pgOn) {
+                    this->_pgOn) {
 
                 registerStudentToMandatoryCourses(
                         *mandatorySemesterCourses, **it_student);
@@ -292,6 +301,9 @@ void Uni :: teach(unsigned short currentSemester) {
     if (currentSemester % 2 == 1) {  // Autumn semester.
         mandatorySemesterCourses = &(this->_mandatoryAutumnCourses);
         electiveSemesterCourses = &(this->_electiveAutumnCourses);
+    } else {  // Spring semester.
+        mandatorySemesterCourses = &(this->_mandatorySpringCourses);
+        electiveSemesterCourses = &(this->_electiveSpringCourses);
     }
 
     for (it_mandatoryCourse = mandatorySemesterCourses->begin();
@@ -300,15 +312,15 @@ void Uni :: teach(unsigned short currentSemester) {
 
         (**it_mandatoryCourse).teach();
     }
-
+/*
     for (it_electiveCourse = electiveSemesterCourses->begin();
             it_electiveCourse != electiveSemesterCourses->end();
             ++it_electiveCourse) {
 
         (**it_electiveCourse).teach();
-    }
+    }*/
 
-    mandatorySemesterCourses = 0;
+    mandatorySemesterCourses = 0;  // FIXME Will removing this cause to destroy Uni's members?
     electiveSemesterCourses = 0;
 }
 
@@ -389,13 +401,22 @@ void Uni :: registerStudentToMandatoryCourses(
         vector<Course *> &mandatorySemesterCourses,
         Student &student) {
 
+    string department = student.getDepartment();
+    unsigned short semester = student.getCurrentSemester();
+
     vector<Course *>::iterator it_mandatoryCourse;
 
+    // If student passed last semester successfully,
+    // register student to his department courses this semester,
     for (it_mandatoryCourse = mandatorySemesterCourses.begin();
             it_mandatoryCourse != mandatorySemesterCourses.end();
             ++it_mandatoryCourse) {
 
-        (**it_mandatoryCourse).reg(student);
+        if ((**it_mandatoryCourse).getDepartment().compare(department) == 0 &&
+                ((**it_mandatoryCourse).getSemester() == semester +1)) {
+
+                (**it_mandatoryCourse).reg(student);
+        }
     }
 }
 
@@ -406,11 +427,11 @@ void Uni :: registerStudentToElectiveCourses(
 
     vector<Course *>::iterator it_electiveCourse;
 
+    // Register student to minimum number of elective courses necessary to graduate.
     for (it_electiveCourse = electiveSemesterCourses.begin();
             it_electiveCourse != electiveSemesterCourses.end();
             ++it_electiveCourse) {
 
-        // Register student to minimum number of elective courses necessary to graduate.
         if (
                 student.getUnfinishedSemesterElectiveCourses() <
                 student.getNecessaryElectiveCourses()) {
@@ -451,7 +472,7 @@ void Uni :: promoteStudents() {
 
     opr.resize(studentImg.getImage(), studentImgResized.getImage());
 
-    if (student.getDepartmentName().compare(CS) == 0) {
+    if (student.getDepartment().compare(CS) == 0) {
 
         opr.copy_paste_image(studentImgResized.getImage(),
                 this->_csPicture.getImage(),
@@ -479,7 +500,7 @@ void Uni :: promoteStudents() {
             studentImgResized.getImage()); //working! checked!
 
 
-            if (student.getDepartmentName().compare(CS) == 0) {
+            if (student.getDepartment().compare(CS) == 0) {
 
             opr.copy_paste_image(studentImgResized.getImage(),
                 this->_csPicture.getImage(),

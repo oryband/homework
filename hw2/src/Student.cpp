@@ -13,13 +13,12 @@ Student :: Student(
         string department) :
 
     _id(id),
-    _imagePath(imagePath),
-    _necessaryElectiveCourses(electiveCourses),
     _department(department),
+    _imagePath(imagePath),
     _currentSemester(0),
     _unfinishedSemesterMandatoryCourses(0),
-    _unfinishedSemesterElectiveCourses(0)
-    {}
+    _unfinishedSemesterElectiveCourses(0),
+    _necessaryElectiveCourses(electiveCourses) {}
 
 
 void Student :: finishcourse(Course &course) {
@@ -33,14 +32,16 @@ void Student :: finishcourse(Course &course) {
 
     // Remove student from course.
     vector<Student *>::iterator it_student;
-    for (it_student = course.getStudents().begin();
-            it_student != course.getStudents().end(); ++it_student) {
+    if (course.getStudents().size() > 0) {
+        for (it_student = course.getStudents().begin();
+                it_student != course.getStudents().end(); ++it_student) {
 
-        if ((**it_student).getStudentId().compare(
-                    this->getStudentId()) == 0) {
+            if ((**it_student).getStudentId().compare(
+                        this->getStudentId()) == 0) {
 
-            course.getStudents().erase(it_student);
-            return;
+                course.getStudents().erase(it_student);
+                return;
+            }
         }
     }
 }
