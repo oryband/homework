@@ -25,7 +25,7 @@ Uni :: Uni(bool pgOn) :
 
         unsigned short
             *numOfCsElectiveCourses = new unsigned short(),
-            *numOfPgElectiveCourses = new unsigned short();
+        *numOfPgElectiveCourses = new unsigned short();
 
         readCurriculumFile(*numOfCsElectiveCourses, *numOfPgElectiveCourses);
         readStudentsFile(*numOfCsElectiveCourses, *numOfPgElectiveCourses);
@@ -59,9 +59,9 @@ Uni :: ~Uni() {
 void Uni :: readCurriculumFile(
         unsigned short &numOfCsElectiveCourses,
         unsigned short &numOfPgElectiveCourses) {
-    
+
     vector< vector<string> > *lines = new vector< vector<string> >;
-    
+
     getLines(CURRICULUM_FILE, lines);
 
     vector<string> line = (*lines)[0];
@@ -69,15 +69,15 @@ void Uni :: readCurriculumFile(
     string numOfSemesters; 
     size_t pos;
     pos = line[0].find("=");
-    
+
     // Cast to unsigned short.
     istringstream oss1(
-           (line[0].substr( pos )).erase(0,1) );
+            (line[0].substr( pos )).erase(0,1) );
 
     oss1 >> numOfSemesters;
-    
+
     this->_semesters = atoi(numOfSemesters.c_str());
-    
+
     // Read department name, and amount of necessary elective courses each
     // student must take for each department.
     size_t length = lines->size();
@@ -109,8 +109,8 @@ void Uni :: readStudentsFile(
         unsigned short &pgElectiveCourses) {
 
     vector< vector<string> > *lines = new vector< vector<string> >;
-    
-   getLines(STUDENTS_FILE, lines);
+
+    getLines(STUDENTS_FILE, lines);
 
     // Iterate over lines and copy data.
     size_t length = lines->size();
@@ -134,6 +134,7 @@ void Uni :: readStudentsFile(
 
             this->_numOfPgStudents ++;
         }
+
         this->_students.push_back(ptr_student);
     }
 
@@ -186,7 +187,7 @@ void Uni :: readCoursesFile() {
             } else {  // Spring mandatory course.
 
                 this->_mandatorySpringCourses.push_back(
-                    new CsCourse(name, semester, minimumGrade));
+                        new CsCourse(name, semester, minimumGrade));
             }
         } 
 
@@ -194,12 +195,12 @@ void Uni :: readCoursesFile() {
             if (semester % 2 == 1) {  // Autumn course.
 
                 this->_mandatoryAutumnCourses.push_back(
-                    new PgCourse(name, semester, minimumGrade));
+                        new PgCourse(name, semester, minimumGrade));
 
             } else {  // Spring course.
 
                 this->_mandatorySpringCourses.push_back(
-                    new PgCourse(name, semester, minimumGrade));
+                        new PgCourse(name, semester, minimumGrade));
             }
         }
     }
@@ -228,10 +229,7 @@ void Uni :: simulate() {
 
     for (unsigned short currentSemester = 1;
             currentSemester <= this->_semesters;
-            //currentSemester <= 1;
             currentSemester++) {
-
-        cout << "----- NEW SEMESTER -----" << currentSemester << endl << endl << endl;
 
         // Log semester number.
         writeNumOfSemesterToFile(currentSemester);
@@ -239,12 +237,10 @@ void Uni :: simulate() {
         // Registers, teaches and promotes students for this semester.
         this->registerStudentsToCourses(currentSemester);
         this->teach(currentSemester);
-
-        /*
         this->promoteStudents();
-        this->graduate();
-        */
     }
+
+    this->graduate();
 }
 
 
@@ -271,7 +267,8 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
         // Register student to next semester only if he finished last one
         // successfuly.
-        if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0) {
+        if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0 &&
+                (**it_student).getUnfinishedSemesterElectiveCourses() == 0) {
 
             // Register if CS student,
             // OR if MALAG is on and PG studentl.
@@ -312,13 +309,13 @@ void Uni :: teach(unsigned short currentSemester) {
 
         (**it_mandatoryCourse).teach();
     }
-/*
+
     for (it_electiveCourse = electiveSemesterCourses->begin();
             it_electiveCourse != electiveSemesterCourses->end();
             ++it_electiveCourse) {
 
         (**it_electiveCourse).teach();
-    }*/
+    }
 
     mandatorySemesterCourses = 0;  // FIXME Will removing this cause to destroy Uni's members?
     electiveSemesterCourses = 0;
@@ -333,12 +330,12 @@ void Uni :: graduate() {
             compareStudents());
 
     /*ImageLoader
-        csGraduationImage(
-            PROFILE_IMAGE_SIZE,
-            numOfStudents*PROFILE_IMAGE_SIZE),
-        pgGraduationImage(
-            PROFILE_IMAGE_SIZE,
-            numOfStudents*PROFILE_IMAGE_SIZE);*/
+      csGraduationImage(
+      PROFILE_IMAGE_SIZE,
+      numOfStudents*PROFILE_IMAGE_SIZE),
+      pgGraduationImage(
+      PROFILE_IMAGE_SIZE,
+      numOfStudents*PROFILE_IMAGE_SIZE);*/
 
     /* Iterate all students in vector,
      * log their graduations status to file,
@@ -351,17 +348,17 @@ void Uni :: graduate() {
         // If student has graduated succesfully:
         if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0 &&
                 (**it_student).getNecessaryElectiveCourses() == 0 &&
-                (**it_student).getCurrentSemester() == _semesters -1) {
+                (**it_student).getCurrentSemester() == this->_semesters) {
 
             // Log to file.
             writeToStudentsLogFile(
                     (**it_student).getStudentId(), "", "", GRADUATED); 
 
             /*if ((**it_student).getDepartment() == CS) {
-                saveColorImage(csGraduationImage, **it_student); 
-            } else {
-                saveColorImage(pgGraduationImage, **it_student); 
-            }*/
+              saveColorImage(csGraduationImage, **it_student);
+              } else {
+              saveColorImage(pgGraduationImage, **it_student);
+              }*/
         } else {
 
             // Log to file.
@@ -369,10 +366,10 @@ void Uni :: graduate() {
                     (**it_student).getStudentId(), "", "", NOT_GRADUATED);
 
             /*if ((**it_student).getDepartment() == CS) {
-                saveGreyscaleImage(csGraduationImage, **it_student); 
-            } else {
-                saveGreyscaleImage(pgGraduationImage, **it_student); 
-            }*/
+              saveGreyscaleImage(csGraduationImage, **it_student);
+              } else {
+              saveGreyscaleImage(pgGraduationImage, **it_student);
+              }*/
         }
     }
 
@@ -415,7 +412,7 @@ void Uni :: registerStudentToMandatoryCourses(
         if ((**it_mandatoryCourse).getDepartment().compare(department) == 0 &&
                 ((**it_mandatoryCourse).getSemester() == semester +1)) {
 
-                (**it_mandatoryCourse).reg(student);
+            (**it_mandatoryCourse).reg(student);
         }
     }
 }
@@ -455,7 +452,8 @@ void Uni :: promoteStudents() {
     for (it_student = this->_students.begin();
             it_student != this->_students.end(); ++it_student) {
 
-        if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0) {
+        if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0 &&
+                (**it_student).getUnfinishedSemesterElectiveCourses() == 0) {
 
             (**it_student).promoteToNextSemster();
         }
@@ -465,55 +463,55 @@ void Uni :: promoteStudents() {
 
 /*void Uni :: saveColorImage(ImageLoader &image, Student& student) {
 
-    ImageOperations opr;
+  ImageOperations opr;
 
-    ImageLoader studentImg(student.getImagePath());
-    ImageLoader studentImgResized(100,100);
+  ImageLoader studentImg(student.getImagePath());
+  ImageLoader studentImgResized(100, 100);
 
-    opr.resize(studentImg.getImage(), studentImgResized.getImage());
+  opr.resize(studentImg.getImage(), studentImgResized.getImage());
 
-    if (student.getDepartment().compare(CS) == 0) {
+  if (student.getDepartment().compare(CS) == 0) {
 
-        opr.copy_paste_image(studentImgResized.getImage(),
-                this->_csPicture.getImage(),
-                this->_numOfCsStuInImage*100);
-        this->_numOfCsStuInImage++;
-    } else {
-        opr.copy_paste_image(studentImgResized.getImage(),
-                this->_pgPicture.getImage(),
-                this->_numOfPgStuInImage*100);
-        this->_numOfPgStuInImage++;
-    }
-}*/
+  opr.copy_paste_image(studentImgResized.getImage(),
+  this->_csPicture.getImage(),
+  this->_numOfCsStuInImage*100);
+  this->_numOfCsStuInImage++;
+  } else {
+  opr.copy_paste_image(studentImgResized.getImage(),
+  this->_pgPicture.getImage(),
+  this->_numOfPgStuInImage*100);
+  this->_numOfPgStuInImage++;
+  }
+  }*/
 
 
 /*void Uni :: saveGreyscaleImage(ImageLoader &image, Student& student) {
 
-    ImageOperations opr;
+  ImageOperations opr;
 
-    ImageLoader studentImg(student.getImagePath());
-    ImageLoader studentImgResized(100,100);
+  ImageLoader studentImg(student.getImagePath());
+  ImageLoader studentImgResized(100,100);
 
-    opr.resize(studentImg.getImage(), studentImgResized.getImage());
+  opr.resize(studentImg.getImage(), studentImgResized.getImage());
 
-    opr.rgb_to_greyscale(studentImgResized.getImage(),
-            studentImgResized.getImage()); //working! checked!
+  opr.rgb_to_greyscale(studentImgResized.getImage(),
+  studentImgResized.getImage()); //working! checked!
 
 
-            if (student.getDepartment().compare(CS) == 0) {
+  if (student.getDepartment().compare(CS) == 0) {
 
-            opr.copy_paste_image(studentImgResized.getImage(),
-                this->_csPicture.getImage(),
-                this->_numOfCsStuInImage*100);
-            this->_numOfCsStuInImage++;
-            } else {
+  opr.copy_paste_image(studentImgResized.getImage(),
+  this->_csPicture.getImage(),
+  this->_numOfCsStuInImage*100);
+  this->_numOfCsStuInImage++;
+  } else {
 
-            opr.copy_paste_image(studentImgResized.getImage(),
-                this->_pgPicture.getImage(),
-                this->_numOfPgStuInImage*100);
-            this->_numOfPgStuInImage++;
-            }
-}*/
+  opr.copy_paste_image(studentImgResized.getImage(),
+  this->_pgPicture.getImage(),
+  this->_numOfPgStuInImage*100);
+  this->_numOfPgStuInImage++;
+  }
+  }*/
 
 
 void Uni :: deleteCourses(vector<Course *> &courses) {

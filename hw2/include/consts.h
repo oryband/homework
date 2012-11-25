@@ -18,17 +18,14 @@
 
 #define PROFILE_IMAGE_SIZE 100
 
-// 1 - Student is taking a course.
-// 2 - Student took and finish course successfully.
-// 3 - Student took and finish course unsuccessfully.
-// 4 - Student has graduated.
-// 5 - Student has not graduated.
 #define TAKING_COURSE 1
 #define FINISHED_COURSE 2
 #define FAILED_COURSE 3
-#define GRADUATED 4
-#define NOT_GRADUATED 5
-#define DENIED 6
+#define QUITS_COURSE 4
+#define SLACKING_COURSE 5
+#define GRADUATED 6
+#define NOT_GRADUATED 7
+#define DENIED 8
  
 
 #endif

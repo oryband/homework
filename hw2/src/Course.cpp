@@ -19,10 +19,10 @@ Course :: Course(
 
 
 void Course :: teach() {
-	vector<Student *>::iterator it_student;
+	vector<Student *>::reverse_iterator it_student;
 
-	for (it_student = this->_students.begin();
-            it_student != this->_students.end(); ++it_student) {
+	for (it_student = this->_students.rbegin();
+            it_student != this->_students.rend(); ++it_student) {
 
         (**it_student).study(*this);
 	}

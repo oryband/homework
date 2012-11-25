@@ -74,6 +74,16 @@ void writeToStudentsLogFile(
             randomFile << studentId << " took " << courseName <<
                 " and finished UNSUCCESSFULLY" << endl;
             break;
+        case QUITS_COURSE:
+            randomFile << studentId << " quits course " << courseName << endl;
+            randomFile << studentId << " took " << courseName <<
+                " and finished UNSUCCESSFULLY" << endl;  // FIXME no redundancy!
+            break;
+        case SLACKING_COURSE:
+            randomFile << studentId << " is slacking course " << courseName << endl;
+            randomFile << studentId << " took " << courseName <<
+                " and finished UNSUCCESSFULLY" << endl;
+            break;
         case GRADUATED:
             randomFile << studentId << " has graduated" << endl;
             break;

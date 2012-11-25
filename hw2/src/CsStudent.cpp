@@ -4,28 +4,27 @@
 
 using namespace std;
 
-void CsStudent :: study(Course &course){
-    cout << "Course: " << course.getName() << endl;
+void CsStudent :: study(Course &course) {
     // If Student finished course succesfully:
-	if (rand() % GRADE_RANGE >= course.getMinimumGrade() &&
-            rand() % GRADE_RANGE >= CS_QUIT_CHANCE) {
-
-        cout << "\t" << this->_id << ": finished" << endl;
+    if (rand() % GRADE_RANGE < CS_QUIT_CHANCE) {
+        writeToStudentsLogFile(
+                this->_id,
+                course.getName(),
+                this->_department,
+                QUITS_COURSE);
+    } else if (rand() % GRADE_RANGE < course.getMinimumGrade()) {
+        writeToStudentsLogFile(
+                this->_id,
+                course.getName(),
+                this->_department,
+                FAILED_COURSE);
+    } else {
         this->finishcourse(course);
-        cout << "\t\tremoved myself from course" << endl;
 
-        /*writeToStudentsLogFile(
+        writeToStudentsLogFile(
                 this->_id,
                 course.getName(),
                 this->_department,
-                FINISHED_COURSE);*/
-	} else {
-        cout << "\t" << this->_id << ": UNFINISHED" << endl;
-        /*writeToStudentsLogFile(
-                this->_id,
-                course.getName(),
-                this->_department,
-                FAILED_COURSE);*/
+                FINISHED_COURSE);
     }
-    cout << "\t" << this->_id << ": end of study" << endl;
 }

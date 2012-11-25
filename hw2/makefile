@@ -8,7 +8,7 @@ SHELL = /bin/sh
 CC = g++
 CPPFLAGS = -Wall -Weffc++ -g
 
-INCLUDES = -I/usr/include/opencv -I/usr/local/include/opencv -Iinclude/
+INCLUDES = -L/usr/include/opencv -L/usr/local/include/opencv -Iinclude/
 
 SRCDIR = ./src/
 BINDIR = ./bin/
