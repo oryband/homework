@@ -8,7 +8,9 @@ SHELL = /bin/sh
 CC = g++
 CPPFLAGS = -Wall -Weffc++ -g
 
-INCLUDES = -L/usr/include/opencv -L/usr/local/include/opencv -Iinclude/
+INCLUDES = -I./include
+#OPENCV_LIB = -L/usr/include/opencv -L/usr/local/include/opencv -L/usr/lib -L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
+OPENCV_LIB =
 
 SRCDIR = ./src/
 BINDIR = ./bin/
@@ -16,7 +18,7 @@ BINDIR = ./bin/
 
 all: $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o
 	@echo -n 'Buildting target all: '
-	$(CC) -o $(BINDIR)RandomU $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o -L/usr/lib -L/usr/local/lib -lopencv_core -lopencv_highgui -lopencv_imgproc
+	$(CC) -o $(BINDIR)RandomU $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o $(OPENCV_LIB)
 
 
 $(BINDIR)RandomU.o: $(SRCDIR)RandomU.cpp $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o  $(BINDIR)ElCourse.o
