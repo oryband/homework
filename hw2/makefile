@@ -78,4 +78,4 @@ $(BINDIR)Course.o: $(SRCDIR)Course.cpp $(INCLUDEDIR)Course.h $(INCLUDEDIR)consts
 .PHONY: clean
 clean:
 	@echo -n 'Cleaning $(BINDIR): '
-	rm -f $(BINDIR)*.o $(BINDIR)RandomU
+	rm -f $(BINDIR)*.o $(BINDIR)RandomU $(BINDIR)random.log
