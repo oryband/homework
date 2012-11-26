@@ -329,13 +329,13 @@ void Uni :: graduate() {
             this->_students.end(),
             compareStudents());
 
-    /*ImageLoader
+    ImageLoader
         csGraduationImage(
                 PROFILE_IMAGE_SIZE,
-                numOfStudents*PROFILE_IMAGE_SIZE),
+              this-> _numOfCsStudents*PROFILE_IMAGE_SIZE),
         pgGraduationImage(
                 PROFILE_IMAGE_SIZE,
-                numOfStudents*PROFILE_IMAGE_SIZE);*/
+                this->_numOfPgStudents*PROFILE_IMAGE_SIZE);
 
     /* Iterate all students in vector,
      * log their graduations status to file,
@@ -354,11 +354,11 @@ void Uni :: graduate() {
             writeToStudentsLogFile(
                     (**it_student).getStudentId(), "", "", GRADUATED); 
 
-            /*if ((**it_student).getDepartment() == _CS_) {
+            if ((**it_student).getDepartment() == _CS_) {
                 saveColorImage(csGraduationImage, **it_student);
             } else {
                 saveColorImage(pgGraduationImage, **it_student);
-            }*/
+            }
         } else {
 
             // Log to file.
@@ -461,13 +461,20 @@ void Uni :: promoteStudents() {
 }
 
 
-/*void Uni :: saveColorImage(ImageLoader &image, Student& student) {
+void Uni :: saveColorImage(ImageLoader &image, Student& student) {
 
   ImageOperations opr;
+  
+  const string studnetImgPath = student.getImagePath();
 
   ImageLoader studentImg(student.getImagePath());
+
+  studentImg.displayImage();
+
   cout << "Printing Student : " << student.getStudentId() << endl;
   cout << " ImagePATH: " << student.getImagePath() << endl;
+  cout << " ImagePATH: string " << studnetImgPath<< endl;
+
   
   ImageLoader studentImgResized(100, 100);
 
@@ -475,19 +482,25 @@ void Uni :: promoteStudents() {
 
   if (student.getDepartment().compare(_CS_) == 0) {
 
-  opr.copy_paste_image(studentImgResized.getImage(),
-  this->_csPicture.getImage(),
-  this->_numOfCsStuInImage*100);
-  this->_numOfCsStuInImage++;
+      opr.copy_paste_image(studentImgResized.getImage(),
+              image.getImage(),
+              this->_numOfCsStuInImage*100);
+      this->_numOfCsStuInImage++;
   } else {
-  opr.copy_paste_image(studentImgResized.getImage(),
-  this->_pgPicture.getImage(),
-  this->_numOfPgStuInImage*100);
-  this->_numOfPgStuInImage++;
+      opr.copy_paste_image(studentImgResized.getImage(),
+              image.getImage(),
+              this->_numOfPgStuInImage*100);
+      this->_numOfPgStuInImage++;
   }
+    
+  image.displayImage();
+
+  //TODO print_test
+    cout << "end of saveColorImage : " << endl;
+
 } 
 
-
+/*
 void Uni :: saveGreyscaleImage(ImageLoader &image, Student& student) {
 
   ImageOperations opr;

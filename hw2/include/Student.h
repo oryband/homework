@@ -41,7 +41,7 @@ class Student {
         // Getters.
         const std::string getStudentId() const;
         const std::string getDepartment() const;
-        const std::string getImagePath() const; 
+        std::string getImagePath() const; 
         const unsigned short getCurrentSemester() const;
         const unsigned short getUnfinishedSemesterMandatoryCourses() const;
         const unsigned short getUnfinishedSemesterElectiveCourses() const;

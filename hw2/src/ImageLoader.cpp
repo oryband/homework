@@ -13,6 +13,10 @@ ImageLoader::ImageLoader(int width, int height)
 ImageLoader::ImageLoader(const string& fileName)
         : m_image(imread(fileName))
 {
+    int i = fileName.compare("./img/picard.jpg");
+
+    cout << "file name:" << fileName << endl;
+    cout << "FUCK YOU :      " << i << endl;
       if (!m_image.data)
             {
                     cout << "Failed loading " << fileName << endl;
