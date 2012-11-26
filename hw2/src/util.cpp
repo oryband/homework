@@ -22,6 +22,7 @@ void getLines(string filePath, vector< vector<string> > *lines) {
 
         (*lines).push_back(words);
     }
+
     file.close();
 }
 
