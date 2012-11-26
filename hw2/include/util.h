@@ -12,6 +12,7 @@
 
 #include "consts.h"
 
+
 void getLines(
         std::string filePath,
         std::vector< std::vector<std::string> > *lines);

@@ -29,7 +29,7 @@ void Course :: teach() {
 }
 
 
-const unsigned short Course :: getMinimumGrade() const{
+unsigned short Course :: getMinimumGrade() const{
     return this->_minimumGrade;
 }
 
@@ -61,6 +61,6 @@ const string Course :: getDepartment() const {
 }
 
 
-const unsigned short Course :: getSemester() const {
+unsigned short Course :: getSemester() const {
     return this->_semester;
 }

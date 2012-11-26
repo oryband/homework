@@ -36,8 +36,8 @@ void Student :: finishcourse(Course &course) {
         for (it_student = course.getStudents().begin();
                 it_student != course.getStudents().end(); ++it_student) {
 
-            if ((**it_student).getStudentId().compare(
-                        this->getStudentId()) == 0) {
+            if ((**it_student).getId().compare(
+                        this->getId()) == 0) {
 
                 course.getStudents().erase(it_student);
                 return;
@@ -47,7 +47,7 @@ void Student :: finishcourse(Course &course) {
 }
 
 
-const string Student :: getStudentId() const {
+const string Student :: getId() const {
     return this->_id;
 }
 
@@ -58,7 +58,7 @@ const string Student :: getDepartment() const {
 
 
 
-string Student :: getImagePath() const {
+const string Student :: getImagePath() const {
     return this->_imagePath;
 }
 /*const string Student :: getImagePath() const {
@@ -66,22 +66,22 @@ string Student :: getImagePath() const {
 }*/
 
 
-const unsigned short Student :: getCurrentSemester() const {
+unsigned short Student :: getCurrentSemester() const {
     return this->_currentSemester;
 }
 
 
-const unsigned short Student :: getUnfinishedSemesterMandatoryCourses() const {
+unsigned short Student :: getUnfinishedSemesterMandatoryCourses() const {
     return this->_unfinishedSemesterMandatoryCourses;
 }
 
 
-const unsigned short Student :: getUnfinishedSemesterElectiveCourses() const {
+unsigned short Student :: getUnfinishedSemesterElectiveCourses() const {
     return this->_unfinishedSemesterElectiveCourses;
 }
 
 
-const unsigned short Student :: getNecessaryElectiveCourses() const {
+unsigned short Student :: getNecessaryElectiveCourses() const {
     return this->_necessaryElectiveCourses;
 }
 

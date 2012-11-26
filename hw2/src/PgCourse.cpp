@@ -7,7 +7,7 @@ void PgCourse :: reg(Student &s) {
     this->pushToCourse(&s);
 
     writeToStudentsLogFile(
-            s.getStudentId(),
+            s.getId(),
             this->_name,
             _PG_,
             TAKING_COURSE);

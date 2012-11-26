@@ -16,18 +16,19 @@ void getLines(string filePath, vector< vector<string> > *lines) {
         exit(1);  // Terminate with error.
     }
 
-        while(getline(file,line)) {
+    while(getline(file,line)) {
         vector<string> words;
-        boost::split(words,line, boost::is_any_of(","));
+        boost::split(words, line, boost::is_any_of(","));
 
         (*lines).push_back(words);
     }
+
     file.close();
 }
 
 
 void writeNumOfSemesterToFile(int semester) {
-    
+
     ofstream randomFile;
     randomFile.open(RANDOM_FILE, fstream::in | fstream::app);
 
@@ -76,13 +77,9 @@ void writeToStudentsLogFile(
             break;
         case QUITS_COURSE:
             randomFile << studentId << " quits course " << courseName << endl;
-            randomFile << studentId << " took " << courseName <<
-                " and finished UNSUCCESSFULLY" << endl;  // FIXME no redundancy!
             break;
         case SLACKING_COURSE:
             randomFile << studentId << " is slacking course " << courseName << endl;
-            randomFile << studentId << " took " << courseName <<
-                " and finished UNSUCCESSFULLY" << endl;
             break;
         case GRADUATED:
             randomFile << studentId << " has graduated" << endl;

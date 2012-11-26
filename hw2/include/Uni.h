@@ -39,8 +39,8 @@ class Uni {
         unsigned short _numOfCsStudents;
         unsigned short _numOfPgStudents;
 
-        unsigned short _numOfCsStuInImage;
-        unsigned short _numOfPgStuInImage;
+        unsigned short _numOfCsStudentInImage;
+        unsigned short _numOfPgStudentInImage;
 
         void readCurriculumFile(
                 unsigned short &numOfCsElectiveCourses,
@@ -60,7 +60,7 @@ class Uni {
                 std::vector<Course *> &electiveSemesterCourses,
                 Student &student);
 
-        const bool isStudentInCourse(
+        bool isStudentInCourse(
                 Course &course, Student &student) const;
 
         void saveColorImage(ImageLoader &image, Student &student);
