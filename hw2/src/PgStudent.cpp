@@ -6,8 +6,6 @@
 
 void PgStudent :: study(Course &course) {
 
-    srand(time(NULL));
-
     // If Student finished course succesfully:
     if (rand() % GRADE_RANGE < PG_QUIT_CHANCE) {
         writeToStudentsLogFile(

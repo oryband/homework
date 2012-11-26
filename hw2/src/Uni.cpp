@@ -18,10 +18,7 @@ Uni :: Uni(bool pgOn) :
     _pgOn(pgOn),
 
     _numOfCsStudents(0),
-    _numOfPgStudents(0),
-
-    _numOfCsStudentInImage(0),
-    _numOfPgStudentInImage(0) {
+    _numOfPgStudents(0) {
 
         unsigned short
             *numOfCsElectiveCourses = new unsigned short(),
@@ -33,6 +30,8 @@ Uni :: Uni(bool pgOn) :
 
         delete numOfCsElectiveCourses;
         delete numOfPgElectiveCourses;
+
+        srand(time(0));  // Seed random generator.
     }
 
 
@@ -319,14 +318,7 @@ void Uni :: teach(unsigned short currentSemester) {
 
 void Uni :: graduate() {
 
-    sort(
-            this->_students.begin(),
-            this->_students.end(),
-            compareStudents());
-
-    cout << "NUmber of CS students " << this->_numOfCsStudents << endl;
-    cout << "NUmber of Pg students " << this->_numOfPgStudents << endl;
-    cout << " SIZE: " << PROFILE_IMAGE_SIZE << endl;
+    sort(this->_students.begin(), this->_students.end(), compareStudents());
 
     ImageLoader 
         csGraduationImage(
@@ -336,10 +328,10 @@ void Uni :: graduate() {
         pgGraduationImage(
                 PROFILE_IMAGE_SIZE,
                 this->_numOfPgStudents * PROFILE_IMAGE_SIZE);
-    
-    //csGraduationImage.displayImage();
-    //pgGraduationImage.displayImage();
 
+    unsigned int numberOfCsImages = 0,
+                 numberOfPgImages = 0;
+    
     /* Iterate all students in vector,
      * log their graduations status to file,
      * and generate their profile image. */
@@ -358,9 +350,15 @@ void Uni :: graduate() {
                     (**it_student).getId(), "", "", GRADUATED); 
 
             if ((**it_student).getDepartment() == _CS_) {
-                saveColorImage(csGraduationImage, **it_student);
-            } else {
-                saveColorImage(pgGraduationImage, **it_student);
+                saveColorImage(
+                        csGraduationImage,
+                        **it_student,
+                        numberOfCsImages);
+            } else {  // PG student.
+                saveColorImage(
+                        pgGraduationImage,
+                        **it_student,
+                        numberOfPgImages);
             }
         } else {
 
@@ -369,15 +367,21 @@ void Uni :: graduate() {
                     (**it_student).getId(), "", "", NOT_GRADUATED);
 
             if ((**it_student).getDepartment() == _CS_) {
-                saveGreyscaleImage(csGraduationImage, **it_student);
-            } else {
-                saveGreyscaleImage(pgGraduationImage, **it_student);
+                saveGreyscaleImage(
+                        csGraduationImage,
+                        **it_student,
+                        numberOfCsImages);
+            } else {  // PG student.
+                saveGreyscaleImage(
+                        pgGraduationImage,
+                        **it_student,
+                        numberOfPgImages);
             }
         }
     }
-cout << "need to print final" << endl;
+
     csGraduationImage.displayImage();
-    // TODO save images on root project folder
+    pgGraduationImage.displayImage();
 }
 
 
@@ -463,15 +467,16 @@ void Uni :: promoteStudents() {
 }
 
 
-void Uni :: saveColorImage(ImageLoader &image, Student& student) {
-
-    cout << "in colring func " << student.getId() << endl;
+void Uni :: saveColorImage(
+        ImageLoader &image,
+        Student& student,
+        unsigned int &numberOfImages) {
 
     ImageOperations opr;
 
     string studentImagePath = student.getImagePath();
     studentImagePath.erase(
-            studentImagePath.find_last_not_of(" \n\r\t")+1);
+            studentImagePath.find_last_not_of(" \n\r\t") +1);
 
     ImageLoader studentImage(studentImagePath);
     ImageLoader studentImageResized(
@@ -484,44 +489,54 @@ void Uni :: saveColorImage(ImageLoader &image, Student& student) {
         opr.copy_paste_image(
                 studentImageResized.getImage(),
                 image.getImage(),
-                this->_numOfCsStudentInImage * PROFILE_IMAGE_SIZE);
-        this->_numOfCsStudentInImage++;
+                numberOfImages * PROFILE_IMAGE_SIZE);
+        
+        numberOfImages++;
     } else {
         opr.copy_paste_image(studentImageResized.getImage(),
                 image.getImage(),
-                this->_numOfPgStudentInImage * PROFILE_IMAGE_SIZE);
-        this->_numOfPgStudentInImage++;
+                numberOfImages * PROFILE_IMAGE_SIZE);
+        
+        numberOfImages++;
     }
 }
 
 
-void Uni :: saveGreyscaleImage(ImageLoader &image, Student& student) {
+void Uni :: saveGreyscaleImage(
+        ImageLoader &image,
+        Student &student,
+        unsigned int &numberOfImages) {
 
     ImageOperations opr;
 
     string studentImagePath = student.getImagePath();
-    studentImagePath.erase(studentImagePath.find_last_not_of(" \n\r\t")+1);
+    studentImagePath.erase(studentImagePath.find_last_not_of(" \n\r\t") +1);
 
     ImageLoader studentImage(studentImagePath);
     ImageLoader studentImageResized(PROFILE_IMAGE_SIZE, PROFILE_IMAGE_SIZE);
 
     opr.resize(studentImage.getImage(), studentImageResized.getImage());
 
-    opr.rgb_to_greyscale(studentImageResized.getImage(),
-            studentImageResized.getImage()); //working! checked!
+    opr.rgb_to_greyscale(
+            studentImageResized.getImage(),
+            studentImageResized.getImage());
 
     if (student.getDepartment().compare(_CS_) == 0) {
 
-        opr.copy_paste_image(studentImageResized.getImage(),
+        opr.copy_paste_image(
+                studentImageResized.getImage(),
                 image.getImage(),
-                this->_numOfCsStudentInImage * PROFILE_IMAGE_SIZE);
-        this->_numOfCsStudentInImage++;
+                numberOfImages * PROFILE_IMAGE_SIZE);
+
+        numberOfImages++;
     } else {
 
-        opr.copy_paste_image(studentImageResized.getImage(),
+        opr.copy_paste_image(
+                studentImageResized.getImage(),
                 image.getImage(),
-                this->_numOfPgStudentInImage * PROFILE_IMAGE_SIZE);
-        this->_numOfPgStudentInImage++;
+                numberOfImages * PROFILE_IMAGE_SIZE);
+
+        numberOfImages++;
     }
 }
 

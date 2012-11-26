@@ -19,13 +19,12 @@ ImageLoader :: ImageLoader(const string& fileName) :
 
 
 ImageLoader :: ~ImageLoader() {
-    cout << "Killing pic" << endl;
     m_image.release();
 }
 
 
 void ImageLoader :: displayImage() {
-    namedWindow("My image");  // Create image window named "My image".
+    namedWindow("My image", CV_WINDOW_AUTOSIZE);  // Create image window named "My image".
     imshow("My image", m_image);  // Show the image on window.
     waitKey(5000);  // Wait key for 5000 ms
 
@@ -36,6 +35,7 @@ void ImageLoader :: displayImage() {
 cv::Mat& ImageLoader :: getImage() {
     return m_image;
 }
+
 
 void ImageLoader :: saveImage(const string& fileName) {
     imwrite(fileName, m_image);

@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <time.h>
 
 #include "Student.h"
 #include "CsStudent.h"
@@ -39,9 +40,6 @@ class Uni {
         unsigned short _numOfCsStudents;
         unsigned short _numOfPgStudents;
 
-        unsigned short _numOfCsStudentInImage;
-        unsigned short _numOfPgStudentInImage;
-
         void readCurriculumFile(
                 unsigned short &numOfCsElectiveCourses,
                 unsigned short &numOfPgElectiveCourses);
@@ -63,8 +61,15 @@ class Uni {
         bool isStudentInCourse(
                 Course &course, Student &student) const;
 
-        void saveColorImage(ImageLoader &image, Student &student);
-        void saveGreyscaleImage(ImageLoader &image, Student &student);
+        void saveColorImage(
+                ImageLoader &image,
+                Student &student,
+                unsigned int &numberOfImages);
+
+        void saveGreyscaleImage(
+                ImageLoader &image,
+                Student &student,
+                unsigned int &numberOfImages);
 
         void deleteCourses(std::vector<Course *> &courses);
 

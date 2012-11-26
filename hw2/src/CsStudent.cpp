@@ -8,8 +8,6 @@ using namespace std;
 
 void CsStudent :: study(Course &course) {
 
-    srand(time(NULL));
-
     // If Student finished course succesfully:
     if (rand() % GRADE_RANGE < CS_QUIT_CHANCE) {
         writeToStudentsLogFile(

@@ -4,7 +4,6 @@
 
 #include <string>
 #include <cstdlib>
-#include <time.h>
 
 #include "Student.h"
 

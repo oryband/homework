@@ -1,7 +1,8 @@
 #include "ImageOperations.h"
 
 
-void ImageOperations :: rgb_to_greyscale(const cv :: Mat& src, cv :: Mat& dst) {
+void ImageOperations :: rgb_to_greyscale(
+        const cv :: Mat& src, cv :: Mat& dst) {
     cv :: cvtColor(src, dst, CV_RGB2GRAY);
 }
 
@@ -14,12 +15,17 @@ void ImageOperations :: resize(const cv :: Mat& src, cv :: Mat& dst) {
 void ImageOperations :: copy_paste_image(
         const cv :: Mat& original, cv :: Mat& destination, int xLocation) {
 
-    if(original.size().height > destination.size().height) {
+    if (original.size().height > destination.size().height) {
         throw ("original image is higher that destination image");
     }
 
-    cv :: Rect roi(xLocation, 0, original.size().width, original.size().height);
-    cv :: Mat imageROI (destination, roi);
+    cv :: Rect roi(
+            xLocation,
+            0,
+            original.size().width,
+            original.size().height);
+
+    cv :: Mat imageROI(destination, roi);
 
     original.copyTo(imageROI);
 }
