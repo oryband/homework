@@ -39,13 +39,13 @@ class Student {
         void finishcourse(Course &course);
 
         // Getters.
-        const std::string getStudentId() const;
+        const std::string getId() const;
         const std::string getDepartment() const;
         const std::string getImagePath() const; 
-        const unsigned short getCurrentSemester() const;
-        const unsigned short getUnfinishedSemesterMandatoryCourses() const;
-        const unsigned short getUnfinishedSemesterElectiveCourses() const;
-        const unsigned short getNecessaryElectiveCourses() const;
+        unsigned short getCurrentSemester() const;
+        unsigned short getUnfinishedSemesterMandatoryCourses() const;
+        unsigned short getUnfinishedSemesterElectiveCourses() const;
+        unsigned short getNecessaryElectiveCourses() const;
 
         // Setters
         void incrementUnfinishedSemesterMandatoryCourses(); 
@@ -55,8 +55,8 @@ class Student {
 
 
 struct compareStudents {
-    bool operator()(Student const *s1, Student const *s2) const {
-        return s1->getStudentId().c_str() < s2->getStudentId().c_str();
+    bool operator() (Student const *s1, Student const *s2) const {
+        return s1->getId().c_str() < s2->getId().c_str();
     }
 };
 

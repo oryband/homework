@@ -222,7 +222,7 @@ void Uni :: simulate() {
 
             if ((**it_student).getDepartment().compare(_PG_) == 0) {
                 writeToStudentsLogFile(
-                        (**it_student).getStudentId(), "", "", DENIED);
+                        (**it_student).getId(), "", "", DENIED);
             }
         }
     }
@@ -352,7 +352,7 @@ void Uni :: graduate() {
 
             // Log to file.
             writeToStudentsLogFile(
-                    (**it_student).getStudentId(), "", "", GRADUATED); 
+                    (**it_student).getId(), "", "", GRADUATED); 
 
             /*if ((**it_student).getDepartment() == _CS_) {
                 saveColorImage(csGraduationImage, **it_student);
@@ -363,7 +363,7 @@ void Uni :: graduate() {
 
             // Log to file.
             writeToStudentsLogFile(
-                    (**it_student).getStudentId(), "", "", NOT_GRADUATED);
+                    (**it_student).getId(), "", "", NOT_GRADUATED);
 
             /*if ((**it_student).getDepartment() == _CS_) {
               saveGreyscaleImage(csGraduationImage, **it_student);
@@ -377,15 +377,13 @@ void Uni :: graduate() {
 }
 
 
-const bool Uni :: isStudentInCourse(Course &course, Student &student) const {
+bool Uni :: isStudentInCourse(Course &course, Student &student) const {
 
     vector<Student *>::iterator it_student;
     for (it_student = course.getStudents().begin();
             it_student != course.getStudents().end(); ++it_student) {
 
-        if ((**it_student).getStudentId().compare(
-                    student.getStudentId()) == 0) {
-
+        if ((**it_student).getId().compare(student.getId()) == 0) {
             return true;
         }
     }
@@ -466,7 +464,7 @@ void Uni :: promoteStudents() {
   ImageOperations opr;
 
   ImageLoader studentImg(student.getImagePath());
-  cout << "Printing Student : " << student.getStudentId() << endl;
+  cout << "Printing Student : " << student.getId() << endl;
   cout << " ImagePATH: " << student.getImagePath() << endl;
   
   ImageLoader studentImgResized(100, 100);

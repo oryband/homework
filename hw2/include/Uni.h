@@ -58,7 +58,7 @@ class Uni {
                 std::vector<Course *> &electiveSemesterCourses,
                 Student &student);
 
-        const bool isStudentInCourse(
+        bool isStudentInCourse(
                 Course &course, Student &student) const;
 
         //void saveColorImage(ImageLoader &image, Student &student);

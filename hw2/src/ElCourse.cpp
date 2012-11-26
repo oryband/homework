@@ -7,7 +7,7 @@ void ElCourse :: reg(Student &s) {
     this->pushToCourse(&s);
 
     writeToStudentsLogFile(
-            s.getStudentId(),
+            s.getId(),
             this->_name,
             _ELECTIVE_,
             TAKING_COURSE);
