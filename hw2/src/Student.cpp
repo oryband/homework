@@ -57,9 +57,13 @@ const string Student :: getDepartment() const {
 }
 
 
+
 const string Student :: getImagePath() const {
     return this->_imagePath;
 }
+/*const string Student :: getImagePath() const {
+    return this->_imagePath;
+}*/
 
 
 unsigned short Student :: getCurrentSemester() const {

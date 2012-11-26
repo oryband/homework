@@ -61,7 +61,7 @@ class Uni {
         bool isStudentInCourse(
                 Course &course, Student &student) const;
 
-        //void saveColorImage(ImageLoader &image, Student &student);
+        void saveColorImage(ImageLoader &image, Student &student);
         //void saveGreyscaleImage(ImageLoader &image, Student &student);
 
         void deleteCourses(std::vector<Course *> &courses);
