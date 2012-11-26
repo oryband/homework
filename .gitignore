@@ -22,3 +22,6 @@ Debug/
 
 # Vim.
 *.swp
+
+# OSX
+.DS_STORE
