@@ -5,20 +5,23 @@ SHELL = /bin/sh
 .SUFFIXES: .cpp .o
 
 
-INCLUDES = -I./include
-OPENCV = -L/usr/lib -L/usr/local/lib -I/usr/include/opencv -I/usr/local/include/opencv -lopencv_core -lopencv_highgui -lopencv_imgproc
-
 SRCDIR = ./src/
 INCLUDEDIR = ./include/
 BINDIR = ./bin/
+
+INCLUDES = -I$(INCLUDEDIR)
+OPENCV = -L/usr/lib -L/usr/local/lib -I/usr/include/opencv -I/usr/local/include/opencv -lopencv_core -lopencv_highgui -lopencv_imgproc
+IMAGES = $(BINDIR)ImageLoader.o $(BINDIR)ImageOperations.o
+#OPENCV=
+#IMAGES=
 
 CC = g++
 CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES)
 
 
-all: $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)ImageLoader.o $(BINDIR)ImageOperations.o $(BINDIR)Uni.o $(BINDIR)RandomU.o
+all: $(IMAGES) $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o
 	@echo -n 'Building target all: '
-	$(CC) $(CPPFLAGS) $(OPENCV) -o $(BINDIR)RandomU $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)ImageLoader.o $(BINDIR)ImageOperations.o $(BINDIR)Uni.o $(BINDIR)RandomU.o
+	$(CC) $(CPPFLAGS) $(OPENCV) -o $(BINDIR)RandomU $(IMAGES) $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o
 
 
 $(BINDIR)RandomU.o: $(SRCDIR)RandomU.cpp $(BINDIR)Uni.o
@@ -31,7 +34,7 @@ $(BINDIR)util.o: $(SRCDIR)util.cpp $(INCLUDEDIR)util.h $(INCLUDEDIR)consts.h
 	$(CC) -c $(CPPFLAGS) -o $(BINDIR)util.o $(SRCDIR)util.cpp
 
 
-$(BINDIR)Uni.o: $(SRCDIR)Uni.cpp $(INCLUDEDIR)Uni.h $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)ImageLoader.o $(BINDIR)ImageOperations.o
+$(BINDIR)Uni.o: $(SRCDIR)Uni.cpp $(INCLUDEDIR)Uni.h $(IMAGES) $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o
 	@echo -n 'Building target Uni.o: '
 	$(CC) -c $(CPPFLAGS) -o $(BINDIR)Uni.o $(SRCDIR)Uni.cpp
 
