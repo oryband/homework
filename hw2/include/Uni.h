@@ -4,6 +4,8 @@
 
 #include <algorithm>
 #include <sstream>
+#include <fstream>
+#include <iostream>
 
 #include "Student.h"
 #include "CsStudent.h"
@@ -62,7 +64,7 @@ class Uni {
                 Course &course, Student &student) const;
 
         void saveColorImage(ImageLoader &image, Student &student);
-        //void saveGreyscaleImage(ImageLoader &image, Student &student);
+        void saveGreyscaleImage(ImageLoader &image, Student &student);
 
         void deleteCourses(std::vector<Course *> &courses);
 

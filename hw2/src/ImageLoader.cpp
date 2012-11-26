@@ -1,32 +1,28 @@
 #include "../include/ImageLoader.h"
 #include <iostream>
- 
+
 using namespace cv;
 using namespace std;
- 
-ImageLoader::ImageLoader(int width, int height)
-        : m_image(width, height, CV_8UC3)
-{
-        
-}
- 
-ImageLoader::ImageLoader(const string& fileName)
-        : m_image(imread(fileName))
-{
-    int i = fileName.compare("./img/picard.jpg");
 
-    cout << "file name:" << fileName << endl;
-    cout << "FUCK YOU :      " << i << endl;
-      if (!m_image.data)
-            {
-                    cout << "Failed loading " << fileName << endl;
-                      }
+    ImageLoader::ImageLoader(int width, int height)
+: m_image(width, height, CV_8UC3)
+{
+
+}
+
+    ImageLoader::ImageLoader(const string& fileName)
+: m_image(imread(fileName))
+{
+    if (!m_image.data)
+    {
+        cout << "Failed loading " << fileName << endl;
+    }
 }
 
 ImageLoader::~ImageLoader()
 {
     cout << "Killing pic" << endl;
-      m_image.release();
+    m_image.release();
 }
 
 void ImageLoader::displayImage()
@@ -37,6 +33,8 @@ void ImageLoader::displayImage()
     imshow("My image", m_image);
     // wait key for 5000 ms
     waitKey(5000);
+    //FIXME NEED TO DELETE TEMP IMAGE!!!!!!!
+    //
 }
 
 

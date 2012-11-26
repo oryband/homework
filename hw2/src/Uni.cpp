@@ -329,13 +329,21 @@ void Uni :: graduate() {
             this->_students.end(),
             compareStudents());
 
+    cout << "NUmber of CS students " << this->_numOfCsStudents << endl;
+    cout << "NUmber of Pg students " << this->_numOfPgStudents << endl;
+    cout << " SIZE: " << PROFILE_IMAGE_SIZE << endl;
+
     ImageLoader
-        csGraduationImage(
-                PROFILE_IMAGE_SIZE,
-              this-> _numOfCsStudents*PROFILE_IMAGE_SIZE),
+        csGraduationImage(PROFILE_IMAGE_SIZE,
+                this->_numOfCsStudents*PROFILE_IMAGE_SIZE);
+        
+    ImageLoader 
         pgGraduationImage(
                 PROFILE_IMAGE_SIZE,
                 this->_numOfPgStudents*PROFILE_IMAGE_SIZE);
+    
+    //csGraduationImage.displayImage();
+    //pgGraduationImage.displayImage();
 
     /* Iterate all students in vector,
      * log their graduations status to file,
@@ -365,14 +373,15 @@ void Uni :: graduate() {
             writeToStudentsLogFile(
                     (**it_student).getStudentId(), "", "", NOT_GRADUATED);
 
-            /*if ((**it_student).getDepartment() == _CS_) {
-              saveGreyscaleImage(csGraduationImage, **it_student);
-              } else {
-              saveGreyscaleImage(pgGraduationImage, **it_student);
-              }*/
+            if ((**it_student).getDepartment() == _CS_) {
+                saveGreyscaleImage(csGraduationImage, **it_student);
+            } else {
+                saveGreyscaleImage(pgGraduationImage, **it_student);
+            }
         }
     }
-
+cout << "need to print final" << endl;
+    csGraduationImage.displayImage();
     // TODO save images on root project folder
 }
 
@@ -463,71 +472,65 @@ void Uni :: promoteStudents() {
 
 void Uni :: saveColorImage(ImageLoader &image, Student& student) {
 
-  ImageOperations opr;
-  
-  const string studnetImgPath = student.getImagePath();
+    cout << "in colring func " << student.getStudentId() << endl;
 
-  ImageLoader studentImg(student.getImagePath());
+    ImageOperations opr;
 
-  studentImg.displayImage();
+    string studentImgPath = student.getImagePath();
+    studentImgPath.erase(studentImgPath.find_last_not_of(" \n\r\t")+1);
 
-  cout << "Printing Student : " << student.getStudentId() << endl;
-  cout << " ImagePATH: " << student.getImagePath() << endl;
-  cout << " ImagePATH: string " << studnetImgPath<< endl;
+    ImageLoader studentImg(studentImgPath);
 
-  
-  ImageLoader studentImgResized(100, 100);
 
-  opr.resize(studentImg.getImage(), studentImgResized.getImage());
+    ImageLoader studentImgResized(100, 100);
+    opr.resize(studentImg.getImage(), studentImgResized.getImage());
 
-  if (student.getDepartment().compare(_CS_) == 0) {
+    if (student.getDepartment().compare(_CS_) == 0) {
 
-      opr.copy_paste_image(studentImgResized.getImage(),
-              image.getImage(),
-              this->_numOfCsStuInImage*100);
-      this->_numOfCsStuInImage++;
-  } else {
-      opr.copy_paste_image(studentImgResized.getImage(),
-              image.getImage(),
-              this->_numOfPgStuInImage*100);
-      this->_numOfPgStuInImage++;
-  }
-    
-  image.displayImage();
-
-  //TODO print_test
-    cout << "end of saveColorImage : " << endl;
+        opr.copy_paste_image(studentImgResized.getImage(),
+                image.getImage(),
+                this->_numOfCsStuInImage*100);
+        this->_numOfCsStuInImage++;
+    } else {
+        opr.copy_paste_image(studentImgResized.getImage(),
+                image.getImage(),
+                this->_numOfPgStuInImage*100);
+        this->_numOfPgStuInImage++;
+    }
 
 } 
 
-/*
+
 void Uni :: saveGreyscaleImage(ImageLoader &image, Student& student) {
 
-  ImageOperations opr;
+    ImageOperations opr;
 
-  ImageLoader studentImg(student.getImagePath());
-  ImageLoader studentImgResized(100,100);
+    string studentImgPath = student.getImagePath();
+    studentImgPath.erase(studentImgPath.find_last_not_of(" \n\r\t")+1);
 
-  opr.resize(studentImg.getImage(), studentImgResized.getImage());
+    ImageLoader studentImg(studentImgPath);
+    ImageLoader studentImgResized(100,100);
 
-  opr.rgb_to_greyscale(studentImgResized.getImage(),
-  studentImgResized.getImage()); //working! checked!
+    opr.resize(studentImg.getImage(), studentImgResized.getImage());
+
+    opr.rgb_to_greyscale(studentImgResized.getImage(),
+            studentImgResized.getImage()); //working! checked!
 
 
-  if (student.getDepartment().compare(_CS_) == 0) {
+    if (student.getDepartment().compare(_CS_) == 0) {
 
-  opr.copy_paste_image(studentImgResized.getImage(),
-  this->_csPicture.getImage(),
-  this->_numOfCsStuInImage*100);
-  this->_numOfCsStuInImage++;
-  } else {
+        opr.copy_paste_image(studentImgResized.getImage(),
+                image.getImage(),
+                this->_numOfCsStuInImage*100);
+        this->_numOfCsStuInImage++;
+    } else {
 
-  opr.copy_paste_image(studentImgResized.getImage(),
-  this->_pgPicture.getImage(),
-  this->_numOfPgStuInImage*100);
-  this->_numOfPgStuInImage++;
-  }
-  }*/
+        opr.copy_paste_image(studentImgResized.getImage(),
+                image.getImage(),
+                this->_numOfPgStuInImage*100);
+        this->_numOfPgStuInImage++;
+    }
+}
 
 
 void Uni :: deleteCourses(vector<Course *> &courses) {
