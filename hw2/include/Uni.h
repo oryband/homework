@@ -14,8 +14,8 @@
 #include "PgCourse.h"
 #include "ElCourse.h"
 
-//#include "ImageLoader.h"
-//#include "ImageOperations.h"
+#include "ImageLoader.h"
+#include "ImageOperations.h"
 
 #include "consts.h"
 #include "util.h"
@@ -61,8 +61,8 @@ class Uni {
         const bool isStudentInCourse(
                 Course &course, Student &student) const;
 
-        /*void saveColorImage(ImageLoader &image, Student &student);
-        void saveGreyscaleImage(ImageLoader &image, Student &student);*/
+        void saveColorImage(ImageLoader &image, Student &student);
+       // void saveGreyscaleImage(ImageLoader &image, Student &student);*/
 
         void deleteCourses(std::vector<Course *> &courses);
 

@@ -33,7 +33,7 @@ Uni :: Uni(bool pgOn) :
 
         delete numOfCsElectiveCourses;
         delete numOfPgElectiveCourses;
-}
+    }
 
 
 Uni :: ~Uni() {
@@ -329,13 +329,13 @@ void Uni :: graduate() {
             this->_students.end(),
             compareStudents());
 
-    /*ImageLoader
+    ImageLoader
       csGraduationImage(
       PROFILE_IMAGE_SIZE,
       numOfStudents*PROFILE_IMAGE_SIZE),
       pgGraduationImage(
       PROFILE_IMAGE_SIZE,
-      numOfStudents*PROFILE_IMAGE_SIZE);*/
+      numOfStudents*PROFILE_IMAGE_SIZE);
 
     /* Iterate all students in vector,
      * log their graduations status to file,
@@ -354,11 +354,11 @@ void Uni :: graduate() {
             writeToStudentsLogFile(
                     (**it_student).getStudentId(), "", "", GRADUATED); 
 
-            /*if ((**it_student).getDepartment() == CS) {
+            if ((**it_student).getDepartment() == CS) {
               saveColorImage(csGraduationImage, **it_student);
               } else {
               saveColorImage(pgGraduationImage, **it_student);
-              }*/
+              }
         } else {
 
             // Log to file.
@@ -461,11 +461,14 @@ void Uni :: promoteStudents() {
 }
 
 
-/*void Uni :: saveColorImage(ImageLoader &image, Student& student) {
+void Uni :: saveColorImage(ImageLoader &image, Student& student) {
 
   ImageOperations opr;
 
   ImageLoader studentImg(student.getImagePath());
+  cout << "Printing Student : " << student.getStudentId() << endl;
+  cout << " ImagePATH: " << student.getImagePath() << endl;
+  
   ImageLoader studentImgResized(100, 100);
 
   opr.resize(studentImg.getImage(), studentImgResized.getImage());
@@ -482,7 +485,7 @@ void Uni :: promoteStudents() {
   this->_numOfPgStuInImage*100);
   this->_numOfPgStuInImage++;
   }
-  }*/
+} 
 
 
 /*void Uni :: saveGreyscaleImage(ImageLoader &image, Student& student) {

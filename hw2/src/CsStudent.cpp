@@ -2,10 +2,13 @@
 
 #include "Course.h"
 
+#include <time.h>
+
 using namespace std;
 
 void CsStudent :: study(Course &course) {
     // If Student finished course succesfully:
+    srand(time(NULL));
     if (rand() % GRADE_RANGE < CS_QUIT_CHANCE) {
         writeToStudentsLogFile(
                 this->_id,

@@ -11,8 +11,11 @@
 #define PG "PG"
 #define ELECTIVE "ELECTIVE"
 
-#define CS_QUIT_CHANCE 25
-#define PG_QUIT_CHANCE 20
+//#define CS_QUIT_CHANCE 25
+//#define PG_QUIT_CHANCE 20
+
+#define CS_QUIT_CHANCE 0
+#define PG_QUIT_CHANCE 0
 
 #define GRADE_RANGE 101
 
