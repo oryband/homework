@@ -17,7 +17,7 @@ class CsCourse : public Course {
                 std::string name,
                 unsigned short semester,
                 unsigned short minimumGrade) :
-            Course(name, CS, semester, minimumGrade) {}
+            Course(name, _CS_, semester, minimumGrade) {}
 
         void reg(Student &s);
 };

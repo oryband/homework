@@ -4,9 +4,11 @@
 
 #include <string>
 #include <cstdlib>
+#include <time.h>
 
 #include "Student.h"
 
+#include "consts.h"
 #include "util.h"
 
 
@@ -19,7 +21,7 @@ class CsStudent : public Student {
                 std::string studentId,
                 std::string imagePath,
                 unsigned short electiveCourses) :
-            Student(studentId, imagePath, electiveCourses, CS) {}
+            Student(studentId, imagePath, electiveCourses, _CS_) {}
 
         void study(Course &course);
 };

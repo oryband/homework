@@ -2,8 +2,9 @@
 
 #include "Student.h"
 
-#include <iostream>
+
 using namespace std;
+
 
 void CsCourse :: reg(Student &s) {
     this->pushToCourse(&s);
@@ -11,6 +12,6 @@ void CsCourse :: reg(Student &s) {
     writeToStudentsLogFile(
             s.getStudentId(),
             this->_name,
-            CS,
+            _CS_,
             TAKING_COURSE);
 }

@@ -9,6 +9,6 @@ void ElCourse :: reg(Student &s) {
     writeToStudentsLogFile(
             s.getStudentId(),
             this->_name,
-            ELECTIVE,
+            _ELECTIVE_,
             TAKING_COURSE);
 }

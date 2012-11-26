@@ -43,7 +43,7 @@ void Course :: pushToCourse(Student *ptr_student) {
 
     this->_students.push_back(ptr_student);
 
-    if (this->getDepartment() != ELECTIVE) {  // Mandatory course.
+    if (this->getDepartment() != _ELECTIVE_) {  // Mandatory course.
         ptr_student->incrementUnfinishedSemesterMandatoryCourses();
     } else {  // Elective course.
         ptr_student->incrementUnfinishedSemesterElectiveCourses();

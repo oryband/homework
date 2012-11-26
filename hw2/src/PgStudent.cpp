@@ -5,8 +5,10 @@
 #include <time.h>
 
 void PgStudent :: study(Course &course) {
-    // If Student finished course succesfully:
+
     srand(time(NULL));
+
+    // If Student finished course succesfully:
     if (rand() % GRADE_RANGE < PG_QUIT_CHANCE) {
         writeToStudentsLogFile(
                 this->_id,

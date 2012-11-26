@@ -4,6 +4,7 @@
 
 #include <string>
 #include <cstdlib>
+#include <time.h>
 
 #include "Student.h"
 
@@ -20,7 +21,7 @@ class PgStudent : public Student {
                 std::string studentId,
                 std::string imagePath,
                 unsigned short electiveCourses) :
-            Student(studentId, imagePath, electiveCourses, PG) {}
+            Student(studentId, imagePath, electiveCourses, _PG_) {}
 
         void study(Course &course);
 };

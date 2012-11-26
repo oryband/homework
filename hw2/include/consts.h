@@ -7,9 +7,9 @@
 #define CURRICULUM_FILE "curriculum.conf"
 #define RANDOM_FILE "random.log"
 
-#define CS "CS"
-#define PG "PG"
-#define ELECTIVE "ELECTIVE"
+#define _CS_ "CS"
+#define _PG_ "PG"
+#define _ELECTIVE_ "ELECTIVE"
 
 //#define CS_QUIT_CHANCE 25
 //#define PG_QUIT_CHANCE 20

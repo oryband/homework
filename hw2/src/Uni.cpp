@@ -1,7 +1,5 @@
 #include "Uni.h"
 
-#include "ImageLoader.h"
-#include "ImageOperations.h"
 
 using namespace std;
 
@@ -94,7 +92,7 @@ void Uni :: readCurriculumFile(
         oss2 >> unfinishedElectiveCourses;
         int electiveCourses = atoi(unfinishedElectiveCourses.c_str());
 
-        if (department.compare(CS) == 0) {  // CS department.
+        if (department.compare(_CS_) == 0) {  // CS department.
             numOfCsElectiveCourses = electiveCourses;
         } else {  // PG department.
             numOfPgElectiveCourses = electiveCourses;
@@ -125,7 +123,7 @@ void Uni :: readStudentsFile(
                imagePath = string(line[2]);
 
         Student *ptr_student;
-        if (department.compare(CS) == 0) {
+        if (department.compare(_CS_) == 0) {
             ptr_student = new CsStudent(
                     id, imagePath, csElectiveCourses);
             this->_numOfCsStudents ++;
@@ -167,7 +165,7 @@ void Uni :: readCoursesFile() {
         istringstream oss2(line[3]);
         oss2 >> minimumGrade;
 
-        if (department.compare(ELECTIVE) == 0) {
+        if (department.compare(_ELECTIVE_) == 0) {
             if (semester % 2 == 1) {  // Autumn elective course.
 
                 this->_electiveAutumnCourses.push_back(
@@ -180,7 +178,7 @@ void Uni :: readCoursesFile() {
             }
         } // FIXME use if/elif/elif ?
 
-        if (department.compare(CS) == 0) {
+        if (department.compare(_CS_) == 0) {
             if (semester % 2 == 1) {  // Autumn mandatory course.
 
                 this->_mandatoryAutumnCourses.push_back(
@@ -193,7 +191,7 @@ void Uni :: readCoursesFile() {
             }
         } 
 
-        if (department.compare(PG) == 0) {
+        if (department.compare(_PG_) == 0) {
             if (semester % 2 == 1) {  // Autumn course.
 
                 this->_mandatoryAutumnCourses.push_back(
@@ -222,7 +220,7 @@ void Uni :: simulate() {
                 it_student != this->_students.end();
                 ++it_student) {
 
-            if ((**it_student).getDepartment().compare(PG) == 0) {
+            if ((**it_student).getDepartment().compare(_PG_) == 0) {
                 writeToStudentsLogFile(
                         (**it_student).getStudentId(), "", "", DENIED);
             }
@@ -274,7 +272,7 @@ void Uni :: registerStudentsToCourses(unsigned short currentSemester) {
 
             // Register if CS student,
             // OR if MALAG is on and PG studentl.
-            if ( (**it_student).getDepartment().compare(CS) == 0 ||
+            if ( (**it_student).getDepartment().compare(_CS_) == 0 ||
                     this->_pgOn) {
 
                 registerStudentToMandatoryCourses(
@@ -331,13 +329,13 @@ void Uni :: graduate() {
             this->_students.end(),
             compareStudents());
 
-    ImageLoader
-      csGraduationImage(
-      PROFILE_IMAGE_SIZE,
-      numOfStudents*PROFILE_IMAGE_SIZE),
-      pgGraduationImage(
-      PROFILE_IMAGE_SIZE,
-      numOfStudents*PROFILE_IMAGE_SIZE);
+    /*ImageLoader
+        csGraduationImage(
+                PROFILE_IMAGE_SIZE,
+                numOfStudents*PROFILE_IMAGE_SIZE),
+        pgGraduationImage(
+                PROFILE_IMAGE_SIZE,
+                numOfStudents*PROFILE_IMAGE_SIZE);*/
 
     /* Iterate all students in vector,
      * log their graduations status to file,
@@ -356,18 +354,18 @@ void Uni :: graduate() {
             writeToStudentsLogFile(
                     (**it_student).getStudentId(), "", "", GRADUATED); 
 
-            if ((**it_student).getDepartment() == CS) {
-              saveColorImage(csGraduationImage, **it_student);
-              } else {
-              saveColorImage(pgGraduationImage, **it_student);
-              }
+            /*if ((**it_student).getDepartment() == _CS_) {
+                saveColorImage(csGraduationImage, **it_student);
+            } else {
+                saveColorImage(pgGraduationImage, **it_student);
+            }*/
         } else {
 
             // Log to file.
             writeToStudentsLogFile(
                     (**it_student).getStudentId(), "", "", NOT_GRADUATED);
 
-            /*if ((**it_student).getDepartment() == CS) {
+            /*if ((**it_student).getDepartment() == _CS_) {
               saveGreyscaleImage(csGraduationImage, **it_student);
               } else {
               saveGreyscaleImage(pgGraduationImage, **it_student);
@@ -463,7 +461,7 @@ void Uni :: promoteStudents() {
 }
 
 
-void Uni :: saveColorImage(ImageLoader &image, Student& student) {
+/*void Uni :: saveColorImage(ImageLoader &image, Student& student) {
 
   ImageOperations opr;
 
@@ -475,7 +473,7 @@ void Uni :: saveColorImage(ImageLoader &image, Student& student) {
 
   opr.resize(studentImg.getImage(), studentImgResized.getImage());
 
-  if (student.getDepartment().compare(CS) == 0) {
+  if (student.getDepartment().compare(_CS_) == 0) {
 
   opr.copy_paste_image(studentImgResized.getImage(),
   this->_csPicture.getImage(),
@@ -503,7 +501,7 @@ void Uni :: saveGreyscaleImage(ImageLoader &image, Student& student) {
   studentImgResized.getImage()); //working! checked!
 
 
-  if (student.getDepartment().compare(CS) == 0) {
+  if (student.getDepartment().compare(_CS_) == 0) {
 
   opr.copy_paste_image(studentImgResized.getImage(),
   this->_csPicture.getImage(),
@@ -516,7 +514,7 @@ void Uni :: saveGreyscaleImage(ImageLoader &image, Student& student) {
   this->_numOfPgStuInImage*100);
   this->_numOfPgStuInImage++;
   }
-  }
+  }*/
 
 
 void Uni :: deleteCourses(vector<Course *> &courses) {

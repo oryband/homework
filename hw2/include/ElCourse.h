@@ -17,7 +17,7 @@ class ElCourse : public Course {
                 std::string name,
                 unsigned short semester,
                 unsigned short minimumGrade) :
-            Course(name, ELECTIVE, semester, minimumGrade) {}
+            Course(name, _ELECTIVE_, semester, minimumGrade) {}
 
         void reg(Student &s);
 };

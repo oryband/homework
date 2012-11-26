@@ -23,7 +23,7 @@ Student :: Student(
 
 void Student :: finishcourse(Course &course) {
 
-    if (course.getDepartment() != ELECTIVE) {  // CS or PG course.
+    if (course.getDepartment() != _ELECTIVE_) {  // CS or PG course.
         this->_unfinishedSemesterMandatoryCourses --;
     } else {  // Elective course.
         this->_unfinishedSemesterElectiveCourses --;

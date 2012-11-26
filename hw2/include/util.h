@@ -8,6 +8,8 @@
 #include <fstream>
 #include <cstdlib>
 
+#include <boost/algorithm/string.hpp>
+
 #include "consts.h"
 
 void getLines(
