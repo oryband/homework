@@ -1,5 +1,7 @@
 #include "Uni.h"
 
+#include "ImageLoader.h"
+#include "ImageOperations.h"
 
 using namespace std;
 
@@ -488,7 +490,7 @@ void Uni :: saveColorImage(ImageLoader &image, Student& student) {
 } 
 
 
-/*void Uni :: saveGreyscaleImage(ImageLoader &image, Student& student) {
+void Uni :: saveGreyscaleImage(ImageLoader &image, Student& student) {
 
   ImageOperations opr;
 
@@ -514,7 +516,7 @@ void Uni :: saveColorImage(ImageLoader &image, Student& student) {
   this->_numOfPgStuInImage*100);
   this->_numOfPgStuInImage++;
   }
-  }*/
+  }
 
 
 void Uni :: deleteCourses(vector<Course *> &courses) {
