@@ -1,3 +1,10 @@
+/** SPL Assignment #2
+ * http://www.cs.bgu.ac.il/~spl131/Assignments/Assignment_2
+ *
+ * Eldar Damari damariel@post.bgu.ac.il
+ * Ory Band oryb@post.bgu.acil
+ */
+
 #include <string>
 #include <iostream>
 #include <algorithm>
