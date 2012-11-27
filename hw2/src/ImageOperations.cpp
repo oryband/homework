@@ -19,14 +19,19 @@ void ImageOperations :: copy_paste_image(
     if (original.size().height > destination.size().height) {
         throw ("original image is higher that destination image");
     }
-
+    std::cout << " here with a probelm???? " << std::endl;
     cv :: Rect roi(
             xLocation,
             0,
             original.size().width,
             original.size().height);
 
+    std::cout << " 1 here with a probelm???? " << std::endl;
     cv :: Mat imageROI(destination, roi);
+    std::cout << " 2 here with a probelm???? " << std::endl;
 
     original.copyTo(imageROI);
+
+    std::cout << " 3 here with a probelm???? " << std::endl;
+
 }

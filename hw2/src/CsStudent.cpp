@@ -7,7 +7,7 @@ void CsStudent :: study(Course &course) {
 
     int r1 = rand() / (RAND_MAX / (GRADE_RANGE + 1));
     int r2 = rand() / (RAND_MAX / (GRADE_RANGE + 1));
-
+    std::cout << "NUmbers: " << r1 << "  " << r2 << std::endl << std::endl;
     // If Student finished course succesfully:
     if (r1 < CS_QUIT_CHANCE) {
         writeToStudentsLogFile(

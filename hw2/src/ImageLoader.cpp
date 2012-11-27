@@ -24,7 +24,8 @@ ImageLoader :: ~ImageLoader() {
 
 
 void ImageLoader :: displayImage() {
-    namedWindow("My image", CV_WINDOW_AUTOSIZE);  // Create image window named "My image".
+    namedWindow("My image");  // Create image window named "My image".
+    //namedWindow("My image", CV_WINDOW_AUTOSIZE);  // Create image window named "My image".
     imshow("My image", m_image);  // Show the image on window.
     waitKey(2000);  // Wait key for 5000 ms
 
