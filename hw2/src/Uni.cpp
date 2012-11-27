@@ -324,8 +324,6 @@ void Uni :: graduate() {
         pgGraduationImage(
                 PROFILE_IMAGE_SIZE,
                 this->_numOfPgStudents * PROFILE_IMAGE_SIZE);
-    cout << " THE CS IMAGE SIZE: " << this->_numOfCsStudents*PROFILE_IMAGE_SIZE << endl;
-    cout << " THE PG IMAGE SIZE: " << this->_numOfPgStudents*PROFILE_IMAGE_SIZE << endl;
 
     unsigned int numberOfCsImages = 0,
                  numberOfPgImages = 0;
@@ -378,10 +376,8 @@ void Uni :: graduate() {
         }
     }
 
-    csGraduationImage.displayImage();
-    if ( _numOfPgStudents != 0 ){
-    pgGraduationImage.displayImage();
-    }
+    csGraduationImage.displayImage(_CS_);
+    pgGraduationImage.displayImage(_PG_);
 }
 
 
@@ -463,7 +459,7 @@ void Uni :: promoteStudents() {
 
             (**it_student).promoteToNextSemster();
         }
-    }   
+    }
 }
 
 
@@ -471,8 +467,6 @@ void Uni :: saveColorImage(
         ImageLoader &image,
         Student& student,
         unsigned int &numberOfImages) {
-    //TODO print_test
-    cout << " In color func" << endl;
     ImageOperations opr;
 
     string studentImagePath = student.getImagePath();
@@ -484,31 +478,13 @@ void Uni :: saveColorImage(
             PROFILE_IMAGE_SIZE, PROFILE_IMAGE_SIZE);
 
     opr.resize(studentImage.getImage(), resizedStudentImage.getImage());
- cout << " in color : the fucking x location " << numberOfImages * PROFILE_IMAGE_SIZE << endl;
 
-        opr.copy_paste_image(
-                resizedStudentImage.getImage(),
-                image.getImage(),
-                numberOfImages * PROFILE_IMAGE_SIZE);
-       image.displayImage(); 
-        numberOfImages++;
-cout << numberOfImages << endl;
+    opr.copy_paste_image(
+            resizedStudentImage.getImage(),
+            image.getImage(),
+            numberOfImages * PROFILE_IMAGE_SIZE);
 
-    /*if (student.getDepartment().compare(_CS_) == 0) {
-
-        opr.copy_paste_image(
-                resizedStudentImage.getImage(),
-                image.getImage(),
-                numberOfImages * PROFILE_IMAGE_SIZE);
-        
-        numberOfImages++;
-    } else {  // PG student.
-        opr.copy_paste_image(resizedStudentImage.getImage(),
-                image.getImage(),
-                numberOfImages * PROFILE_IMAGE_SIZE);
-        
-        numberOfImages++;
-    }*/
+    numberOfImages++;
 }
 
 
@@ -516,7 +492,6 @@ void Uni :: saveGreyscaleImage(
         ImageLoader &image,
         Student &student,
         unsigned int &numberOfImages) {
-    cout << "In GrayScale func " << endl;
     ImageOperations opr;
 
     string studentImagePath = student.getImagePath();
@@ -530,32 +505,13 @@ void Uni :: saveGreyscaleImage(
     opr.rgb_to_greyscale(
             resizedStudentImage.getImage(),
             resizedStudentImage.getImage());
- cout << " in gray scale : the fucking x location " << numberOfImages * PROFILE_IMAGE_SIZE << endl;
-        opr.copy_paste_image(
-                resizedStudentImage.getImage(),
-                image.getImage(),
-                numberOfImages * PROFILE_IMAGE_SIZE);
-        numberOfImages++;
 
-        cout << numberOfImages << endl;
+    opr.copy_paste_image(
+            resizedStudentImage.getImage(),
+            image.getImage(),
+            numberOfImages * PROFILE_IMAGE_SIZE);
 
-    /*if (student.getDepartment().compare(_CS_) == 0) {
-
-        opr.copy_paste_image(
-                resizedStudentImage.getImage(),
-                image.getImage(),
-                numberOfImages * PROFILE_IMAGE_SIZE);
-
-        numberOfImages++;
-    } else {  // PG student.
-
-        opr.copy_paste_image(
-                resizedStudentImage.getImage(),
-                image.getImage(),
-                numberOfImages * PROFILE_IMAGE_SIZE);
-
-        numberOfImages++;
-    }*/
+    numberOfImages++;
 }
 
 

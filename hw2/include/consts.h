@@ -2,21 +2,18 @@
 #define CONSTS_H_
 
 
-#define COURSES_FILE "../courses3.conf"
+#define COURSES_FILE "../courses.conf"
 #define STUDENTS_FILE "../students.conf"
 #define CURRICULUM_FILE "../curriculum.conf"
 
-#define RANDOM_FILE "random.log"
+#define RANDOM_FILE "./random.log"
 
 #define _CS_ "CS"
 #define _PG_ "PG"
 #define _ELECTIVE_ "ELECTIVE"
 
-//#define CS_QUIT_CHANCE 25
-//#define PG_QUIT_CHANCE 20
-
-#define CS_QUIT_CHANCE 0
-#define PG_QUIT_CHANCE 0
+#define CS_QUIT_CHANCE 25
+#define PG_QUIT_CHANCE 20
 
 #define GRADE_RANGE 100
 

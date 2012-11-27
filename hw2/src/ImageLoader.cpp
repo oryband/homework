@@ -19,17 +19,27 @@ ImageLoader :: ImageLoader(const string& fileName) :
 
 
 ImageLoader :: ~ImageLoader() {
+
     m_image.release();
+    destroyAllWindows();
 }
 
 
-void ImageLoader :: displayImage() {
-    namedWindow("My image");  // Create image window named "My image".
-    //namedWindow("My image", CV_WINDOW_AUTOSIZE);  // Create image window named "My image".
-    imshow("My image", m_image);  // Show the image on window.
+void ImageLoader :: displayImage(const string department) {
+
+    string windowName;
+
+    if (department.compare(_CS_) == 0) {
+        windowName = "Computer Science - Graduation Image";
+    } else {
+        windowName = "Politics and Government - Graduation Image";
+    }
+
+    namedWindow(windowName);  // Create image window named "My image".
+    imshow(windowName, m_image);  // Show the image on window.
     waitKey(2000);  // Wait key for 5000 ms
 
-    // FIXME NEED TO DELETE TEMP IMAGE!!!!!!!
+    destroyWindow(windowName);  // Clean up.
 }
 
 

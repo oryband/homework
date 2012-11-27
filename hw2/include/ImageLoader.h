@@ -7,6 +7,8 @@
 
 #include <opencv/highgui.h>
 
+#include "consts.h"
+
 
 class ImageLoader {
     private:
@@ -20,7 +22,7 @@ class ImageLoader {
         ImageLoader(const std::string& fileName);
 
         // Display an image on screen.
-        void displayImage();
+        void displayImage(const std::string department);
 
         // Matrix getter.
         cv::Mat& getImage();
