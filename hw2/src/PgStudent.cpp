@@ -2,18 +2,20 @@
 
 #include "Course.h"
 
-#include <time.h>
 
 void PgStudent :: study(Course &course) {
 
+    int r1 = rand() / (RAND_MAX / (GRADE_RANGE + 1));
+    int r2 = rand() / (RAND_MAX / (GRADE_RANGE + 1));
+
     // If Student finished course succesfully:
-    if (rand() % GRADE_RANGE < PG_QUIT_CHANCE) {
+    if (r1 % GRADE_RANGE < PG_QUIT_CHANCE) {
         writeToStudentsLogFile(
                 this->_id,
                 course.getName(),
                 this->_department,
                 SLACKING_COURSE);
-    } else if (rand() % GRADE_RANGE < course.getMinimumGrade()) {
+    } else if (r2 % GRADE_RANGE < course.getMinimumGrade()) {
         writeToStudentsLogFile(
                 this->_id,
                 course.getName(),

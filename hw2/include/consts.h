@@ -2,9 +2,6 @@
 #define CONSTS_H_
 
 
-//#define COURSES_FILE "courses.conf"
-//#define STUDENTS_FILE "students.conf"
-//#define CURRICULUM_FILE "curriculum.conf"
 #define COURSES_FILE "../courses.conf"
 #define STUDENTS_FILE "../students.conf"
 #define CURRICULUM_FILE "../curriculum.conf"
@@ -21,7 +18,7 @@
 #define CS_QUIT_CHANCE 0
 #define PG_QUIT_CHANCE 0
 
-#define GRADE_RANGE 101
+#define GRADE_RANGE 100
 
 #define PROFILE_IMAGE_SIZE 100
 

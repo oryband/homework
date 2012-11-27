@@ -36,16 +36,16 @@ void writeNumOfSemesterToFile(int semester) {
 
     switch (semester) {
         case 1:
-            randomFile << "1st" << tail << endl;
+            randomFile << endl << "1st" << tail << endl;
             break;
         case 2:
-            randomFile << "2nd" << tail << endl;
+            randomFile << endl << "2nd" << tail << endl;
             break;
         case 3:
-            randomFile << "3rd" << tail << endl;
+            randomFile << endl << "3rd" << tail << endl;
             break;
         default:
-            randomFile << semester << "th" << tail << endl;
+            randomFile << endl << semester << "th" << tail << endl;
             break;
     }
 

@@ -20,19 +20,15 @@ Uni :: Uni(bool pgOn) :
     _numOfCsStudents(0),
     _numOfPgStudents(0) {
 
-        unsigned short
-            *numOfCsElectiveCourses = new unsigned short(),
-        *numOfPgElectiveCourses = new unsigned short();
 
-        readCurriculumFile(*numOfCsElectiveCourses, *numOfPgElectiveCourses);
-        readStudentsFile(*numOfCsElectiveCourses, *numOfPgElectiveCourses);
-        readCoursesFile();
+    unsigned short numOfCsElectiveCourses, numOfPgElectiveCourses;
 
-        delete numOfCsElectiveCourses;
-        delete numOfPgElectiveCourses;
+    readCurriculumFile(numOfCsElectiveCourses, numOfPgElectiveCourses);
+    readStudentsFile(numOfCsElectiveCourses, numOfPgElectiveCourses);
+    readCoursesFile();
 
-        srand(time(0));  // Seed random generator.
-    }
+    srand(time(0));  // Seed random generator.
+}
 
 
 Uni :: ~Uni() {
@@ -349,7 +345,7 @@ void Uni :: graduate() {
             writeToStudentsLogFile(
                     (**it_student).getId(), "", "", GRADUATED); 
 
-            if ((**it_student).getDepartment() == _CS_) {
+            if ((**it_student).getDepartment().compare(_CS_)) {
                 saveColorImage(
                         csGraduationImage,
                         **it_student,
@@ -366,7 +362,7 @@ void Uni :: graduate() {
             writeToStudentsLogFile(
                     (**it_student).getId(), "", "", NOT_GRADUATED);
 
-            if ((**it_student).getDepartment() == _CS_) {
+            if ((**it_student).getDepartment().compare(_CS_) == 0) {
                 saveGreyscaleImage(
                         csGraduationImage,
                         **it_student,
@@ -479,21 +475,21 @@ void Uni :: saveColorImage(
             studentImagePath.find_last_not_of(" \n\r\t") +1);
 
     ImageLoader studentImage(studentImagePath);
-    ImageLoader studentImageResized(
+    ImageLoader resizedStudentImage(
             PROFILE_IMAGE_SIZE, PROFILE_IMAGE_SIZE);
 
-    opr.resize(studentImage.getImage(), studentImageResized.getImage());
+    opr.resize(studentImage.getImage(), resizedStudentImage.getImage());
 
     if (student.getDepartment().compare(_CS_) == 0) {
 
         opr.copy_paste_image(
-                studentImageResized.getImage(),
+                resizedStudentImage.getImage(),
                 image.getImage(),
                 numberOfImages * PROFILE_IMAGE_SIZE);
         
         numberOfImages++;
-    } else {
-        opr.copy_paste_image(studentImageResized.getImage(),
+    } else {  // PG student.
+        opr.copy_paste_image(resizedStudentImage.getImage(),
                 image.getImage(),
                 numberOfImages * PROFILE_IMAGE_SIZE);
         
@@ -513,26 +509,26 @@ void Uni :: saveGreyscaleImage(
     studentImagePath.erase(studentImagePath.find_last_not_of(" \n\r\t") +1);
 
     ImageLoader studentImage(studentImagePath);
-    ImageLoader studentImageResized(PROFILE_IMAGE_SIZE, PROFILE_IMAGE_SIZE);
+    ImageLoader resizedStudentImage(PROFILE_IMAGE_SIZE, PROFILE_IMAGE_SIZE);
 
-    opr.resize(studentImage.getImage(), studentImageResized.getImage());
+    opr.resize(studentImage.getImage(), resizedStudentImage.getImage());
 
     opr.rgb_to_greyscale(
-            studentImageResized.getImage(),
-            studentImageResized.getImage());
+            resizedStudentImage.getImage(),
+            resizedStudentImage.getImage());
 
     if (student.getDepartment().compare(_CS_) == 0) {
 
         opr.copy_paste_image(
-                studentImageResized.getImage(),
+                resizedStudentImage.getImage(),
                 image.getImage(),
                 numberOfImages * PROFILE_IMAGE_SIZE);
 
         numberOfImages++;
-    } else {
+    } else {  // PG student.
 
         opr.copy_paste_image(
-                studentImageResized.getImage(),
+                resizedStudentImage.getImage(),
                 image.getImage(),
                 numberOfImages * PROFILE_IMAGE_SIZE);
 

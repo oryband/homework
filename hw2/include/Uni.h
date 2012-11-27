@@ -6,7 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include <time.h>
+#include <ctime>
 
 #include "Student.h"
 #include "CsStudent.h"

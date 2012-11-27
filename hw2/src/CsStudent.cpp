@@ -3,19 +3,19 @@
 #include "Course.h"
 
 
-using namespace std;
-
-
 void CsStudent :: study(Course &course) {
 
+    int r1 = rand() / (RAND_MAX / (GRADE_RANGE + 1));
+    int r2 = rand() / (RAND_MAX / (GRADE_RANGE + 1));
+
     // If Student finished course succesfully:
-    if (rand() % GRADE_RANGE < CS_QUIT_CHANCE) {
+    if (r1 < CS_QUIT_CHANCE) {
         writeToStudentsLogFile(
                 this->_id,
                 course.getName(),
                 this->_department,
                 QUITS_COURSE);
-    } else if (rand() % GRADE_RANGE < course.getMinimumGrade()) {
+    } else if (r2 < course.getMinimumGrade()) {
         writeToStudentsLogFile(
                 this->_id,
                 course.getName(),
