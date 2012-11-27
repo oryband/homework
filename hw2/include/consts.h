@@ -6,6 +6,9 @@
 #define STUDENTS_FILE "../students.conf"
 #define CURRICULUM_FILE "../curriculum.conf"
 
+#define CS_IMAGE_FILE "./CS.jpg"
+#define PG_IMAGE_FILE "./PG.jpg"
+
 #define RANDOM_FILE "./random.log"
 
 #define _CS_ "CS"

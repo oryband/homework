@@ -378,6 +378,9 @@ void Uni :: graduate() {
 
     csGraduationImage.displayImage(_CS_);
     pgGraduationImage.displayImage(_PG_);
+
+    csGraduationImage.saveImage(CS_IMAGE_FILE);
+    pgGraduationImage.saveImage(PG_IMAGE_FILE);
 }
 
 
