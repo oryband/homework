@@ -56,7 +56,10 @@ class Student {
 
 struct compareStudents {
     bool operator() (Student const *s1, Student const *s2) const {
-        return s1->getId() < s2->getId();
+        unsigned int id1 = atoi(s1->getId().c_str()),
+                     id2 = atoi(s2->getId().c_str());
+
+        return id1 < id2;
     }
 };
 
