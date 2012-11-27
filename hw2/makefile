@@ -19,7 +19,7 @@ CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES)
 
 all: $(IMAGES) $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o
 	@echo -n 'Building target all: '
-	$(CC) $(CPPFLAGS) $(OPENCV) -o $(BINDIR)RandomU $(IMAGES) $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o 
+	$(CC) $(CPPFLAGS) -o $(BINDIR)RandomU $(IMAGES) $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o $(OPENCV)
 
 
 
