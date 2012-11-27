@@ -56,7 +56,7 @@ class Student {
 
 struct compareStudents {
     bool operator() (Student const *s1, Student const *s2) const {
-        return s1->getId().c_str() < s2->getId().c_str();
+        return s1->getId() < s2->getId();
     }
 };
 

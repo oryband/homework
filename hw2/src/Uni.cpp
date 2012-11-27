@@ -27,6 +27,9 @@ Uni :: Uni(bool pgOn) :
     readStudentsFile(numOfCsElectiveCourses, numOfPgElectiveCourses);
     readCoursesFile();
 
+    // Sort students.
+    sort(this->_students.begin(), this->_students.end(), compareStudents());
+
     srand(time(0));  // Seed random generator.
 }
 
@@ -39,7 +42,7 @@ Uni :: ~Uni() {
     this->deleteCourses(this->_electiveSpringCourses);
 
     // Delete all students.
-    std::vector<Student *>::iterator it_student;
+    vector<Student *>::iterator it_student;
 
     for (it_student = this->_students.begin();
             it_student != this->_students.end();
@@ -314,8 +317,6 @@ void Uni :: teach(unsigned short currentSemester) {
 
 void Uni :: graduate() {
 
-    sort(this->_students.begin(), this->_students.end(), compareStudents());
-
     ImageLoader 
         csGraduationImage(
                 PROFILE_IMAGE_SIZE,
@@ -358,9 +359,13 @@ void Uni :: graduate() {
             }
         } else {
 
-            // Log to file.
-            writeToStudentsLogFile(
-                    (**it_student).getId(), "", "", NOT_GRADUATED);
+            // Log to file if CS or (PG & Malag is on).
+            if ((**it_student).getDepartment().compare(_CS_) == 0 ||
+                    this->_pgOn) {
+
+                writeToStudentsLogFile(
+                        (**it_student).getId(), "", "", NOT_GRADUATED);
+            }
 
             if ((**it_student).getDepartment().compare(_CS_) == 0) {
                 saveGreyscaleImage(
@@ -520,7 +525,7 @@ void Uni :: saveGreyscaleImage(
 
 void Uni :: deleteCourses(vector<Course *> &courses) {
 
-    std::vector<Course *>::iterator it_course;
+    vector<Course *>::iterator it_course;
 
     for (it_course = courses.begin();
             it_course != courses.end();
