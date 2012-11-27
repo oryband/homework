@@ -26,7 +26,7 @@ ImageLoader :: ~ImageLoader() {
 void ImageLoader :: displayImage() {
     namedWindow("My image", CV_WINDOW_AUTOSIZE);  // Create image window named "My image".
     imshow("My image", m_image);  // Show the image on window.
-    waitKey(5000);  // Wait key for 5000 ms
+    waitKey(2000);  // Wait key for 5000 ms
 
     // FIXME NEED TO DELETE TEMP IMAGE!!!!!!!
 }
