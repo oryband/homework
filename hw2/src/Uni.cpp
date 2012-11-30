@@ -339,8 +339,10 @@ void Uni :: graduate() {
 
         // If student has graduated succesfully:
         if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0 &&
-                (**it_student).getNecessaryElectiveCourses() == 0 &&
-                (**it_student).getCurrentSemester() == this->_semesters) {
+                (**it_student).getNecessaryElectiveCourses() == 0) {
+                // TODO Check if this is good.
+                //(**it_student).getNecessaryElectiveCourses() == 0 && {
+                //(**it_student).getCurrentSemester() == this->_semesters) {
 
             // Log to file.
             writeToStudentsLogFile(
