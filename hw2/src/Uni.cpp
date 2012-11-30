@@ -337,10 +337,17 @@ void Uni :: graduate() {
     for (it_student = this->_students.begin();
             it_student != this->_students.end(); ++it_student) {
 
-        // If student has graduated succesfully:
+        /*// If student has graduated succesfully:
         if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0 &&
                 (**it_student).getNecessaryElectiveCourses() == 0 &&
                 (**it_student).getCurrentSemester() == this->_semesters) {
+*/
+
+        //FIXME 
+        // If student has graduated succesfully:
+        if ((**it_student).getUnfinishedSemesterMandatoryCourses() == 0 &&
+                (**it_student).getNecessaryElectiveCourses() == 0){
+                //(**it_student).getCurrentSemester() == this->_semesters) {
 
             // Log to file.
             writeToStudentsLogFile(
