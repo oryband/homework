@@ -21,7 +21,7 @@ ImageLoader :: ImageLoader(const string& fileName) :
 ImageLoader :: ~ImageLoader() {
 
     m_image.release();
-    destroyAllWindows();
+    //destroyAllWindows();  // TODO This shouldn't be here.
 }
 
 
