@@ -24,7 +24,6 @@ ScienceStore \[Passive\]    | EquipmentPackage | Laboratory                 | Sc
 equipment packages          | name             | name of head of laboratory | name           |
 scientists                  | # of items       | specialization             | specialization |
 laboratories                | total cost       | number of scientists       | cost           |
-                            | costs            |                            |                |
 
 ## Laboratories and scientists
 
@@ -32,8 +31,8 @@ HeadOfLaboratory \[Passive\]                             |
 ----------------------------                             |
 name                                                     |
 specialization                                           |
-number of scientists                                     |
-thread pool - 1 for each scientist.                      |
+number of scientists (threads)                           |
+thread pool - 1 thread for each scientist.               |
 **NOTE** all the first 3 fields are also in `Laboratory` |
 
 
