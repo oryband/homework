@@ -3,7 +3,7 @@
 ## Experiments
 
 Experiment \[Passive\] | Runnable Experiment \[Observable\] \[Active\]
---                     | --
+---------------------- | ---------------------------------------------
 id                     | 1 program "hour" = 100 real-life ms
 Specialization         |
 Run time               |
@@ -14,7 +14,7 @@ Equipment              |
 ## Items
 
 Repository \[Passive\]                          |
---                                              |
+----------------------------------------------- |
 Item list: [(name, amount), (name, amount), ..] |
 
 
