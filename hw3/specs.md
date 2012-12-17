@@ -19,14 +19,14 @@ Item list: [(name, amount), (name, amount), ..] |
 
 
 ScienceStore \[Passive\] |
---                       |
+------------------------ |
 Equipment Packages       |
 Sceintists               |
 Laboratories             |
 
 
 EquipmentPackage      | Laboratory                 | Scientist
---                    | --                         | --
+--------------------- | -------------------------- | ---------
 Name                  | Name of Head of Laboratory | Name
 Number of items       | Specialization             | Specialization
 Total cost            | Number of Scientists       | Cost
