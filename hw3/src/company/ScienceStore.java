@@ -1,26 +1,38 @@
 /**
- * Represents a Science Store
+ * Represents a Science Store.
  *
  * @author Eldar Damari, Ory Band
  */
 package company;
 
-
 import java.util.HashMap; 
+import java.util.ArrayList; 
 
 
-public class ScienceStore {
-    private HashMap<String, EquipmentPackage> equipmentPackages;
-    private HashMap<String, Scientist> scientists;
-    private HashMap<String, Laboratory> laboratories;
+public class ScienceStore implements ScienceStoreInterface {  
+ 
+    private HashMap<String, ArrayList<EquipmentPackage>> equipmentPackages;
+    private HashMap<String, ArrayList<Scientist>> scientists;
+    private HashMap<String, ArrayList<Laboratory>> laboratories;
 
     public ScienceStore( 
             HashMap<String, EquipmentPackage> equipmentPackages,
             HashMap<String, Scientist> scientists,
-            HashMap<String, Laboratory> laboratories) {};
+            HashMap<String, Laboratory> laboratories) {}
 
-    public void purchaseEquipmentPackage(String type, int amount) {}
-    public void purchaseScientist(String specializaiton, String name) {}
-    public void purchaseLaboratory(
-            String headOfLaboratory, String specialization) {}
+    public boolean purchaseEquipmentPackage(
+            Statistics statistics, String requestedEquipment, int requestedAmount) {}
+    public boolean purchaseScientist(
+            Statistics statistics, String requestedSpecialization) {}
+    public boolean purchaseLaboratory(
+            Statistics statistics, String requestedSpecialization) {}
+    
+    private EquipmentPackage calculateBestPackage(
+            String requestedEquipment, int requestedAmount) {}
+    private Scientist calculateBestScientist(String requestedSpecialization) {}
+    private Laboratory calculateBestLaboratory(String requestedSpecialization) {}
+
+    private boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {}
+    private boolean isScientistsEmpty(String specialization) {}
+    private boolean isLaboratoriesEmpty(String specialization) {}
 }

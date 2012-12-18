@@ -22,6 +22,8 @@ public class TestScienceStore {
     public static void setup() {
         // TODO Create hashmaps for constructor.
         ScienceStore store = new ScienceStore(/*TODO add them here*/);
+        // NOTE Statistics will be tested in its own specific file.
+        Statistics statistics = new Statistics(/*TODO Add budget, etc.*/);
     }
 
     //@After
@@ -29,68 +31,68 @@ public class TestScienceStore {
 
     @Test
     public final void testPurchaseEquipmentPackage() {
-        store.PurchaseEquipmentPackage("Microscope", 10);
+        store.PurchaseEquipmentPackage(statistics, "Microscope", 10);
     }
 
     @Test(expected= RuntimeException.class)
     public final void testMissingTypePurchaseEquipmentPackage() {
-        store.purchaseEquipmentPackage("MISSING", 10);
+        store.purchaseEquipmentPackage(statistics, "MISSING", 10);
     }
 
     @Test(expected= RuntimeException.class)
     public final void testMissingAmountPurchaseEquipmentPackage() {
-        store.purchaseEquipmentPackage("Microscope", 5);
+        store.purchaseEquipmentPackage(statistics, "Microscope", 5);
     }
 
     @Test(expected= RuntimeException.class)
     public final void testPurchaseTooManyEquipmentPackage() {
-        store.purchaseEquipmentPackage("Microscope", 10, 100);
-        store.purchaseEquipmentPackage("Microscope", 10, 100);
-        store.purchaseEquipmentPackage("Microscope", 10, 100);
+        store.purchaseEquipmentPackage(statistics, "Microscope", 10, 100);
+        store.purchaseEquipmentPackage(statistics, "Microscope", 10, 100);
+        store.purchaseEquipmentPackage(statistics, "Microscope", 10, 100);
     }
 
 
     @Test
     public final void testPurchaseScientist() {
-        store.PurchaseScientist("Family", "Steve");
+        store.PurchaseScientist(statistics, "Family", "Steve");
     }
 
     @Test(expected= RuntimeException.class)
     public final void testMissingSpecializationPurchaseScientist() {
-        store.PurchaseScientist("MISSING", "Steve");
+        store.PurchaseScientist(statistics, "MISSING", "Steve");
     }
 
     @Test(expected= RuntimeException.class)
     public final void testMissingNamePurchaseScientist() {
-        store.PurchaseScientist("Children", "NO_NAME");
+        store.PurchaseScientist(statistics, "Children", "NO_NAME");
     }
 
     @Test(expected= RuntimeException.class)
     public final void testPurchaseTooManyScientist() {
-        store.purchaseScientist("Family", "Steve");
-        store.purchaseScientist("Family", "Steve");
+        store.purchaseScientist(statistics, "Family", "Steve");
+        store.purchaseScientist(statistics, "Family", "Steve");
     }
 
 
     @Test
     public final void testPurchaseLaboratory() {
-        store.PurchaseLaboratory("House", "Family");
+        store.PurchaseLaboratory(statistics, "House", "Family");
     }
 
     @Test(expected= RuntimeException.class)
     public final void testMissingHeadOfLaboratoryPurchaseLaboratory() {
-        store.PurchaseLaboratory("NO_NAME", "Family");
+        store.PurchaseLaboratory(statistics, "NO_NAME", "Family");
     }
 
     @Test(expected= RuntimeException.class)
     public final void testMissingSpecializationPurchaseLaboratory() {
-        store.PurchaseLaboratory("House", "MISSING");
+        store.PurchaseLaboratory(statistics, "House", "MISSING");
     }
 
     @Test(expected= RuntimeException.class)
     public final void testPurchaseTooManyLaboratories() {
-        store.PurchaseLaboratory("House", "Family");
-        store.PurchaseLaboratory("House", "Family");
+        store.PurchaseLaboratory(specialization"House", "Family");
+        store.PurchaseLaboratory(specialization"House", "Family");
     }
 
 
