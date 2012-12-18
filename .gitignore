@@ -12,6 +12,9 @@
 *.la
 *.a
 
+# Java
+*.class
+
 bin/
 
 # Eclipse.
