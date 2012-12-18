@@ -1,0 +1,1 @@
+"let g:syntastic_java_javac_classpath = '/Users/ory/Documents/uni/homework/spl/assignments/hw3/*/*/*/*.java'
