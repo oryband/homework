@@ -42,7 +42,6 @@ public class Util{
     // need to return ArrayList
     public ArrayList<String> divideLinesByTab(ArrayList<String> arr){
 
-        System.out.println("in Divide");
         String word = new String();
         ArrayList<String> lines = new ArrayList<String>();
         Iterator<String> itr = arr.iterator();
