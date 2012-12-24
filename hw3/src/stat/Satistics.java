@@ -1,20 +1,20 @@
 package stat;
 
 
-public class Satistics(){
+public class Satistics{
 
     private int budget;
 
 
     // Constructor
-    public Satistics(){
+    Satistics(){
         this.budget = 0;
     }
 
 
     // Setters
     public void setBudget(int i){
-        this.beudget = i;
+        this.budget = i;
     }
 
     // Getters

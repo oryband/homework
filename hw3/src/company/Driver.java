@@ -9,14 +9,10 @@ public class Driver{
 
 public static void main(String args[]){
 
-        Util u = null;// new Util();  
+        Util u = new Util();  
 
-        try{
-            u = new Util();
-            u.divideLinesByTab(u.getLines("InitialData.txt"));
-        } catch (IOException e){
-          System.err.println("error: " + e);
-        }
+        // 1 error - need to chanfe arguments send to getDataFromInizialData
+        u.getDataFromInizialData("InitialData.txt");
 }
 
 }
