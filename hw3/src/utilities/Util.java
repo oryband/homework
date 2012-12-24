@@ -5,8 +5,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class util{
+
+public class Util{
 
     // Get lines from files.
     public ArrayList<String> getLines(String filePath) throws IOException {
@@ -15,7 +17,7 @@ public class util{
         BufferedReader br = null;
         ArrayList<String> lines = new ArrayList<String>();
         try {
-            br  = new BufferedReader(new FileReader("EquipmentForSale.txt"));
+            br  = new BufferedReader(new FileReader(filePath));
             while ((thisLine = br.readLine()) != null ) {
                 lines.add(thisLine);
                 System.out.println(lines.get( lines.size()-1));
@@ -33,36 +35,28 @@ public class util{
                 ex.printStackTrace();
             }
         }
+
+        return lines;
     }
 
-    // Croping data from lines and importing to data structures.
-    public void saveLines(ArrayList<String> arr, int flag) {
+    // need to return ArrayList
+    public ArrayList<String> divideLinesByTab(ArrayList<String> arr){
 
-        switch(flag) {
-            // InitialData.txt
-            case 1: 
-                break;
-                //EquipmentForSale.txt
-            case 2: 
-                break;
-                //ExperimentsList.txt
-            case 3: 
-                break;
-                //LaboratoriesForSale.txt
-            case 4: 
-                break;
-                //ScientistsForPurchase.txt
-            case 5: 
-                break;
+        System.out.println("in Divide");
+        String word = new String();
+        ArrayList<String> lines = new ArrayList<String>();
+        Iterator<String> itr = arr.iterator();
 
-            default: 
-                System.out.println("Invaild input referance to file");
-                break;
+        // Iterate all lines
+        while (itr.hasNext()) {
+            Scanner s = new Scanner(itr.next());
+            s.useDelimiter("\\s*\t*\\s");
+
+            while (s.hasNext()) {  // Divide each line by tab and add to arr.
+                lines.add(s.next());
+            }
+            s.close();
         }
-
-
-
+        return arr;
     }
 }
-
-

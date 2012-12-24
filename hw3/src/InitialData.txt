@@ -3,9 +3,9 @@ Budget
 Repository
 Microscope	1
 Beaker	2
-Stirrer	1
+Stirrer 1
 BunsenBurner	2
 Laboratories
-ProfA	Haematology	1
-ProfB	Histopathology	1
-ProfC	Cytology	2
+ProfA	Haematology 1
+ProfB	Histopathology  1
+ProfC	Cytology    2
