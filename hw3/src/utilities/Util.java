@@ -71,7 +71,7 @@ public class Util{
     }
 
     public void getDataFromInizialData(String filePath,
-            Satistics stat,
+            Statistics stat,
             Repository repo,
             ArrayList<HeadOfLaboratory> headsOfLaboratory){
 
@@ -93,11 +93,11 @@ public class Util{
             // Assign equipment to repository 
             if (words.get(i).equals("Repository") == true) {
                 while (words.get(i+1).equals("Laboratories") == false) {
-                    repo.getEquipment().put(new String(words.get(i+1)),
+                    repo.getRepository().put(new String(words.get(i+1)),
                             new Integer(Integer.parseInt(words.get(i+2))));
                     //TODO TEST!
-                    //System.out.println(words.get(i+1));
-                    //System.out.println(words.get(i+2));
+                   // System.out.println(words.get(i+1));
+                   // System.out.println(words.get(i+2));
                     i += 2;
                 }
             }
@@ -108,6 +108,10 @@ public class Util{
                       words.get(i+1),
                       words.get(i+2),
                       Integer.parseInt(words.get(i+3))));
+                    //TODO TEST!
+                    //System.out.println(words.get(i+1));
+                    //System.out.println(words.get(i+2));
+                    //System.out.println(words.get(i+3));
                     i += 3;
                 }
             }
