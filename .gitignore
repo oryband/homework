@@ -25,6 +25,10 @@ Debug/
 
 # Vim.
 *.swp
+*.swo
+
+# Kate.
+*.kate-swp
 
 # OSX
 .DS_STORE
