@@ -43,16 +43,24 @@ public class Util{
     }
 
     // need to return ArrayList
-    public ArrayList<String> divideLinesByTab(ArrayList<String> arr){
+    public ArrayList<String> divideLinesByDelimiter(ArrayList<String> arr,
+            String delimeter){
 
-        String word = new String();
         ArrayList<String> lines = new ArrayList<String>();
         Iterator<String> itr = arr.iterator();
 
         // Iterate all lines
         while (itr.hasNext()) {
             Scanner s = new Scanner(itr.next());
-            s.useDelimiter("\\s*\t*\\s");
+            if (delimeter.equals("TAB") == true) {
+                s.useDelimiter("\t");   // Use delimeter Tab.
+            }
+            else if (delimeter.equals("COMMA") == true) {
+                s.useDelimiter("[, ]");    // User delimeter comma.
+            }
+            else if (delimeter.equals("SPACE") == true) {
+                s.useDelimiter("\\s");    // User delimeter comma.
+            }
 
             while (s.hasNext()) {  // Divide each line by tab and add to arr.
                 lines.add(s.next());
@@ -62,14 +70,14 @@ public class Util{
         return lines;
     }
 
-public void getDataFromInizialData(String filePath,
-                                   Satistics stat,
-                                   Repository repo,
-                                   ArrayList<HeadOfLaboratory> headsOfLaboratory){
+    public void getDataFromInizialData(String filePath,
+            Satistics stat,
+            Repository repo,
+            ArrayList<HeadOfLaboratory> headsOfLaboratory){
 
         ArrayList<String> words = new ArrayList<String>();
         try{
-        words = divideLinesByTab(getLines(filePath));
+            words = divideLinesByDelimiter(getLines(filePath),"TAB");
         } catch (IOException e) {
             System.err.println("Error: Can't get data from file: "+ e);
             e.printStackTrace();
@@ -86,31 +94,100 @@ public void getDataFromInizialData(String filePath,
             if (words.get(i).equals("Repository") == true) {
                 while (words.get(i+1).equals("Laboratories") == false) {
                     repo.getEquipment().put(new String(words.get(i+1)),
-                                            new Integer(Integer.parseInt(words.get(i+2))));
-                //TODO TEST!
-                //System.out.println(words.get(i+1));
-                //System.out.println(words.get(i+2));
+                            new Integer(Integer.parseInt(words.get(i+2))));
+                    //TODO TEST!
+                    //System.out.println(words.get(i+1));
+                    //System.out.println(words.get(i+2));
                     i += 2;
                 }
             }
             if (words.get(i).equals("Laboratories") == true) {
                 while (i != words.size()-1){
-                
-                    HeadOfLaboratory head = new HeadOfLaboratory("rr","rr",2);
-                    headsOfLaboratory.add(head);
-                    /*headsOfLaboratory.add(new HeadOfLaboratory(
-                                words.get(i+1),
-                                words.get(i+2),
-                                Integer.parseInt(words.get(i+3))));*/
-                //TODO TEST!
-                //System.out.println(words.get(i+1));
-                //System.out.println(words.get(i+2));
-                //System.out.println(words.get(i+3));
+
+                    headsOfLaboratory.add(new HeadOfLaboratory(
+                      words.get(i+1),
+                      words.get(i+2),
+                      Integer.parseInt(words.get(i+3))));
                     i += 3;
                 }
-             }
+            }
+        }
     }
-}
 
+    public ArrayList<Experiment> getDataFromExperimentsList(String filePath){
+
+        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<Experiment> experiments = new ArrayList<Experiment>();
+        Iterator<String> it = null; 
+        try{
+            lines = getLines(filePath);
+        } catch (IOException e) {
+            System.err.println("Error: Can't get data from file: "
+                    + filePath + e);
+            e.printStackTrace();
+        }
+        //TODO TESTT
+        it = lines.iterator();
+        while(it.hasNext()) {
+
+            ArrayList<String> words = new ArrayList<String>();
+            ArrayList<String> analyzeWords0 = new ArrayList<String>();
+            analyzeWords0.add(it.next());
+            
+            words = divideLinesByDelimiter(analyzeWords0,"TAB");
+
+            String id = new String(words.get(0));
+
+            ArrayList<Integer> preExperiments = new ArrayList<Integer>();
+            ArrayList<String> dividedWords = new ArrayList<String>();
+            ArrayList<String> analyzeWords1 = new ArrayList<String>();
+            analyzeWords1.add(words.get(1));
+            dividedWords = divideLinesByDelimiter(analyzeWords1,
+                    "SPACE");
+
+            // Convert String array to int array
+            for (int k=0 ; k < dividedWords.size() ; k++) {
+                preExperiments.add(Integer.parseInt(
+                            dividedWords.get(k)));
+                //TODO TEST
+                //System.out.println("The # is :" + Integer.parseInt(dividedWords.get(k)));
+            }
+
+            String specialization = new String(words.get(2));
+
+            ArrayList<String> equipments = new ArrayList<String>();
+            ArrayList<String> analyzeWords = new ArrayList<String>();
+            analyzeWords.add(words.get(3));
+                //TODO TEST
+                //System.out.println(lines.get(3));
+            equipments = divideLinesByDelimiter(analyzeWords,"COMMA");
+
+            ArrayList<EquipmentPackage> equipmentPackages =
+                new ArrayList<EquipmentPackage>();
+
+            for (int e=0 ; e < equipments.size() ; e += 2) {
+                //TODO TEST
+                //System.out.println(equipments.size());
+                EquipmentPackage equipmentPackage =
+                    new EquipmentPackage(equipments.get(e),
+                            Integer.parseInt(equipments.get(e+1)));
+
+                equipmentPackages.add(equipmentPackage);
+            }
+            int runtime = Integer.parseInt(words.get(4));
+            int reward = Integer.parseInt(words.get(5));
+
+            // Creating instance of Experiment and push to array list.
+            Experiment experiment = new Experiment(id,
+                    preExperiments,
+                    specialization,
+                    equipmentPackages,
+                    runtime,
+                    reward,
+                    "INCOMPLETE");
+            experiments.add(experiment);
+        }
+        return experiments;
+    }
 }
 
