@@ -11,17 +11,31 @@ public class Driver{
 
 public static void main(String args[]){
 
-        // Read Data From File: InitialData.txt
+        // utilities instance - reads files.
         Util u = new Util();  
+        
         Statistics statistics = new Statistics();
         Repository repository = new Repository();
         ArrayList<HeadOfLaboratory> headsOfLaboratory = 
             new ArrayList<HeadOfLaboratory>();
-
-        u.getDataFromInizialData("InitialData.txt",
+        // for ExperimentsList
+        ArrayList<Experiment> experiments = new ArrayList<Experiment>();
+        // for ScienceStore
+        HashMap<String, ArrayList<EquipmentPackage>> equipmentForSale = 
+            new HashMap<String, ArrayList<EquipmentPackage>>();
+        HashMap<String, ArrayList<Laboratory>> laboratoryForSale= 
+            new HashMap<String, ArrayList<Laboratory>>();
+        HashMap<String, ArrayList<Scientist>> scientistsForSale= 
+            new HashMap<String, ArrayList<Scientist>>();
+        // for ChiedScientist
+        ChiefAssistat chiefAssistant = new ChiefAssistat();
+        
+        
+        // Read data from: InitialData.txt
+        /*u.getDataFromInizialData("InitialData.txt",
                                  statistics,
                                  repository,
-                                 headsOfLaboratory);
+                                 headsOfLaboratory);*/
 
         // Print Tests
         /*System.out.println("Printing InitialData : " ); 
@@ -38,8 +52,7 @@ public static void main(String args[]){
 
 
         // Read data from file: ExperimentsList.txt
-        ArrayList<Experiment> experiments = new ArrayList<Experiment>();
-        experiments = u.getDataFromExperimentsList("ExperimentsList.txt");
+        experiments = u.getDataFromExperimentsList("ExperimentsList.txt");*/
 
         // Print Tests
         /*System.out.println("all good , need to print" ); 
@@ -48,6 +61,36 @@ public static void main(String args[]){
        //print to string 
         System.out.println(it.next().toString());
         }*/
+
+
+        /*// Read Data From: EquipmentForSale.txt
+        equipmentForSale = u.getDataFromEquipmentForSale("EquipmentForSale.txt");
+        // Print Tests
+        System.out.println(equipmentForSale.values());*/
+        
+        
+        /*// Read Data From: LaboratoryForSale.txt
+        laboratoryForSale = u.getDataFromLaboratoriesForSale("LaboratoriesForSale.txt");
+        // Print Tests
+        System.out.println(laboratoryForSale.values());*/
+        
+        
+        /*// Read Data From: ScientistsForSale.txt
+        scientistsForSale = u.getDataFromScientistsForSale("ScientistsForPurchase.txt");
+        // Print Tests
+        System.out.println(scientistsForSale.values());*/
+
+
+
+        ChiedScientist chief = new ChiedScientist(headsOfLaboratory,
+                                                  experiments, 
+                                                  statistics,
+                                                  new ScienceStore(
+                                                      equipmentForSale,
+                                                      scientistsForSale,
+                                                      laboratoryForSale),
+                                                  repository,
+                                                  chiefAssistant);
     }
 
 }

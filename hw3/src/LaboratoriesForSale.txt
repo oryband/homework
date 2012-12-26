@@ -1,3 +1,4 @@
 ProfD	Histopathology	1	100
+ProfZ	Histopathology	8	800
 ProfE	Bacteriology	3	200
 ProfF	Serology	2	300

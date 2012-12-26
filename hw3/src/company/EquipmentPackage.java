@@ -8,11 +8,15 @@ public class EquipmentPackage {
 
     private String type;
     private int amount;
-
-   public EquipmentPackage(String equipmentType,
-                     int equipmentAmount) {
+    private int price; // Relevant only in store
+    
+    // Constructor
+    public EquipmentPackage(String equipmentType,
+                            int equipmentAmount, 
+                            int price) {
         this.type = new String(equipmentType);
         this.amount = equipmentAmount; 
+        this.price = price;
 
     }
     
@@ -21,8 +25,9 @@ public class EquipmentPackage {
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
 
-        result.append("Type: " + type + NEW_LINE);
-        result.append("Amount: " + amount + NEW_LINE);
+        result.append(NEW_LINE + "Type: " + this.type + " ");
+        result.append("Amount: " + this.amount + " ");
+        result.append("Price: " + this.price);
         return result.toString();
     }
 }

@@ -174,7 +174,8 @@ public class Util{
                 //System.out.println(equipments.size());
                 EquipmentPackage equipmentPackage =
                     new EquipmentPackage(equipments.get(e),
-                            Integer.parseInt(equipments.get(e+1)));
+                            Integer.parseInt(equipments.get(e+1)),
+                            0);
 
                 equipmentPackages.add(equipmentPackage);
             }
@@ -193,5 +194,165 @@ public class Util{
         }
         return experiments;
     }
+
+    public HashMap<String, ArrayList<EquipmentPackage>>
+        getDataFromEquipmentForSale(String equipment) {
+    
+        ArrayList<String> lines = new ArrayList<String>();
+        HashMap<String, ArrayList<EquipmentPackage>> equipmentPackages =
+            new HashMap<String, ArrayList<EquipmentPackage>>(); 
+
+        Iterator<String> it = null; 
+        try{
+            lines = getLines(equipment);
+        } catch (IOException e) {
+            System.err.println("Error: Can't get data from file: "
+                    + equipment + e);
+            e.printStackTrace();
+        }
+        
+        it = lines.iterator();
+        while (it.hasNext()) {
+
+            // Get words from line
+            ArrayList<String> words = new ArrayList<String>();
+            ArrayList<String> analyzeWords = new ArrayList<String>();
+            analyzeWords.add(it.next());
+            words = divideLinesByDelimiter(analyzeWords,"TAB");
+            
+            // Check for double entries.
+            if (equipmentPackages.containsKey(words.get(0))) {
+
+                equipmentPackages.get(words.get(0)).add(
+                        new EquipmentPackage(words.get(0),
+                            Integer.parseInt(words.get(1)),
+                            Integer.parseInt(words.get(2))));
+            } else {
+
+                equipmentPackages.put(new String(words.get(0)),
+                        new ArrayList<EquipmentPackage>());
+                if (equipmentPackages.containsKey(words.get(0))) {
+
+                    equipmentPackages.get(words.get(0)).add(
+                                new EquipmentPackage(words.get(0),
+                                    Integer.parseInt(words.get(1)),
+                                    Integer.parseInt(words.get(2))));
+                            } else {
+                                System.out.println("Error: Can't find specific etry");
+                            }
+            }
+        }
+        //TODO TEST
+       //System.out.println(equipmentPackages.values());
+        return equipmentPackages;
+    }
+    
+    public HashMap<String, ArrayList<Laboratory>>
+        getDataFromLaboratoriesForSale(String laboratories) {
+    
+        ArrayList<String> lines = new ArrayList<String>();
+        HashMap<String, ArrayList<Laboratory>> labs =
+            new HashMap<String, ArrayList<Laboratory>>(); 
+
+        Iterator<String> it = null; 
+        try{
+            lines = getLines(laboratories);
+        } catch (IOException e) {
+            System.err.println("Error: Can't get data from file: "
+                    + laboratories + e);
+            e.printStackTrace();
+        }
+        
+        it = lines.iterator();
+        while (it.hasNext()) {
+
+            // Get words from line
+            ArrayList<String> words = new ArrayList<String>();
+            ArrayList<String> analyzeWords = new ArrayList<String>();
+            analyzeWords.add(it.next());
+            words = divideLinesByDelimiter(analyzeWords,"TAB");
+            
+            // Check for double entries.
+            if (labs.containsKey(words.get(1))) {
+
+                labs.get(words.get(1)).add(
+                        new Laboratory(words.get(0),
+                            words.get(1),
+                            Integer.parseInt(words.get(2)),
+                            Integer.parseInt(words.get(3))));
+            } else {
+
+                labs.put(new String(words.get(1)),
+                        new ArrayList<Laboratory>());
+                if (labs.containsKey(words.get(1))) {
+
+                    labs.get(words.get(1)).add(
+                                new Laboratory(words.get(0),
+                                    words.get(1),
+                                    Integer.parseInt(words.get(2)),
+                                    Integer.parseInt(words.get(3))));
+                            } else {
+                                System.out.println("Error: Can't find specific etry");
+                            }
+            }
+        }
+        //TODO TEST
+       //System.out.println(equipmentPackages.values());
+        return labs;
+    }
+    
+    public HashMap<String, ArrayList<Scientist>>
+        getDataFromScientistsForSale(String scientistsFilePath) {
+    
+        ArrayList<String> lines = new ArrayList<String>();
+        HashMap<String, ArrayList<Scientist>> scientists =
+            new HashMap<String, ArrayList<Scientist>>(); 
+
+        Iterator<String> it = null; 
+        try{
+            lines = getLines(scientistsFilePath);
+        } catch (IOException e) {
+            System.err.println("Error: Can't get data from file: "
+                    + scientists + e);
+            e.printStackTrace();
+        }
+        
+        it = lines.iterator();
+        while (it.hasNext()) {
+
+            // Get words from line
+            ArrayList<String> words = new ArrayList<String>();
+            ArrayList<String> analyzeWords = new ArrayList<String>();
+            analyzeWords.add(it.next());
+            words = divideLinesByDelimiter(analyzeWords,"TAB");
+
+            // Check for double entries.
+            if (scientists.containsKey(words.get(1))) {
+
+                scientists.get(words.get(1)).add(
+                        new Scientist(words.get(0),
+                            words.get(1),
+                            Integer.parseInt(words.get(2))));
+            } else {
+
+                scientists.put(new String(words.get(1)),
+                        new ArrayList<Scientist>());
+                if (scientists.containsKey(words.get(1))) {
+
+                    scientists.get(words.get(1)).add(
+                            new Scientist(words.get(0),
+                                words.get(1),
+                                Integer.parseInt(words.get(2))));
+                } else {
+                    System.out.println("Error: Can't find specific etry");
+                            }
+            }
+        }
+        //TODO TEST
+       //System.out.println(equipmentPackages.values());
+        return scientists;
+    }
+
+
 }
 
