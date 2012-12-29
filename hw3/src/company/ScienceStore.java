@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class ScienceStore implements ScienceStoreInterface {  
  
-    private HahMap<String, ArrayList<EquipmentPackage>> equipmentPackages;
+    private HashMap<String, ArrayList<EquipmentPackage>> equipmentPackages;
     private HashMap<String, ArrayList<Scientist>> scientists;
     private HashMap<String, ArrayList<Laboratory>> laboratories;
 
