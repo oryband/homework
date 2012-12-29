@@ -5,13 +5,15 @@
  */
 package company;
 
+import stat.*;
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 
 
 public class ScienceStore implements ScienceStoreInterface {  
  
-    private HahMap<String, ArrayList<EquipmentPackage>> equipmentPackages;
+    private HashMap<String, ArrayList<EquipmentPackage>> equipmentPackages;
     private HashMap<String, ArrayList<Scientist>> scientists;
     private HashMap<String, ArrayList<Laboratory>> laboratories;
 
@@ -22,7 +24,8 @@ public class ScienceStore implements ScienceStoreInterface {
             HashMap<String, Laboratory> laboratories) {}
     // Purchasing 
     public boolean purchaseEquipmentPackage(
-            Statistics statistics, String requestedEquipment, int requestedAmount) {}
+            Statistics statistics, String requestedEquipment, int requestedAmount) {
+            return }
     public boolean purchaseScientist(
             Statistics statistics, String requestedSpecialization) {}
     public boolean purchaseLaboratory(
@@ -39,17 +42,17 @@ public class ScienceStore implements ScienceStoreInterface {
                                         getEquipmentPackages() {
              return this.equipmentPackages;
             }
-    public HashMap<String, ArrayList<EquipmentPackage>> 
+    public HashMap<String, ArrayList<Scientist>> 
                                         getScientists() {
              return this.scientists;
             }
-    public HashMap<String, ArrayList<EquipmentPackage>> 
+    public HashMap<String, ArrayList<Laboratory>> 
                                         getLaboratories() {
              return this.laboratories;
             }
     
     // For tests
-    private boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {}
-    private boolean isScientistsEmpty(String specialization) {}
-    private boolean isLaboratoriesEmpty(String specialization) {}
+    public boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {}
+    public boolean isScientistsEmpty(String specialization) {}
+    public boolean isLaboratoriesEmpty(String specialization) {}
 }

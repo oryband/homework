@@ -28,14 +28,14 @@ public static void main(String args[]){
         HashMap<String, ArrayList<Scientist>> scientistsForSale= 
             new HashMap<String, ArrayList<Scientist>>();
         // for ChiedScientist
-        ChiefAssistat chiefAssistant = new ChiefAssistat();
+        ChiefScientistAssistant chiefAssistant = new ChiefScientistAssistant();
         
         
         // Read data from: InitialData.txt
-        /*u.getDataFromInizialData("InitialData.txt",
+        u.getDataFromInizialData("InitialData.txt",
                                  statistics,
                                  repository,
-                                 headsOfLaboratory);*/
+                                 headsOfLaboratory);
 
         // Print Tests
         /*System.out.println("Printing InitialData : " ); 
@@ -52,9 +52,9 @@ public static void main(String args[]){
 
 
         // Read data from file: ExperimentsList.txt
-        experiments = u.getDataFromExperimentsList("ExperimentsList.txt");*/
+        experiments = u.getDataFromExperimentsList("ExperimentsList.txt");
 
-        // Print Tests
+        //Print Tests
         /*System.out.println("all good , need to print" ); 
         Iterator<Experiment> it = experiments.iterator();
         while(it.hasNext()) {
@@ -63,26 +63,26 @@ public static void main(String args[]){
         }*/
 
 
-        /*// Read Data From: EquipmentForSale.txt
+        // Read Data From: EquipmentForSale.txt
         equipmentForSale = u.getDataFromEquipmentForSale("EquipmentForSale.txt");
         // Print Tests
-        System.out.println(equipmentForSale.values());*/
+        //System.out.println(equipmentForSale.values());*/
         
         
-        /*// Read Data From: LaboratoryForSale.txt
+        // Read Data From: LaboratoryForSale.txt
         laboratoryForSale = u.getDataFromLaboratoriesForSale("LaboratoriesForSale.txt");
         // Print Tests
-        System.out.println(laboratoryForSale.values());*/
+        //System.out.println(laboratoryForSale.values());*/
         
         
-        /*// Read Data From: ScientistsForSale.txt
+        // Read Data From: ScientistsForSale.txt
         scientistsForSale = u.getDataFromScientistsForSale("ScientistsForPurchase.txt");
         // Print Tests
-        System.out.println(scientistsForSale.values());*/
+        //System.out.println(scientistsForSale.values());*/
 
 
 
-        ChiedScientist chief = new ChiedScientist(headsOfLaboratory,
+        ChiefScientist chief = new ChiedScientist(headsOfLaboratory,
                                                   experiments, 
                                                   statistics,
                                                   new ScienceStore(
@@ -91,6 +91,8 @@ public static void main(String args[]){
                                                       laboratoryForSale),
                                                   repository,
                                                   chiefAssistant);
+        // Print Tets
+        System.out.println(chief.toString());
     }
 
 }
