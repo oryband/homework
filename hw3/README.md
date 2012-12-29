@@ -1,11 +1,19 @@
 # Action items
 
-1. Use `final` wherever possible. Note an object actually becomes immutable (`final`) *after* construction.
-2. Who should be runnable?
+1. Use `final` wherever possible:
+    1. Fields, functions, and *classes*.
+    2. Make sure mutable fields are private, and are **never returned** (no getters).
+    3. **Note** an object actually becomes immutable (`final`) *after* construction.
+2. **TODO:** Check if we should use `java.util.Collections.unmodifiableMap(Map)`.
+3. Who should be:
+    1. `runnable`? Only `RunnableExperiment` and `ChiefScientistAssistant`?
+    2. Thread-confined?
+    3. Shared read-only?
+    4. Shared thread-safe?
 
 # Data types
 
-### Experiments
+## Experiments
 
 Experiment \[Passive\] | Runnable Experiment \[Observable\] \[Active\] |
 ---------------------- | --------------------------------------------- |
@@ -17,7 +25,7 @@ equipment              |                                               |
 reward                 |                                               |
 status                 |                                               |
 
-### Items
+## Items
 
 Repository \[Passive\]                          |
 ----------------------                          |
@@ -30,7 +38,7 @@ equipment packages       | name             | name of head of laboratory | name 
 scientists               | # of items       | specialization             | specialization |
 laboratories             | total cost       | number of scientists       | cost           |
 
-### Laboratories and scientists
+## Laboratories and scientists
 
 HeadOfLaboratory \[Passive\]                             |
 ----------------------------                             |
@@ -49,7 +57,6 @@ statistcs                               |                                    |
 science store                           |                                    |
 repository                              |                                    |
 chief scientist assistant               |                                    |
-
 
 ## Statistics
 
