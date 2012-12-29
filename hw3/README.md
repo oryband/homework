@@ -1,6 +1,11 @@
+# Action items
+
+1. Use `final` wherever possible. Note an object actually becomes immutable (`final`) *after* construction.
+2. Who should be runnable?
+
 # Data types
 
-## Experiments
+### Experiments
 
 Experiment \[Passive\] | Runnable Experiment \[Observable\] \[Active\] |
 ---------------------- | --------------------------------------------- |
@@ -9,23 +14,23 @@ specialization         |                                               |
 run time               |                                               |
 pre-requirements       |                                               |
 equipment              |                                               |
-reward                 |
-status                 |
+reward                 |                                               |
+status                 |                                               |
 
-## Items
+### Items
 
 Repository \[Passive\]                          |
 ----------------------                          |
 item list: [(name, amount), (name, amount), ..] |
 
 
-ScienceStore \[Passive\]    | EquipmentPackage | Laboratory                 | Scientist      |
-------------------------    | ---------------- | ----------                 | ---------      |
-equipment packages          | name             | name of head of laboratory | name           |
-scientists                  | # of items       | specialization             | specialization |
-laboratories                | total cost       | number of scientists       | cost           |
+ScienceStore \[Passive\] | EquipmentPackage | Laboratory                 | Scientist      |
+------------------------ | ---------------- | ----------                 | ---------      |
+equipment packages       | name             | name of head of laboratory | name           |
+scientists               | # of items       | specialization             | specialization |
+laboratories             | total cost       | number of scientists       | cost           |
 
-## Laboratories and scientists
+### Laboratories and scientists
 
 HeadOfLaboratory \[Passive\]                             |
 ----------------------------                             |
@@ -46,7 +51,7 @@ repository                              |                                    |
 chief scientist assistant               |                                    |
 
 
-# Statistics
+## Statistics
 
 Statistics \[Passive\]    |
 ----------------------    |
@@ -56,5 +61,3 @@ money spent               |
 scientists purchased      |
 equipment packs purhcased |
 laboratories purchased    |
-completed experiments  
-test - need to be removed!|
