@@ -5,12 +5,11 @@ import java.util.concurrent.*;
 import java.util.ArrayList;
 
 
-public class HeadOfLaboratory{
+public class HeadOfLaboratory {
 
     private String name;
     private String specialization;
     private int numberOfScientists;
-    private ArrayList<RunnableExperiment> experiments;
     private ExecutorService executor;
 
 
@@ -21,8 +20,31 @@ public class HeadOfLaboratory{
         this.specialization = new String(special);
         this.numberOfScientists = numOfScientists;
         this.executor = Executors.newFixedThreadPool(numOfScientists);
-        this.experiments = null;
     }
+    
+    public void addExperimentToExecute(Runnable experiment) {
+        this.executor.execute(experiment);
+    }
+
+
+    // Getters
+    public String getSpecialization() {
+        return this.specialization;
+    }
+
+
+
+    // need to think about how to stop all threads and to add (by buying new scintist)
+    // assume ChiefAssistat will get all the same experiments by specialization
+    // add calculate if HeadOfLaboratory should buy new scientist from store - 
+    // we should do it after everything is working!
+    public function(){
+    }
+
+    // shutdown gracefully - need to read API ExecutorService documentaion.
+    public shutDownGracefully() {
+    }
+
     
     public String toString(){
 

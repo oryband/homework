@@ -62,6 +62,9 @@ public class Experiment{
     public void setExperimentRunTime(int runtime){
         this.runTimeInHours = runtime;
     }
+    public void setExperimentStatus(String status) {
+        this.status = status;
+    }
 
 
 

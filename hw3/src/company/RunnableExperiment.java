@@ -73,11 +73,16 @@ public class RunnableExperiment extends Observable implements Runnable{
                     (this.experiment.getExperimentRequiredEquipments());
 
                 date = new Date();
-                this.experimentiRealRunTime -= date.getTime();
+                this.experimentRealRunTime -= date.getTime();
 
                 // Sleep for 16 hours ~ 16,000 miliseconds
                 Thread.currentThread().sleep(16000);
             }
         } 
+    }
+
+    // Getters
+    public Experiment getExperiment() {
+        return this.experiment;
     }
 }

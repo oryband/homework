@@ -48,7 +48,9 @@ public class ChiefScientist implements Observer{
     public Statistics getStatistics() {
         return this.statistics;
     }
-
+    public ArrayList<HeadOfLaboratory> getLaboratories() {
+        return this.laboratories;
+    }
     public String toString() {
 
         StringBuilder result = new StringBuilder();
