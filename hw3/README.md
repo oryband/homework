@@ -3,13 +3,16 @@
 1. Use `final` wherever possible:
     1. Fields, functions, and *classes*.
     2. Make sure mutable fields are private, and are **never returned** (no getters).
-    3. **Note** an object actually becomes immutable (`final`) *after* construction.
+    3. We can also return new instances of mutable objects, instead of our own - so we won't accidently change stuff.
+    4. **Note** an object actually becomes immutable - `final` *after* construction.
 2. **TODO:** Check if we should use `java.util.Collections.unmodifiableMap(Map)`.
 3. Who should be:
-    1. `runnable`? Only `RunnableExperiment` and `ChiefScientistAssistant`?
+    1. `runnable`? Only `RunnableExperiment` and `ChiefScientistAssistant`? Anything else perhaps?
     2. Thread-confined?
     3. Shared read-only?
     4. Shared thread-safe?
+4. Add @INV, @PRE, @POST and whatever else to all fields & functions.
+5. Do tests for everything? God please no.
 
 # Data types
 
