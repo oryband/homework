@@ -22,20 +22,22 @@ public class ChiefScientist implements Observer{
                           ScienceStore store,
                           Repository repository,
                           ChiefScientistAssistant chiefAssistant) {
-
+        // TODO check if need to do deep copy!!!
         this.laboratories = laboratories;
         this.experiments = experiments;
         this.statistics = statistics;
         this.store = store;
         this.repository = repository;
         this.chiefAssistant = chiefAssistant;
-            }
+    }
     // an experiments inform the chief that he is done.
     // chief need to update the database for rerun the ChiefAssistant by notify 
     // him (wake him up from wait())
     // who returns stuff to repo?
     // who is updating status of experiment?
     public void update(){
+
+
 
 
     }
@@ -51,6 +53,11 @@ public class ChiefScientist implements Observer{
     public ArrayList<HeadOfLaboratory> getLaboratories() {
         return this.laboratories;
     }
+    public ScienceStore getStore() {
+        return this.store;
+    }
+    
+
     public String toString() {
 
         StringBuilder result = new StringBuilder();

@@ -24,14 +24,14 @@ public class ScienceStore implements ScienceStoreInterface {
             HashMap<String, Laboratory> laboratories) {}
     // Purchasing 
     public boolean purchaseEquipmentPackage(
-            Statistics statistics, String requestedEquipment, int requestedAmount) {
-            return }
+            Statistics statistics, String requestedEquipment, int requestedAmount) {}
     public boolean purchaseScientist(
             Statistics statistics, String requestedSpecialization) {}
     public boolean purchaseLaboratory(
-            Statistics statistics, String requestedSpecialization) {}
+            Statistics statistics, String requestedSpecialization,
+            ArrayList<HeadOfLaboratory> laboratories) {} // add to ArrayList to lab purchased
 
-    // Calcilate best choise    
+    // Calculate best choise    
     private EquipmentPackage calculateBestPackage(
             String requestedEquipment, int requestedAmount) {}
     private Scientist calculateBestScientist(String requestedSpecialization) {}

@@ -20,9 +20,12 @@ public class Repository{
     }
 
     // TODO 
-    public aquireEquipment(ArrayList<EquipmentPackage> equipmentRequired){
+    public aquireEquipment(HashMap<String,Integer> equipments){
 
     }
+
+    // TODO 
+    public releaseEquipment(HashMap<String,Integer> equipments){}
 
 
 

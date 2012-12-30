@@ -32,16 +32,14 @@ public class HeadOfLaboratory {
         return this.specialization;
     }
 
-
-
-    // need to think about how to stop all threads and to add (by buying new scintist)
+    // TODO need to think about how to stop all threads and to add (by buying new scintist)
     // assume ChiefAssistat will get all the same experiments by specialization
     // add calculate if HeadOfLaboratory should buy new scientist from store - 
     // we should do it after everything is working!
     public function(){
     }
 
-    // shutdown gracefully - need to read API ExecutorService documentaion.
+    // TODO shutdown gracefully - need to read API ExecutorService documentaion.
     public shutDownGracefully() {
     }
 
