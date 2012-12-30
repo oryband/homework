@@ -1,28 +1,39 @@
 package company;
 
+import java.lang.Comparable;
 import java.io.*;
 import java.util.*;
 
 
-public class Scientist {
+public class Scientist implements Comparable<Scientist> {
 
-    private String name;
-    private String specialty;
-    private int price;
+    final private String name;
+    final private String specialty;
+    final private int price;
 
-    public Scientist(String name,
-                     String specialty,
-                     int price) {
+
+    public Scientist(String name, String specialty, int price) {
         this.name = name;
         this.specialty = specialty;
         this.price = price;
     }
 
-    public String toString(){
+
+    public int compareTo(Scientist s) {
+        return this.price - s.getPrice();
+    }
+
+
+    public int getPrice() {
+        return this.price;
+    }
+
+
+    public String toString() {
 
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
-        
+
         result.append("______________________________________" + NEW_LINE);
         result.append("           ---Scientists For Sale---: " + NEW_LINE);
         result.append("Name: " + this.name + NEW_LINE);
@@ -30,7 +41,4 @@ public class Scientist {
         result.append("Price: " + this.price + NEW_LINE);
         return result.toString();
     }
-
-
-
 }
