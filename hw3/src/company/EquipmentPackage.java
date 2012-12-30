@@ -1,26 +1,39 @@
 package company;
 
+import java.lang.Comparable;
 import java.io.*;
 import java.util.*;
-import utilities.*;
 
-public class EquipmentPackage {
 
-    private String type;
-    private int amount;
-    private int price; // Relevant only in store
-    
-    // Constructor
-    public EquipmentPackage(String equipmentType,
-                            int equipmentAmount, 
-                            int price) {
+public class EquipmentPackage implements Comparable<EquipmentPackage> {
+
+    final private String type;
+    final private int amount;
+    final private int price;  // Relevant only in store.
+
+
+    public EquipmentPackage (
+            String equipmentType,
+            int equipmentAmount, 
+            int price) {
+
         this.type = new String(equipmentType);
         this.amount = equipmentAmount; 
         this.price = price;
-
     }
-    
-   public String toString(){
+
+
+    public int compareTo(EquipmentPackage p) {
+        return this.amount - p.getEquipmentAmount();
+    }
+
+
+    public int getEquipmentAmount() {
+        return this.amount;
+    }
+
+
+   public String toString() {
 
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");

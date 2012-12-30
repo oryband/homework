@@ -5,61 +5,41 @@
  */
 package company;
 
-import stat.*;
-import utilities.*;
+import java.util.Map;
+
 
 public interface ScienceStoreInterface {
 
-    /** 
+    /**
      * Substracts equipment package if found, and charges money from budget.
      *
      * @param statistics for handling purchase.
-     * @param requestedEquipment equipment type (Microscope, burner, etc.)
-     * @param requestedAmount requested equipment amount.
+     * @param requestedEquipment equipment hash map {type : amount}
      *
      * @return true if package is in stock, false otherwise.
-     *
-     * @pre statistics != null
-     * @pre requestedEquipment != null
-     * @pre requestedAmount > 0 
-     * @pre ! isEquipmentPackageEmpty(requestedEquipment)
-     *
-     * @post ! isEquipmentPackageEmpty(requestedEquipment)
      **/
-    public boolean purchaseEquipmentPackage(
-            Statistics statistics, String requestedEquipment, int requestedAmount);
-    
+    public boolean purchaseEquipmentPackages (
+            Statistics statistics, Map<String, Integer> requestedEquipment);
+
     /**
      * Substracts scientist if found, and charges money from budget.
      *
      * @param statistics for handling purchase.
-     * @param requestedSpecialization scientist specialization.
+     * @param requestedScientists scientist hash map {type : amount}
      *
-     * @return true if science is in stock, false otherwise.
-     *
-     * @pre statistics != null
-     * @pre requestedSpecialization != null
-     * @pre ! isScientistsEmpty(requestedSpecialization)
-     *
-     * @post ! isScientistsEmpty(requestedSpecialization)
+     * @return true if requested scientist are in stock, false otherwise.
      **/
-    public boolean purchaseScientist(
-            Statistics statistics, String requestedSpecialization);
-    
+    public boolean purchaseScientist (
+            Statistics statistics, Map<String, Integer> requestedScientists);
+
     /**
      * Substracts laboratory if found, and charges money from budget.
      *
      * @param statistics for handling purchase.
-     * @param requestedSpecialization Lab specialization.
-     *
-     * @pre statistics != null
-     * @pre requestedSpecialization != null
-     * @pre ! isLaboratoriesEmpty(requestedSpecialization)
-     *
-     * @post ! isLaboratoriesEmpty(requestedSpecialization)
+     * @param requestedLaboratory Lab specialization.
      **/
-    public boolean purchaseLaboratory(
-            Statistics statistics, String requestedSpecialization); 
+    public boolean purchaseLaboratory (
+            Statistics statistics, String requestedLaboratory);
 
 
     /**
