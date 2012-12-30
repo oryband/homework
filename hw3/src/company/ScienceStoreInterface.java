@@ -5,6 +5,8 @@
  */
 package company;
 
+import stat.*;
+import utilities.*;
 
 public interface ScienceStoreInterface {
 
@@ -56,8 +58,8 @@ public interface ScienceStoreInterface {
      *
      * @post ! isLaboratoriesEmpty(requestedSpecialization)
      **/
-    public void purchaseLaboratory(
-            String headOfLaboratory, String requestedSpecialization); 
+    public boolean purchaseLaboratory(
+            Statistics statistics, String requestedSpecialization); 
 
 
     /**
@@ -65,19 +67,19 @@ public interface ScienceStoreInterface {
      *
      * @return True if EquipmentPackage is in store (not just in stock).
      **/
-    private boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {}
+    public boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage);
 
     /**
      * @param requestedSpecialization Scientist specialization.
      *
      * @return True if scientist is in store (not just in stock).
      **/
-    private boolean isScientistsEmpty(String specialization) {}
+    public boolean isScientistsEmpty(String specialization);
 
     /**
      * @param requestedSpecialization Laboratory specialization.
      *
      * @return True if laboratory is in store (not just in stock).
      **/
-    private boolean isLaboratoriesEmpty(String specialization) {}
+    public boolean isLaboratoriesEmpty(String specialization);
 }

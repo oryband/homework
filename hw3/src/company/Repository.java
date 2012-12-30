@@ -19,6 +19,13 @@ public class Repository{
         return equipment;
     }
 
+    // TODO 
+    public aquireEquipment(ArrayList<EquipmentPackage> equipmentRequired){
+
+    }
+
+
+
     public String toString(){
 
         StringBuilder result = new StringBuilder();

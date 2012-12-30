@@ -29,6 +29,9 @@ public class Statistics{
     public void setBudget(int i) {
         this.budget = i;
     }
+    public void increaseMoneyGained(int moneygained) {
+        this.moneyGained += moneygained;
+    }
 
     // Getters
     public int getBudget() {

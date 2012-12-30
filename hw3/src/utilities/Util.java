@@ -151,8 +151,11 @@ public class Util{
 
             // Convert String array to int array
             for (int k=0 ; k < dividedWords.size() ; k++) {
-                preExperiments.add(Integer.parseInt(
-                            dividedWords.get(k)));
+                // if there is no preExperiments required the ArrayList will be empty
+                if (dividedWords.get(k).equals("0") != true ) {
+                    preExperiments.add(Integer.parseInt(
+                                dividedWords.get(k)));
+                }
                 //TODO TEST
                 //System.out.println("The # is :" + Integer.parseInt(dividedWords.get(k)));
             }
