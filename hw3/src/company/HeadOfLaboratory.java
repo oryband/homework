@@ -1,4 +1,4 @@
-package company;
+//package company;
 
 import java.io.*;
 import java.util.concurrent.*;
@@ -7,27 +7,32 @@ import java.util.ArrayList;
 
 public class HeadOfLaboratory {
 
-    private String name;
-    private String specialization;
+    private final String name;
+    private final String specialization;
     private int numberOfScientists;
     private ExecutorService executor;
 
 
-    public  HeadOfLaboratory(String headLabName,
-                             String special,
-                             int numOfScientists) {
+    public HeadOfLaboratory(
+            String headLabName,
+            String special,
+            int numberOfScientists) {
+
         this.name = new String(headLabName);
         this.specialization = new String(special);
-        this.numberOfScientists = numOfScientists;
+        this.numberOfScientists = numberOfScientists;
         this.executor = Executors.newFixedThreadPool(numOfScientists);
     }
     
+
     public void addExperimentToExecute(Runnable experiment) {
         this.executor.execute(experiment);
     }
 
+    public void addScientists(int amount) {
+        this.numberOfScientists += amount;
+    }
 
-    // Getters
     public String getSpecialization() {
         return this.specialization;
     }
@@ -46,8 +51,8 @@ public class HeadOfLaboratory {
         this.executor.shutdown();
     }
 
-    
-    public String toString(){
+
+    public String toString() {
 
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
@@ -59,8 +64,4 @@ public class HeadOfLaboratory {
         result.append("Number Of Scientists: " + this.numberOfScientists + NEW_LINE);
         return result.toString();
     }
-
-
-
-
 }

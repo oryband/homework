@@ -34,10 +34,11 @@ public class Repository {
      * @param type added item type.
      * @param additionalAmount amount of items added to repository.
      */
-    public void addItemToRepository(String type, int additionalAmount) {
+    public void addEquipmentToRepository(String type, int additionalAmount) {
         int currentAmount = this.equipment.get(type);
         this.equipment.put(type, currentAmount + additionalAmount);
     }
+
 
     // TODO Delete this. Used in util for initialization Repository. This should be done in the constructor.
     public HashMap<String, Integer> getRepository() {

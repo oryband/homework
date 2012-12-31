@@ -40,19 +40,19 @@ public class Statistics {
     }
 
 
-    public void AddPurchasedEquipment(EquipmentPackage equipmentPackage) {
+    public void addPurchasedEquipment(EquipmentPackage equipmentPackage) {
         this.budget -= equipmentPackage.getPrice();
         this.moneySpent += equipmentPackage.getPrice();
         this.equipmentPackagesPurchased.add(equipmentPackage);
     }
 
-    public void AddPurchasedScientist(Scientist scientist) {
+    public void addPurchasedScientist(Scientist scientist) {
         this.budget -= scientist.getPrice();
         this.moneySpent += scientist.getPrice();
         this.scientistsPurchased.add(scientist);
     }
 
-    public void AddPurchasedLaboratory(Laboratory laboratory) {
+    public void addPurchasedLaboratory(Laboratory laboratory) {
         this.budget -= laboratory.getPrice();
         this.moneySpent += laboratory.getPrice();
         this.laboratoriesPurchased.add(laboratory);

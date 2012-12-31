@@ -9,6 +9,7 @@
 import java.util.Comparator;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.HashMap; 
@@ -41,7 +42,7 @@ public class ScienceStore implements ScienceStoreInterface {
         this.laboratories = new HashMap(laboratories);
 
         // Sort equipment (amount) from largest to smallest,
-        // and sorts scientists from cheapest to most expensive.
+        // and sorts scientists & labs from cheapest to most expensive.
         for (Map.Entry<String, ArrayList<EquipmentPackage>> entry
                 : this.equipmentPackages.entrySet()) {
 
@@ -51,6 +52,12 @@ public class ScienceStore implements ScienceStoreInterface {
 
         for (Map.Entry<String, ArrayList<Scientist>> entry :
                 this.scientists.entrySet()) {
+
+            Collections.sort(entry.getValue());
+        }
+
+        for (Map.Entry<String, ArrayList<Laboratory>> entry :
+                this.laboratories.entrySet()) {
 
             Collections.sort(entry.getValue());
         }
@@ -96,14 +103,14 @@ public class ScienceStore implements ScienceStoreInterface {
                 int amount = equipmentPackage.getAmount();
                 statistics.addPurchasedEquipment(equipmentPackage);
                 equipmentPackage.decrementAmount();
-                repository.addItemToRepository(requestedType, amount);
+                repository.addEquipmentToRepository(requestedType, amount);
             }
         }
     }
 
 
     public void purchaseScientists (
-            Repository repository,
+            HeadOfLaboratory headOfLaboratory,
             Statistics statistics,
             Map<String, Integer> requestedScientists) {
 
@@ -120,7 +127,7 @@ public class ScienceStore implements ScienceStoreInterface {
             boolean missing = false;
             if (this.scientists.containsKey(requestedSpecialization)
                 && this.scientists.get(
-                    RequestedType).size() >= requestedAmount) {
+                    requestedSpecialization).size() >= requestedAmount) {
 
                 // Keep buying scientist from specialization until we get the
                 // amount we need.
@@ -131,8 +138,7 @@ public class ScienceStore implements ScienceStoreInterface {
 
                     int price = scientist.getPrice();
                     statistics.addPurchasedScientist(scientist);
-                    repository.addItemToRepository(
-                            requestedSpecialization, amount);
+                    headOfLaboratory.addScientists(1);
 
                     requestedAmount --;
                     it.remove();
@@ -158,60 +164,24 @@ public class ScienceStore implements ScienceStoreInterface {
 
 
     public void purchaseLaboratory (
-            Repository repository,
+            ChiefScientist chiefScientist,
             Statistics statistics,
-            String requestedLaboratory) {
+            String requestedSpecialization) {
 
-        // Iterate over each requested specialization,
-        // and search for the cheapest scientist of that specialization.
-        Scientist laboratory;
-        for (Map.Entry<String, Integer> requestedEntry :
-                requestedLaboratory.entrySet()) {
+        // Test if is there are is a laboratory from the specialization we
+        // need.
+        if (this.laboratories.containsKey(requestedSpecialization)) {
+            Laboratory laboratory =
+                this.laboratories.get(requestedSpecialization);
 
-            String requestedType = requestedEntry.getKey();
-            Integer requestedAmount = requestedEntry.getValue();
 
-            boolean found = false;
-            if (this.scientiests.get(requestedType) >= requestedAmount) {
-                found = true;
-            }
-
-            if ( ! found ) {
-                System.out.println(
-                        "Science Store: No matching specialization for requested scientist '"
-                        + requestedType + "'.");
-            } else {
-                int price = scientist.getPrice();
-                statistics.chargePrice(price);
-                equipmentPackage.decrementAmount();
-                repository.addItemToRepository(requestedType, amount);
-            }
+            int price = laboratory.getPrice();
+            statistics.addPurchasedLaboratory(laboratory);
+            chiefScientist.addLaboratory(laboratory);
+        } else {
+            System.out.println(
+                    "Science Store: No laboratory for requested specialization '"
+                    + requestedSpecialization + "'.");
         }
     }
-
-
-    private EquipmentPackage calculateBestPackage(
-            String requestedEquipment, int requestedAmount) {}
-    private Scientist calculateBestScientist(String requestedSpecialization) {}
-    private Laboratory calculateBestLaboratory(String requestedSpecialization) {}
-
-    
-    // TODO Do we really need getters?
-    // Getters
-    public HashMap<String, ArrayList<EquipmentPackage>> getEquipmentPackages() {
-        return this.equipmentPackages;
-    }
-
-    public HashMap<String, ArrayList<Scientist>> getScientists() {
-        return this.scientists;
-    }
-
-    public HashMap<String, ArrayList<Laboratory>> getLaboratories() {
-        return this.laboratories;
-    }
-    // TODO Do we really need these?
-    // For tests -- TODO huh ?
-    public boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {}
-    public boolean isScientistsEmpty(String specialization) {}
-    public boolean isLaboratoriesEmpty(String specialization) {}
 }

@@ -1,10 +1,8 @@
-package company;
-
-import stat.*;
-import utilities.*;
+//package company;
 
 import java.io.*;
 import java.util.*;
+
 
 public class ChiefScientist implements Observer{
 
@@ -17,12 +15,14 @@ public class ChiefScientist implements Observer{
     private Object _lockScanAndUpdate;
 
 
-    public ChiefScientist(ArrayList<HeadOfLaboratory> laboratories,
-                          ArrayList<Experiment> experiments,
-                          Statistics statistics,
-                          ScienceStore store,
-                          Repository repository,
-                          ChiefScientistAssistant chiefAssistant) {
+    public ChiefScientist(
+            ArrayList<HeadOfLaboratory> laboratories,
+            ArrayList<Experiment> experiments,
+            Statistics statistics,
+            ScienceStore store,
+            Repository repository,
+            ChiefScientistAssistant chiefAssistant) {
+
         // TODO check if need to do deep copy!!!
         this.laboratories = laboratories;
         this.experiments = experiments;
@@ -32,8 +32,8 @@ public class ChiefScientist implements Observer{
         this.chiefAssistant = chiefAssistant.getInstance(this.experiments,this);
     }
 
-    public void simulate() {
 
+    public void simulate() {
         Thread t = new Thread(this.chiefAssistant);
         t.start();
     }
@@ -67,22 +67,33 @@ public class ChiefScientist implements Observer{
                 this.chiefAssistant.notifyAll();
             }
     }
-    //Getters
+
+
+    public addLaboratory(laboratory) {
+        this.laboratories.add(laboratory);
+    }
+
+
     public Repository getRepository() {
         return this.repository;
     } 
+
     public Statistics getStatistics() {
         return this.statistics;
     }
+
     public ArrayList<HeadOfLaboratory> getLaboratories() {
         return this.laboratories;
     }
+
     public ScienceStore getStore() {
         return this.store;
     }
+
     public Object getLockObject() {
         return this._lockScanAndUpdate;
     }
+
 
     // Delete pre required experiments from experiment list by the name of
     // the specific experiment that finised!!!

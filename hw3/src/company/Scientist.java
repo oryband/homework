@@ -12,7 +12,7 @@ public class Scientist implements Comparable<Scientist> {
     final private int price;
 
 
-    public Scientist(String name, String specialty, int price) {
+    public Scientist(String name, String specialization, int price) {
         this.name = name;
         this.specialization = specialization;
         this.price = price;
@@ -41,7 +41,7 @@ public class Scientist implements Comparable<Scientist> {
         result.append("______________________________________" + NEW_LINE);
         result.append("           ---Scientists For Sale---: " + NEW_LINE);
         result.append("Name: " + this.name + NEW_LINE);
-        result.append("Specialization: " + this.specialty + NEW_LINE);
+        result.append("Specialization: " + this.specialization + NEW_LINE);
         result.append("Price: " + this.price + NEW_LINE);
         return result.toString();
     }

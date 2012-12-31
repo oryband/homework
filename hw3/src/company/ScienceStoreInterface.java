@@ -37,7 +37,7 @@ public interface ScienceStoreInterface {
      * @PRE Scientists are sorted from cheapest to most expensive.
      */
     public void purchaseScientists (
-            Repository repository,
+            HeadOfLaboratory headOfLaboratory,
             Statistics statistics,
             Map<String, Integer> requestedScientists);
 
@@ -54,7 +54,7 @@ public interface ScienceStoreInterface {
     public void purchaseLaboratory (
             Repository repository,
             Statistics statistics,
-            String requestedLaboratory);
+            String requestedSpecialization);
 
     /**
      * @param requestedEquipment equipment type (Microscope, burner, etc.)
