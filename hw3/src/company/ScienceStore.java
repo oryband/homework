@@ -5,7 +5,10 @@
  */
 package company;
 
+
 import java.util.Comparator;
+
+import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -19,27 +22,29 @@ public class ScienceStore implements ScienceStoreInterface {
 
 
     public ScienceStore( 
-            Map<String, EquipmentPackage> equipmentPackages,
-            Map<String, Scientist> scientists,
-            Map<String, Laboratory> laboratories) {
+            HashMap<String, ArrayList<EquipmentPackage>> equipmentPackages,
+            HashMap<String, ArrayList<Scientist>> scientists,
+            HashMap<String, ArrayList<Laboratory>> laboratories) {
 
+        // FIXME Produces warnings since arguments are unchecked.
+        this.equipmentPackages = new HashMap(equipmentPackages);
         this.scientists = new HashMap(scientists);
         this.laboratories = new HashMap(laboratories);
 
-        this.equipmentPackages = new HashMap(equipmentPackages);
-
-        // Sort equipment and scientists.
-        HashMap.Entry pairs;
-        for (EquipmentPackage p : this.equipmentPackages.values()) {
-            Collections.sort(p);
+        // Sort equipment (amount) and scientists (price) from largest to smallest.
+        for (Map.Entry<String, ArrayList<EquipmentPackage>> entry : this.equipmentPackages.entrySet()) {
+            Collections.sort(entry.getValue());
+            Collections.reverse(entry.getValue());
         }
 
-        for (Scientist s : this.scientists.values()) {
-            Collections.sort(p);
+        for (Map.Entry<String, ArrayList<Scientist>> entry : this.scientists.entrySet()) {
+            Collections.sort(entry.getValue());
+            Collections.reverse(entry.getValue());
         }
     }
 
     // Purchasing 
+    // TODO 
     public boolean purchaseEquipmentPackages (
             Statistics statistics, Map<String, Integer> requestedEquipment) {
 

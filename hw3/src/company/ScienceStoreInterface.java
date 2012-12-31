@@ -25,7 +25,7 @@ public interface ScienceStoreInterface {
      * Substracts scientist if found, and charges money from budget.
      *
      * @param statistics for handling purchase.
-     * @param requestedScientists scientist hash map {type : amount}
+     * @param requestedScientists scientist hash map {specialization : price}
      *
      * @return true if requested scientist are in stock, false otherwise.
      **/

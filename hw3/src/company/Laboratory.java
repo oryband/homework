@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class Laboratory implements Comparable<Scientist> {
+public class Laboratory implements Comparable<Laboratory> {
 
     final private String name;
     final private String specialization;
