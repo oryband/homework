@@ -3,7 +3,7 @@
  *
  * @author Eldar Damari, Ory Band
  */
-package company;
+//package company;
 
 import java.util.Map;
 
@@ -11,36 +11,50 @@ import java.util.Map;
 public interface ScienceStoreInterface {
 
     /**
-     * Substracts equipment package if found, and charges money from budget.
+     * Find the best package size for each requested item and charges budget.
+     * Best package size is the closest to the requested amount size that
+     * overexceeds the requested size.
      *
-     * @param statistics for handling purchase.
-     * @param requestedEquipment equipment hash map {type : amount}
+     * @param repository for updating repository.
+     * @param statistics for charging from the budget.
+     * @param requestedEquipment shopping list {type : amount}
      *
-     * @return true if package is in stock, false otherwise.
-     **/
-    public boolean purchaseEquipmentPackages (
-            Statistics statistics, Map<String, Integer> requestedEquipment);
+     * @PRE EquipmentPackages are sorted from larget amount to smallest amount.
+     */
+    public void purchaseEquipmentPackages (
+            Repository repository,
+            Statistics statistics,
+            Map<String, Integer> requestedEquipment);
 
     /**
-     * Substracts scientist if found, and charges money from budget.
+     * Find the cheapest scientiest for each requested specialization and
+     * charges budget.
      *
-     * @param statistics for handling purchase.
-     * @param requestedScientists scientist hash map {specialization : price}
+     * @param repository for updating repository.
+     * @param statistics for charging from the budget.
+     * @param requestedScientiest shopping list {specialization : amount}
      *
-     * @return true if requested scientist are in stock, false otherwise.
-     **/
-    public boolean purchaseScientist (
-            Statistics statistics, Map<String, Integer> requestedScientists);
+     * @PRE Scientists are sorted from cheapest to most expensive.
+     */
+    public void purchaseScientist (
+            Repository repository,
+            Statistics statistics,
+            Map<String, Integer> requestedScientists);
 
     /**
-     * Substracts laboratory if found, and charges money from budget.
+     * Find the cheapest laboratory the requested specialization and charges
+     * budget.
      *
-     * @param statistics for handling purchase.
-     * @param requestedLaboratory Lab specialization.
-     **/
-    public boolean purchaseLaboratory (
-            Statistics statistics, String requestedLaboratory);
-
+     * @param repository for updating repository.
+     * @param statistics for charging from the budget.
+     * @param requestedLaboratory
+     *
+     * @PRE Labs are sorted from cheapest to most expensive
+     */
+    public void purchaseLaboratory (
+            Repository repository,
+            Statistics statistics,
+            String requestedLaboratory);
 
     /**
      * @param requestedEquipment equipment type (Microscope, burner, etc.)

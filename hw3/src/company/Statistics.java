@@ -1,4 +1,4 @@
-package company;
+//package company;
 
 import java.io.*;
 import java.util.*;
@@ -7,35 +7,48 @@ import java.util.*;
 public class Statistics {
 
     private int budget;
-    private int moneyGained;
+    private int rewards;
     private int moneySpent;
+
     private ArrayList<Scientist> scientistsPurchased;
     private ArrayList<EquipmentPackage> equipmentPackagesPurchased;
     private ArrayList<Laboratory> labsPurchased;
 
 
-    public Statistics() {
-        this.budget = 0;
-        this.moneyGained = 0 ;
+    public Statistics(int budget) {
+        this.budget = budget;
+        this.rewards = 0 ;
         this.moneySpent = 0;
         this.scientistsPurchased = null;
         this.equipmentPackagesPurchased = null;
         this.labsPurchased = null;
     }
 
+    public Statistics() {
+        this(0);
+    }
+
     // Setters
+    // TODO Remove this, and set budget in constructor (used in util).
     public void setBudget(int i) {
         this.budget = i;
     }
 
-    public void increaseMoneyGained(int moneygained) {
-        this.moneyGained += moneygained;
+    public void chargePrice(int price) {
+        this.budget -= price;
+        this.moneySpent += price;
+    }
+    
+    public void addReward(int reward) {
+        this.budget += reward;
+        this.rewards += reward;
     }
 
-    // Getters
+
     public int getBudget() {
         return this.budget;
     }
+
 
     public String toString() {
 

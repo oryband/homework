@@ -3,17 +3,21 @@
  *
  * @author Eldar Damari, Ory Band
  */
-package company;
+//package company;
 
 
 import java.util.Comparator;
 
 import java.util.Collections;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.HashMap; 
 import java.util.ArrayList; 
 
 
+/**
+ * Responsible for purchasing equipment, scientists and laboratories.
+ */
 public class ScienceStore implements ScienceStoreInterface {  
  
     private HashMap<String, ArrayList<EquipmentPackage>> equipmentPackages;
@@ -21,6 +25,11 @@ public class ScienceStore implements ScienceStoreInterface {
     private HashMap<String, ArrayList<Laboratory>> laboratories;
 
 
+    /**
+     * Besides initializing members,
+     * sorts packages by amount, from largest to smallest,
+     * and sorts scientists by price, from most expensive to cheapest.
+     */
     public ScienceStore( 
             HashMap<String, ArrayList<EquipmentPackage>> equipmentPackages,
             HashMap<String, ArrayList<Scientist>> scientists,
@@ -31,29 +40,69 @@ public class ScienceStore implements ScienceStoreInterface {
         this.scientists = new HashMap(scientists);
         this.laboratories = new HashMap(laboratories);
 
-        // Sort equipment (amount) and scientists (price) from largest to smallest.
-        for (Map.Entry<String, ArrayList<EquipmentPackage>> entry : this.equipmentPackages.entrySet()) {
+        // Sort equipment (amount) from largest to smallest,
+        // and sorts scientists from cheapest to most expensive.
+        for (Map.Entry<String, ArrayList<EquipmentPackage>> entry
+                : this.equipmentPackages.entrySet()) {
+
             Collections.sort(entry.getValue());
             Collections.reverse(entry.getValue());
         }
 
-        for (Map.Entry<String, ArrayList<Scientist>> entry : this.scientists.entrySet()) {
+        for (Map.Entry<String, ArrayList<Scientist>> entry :
+                this.scientists.entrySet()) {
+
             Collections.sort(entry.getValue());
-            Collections.reverse(entry.getValue());
         }
     }
 
-    // Purchasing 
-    // TODO 
-    public boolean purchaseEquipmentPackages (
-            Statistics statistics, Map<String, Integer> requestedEquipment) {
 
-        Iterator<EquipmentPackage> it_equipmentPackages =
-            this.equipmentPackages.get(requestedEquipment);
+    public void purchaseEquipmentPackages (
+            Repository repository, Statistics statistics, Map<String, Integer> requestedEquipment) {
 
-        // Edge case: Equipment TYPE isn't availble in store at all.
-        if (it_equipmentPackages == null) {
-            return false;
+        // Iterate over each request equipment type,
+        // and search for the closest matching package size that overexceeds 
+        // its size.
+        String requestedType;
+        Integer requestedAmount;
+        int price,
+            amount;
+        boolean found,
+                tooSmall;
+        EquipmentPackage equipmentPackage;
+        for (Map.Entry<String, Integer> requestedEntry :
+                requestedEquipment.entrySet()) {
+
+            requestedType = requestedEntry.getKey();
+            requestedAmount = requestedEntry.getValue();
+
+            ListIterator<EquipmentPackage> it =
+                this.equipmentPackages.get(requestedType).listIterator();
+
+            // Search for the closests matching overexceeding package size.
+
+            found = false;
+            tooSmall = false;
+            while (it.hasNext() && ! tooSmall ) {
+                equipmentPackage = it.next();
+                if (equipmentPackage.getAmount() >= requestedAmount) {
+                    found = true;
+                } else {
+                    tooSmall = true;
+                }
+            }
+
+            if ( ! found ) {
+                System.out.println(
+                        "Science Store: No matching package size for requested item '"
+                        + requestedType + "'.");
+            } else {
+                amount = equipmentPackage.getAmount();
+                price = equipmentPackage.getPrice();
+                statistics.chargePrice(price);
+                equipmentPackage.decrementAmount();
+                repository.addItemToRepository(requestedType, amount);
+            }
         }
     }
 
@@ -83,7 +132,6 @@ public class ScienceStore implements ScienceStoreInterface {
     public HashMap<String, ArrayList<Laboratory>> getLaboratories() {
         return this.laboratories;
     }
-    
     // TODO Do we really need these?
     // For tests -- TODO huh ?
     public boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {}

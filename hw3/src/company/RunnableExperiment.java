@@ -1,9 +1,10 @@
-package company;
+//package company;
 
 import java.io.*;
 import java.util.*;
 
-public class RunnableExperiment extends Observable implements Runnable{
+
+public class RunnableExperiment extends Observable implements Runnable {
 
     private Experiment experiment;
     private long experimentRealRunTime;
@@ -49,15 +50,13 @@ public class RunnableExperiment extends Observable implements Runnable{
 
                 // reward claculation and updating statistics
                 if (this.experimentRealRunTime <= 
-                        ((this.experiment.getExperimentRunTime()/100)*115)){
+                        ((this.experiment.getExperimentRunTime() / 100) * 115)){
                     // reward gained.
-                    this.chief.getStatistics().increaseMoneyGained
-                        (this.experiment.getExperimentReward());
+                    this.chief.getStatistics().addReward(this.experiment.getExperimentReward());
 
                 } else {
-                    // 10% of reward gaine.
-                    this.chief.getStatistics().increaseMoneyGained
-                        ((this.experiment.getExperimentReward()/100)*10);
+                    // 10% of reward gained.
+                    this.chief.getStatistics().addReward((this.experiment.getExperimentReward() / 100) * 10);
 
                 }
 
