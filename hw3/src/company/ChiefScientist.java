@@ -14,6 +14,7 @@ public class ChiefScientist implements Observer{
     private ScienceStore store;
     private Repository repository;
     private ChiefScientistAssistant chiefAssistant;
+    private Object _lockScanAndUpdate;
 
 
     public ChiefScientist(ArrayList<HeadOfLaboratory> laboratories,
@@ -55,6 +56,9 @@ public class ChiefScientist implements Observer{
     }
     public ScienceStore getStore() {
         return this.store;
+    }
+    public Object getLockObject() {
+        return this._lockScanAndUpdate;
     }
     
 

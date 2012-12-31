@@ -26,59 +26,70 @@ public class ChiefScientistAssistant implements Runnable{
 
     public void run() {
 
-        // Program Cycle
-        while (this.completeExperiments != this.experiments.size()) {
+        synchronized (this.chief.getLockObject()) {
+            // Program Cycle
+            while (this.completeExperiments != this.experiments.size()) {
 
-            // Scaning experiments and find experiments with 
-            // no preExperiments required..
+                // Scaning experiments and find experiments with 
+                // no preExperiments required..
 
-            Iterator<RunnableExperiment> it = this.experiments.iterator();
+                Iterator<RunnableExperiment> it = this.experiments.iterator();
 
-            while(it.hasNext()) {
+                while(it.hasNext()) {
 
-                // Copy of experiment to work with - can't work with Iterator
-                Experiment experimentItr = it.next();
+                    // Copy of experiment to work with - can't work with Iterator
+                    Experiment experimentItr = it.next();
 
-                if (experimentItr.getExperiment()
-                        .getExperimentPreRequirementsExperiments().size() == 0) {
-
-                    // check status
                     if (experimentItr.getExperiment()
-                            .getExperimentStatus()
-                            .equals("INCOMPLETE") == true) {
-                        // Look for laboratory and add Experiment
-                        // later: claculate effiency and buy new scientists
-                        Iterator<HeadOfLaboratory> labIt = 
-                            this.chief.getLaboratories().iterator();
+                            .getExperimentPreRequirementsExperiments().size() == 0) {
 
-                        boolean found = true; // Prevent from assigning to 2 labs the same experiment
-                        while (labIt.hasNext() && found) {
-                            // Copy of experiment to work with.
-                            HeadOfLaboratory laboratoryIt = labIt.next();
+                        // check status
+                        if (experimentItr.getExperiment()
+                                .getExperimentStatus()
+                                .equals("INCOMPLETE") == true) {
+                            // Look for laboratory and add Experiment
+                            // later: claculate effiency and buy new scientists
+                            Iterator<HeadOfLaboratory> labIt = 
+                                this.chief.getLaboratories().iterator();
 
-                            // Find laboratory with same specialization.
-                            if (laboratoryIt.getSpecialization()
-                                    .equals(experimentItr
-                                        .getExperimentSpecialization()) == true) {
+                            boolean found = false; // Prevent from assigning to 2 labs the same experiment
+                            while (labIt.hasNext() && !found) {
+                                // Copy of experiment to work with.
+                                HeadOfLaboratory laboratoryIt = labIt.next();
 
-                                if (found == true) {
-                                    prepareExperimentToExecute(laboratoryIt, experimentItr);
-                                    found = false;  
-                                }
+                                // Find laboratory with same specialization.
+                                if (laboratoryIt.getSpecialization()
+                                        .equals(experimentItr
+                                            .getExperimentSpecialization()) == true) {
+
+                                    if (found != true) {
+                                        prepareExperimentToExecute(laboratoryIt, experimentItr);
+                                        found = true;  
+                                    }
+                                            }
                             }
-                        }
-                        // Indicates that no lab found and lab need to be purchased and exe experiment.
-                        if (found == true) {
-                            buyLaboratory(experimentItr.getExperimentSpecialization(),
-                                          experimentItr); // buy+add to arraylist + look for the new lab + send to prepareExperimentToExecute
-                        }
-                    } else { // Experiment is Complete or InProgress
-                    }
-                } else {  // Pre experiments required and experiment can't execute.
+                            // Indicates that no lab found and lab need to be purchased and exe experiment.
+                            if (found == false) {
+                                buyLaboratory(experimentItr.getExperimentSpecialization(),
+                                        experimentItr); 
+                            }
+                                } // Experiment is Complete or InProgress
+                            }  // Pre experiments required and experiment can't execute.
                 }
+
+                // wrap it with try and catch and need to be sync??? have to i think
+                try {
+                    this.wait();
+                } catch (InterruptedException e)
+
             }
-            // wrap it with try and catch and need to be sync??? have to i think
-            this.wait();
+            // Printint all data in statistics!!!
+            this.chief.getStatistics().toString();
+
+            // Need to ShutDown everything?!!!!!
+            //code here!
+
+            //
         }
     }
     
@@ -149,11 +160,34 @@ public class ChiefScientistAssistant implements Runnable{
         return equipmentsToPurchase;
     } 
 
-    //TODO
+    // buy+add to arraylist + look for the new lab + send to prepareExperimentToExecute
     public void buyLaboratory(String specialization,
-                              RunnableExperiment experiment) {
+            RunnableExperiment experiment) {
 
+        if (this.chief.getStore().purchaseLaboratory(this.chief.getStatistics(),
+                    specialization)) {
 
+            Iterator<HeadOfLaboratory> it = this.chief.getLaboratories().iterator();
+
+            boolean found = false; 
+            //iterate all labs with new lab that just purchased.
+            while(it.hasNext() && !found) {
+
+                HeadOfLaboratory laboratoryIt = this.chief.getLaboratories().next();
+                // Find laboratory with same specialization.
+                if (laboratoryIt.getSpecialization()
+                        .equals(experiment
+                            .getExperimentSpecialization()) == true) {
+
+                    if (found != true) {
+                        prepareExperimentToExecute(laboratoryIt, experiment);
+                        found = true;  
+                    }
+                            }
+            } else { 
+                System.out.prinln("ERROR : Could not buy laboratory of type: " + specialization);
+            }
+        }
     }
 
     public String toString(){
