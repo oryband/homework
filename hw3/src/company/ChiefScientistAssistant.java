@@ -118,19 +118,21 @@ public class ChiefScientistAssistant implements Runnable{
 
         HashMap<String,Integer> repository =
             this.chief.getRepository(); 
-        
+
         HashMap<String,Integer> equipmentsToPurchase =
             new HashMap<String,Integer>(); 
 
         // iterate all keys in hashmap
         Iterator it = equipments.entrySet().iterator();
         while (it.hasNext()) {
-            
-            String itemName = new String(it.next()); 
+
+            String itemName = (String)it.next(); // maybe will cause problem! 
 
             if (repository.containsKey(itemName) == true) {
+
                 // checks if there is enough items in repo
-                if (repository.get(itemName).intValue() >= equipments.get(itemName).intValue()) {
+                if (repository.get(itemName).intValue() >= 
+                        equipments.get(itemName).intValue()) {
 
                 } else { // not enough item in repo need to add to map to purchased
 
@@ -138,19 +140,13 @@ public class ChiefScientistAssistant implements Runnable{
                             new Integer(equipments.get(itemName).intValue() -
                                 repository.get(itemName).intValue()));
                 } 
-            } else /////////// HERE!!!! TODO
+            } else {
 
-
+                equipmentsToPurchase.put(new String(itemName),
+                        new Integer(equipments.get(itemName).intValue()));
             }
         }
-
-
-    
-
-    
-    
-    
-    
+        return equipmentsToPurchase;
     } 
 
     //TODO
