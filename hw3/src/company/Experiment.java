@@ -1,8 +1,7 @@
-package company;
+//package company;
 
 import java.io.*;
 import java.util.*;
-import utilities.*;
 
 
 public class Experiment{
@@ -10,7 +9,7 @@ public class Experiment{
     private String id;
     private String specialization;
     private ArrayList<Integer> prerequirementsExperiments;
-    private HashMap<String,Integer> requiredEquipments;
+    private HashMap<String, Integer> requiredEquipment;
     private int reward;
     private int runTimeInHours;
     private String status;
@@ -19,7 +18,7 @@ public class Experiment{
     public Experiment(String id,
             ArrayList<Integer> preExperiments,
             String specialization,
-            HashMap<String,Integer> requiredEquipments,
+            HashMap<String,Integer> requiredEquipment,
             int runtime,
             int reward,
             String status){
@@ -28,8 +27,8 @@ public class Experiment{
         this.specialization = specialization;
         this.prerequirementsExperiments = new ArrayList<Integer>();
         this.prerequirementsExperiments = preExperiments;
-        this.requiredEquipments = new HashMap<String,Integer>();
-        this.requiredEquipments = requiredEquipments;
+        this.requiredEquipment = new HashMap<String,Integer>();
+        this.requiredEquipment = requiredEquipment;
         this.reward = reward;
         this.runTimeInHours = runtime;
         this.status = status;
@@ -46,7 +45,7 @@ public class Experiment{
         return this.prerequirementsExperiments;
     }
     public HashMap<String,Integer> getExperimentRequiredEquipments(){
-        return this.requiredEquipments;
+        return this.requiredEquipment;
     }
     public int getExperimentRunTime(){
         return this.runTimeInHours;
@@ -79,7 +78,7 @@ public class Experiment{
         result.append("PrerequirementsExperiments: " +
                 prerequirementsExperiments.toString() + NEW_LINE);
 
-        Iterator<EquipmentPackage> it = requiredEquipments.iterator();
+        Iterator<EquipmentPackage> it = requiredEquipment.iterator();
         while (it.hasNext()) {
 
             result.append(it.next().toString() + NEW_LINE);
