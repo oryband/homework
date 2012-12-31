@@ -15,7 +15,6 @@ public class Statistics {
     private ArrayList<Laboratory> labsPurchased;
     private ArrayList<Experiment> experiments;
 
-
     public Statistics(int budget) {
         this.budget = budget;
         this.rewards = 0 ;
@@ -49,11 +48,9 @@ public class Statistics {
         this.rewards += reward;
     }
 
-
     public int getBudget() {
         return this.budget;
     }
-
 
     public String toString() {
 
@@ -63,6 +60,17 @@ public class Statistics {
         result.append("______________________________________" + NEW_LINE);
         result.append("           ---SATISTICS---: " + NEW_LINE);
         result.append("Budget: " + this.budget + NEW_LINE);
+        result.append("Reward: " + this.rewards + NEW_LINE);
+        result.append("Money Spent: " + this.moneySpent + NEW_LINE);
+        result.append("Finished Experiments: " + 
+                this.experiments.toString() + NEW_LINE);
+        result.append("Equipment Packages Purchased : " + 
+                this.equipmentPackagesPurchased.toString() + NEW_LINE);
+        result.append("Laboratoris Purchased: " + 
+                this.labsPurchased.toString() + NEW_LINE);
+        result.append("Scientists Purchased: " + 
+                this.scientistsPurchased.toString() + NEW_LINE);
+
         return result.toString();
     }
 }
