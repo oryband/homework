@@ -10,8 +10,24 @@ public class ChiefScientistAssistant implements Runnable{
     private int completedExperiments;
     private ChiefScientist chief;
 
-    // Constructor
-    public ChiefScientistAssistant(ArrayList<Experiment> experimentsToRun,
+    // Constructor the singelton 
+
+    private static ChiefScientistAssistant assistant = null;
+
+    public static synchronized ChiefScientistAssistant 
+        getInstance(ArrayList<Experiment> experimentsToRun,ChiefScientist chief) {
+
+            if (assistant == null) {
+
+                assistant = new ChiefScientistAssistant(experimentsToRun,chief);
+                return assistant;
+
+            } else {
+                return assistant;
+            }
+        }
+
+    private void ChiefScientistAssistant(ArrayList<Experiment> experimentsToRun,
             ChiefScientist chief) {
 
         Iterator<Experiment> it = experimentsToRun.iterator();
@@ -23,6 +39,9 @@ public class ChiefScientistAssistant implements Runnable{
         this.completeExperiments = 0;
         this.chief = chief;
     }
+
+
+
 
     public void run() {
 
@@ -80,7 +99,7 @@ public class ChiefScientistAssistant implements Runnable{
                 // wrap it with try and catch and need to be sync??? have to i think
                 try {
                     this.wait();
-                } catch (InterruptedException e)
+                } catch (InterruptedException e) {}
 
             }
             // Need to ShutDown everything?!!!!!

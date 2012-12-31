@@ -29,7 +29,7 @@ public class ChiefScientist implements Observer{
         this.statistics = statistics;
         this.store = store;
         this.repository = repository;
-        this.chiefAssistant = chiefAssistant;
+        this.chiefAssistant = chiefAssistant.getInstance(this.experiments,this);
     }
     // an experiments inform the chief that he is done.
     // chief need to update the database for rerun the ChiefAssistant by notify 
