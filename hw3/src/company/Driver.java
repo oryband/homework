@@ -95,4 +95,5 @@ public static void main(String args[]){
         System.out.println(chief.toString());
     }
 
+    chief.simulate();
 }

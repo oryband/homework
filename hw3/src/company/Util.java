@@ -167,21 +167,19 @@ public class Util{
             analyzeWords.add(words.get(3));
                 //TODO TEST
                 //System.out.println(lines.get(3));
+
             equipments = divideLinesByDelimiter(analyzeWords,"COMMA");
 
-            ArrayList<EquipmentPackage> equipmentPackages =
-                new ArrayList<EquipmentPackage>();
+            HashMap<String,Integer> equipmentsMap = 
+                new HashMap<String,Integer>();
 
             for (int e=0 ; e < equipments.size() ; e += 2) {
                 //TODO TEST
                 //System.out.println(equipments.size());
-                EquipmentPackage equipmentPackage =
-                    new EquipmentPackage(equipments.get(e),
-                            Integer.parseInt(equipments.get(e+1)),
-                            0);
-
-                equipmentPackages.add(equipmentPackage);
+                equipmentmap.put(new String(equipments.get(e)),
+                        new Integer(Integer.parseInt(equipments.get(e+1))));
             }
+           
             int runtime = Integer.parseInt(words.get(4));
             int reward = Integer.parseInt(words.get(5));
 

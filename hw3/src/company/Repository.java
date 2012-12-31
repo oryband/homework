@@ -44,6 +44,7 @@ public class Repository {
         return equipment;
     }
 
+
     // TODO
     /**
      * @param requiredEquipment {type : amount}
@@ -107,6 +108,10 @@ public class Repository {
             }
         }
     }
+
+
+    // TODO 
+    public void releaseEquipment(HashMap<String, Integer> equipment) {}
 
 
     public String toString() {

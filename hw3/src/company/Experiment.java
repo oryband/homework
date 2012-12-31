@@ -10,7 +10,7 @@ public class Experiment{
     private String id;
     private String specialization;
     private ArrayList<Integer> prerequirementsExperiments;
-    private ArrayList<EquipmentPackage> requiredEquipments;
+    private HashMap<String,Integer> requiredEquipments;
     private int reward;
     private int runTimeInHours;
     private String status;
@@ -19,7 +19,7 @@ public class Experiment{
     public Experiment(String id,
             ArrayList<Integer> preExperiments,
             String specialization,
-            ArrayList<EquipmentPackage> requiredEquipments,
+            HashMap<String,Integer> requiredEquipments,
             int runtime,
             int reward,
             String status){
@@ -28,7 +28,7 @@ public class Experiment{
         this.specialization = specialization;
         this.prerequirementsExperiments = new ArrayList<Integer>();
         this.prerequirementsExperiments = preExperiments;
-        this.requiredEquipments = new ArrayList<EquipmentPackage>();
+        this.requiredEquipments = new HashMap<String,Integer>();
         this.requiredEquipments = requiredEquipments;
         this.reward = reward;
         this.runTimeInHours = runtime;
@@ -45,7 +45,7 @@ public class Experiment{
     public ArrayList<Integer> getExperimentPreRequirementsExperiments(){
         return this.prerequirementsExperiments;
     }
-    public ArrayList<EquipmentPackage> getExperimentRequiredEquipments(){
+    public HashMap<String,Integer> getExperimentRequiredEquipments(){
         return this.requiredEquipments;
     }
     public int getExperimentRunTime(){
