@@ -28,6 +28,11 @@ public class EquipmentPackage implements Comparable<EquipmentPackage> {
         this.amount --;
     }
 
+
+    public String getType() {
+        return this.type;
+    }
+
     public int getAmount() {
         return this.amount;
     }

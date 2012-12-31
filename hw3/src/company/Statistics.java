@@ -12,7 +12,7 @@ public class Statistics {
 
     private ArrayList<Scientist> scientistsPurchased;
     private ArrayList<EquipmentPackage> equipmentPackagesPurchased;
-    private ArrayList<Laboratory> labsPurchased;
+    private ArrayList<Laboratory> laboratoriesPurchased;
     private ArrayList<Experiment> experiments;
 
 
@@ -22,7 +22,7 @@ public class Statistics {
         this.moneySpent = 0;
         this.scientistsPurchased = new ArrayList<Scientist>();
         this.equipmentPackagesPurchased = new ArrayList<EquipmentPackage>();
-        this.labsPurchased = new ArrayList<Laboratory>();
+        this.laboratoriesPurchased = new ArrayList<Laboratory>();
         this.experiments = new ArrayList<Experiment>(); 
     }
 
@@ -39,11 +39,26 @@ public class Statistics {
         this.experiments.add(experiment);
     }
 
-    public void chargePrice(int price) {
-        this.budget -= price;
-        this.moneySpent += price;
+
+    public void AddPurchasedEquipment(EquipmentPackage equipmentPackage) {
+        this.budget -= equipmentPackage.getPrice();
+        this.moneySpent += equipmentPackage.getPrice();
+        this.equipmentPackagesPurchased.add(equipmentPackage);
     }
-    
+
+    public void AddPurchasedScientist(Scientist scientist) {
+        this.budget -= scientist.getPrice();
+        this.moneySpent += scientist.getPrice();
+        this.scientistsPurchased.add(scientist);
+    }
+
+    public void AddPurchasedLaboratory(Laboratory laboratory) {
+        this.budget -= laboratory.getPrice();
+        this.moneySpent += laboratory.getPrice();
+        this.laboratoriesPurchased.add(laboratory);
+    }
+
+
     public void addReward(int reward) {
         this.budget += reward;
         this.rewards += reward;

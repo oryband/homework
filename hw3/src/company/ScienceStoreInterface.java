@@ -27,7 +27,7 @@ public interface ScienceStoreInterface {
             Map<String, Integer> requestedEquipment);
 
     /**
-     * Find the cheapest scientiest for each requested specialization and
+     * Find the cheapest scientist for each requested specialization and
      * charges budget.
      *
      * @param repository for updating repository.

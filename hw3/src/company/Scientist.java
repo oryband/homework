@@ -8,13 +8,13 @@ import java.util.*;
 public class Scientist implements Comparable<Scientist> {
 
     final private String name;
-    final private String specialty;
+    final private String specialization;
     final private int price;
 
 
     public Scientist(String name, String specialty, int price) {
         this.name = name;
-        this.specialty = specialty;
+        this.specialization = specialization;
         this.price = price;
     }
 
@@ -23,6 +23,10 @@ public class Scientist implements Comparable<Scientist> {
         return this.price - s.getPrice();
     }
 
+
+    public String getSpecialization() {
+        return this.specialization;
+    }
 
     public int getPrice() {
         return this.price;
