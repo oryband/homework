@@ -7,7 +7,7 @@ import java.util.*;
 public class ChiefScientistAssistant implements Runnable{
 
     private ArrayList<RunnableExperiment> experiments;
-    private int completeExperiments;
+    private int completedExperiments;
     private ChiefScientist chief;
 
     // Constructor
@@ -26,9 +26,9 @@ public class ChiefScientistAssistant implements Runnable{
 
     public void run() {
 
-        synchronized (this.chief.getLockObject()) {
+        synchronized (this) {
             // Program Cycle
-            while (this.completeExperiments != this.experiments.size()) {
+            while (this.completedExperiments != this.experiments.size()) {
 
                 // Scaning experiments and find experiments with 
                 // no preExperiments required..
@@ -188,6 +188,11 @@ public class ChiefScientistAssistant implements Runnable{
                 System.out.prinln("ERROR : Could not buy laboratory of type: " + specialization);
             }
         }
+    }
+
+    // Increase Number Of finishedExperiment by 1;
+    public void increaseNumberOfFinishedExperiments() {
+        this.completedExperiments += 1;
     }
 
     public String toString(){

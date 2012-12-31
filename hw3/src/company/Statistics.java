@@ -12,20 +12,25 @@ public class Statistics {
     private ArrayList<Scientist> scientistsPurchased;
     private ArrayList<EquipmentPackage> equipmentPackagesPurchased;
     private ArrayList<Laboratory> labsPurchased;
+    private ArrayList<Experiment> experiments;
 
 
     public Statistics() {
         this.budget = 0;
         this.moneyGained = 0 ;
         this.moneySpent = 0;
-        this.scientistsPurchased = null;
-        this.equipmentPackagesPurchased = null;
-        this.labsPurchased = null;
+        this.scientistsPurchased = new ArrayList<Scientist>();
+        this.equipmentPackagesPurchased = new ArrayList<EquipmentPackage>();
+        this.labsPurchased = new ArrayList<Laboratory>();
+        this.experiments = new ArrayList<Experiment>(); 
     }
 
     // Setters
     public void setBudget(int i) {
         this.budget = i;
+    }
+    public void increaseFinishedExperiment(Experiment experiment) {
+        this.experiments.add(experiment);
     }
 
     public void increaseMoneyGained(int moneygained) {

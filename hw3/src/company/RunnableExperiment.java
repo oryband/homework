@@ -62,7 +62,7 @@ public class RunnableExperiment extends Observable implements Runnable{
                 }
 
                 // Notify to observers that experiment is done
-                notifyObservers(this.experiment.getExperimentRequiredEquipments());
+                notifyObservers(this.experiment.getExperimentId());
 
             } else {
 

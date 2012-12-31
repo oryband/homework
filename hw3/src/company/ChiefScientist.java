@@ -34,28 +34,31 @@ public class ChiefScientist implements Observer{
     // an experiments inform the chief that he is done.
     // chief need to update the database for rerun the ChiefAssistant by notify 
     // him (wake him up from wait())
-    // who returns stuff to repo?
-    // who is updating status of experiment?
-    public void update(Observable o, Object arg){
+    public synchronized void update(Observable o, Object arg){
 
-        synchronized(this._lockScanAndUpdate) {
+            if (arg instanceof String) {
+                String finishedExperiment = (String) arg;
+                
+                // Removing the experiment from all preRequiredExperiments
+                // of all experiments in chief
+                deletePreExperiments(finishedExperiment);
 
-            /*if (arg instanceof ArrayList<Integer>) {
-                ArrayList<Integer> experimentsToDelete = 
-                    (ArrayList<Integer>) arg;*/
-    
-                deletePreExperiments(o.getExperiment().getExperimentId());
+                // Changing status to COMPLETE!
+                changeStatusToComplete(finishedExperiment);
 
-                // hERE!!!!
+                // Updating statistics with finishedExperiment
+                updateStatisticsFinishedExperiment(finishedExperiment); 
 
+                // Updating number of complete experiments in assistant
+                this.chiefAssistant.increaseNumberOfFinishedExperiments();
 
             } else {
                 System.out.println("ERROR: Problem with casting in Chief:update()");
             }
-        }
+            synchronized(this.chiefAssistant) {
+                this.chiefAssistant.notifyAll();
+            }
     }
-
-
     //Getters
     public Repository getRepository() {
         return this.repository;
@@ -108,6 +111,38 @@ public class ChiefScientist implements Observer{
         }
     }
 
+    // Changing status of experiment to COMPLETE!
+    public void changeStatusToComplete(finishedExperiment) {
+
+        Iterator<Experiment> it = this.experiments.iterator();
+
+        boolean found = false;
+        while (it.hasNext() && !found) {
+            Experiment experiment = it.next();
+            if (experiment.getExperimentId().
+                    equals(finishedExperiment) == true) {
+
+                experiment.setExperimentStatus(finishedExperiment);
+                found = true;
+             }
+        }
+    }
+    // Updating statistics with the finished experiment!
+    public void updateStatisticsFinishedExperiment(String experimentId) {
+
+        Iterator<Experiment> it = this.experiments.iterator();
+
+        boolean found = false;
+        while(it.hasNext() && !found) {
+            Experiment expIt = it.next();
+
+            if (expIt.getExperimentId().equals(experimentId) == true) {
+
+                this.statistics.increaseFinishedExperiment(expIt);
+                found = true;
+            }
+        }
+    }
 
     public String toString() {
 
