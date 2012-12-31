@@ -102,7 +102,7 @@ public class ScienceStore implements ScienceStoreInterface {
     }
 
 
-    public void purchaseScientist (
+    public void purchaseScientists (
             Repository repository,
             Statistics statistics,
             Map<String, Integer> requestedScientists) {

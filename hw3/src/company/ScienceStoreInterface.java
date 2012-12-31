@@ -36,7 +36,7 @@ public interface ScienceStoreInterface {
      *
      * @PRE Scientists are sorted from cheapest to most expensive.
      */
-    public void purchaseScientist (
+    public void purchaseScientists (
             Repository repository,
             Statistics statistics,
             Map<String, Integer> requestedScientists);
