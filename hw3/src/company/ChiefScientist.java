@@ -144,6 +144,15 @@ public class ChiefScientist implements Observer{
         }
     }
 
+    // Shuting Down all Labs Gracefully my lord!
+    public void shutdownAllLabs() {
+        
+        Iterator<HeadOfLaboratory> it = this.laboratories;
+        while (it.hasNext()) {
+            it.next().shutdownLab();
+        }
+    }
+
     public String toString() {
 
         StringBuilder result = new StringBuilder();

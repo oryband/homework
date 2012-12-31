@@ -83,13 +83,11 @@ public class ChiefScientistAssistant implements Runnable{
                 } catch (InterruptedException e)
 
             }
+            // Need to ShutDown everything?!!!!!
+            this.chief.shutdownAllLabs();
+
             // Printint all data in statistics!!!
             this.chief.getStatistics().toString();
-
-            // Need to ShutDown everything?!!!!!
-            //code here!
-
-            //
         }
     }
     

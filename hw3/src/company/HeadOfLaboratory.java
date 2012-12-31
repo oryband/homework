@@ -39,8 +39,11 @@ public class HeadOfLaboratory {
     public function(){
     }
 
-    // TODO shutdown gracefully - need to read API ExecutorService documentaion.
-    public shutDownGracefully() {
+    // Initiates an orderly shutdown in which previously
+    // submitted tasks are executed, but no new tasks will be accepted.
+    // consider if needed: shutdownNow()
+    public shutdownLab() {
+        this.executor.shutdown();
     }
 
     
