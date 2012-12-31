@@ -36,11 +36,23 @@ public class ChiefScientist implements Observer{
     // him (wake him up from wait())
     // who returns stuff to repo?
     // who is updating status of experiment?
-    public void update(){
+    public void update(Observable o, Object arg){
+
+        synchronized(this._lockScanAndUpdate) {
+
+            /*if (arg instanceof ArrayList<Integer>) {
+                ArrayList<Integer> experimentsToDelete = 
+                    (ArrayList<Integer>) arg;*/
+    
+                deletePreExperiments(o.getExperiment().getExperimentId());
+
+                // hERE!!!!
 
 
-
-
+            } else {
+                System.out.println("ERROR: Problem with casting in Chief:update()");
+            }
+        }
     }
 
 
@@ -60,7 +72,42 @@ public class ChiefScientist implements Observer{
     public Object getLockObject() {
         return this._lockScanAndUpdate;
     }
-    
+
+    // Delete pre required experiments from experiment list by the name of
+    // the specific experiment that finised!!!
+    public void deletePreExperiments(String expId) {
+
+        Iterator<Experiment> experimentItr = this.experiments.iterator();
+        ListIterator preRequiredExpItr = null; 
+
+        // Iterate all Experiments
+        while (experimentItr.hasNext()) {
+
+            Experiment experimentIt = experimentItr.next();
+
+            if (experimentIt.getExperimentId().equals(expId) == false) { 
+
+                ArrayList<Integer> preRequiredExperiments = experimentIt
+                    .getExperimentRequiredEquipments();
+
+                // get listIterator to iterate backwards
+                preRequiredExpItr = preRequiredExperiments.
+                    listIterator(preRequiredExperiments.size());
+
+                //Iterate in each experiment the pre required experiment list
+                while (preRequiredExpItr.hasPrevious()) {
+
+                    Integer expInt = preRequiredExpItr.previous();
+                    if (expInt.compareTo(Integer.getInteger(expId)) == true ) {
+
+                        // delete from pre required experiments
+                        preRequiredExpItr.remove(); // hopefully with no special problems
+                    }
+                }
+            } else {} // we reached the same experiment that sent here!
+        }
+    }
+
 
     public String toString() {
 
