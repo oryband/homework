@@ -32,7 +32,11 @@ public class RunnableExperiment extends Observable implements Runnable {
             this.chief.getRepository().aquireEquipment(this.experiment.getExperimentRequiredEquipments()); 
 
             // Sleep 8 hours
+            try{
             Thread.currentThread().sleep(800);  // Sleep 8 hours ( 1 hour = 100 miliseconds ).
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             if (this.experiment.getExperimentRunTime() <= 8) {
 
@@ -75,7 +79,11 @@ public class RunnableExperiment extends Observable implements Runnable {
                 this.experimentRealRunTime -= date.getTime();
 
                 // Sleep for 16 hours ~ 16,000 miliseconds
+                try{
                 Thread.currentThread().sleep(16000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         } 
     }

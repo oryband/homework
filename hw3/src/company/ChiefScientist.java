@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class ChiefScientist implements Observer{
+public class ChiefScientist implements Observer {
 
     private ArrayList<HeadOfLaboratory> laboratories;
     private ArrayList<Experiment> experiments;
@@ -20,8 +20,7 @@ public class ChiefScientist implements Observer{
             ArrayList<Experiment> experiments,
             Statistics statistics,
             ScienceStore store,
-            Repository repository,
-            ChiefScientistAssistant chiefAssistant) {
+            Repository repository) {
 
         // TODO check if need to do deep copy!!!
         this.laboratories = laboratories;
@@ -110,7 +109,7 @@ public class ChiefScientist implements Observer{
             if (experimentIt.getExperimentId().equals(expId) == false) { 
 
                 ArrayList<Integer> preRequiredExperiments = experimentIt
-                    .getExperimentRequiredEquipments();
+                    .getExperimentPreRequirementsExperiments();
 
                 // get listIterator to iterate backwards
                 preRequiredExpItr = preRequiredExperiments.
@@ -119,8 +118,9 @@ public class ChiefScientist implements Observer{
                 //Iterate in each experiment the pre required experiment list
                 while (preRequiredExpItr.hasPrevious()) {
 
-                    Integer expInt = preRequiredExpItr.previous();
-                    if (expInt.compareTo(Integer.getInteger(expId)) == true ) {
+                    Integer i = new Integer(expId);
+                    if (preRequiredExpItr.previous()
+                            .intValue() == i.intValue()) {
 
                         // delete from pre required experiments
                         preRequiredExpItr.remove(); // hopefully with no special problems
@@ -131,7 +131,7 @@ public class ChiefScientist implements Observer{
     }
 
     // Changing status of experiment to COMPLETE!
-    public void changeStatusToComplete(finishedExperiment) {
+    public void changeStatusToComplete(String finishedExperiment) {
 
         Iterator<Experiment> it = this.experiments.iterator();
 
@@ -166,7 +166,7 @@ public class ChiefScientist implements Observer{
     // Shuting Down all Labs Gracefully my lord!
     public void shutdownAllLabs() {
         
-        Iterator<HeadOfLaboratory> it = this.laboratories;
+        Iterator<HeadOfLaboratory> it = this.laboratories.iterator();
         while (it.hasNext()) {
             it.next().shutdownLab();
         }

@@ -1,7 +1,5 @@
-package company;
+//package company;
 
-import stat.*;
-import utilities.*;
 import java.io.*;
 import java.util.*;
 
@@ -28,7 +26,8 @@ public static void main(String args[]){
         HashMap<String, ArrayList<Scientist>> scientistsForSale= 
             new HashMap<String, ArrayList<Scientist>>();
         // for ChiedScientist
-        ChiefScientistAssistant chiefAssistant = new ChiefScientistAssistant();
+        // need to delete this show, cuz its singelton 
+//        ChiefScientistAssistant chiefAssistant = new ChiefScientistAssistant();
         
         
         // Read data from: InitialData.txt
@@ -82,18 +81,17 @@ public static void main(String args[]){
 
 
 
-        ChiefScientist chief = new ChiedScientist(headsOfLaboratory,
-                                                  experiments, 
-                                                  statistics,
-                                                  new ScienceStore(
-                                                      equipmentForSale,
-                                                      scientistsForSale,
-                                                      laboratoryForSale),
-                                                  repository,
-                                                  chiefAssistant);
+        ChiefScientist chief = new ChiefScientist(
+                headsOfLaboratory,
+                experiments, 
+                statistics,
+                new ScienceStore(
+                    equipmentForSale, scientistsForSale, laboratoryForSale),
+                repository);
+
         // Print Tets
         System.out.println(chief.toString());
-    }
 
-    chief.simulate();
+        chief.simulate();  // WAS OUT OF SCOPE TAMBAL.
+    }
 }

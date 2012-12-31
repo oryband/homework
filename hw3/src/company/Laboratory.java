@@ -23,7 +23,7 @@ public class Laboratory implements Comparable<Laboratory> {
         this.specialization = new String(special);
         this.numberOfScientists = numOfScientists;
         this.price = price;
-    }
+            }
 
 
     public int compareTo(Laboratory s) {

@@ -70,7 +70,7 @@ public class Util{
     public void getDataFromInizialData(String filePath,
             Statistics stat,
             Repository repo,
-            ArrayList<HeadOfLaboratory> headsOfLaboratory){
+            ArrayList<HeadOfLaboratory> headsOfLaboratory) {
 
         ArrayList<String> words = new ArrayList<String>();
         try{
@@ -173,7 +173,7 @@ public class Util{
             for (int e=0 ; e < equipments.size() ; e += 2) {
                 //TODO TEST
                 //System.out.println(equipments.size());
-                equipmentmap.put(new String(equipments.get(e)),
+                equipmentsMap.put(new String(equipments.get(e)),
                         new Integer(Integer.parseInt(equipments.get(e+1))));
             }
            
@@ -184,7 +184,7 @@ public class Util{
             Experiment experiment = new Experiment(id,
                     preExperiments,
                     specialization,
-                    equipmentPackages,
+                    equipmentsMap,
                     runtime,
                     reward,
                     "INCOMPLETE");
