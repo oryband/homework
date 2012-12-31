@@ -31,6 +31,14 @@ public class ChiefScientist implements Observer{
         this.repository = repository;
         this.chiefAssistant = chiefAssistant.getInstance(this.experiments,this);
     }
+
+    public void simulate() {
+
+        Thread t = new Thread(this.chiefAssistant);
+        t.start();
+    }
+
+
     // an experiments inform the chief that he is done.
     // chief need to update the database for rerun the ChiefAssistant by notify 
     // him (wake him up from wait())

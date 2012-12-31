@@ -99,7 +99,9 @@ public class ChiefScientistAssistant implements Runnable{
                 // wrap it with try and catch and need to be sync??? have to i think
                 try {
                     this.wait();
-                } catch (InterruptedException e) {}
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
             }
             // Need to ShutDown everything?!!!!!
