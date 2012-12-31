@@ -1,4 +1,4 @@
-package company;
+//package company;
 
 import java.io.*;
 import java.util.*;
@@ -27,7 +27,7 @@ public class ChiefScientistAssistant implements Runnable{
             }
         }
 
-    private void ChiefScientistAssistant(ArrayList<Experiment> experimentsToRun,
+    private ChiefScientistAssistant(ArrayList<Experiment> experimentsToRun,
             ChiefScientist chief) {
 
         Iterator<Experiment> it = experimentsToRun.iterator();
@@ -36,7 +36,7 @@ public class ChiefScientistAssistant implements Runnable{
             experiments.add(new RunnableExperiment(it.next(), chief));
         }
         // will be indicator for finishing scaning experiments.
-        this.completeExperiments = 0;
+        this.completedExperiments = 0;
         this.chief = chief;
     }
 
@@ -57,7 +57,7 @@ public class ChiefScientistAssistant implements Runnable{
                 while(it.hasNext()) {
 
                     // Copy of experiment to work with - can't work with Iterator
-                    Experiment experimentItr = it.next();
+                    RunnableExperiment experimentItr = it.next();
 
                     if (experimentItr.getExperiment()
                             .getExperimentPreRequirementsExperiments().size() == 0) {
@@ -78,7 +78,7 @@ public class ChiefScientistAssistant implements Runnable{
 
                                 // Find laboratory with same specialization.
                                 if (laboratoryIt.getSpecialization()
-                                        .equals(experimentItr
+                                        .equals(experimentItr.getExperiment()
                                             .getExperimentSpecialization()) == true) {
 
                                     if (found != true) {
@@ -89,7 +89,7 @@ public class ChiefScientistAssistant implements Runnable{
                             }
                             // Indicates that no lab found and lab need to be purchased and exe experiment.
                             if (found == false) {
-                                buyLaboratory(experimentItr.getExperimentSpecialization(),
+                                buyLaboratory(experimentItr.getExperiment().getExperimentSpecialization(),
                                         experimentItr); 
                             }
                                 } // Experiment is Complete or InProgress
@@ -120,23 +120,24 @@ public class ChiefScientistAssistant implements Runnable{
  
         // Check for equipment in repo - if HashMap is empty 
         // (meaning no equipment need to be purchased!)
-        HashMap<String,Integer> equipmentsToPurchase = checkEquipmentAvailability(experiment.
-                    getExperimentRequiredEquipments());
+        HashMap<String,Integer> equipmentsToPurchase = checkEquipmentAvailability
+            (experiment.getExperiment().getExperimentRequiredEquipments());
 
         if (equipmentsToPurchase.size() == 0) {
             // change status of experiment to InProgress.
-            experiment.setExperimentStatus("INPROGRESS");
+            experiment.getExperiment().setExperimentStatus("INPROGRESS");
 
             // Send to execute 
             lab.addExperimentToExecute(experiment);
         } else {
             
             // Go and purchase items in HashMap
-            this.chief.getStore().purchaseEquipmentPackage(
+            this.chief.getStore().purchaseEquipmentPackages(
                                         this.chief.getStatistics(),
                                         equipmentsToPurchase);
+
             // Change status of experiment to InProgress.
-            experiment.setExperimentStatus("INPROGRESS");
+            experiment.getExperiment().setExperimentStatus("INPROGRESS");
             // Send to execute 
             lab.addExperimentToExecute(experiment);
         }
@@ -147,7 +148,7 @@ public class ChiefScientistAssistant implements Runnable{
     public HashMap<String,Integer> checkEquipmentAvailability(HashMap<String,Integer> equipments){
 
         HashMap<String,Integer> repository =
-            this.chief.getRepository(); 
+            this.chief.getRepository().getRepository(); 
 
         HashMap<String,Integer> equipmentsToPurchase =
             new HashMap<String,Integer>(); 
@@ -192,10 +193,10 @@ public class ChiefScientistAssistant implements Runnable{
             //iterate all labs with new lab that just purchased.
             while(it.hasNext() && !found) {
 
-                HeadOfLaboratory laboratoryIt = this.chief.getLaboratories().next();
+                HeadOfLaboratory laboratoryIt = it.next();
                 // Find laboratory with same specialization.
                 if (laboratoryIt.getSpecialization()
-                        .equals(experiment
+                        .equals(experiment.getExperiment()
                             .getExperimentSpecialization()) == true) {
 
                     if (found != true) {
@@ -203,9 +204,9 @@ public class ChiefScientistAssistant implements Runnable{
                         found = true;  
                     }
                             }
-            } else { 
-                System.out.prinln("ERROR : Could not buy laboratory of type: " + specialization);
-            }
+            } 
+        } else { 
+            System.out.println("ERROR : Could not buy laboratory of type: " + specialization);
         }
     }
 

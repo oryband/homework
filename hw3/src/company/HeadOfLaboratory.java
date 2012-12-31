@@ -1,4 +1,4 @@
-package company;
+//package company;
 
 import java.io.*;
 import java.util.concurrent.*;
@@ -36,13 +36,13 @@ public class HeadOfLaboratory {
     // assume ChiefAssistat will get all the same experiments by specialization
     // add calculate if HeadOfLaboratory should buy new scientist from store - 
     // we should do it after everything is working!
-    public function(){
-    }
+   // public function(){
+    //}
 
     // Initiates an orderly shutdown in which previously
     // submitted tasks are executed, but no new tasks will be accepted.
     // consider if needed: shutdownNow()
-    public shutdownLab() {
+    public void shutdownLab() {
         this.executor.shutdown();
     }
 

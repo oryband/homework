@@ -78,11 +78,7 @@ public class Experiment{
         result.append("PrerequirementsExperiments: " +
                 prerequirementsExperiments.toString() + NEW_LINE);
 
-        Iterator<EquipmentPackage> it = requiredEquipment.iterator();
-        while (it.hasNext()) {
-
-            result.append(it.next().toString() + NEW_LINE);
-        }
+        result.append("Required Equipment: " + this.requiredEquipment.toString() + NEW_LINE);
         result.append("Run Time: " + runTimeInHours + NEW_LINE);
         result.append("Reward: " + reward + NEW_LINE);
         result.append("Status: " + status + NEW_LINE);
