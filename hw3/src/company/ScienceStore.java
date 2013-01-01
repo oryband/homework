@@ -60,6 +60,7 @@ public class ScienceStore implements ScienceStoreInterface {
                 this.laboratories.entrySet()) {
 
             Collections.sort(entry.getValue());
+            Collections.reverse(entry.getValue());
         }
     }
 
@@ -68,6 +69,8 @@ public class ScienceStore implements ScienceStoreInterface {
             Repository repository,
             Statistics statistics,
             Map<String, Integer> requestedEquipment) {
+
+        // FIXME doesn't purchase two small packages if there isn't a large enough one.
 
         // Iterate over each requested equipment type,
         // and search for the closest matching package size that overexceeds 
@@ -209,8 +212,7 @@ public class ScienceStore implements ScienceStoreInterface {
             Statistics statistics,
             String requestedSpecialization) {
 
-        // Test if is there are is a laboratory from the specialization we
-        // need.
+        // Test if is there are is a laboratory from the specialization we need.
         if (this.laboratories.containsKey(requestedSpecialization)) {
             ArrayList<Laboratory> laboratories =
                 this.laboratories.get(requestedSpecialization);

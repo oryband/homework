@@ -4,56 +4,62 @@ import java.io.*;
 import java.util.*;
 
 
-public class Experiment{
+public class Experiment {
 
-    private String id;
-    private String specialization;
+    private final String id;
+    private final String specialization;
+    private final HashMap<String, Integer> requiredEquipment;
+    private final int reward;
+
     private ArrayList<Integer> prerequirementsExperiments;
-    private HashMap<String, Integer> requiredEquipment;
-    private int reward;
     private int runTimeInHours;
     private String status;
 
 
-    public Experiment(String id,
+    public Experiment(
+            String id,
             ArrayList<Integer> preExperiments,
             String specialization,
             HashMap<String,Integer> requiredEquipment,
             int runtime,
             int reward,
-            String status){
+            String status) {
 
         this.id = id;
         this.specialization = specialization;
-        this.prerequirementsExperiments = new ArrayList<Integer>();
         this.prerequirementsExperiments = preExperiments;
-        this.requiredEquipment = new HashMap<String,Integer>();
         this.requiredEquipment = requiredEquipment;
         this.reward = reward;
         this.runTimeInHours = runtime;
         this.status = status;
     }
 
-    // Getters
-    public String getExperimentId(){
+
+    public String getExperimentId() {
         return this.id;
     }
-    public String getExperimentSpecialization(){
+
+    public String getSpecialization() {
         return this.specialization;
     }
-    public ArrayList<Integer> getExperimentPreRequirementsExperiments(){
+
+    public ArrayList<Integer> getRequiredExperiments() {
         return this.prerequirementsExperiments;
     }
-    public HashMap<String,Integer> getExperimentRequiredEquipments(){
+
+    public HashMap<String, Integer> getRequiredEquipment() {
         return this.requiredEquipment;
     }
-    public int getExperimentRunTime(){
+
+    public int getExperimentRunTime() {
         return this.runTimeInHours;
     }
-    public int getExperimentReward(){
+
+    public int getExperimentReward() {
         return this.reward;
     }
-    public String getExperimentStatus(){
+
+    public String getStatus() {
         return this.status;
     }
 

@@ -31,7 +31,7 @@ public class RunnableExperiment extends Observable implements Runnable {
             this.experimentRealRunTime += date.getTime();
 
             // Acuire equipment from repository
-            this.chief.getRepository().aquireEquipment(this.experiment.getExperimentRequiredEquipments()); 
+            this.chief.getRepository().aquireEquipment(this.experiment.getRequiredEquipment()); 
 
             // Sleep 8 hours
             try{
@@ -48,7 +48,7 @@ public class RunnableExperiment extends Observable implements Runnable {
                 //problem with returning & purchasing? - check sync carefully in repo!!
 
                 this.chief.getRepository().releaseEquipment
-                    (this.experiment.getExperimentRequiredEquipments());
+                    (this.experiment.getRequiredEquipment());
 
                 date = new Date();
                 this.experimentRealRunTime = 
@@ -75,7 +75,7 @@ public class RunnableExperiment extends Observable implements Runnable {
                     (this.experiment.getExperimentRunTime() - 8);
                 // Release equipment back to repository. 
                 this.chief.getRepository().releaseEquipment
-                    (this.experiment.getExperimentRequiredEquipments());
+                    (this.experiment.getRequiredEquipment());
 
                 date = new Date();
                 this.experimentRealRunTime -= date.getTime();

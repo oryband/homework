@@ -1,5 +1,6 @@
 //package company;
 
+import java.util.Map;
 import java.io.*;
 import java.util.*;
 
@@ -42,175 +43,123 @@ public class ChiefScientistAssistant implements Runnable {
     }
 
 
-    public void run() {
+    public synchronized void run() {
 
-        synchronized (this) {
-            while (this.completedExperiments != this.experiments.size()) {
+        while (this.completedExperiments != this.experiments.size()) {
 
-                // Scaning experiments and find experiments with 
-                // no preExperiments required..
+            // Find incomplete experiments to execute.
+            for (RunnableExperiment runnableExperiment : this.experiments) {
 
-                Iterator<RunnableExperiment> it = this.experiments.iterator();
+                Experiment experiment = runnableExperiment.getExperiment();
 
-                while(it.hasNext()) {
+                // If current experiment is incomplete,
+                // and if there are no prerequired experiments for it.
+                if ( experiment.getStatus().equals("INCOMPLETE")
+                        && experiment.getRequiredExperiments().size() == 0 ) {
 
-                    // Copy of experiment to work with - can't work with Iterator
-                    RunnableExperiment experimentItr = it.next();
+                    String specialization = experiment.getSpecialization();
 
-                    if (experimentItr.getExperiment()
-                            .getExperimentPreRequirementsExperiments().size() == 0) {
+                    // Get laboratory for requested specialization for
+                    // current experiment.
+                    HeadOfLaboratory headOfLaboratory =
+                        this.chief.getAvailableLaboratory(specialization);
 
-                        // check status
-                        if (experimentItr.getExperiment()
-                                .getExperimentStatus()
-                                .equals("INCOMPLETE") == true) {
-                            // Look for laboratory and add Experiment
-                            // later: claculate effiency and buy new scientists
-                            Iterator<HeadOfLaboratory> labIt = 
-                                this.chief.getLaboratories().iterator();
+                    // Execute experiment if there's a lab,
+                    // or purhcase one and then execute experiment.
+                    if (headOfLaboratory == null) {
+                        this.chief.getStore().purchaseLaboratory(
+                                this.chief,
+                                this.chief.getStatistics(),
+                                specialization); 
 
-                            boolean found = false; // Prevent from assigning to 2 labs the same experiment
-                            while (labIt.hasNext() && !found) {
-                                // Copy of experiment to work with.
-                                HeadOfLaboratory laboratoryIt = labIt.next();
+                        headOfLaboratory = this.chief.getAvailableLaboratory(specialization);
+                    }
 
-                                // Find laboratory with same specialization.
-                                if (laboratoryIt.getSpecialization()
-                                        .equals(experimentItr.getExperiment()
-                                            .getExperimentSpecialization()) == true) {
-
-                                    if (found != true) {
-                                        prepareExperimentToExecute(laboratoryIt, experimentItr);
-                                        found = true;  
-                                    }
-                                            }
-                            }
-                            // Indicates that no lab found and lab need to be purchased and exe experiment.
-                            if (found == false) {
-                                buyLaboratory(experimentItr.getExperiment().getExperimentSpecialization(),
-                                        experimentItr); 
-                            }
-                                } // Experiment is Complete or InProgress
-                            }  // Pre experiments required and experiment can't execute.
+                    prepareExperimentToExecute(
+                            headOfLaboratory, runnableExperiment);
                 }
-
-                // wrap it with try and catch and need to be sync??? have to i think
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
             }
-            // Need to ShutDown everything?!!!!!
-            this.chief.shutdownAllLabs();
 
-            // Printint all data in statistics!!!
-            this.chief.getStatistics().toString();
+
+            // Wait for another experiment to finish before starting another one.
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
+        this.chief.shutdownAllLabs();
+
+        // Print statistics.
+        System.out.println(this.chief.getStatistics().toString());
     }
-    
-    // preparing experiment to be execute
-    // checks for equipment in repo if missing buying
-    // changing status and execute.
-    public void prepareExperimentToExecute(HeadOfLaboratory lab,
-                                           RunnableExperiment experiment) {
+
+
+    /**
+     * preparing experiment to be execute
+     * checks for equipment in repo if missing buying
+     * changing status and execute.
+     */
+    public void prepareExperimentToExecute(
+            HeadOfLaboratory lab, RunnableExperiment runnableExperiment) {
  
-        // Check for equipment in repo - if HashMap is empty 
-        // (meaning no equipment need to be purchased!)
-        HashMap<String,Integer> equipmentsToPurchase = checkEquipmentAvailability
-            (experiment.getExperiment().getExperimentRequiredEquipments());
+        Experiment experiment = runnableExperiment.getExperiment();
 
-        if (equipmentsToPurchase.size() == 0) {
-            // change status of experiment to InProgress.
-            experiment.getExperiment().setExperimentStatus("INPROGRESS");
+        HashMap<String,Integer> shoppingList =
+            generateShoppingList(experiment.getRequiredEquipment());
 
-            // Send to execute 
-            lab.addExperimentToExecute(experiment);
-        } else {
-            
+        if (shoppingList.size() > 0) {
             // Go and purchase items in HashMap
             this.chief.getStore().purchaseEquipmentPackages(
-                                        this.chief.getRepository(),
-                                        this.chief.getStatistics(),
-                                        equipmentsToPurchase);
-
-            // Change status of experiment to InProgress.
-            experiment.getExperiment().setExperimentStatus("INPROGRESS");
-            // Send to execute 
-            lab.addExperimentToExecute(experiment);
+                    this.chief.getRepository(),
+                    this.chief.getStatistics(),
+                    shoppingList);
         }
+
+        experiment.setExperimentStatus("INPROGRESS");
+        lab.addExperimentToExecute(runnableExperiment);
     }
     
-    // Checks in repo for equipments, and if mising, fill hash map with
-    // equipments to buy.
-    public HashMap<String,Integer> checkEquipmentAvailability(HashMap<String,Integer> equipments){
+
+    /**
+     * Checks in repo for equipments, and if mising, fill hash map with
+     * equipments to buy.
+     */
+    public HashMap<String, Integer> generateShoppingList(HashMap<String, Integer> equipment) {
 
         HashMap<String,Integer> repository =
             this.chief.getRepository().getRepository(); 
 
-        HashMap<String,Integer> equipmentsToPurchase =
+        HashMap<String,Integer> equipmentToPurchase =
             new HashMap<String,Integer>(); 
 
-        // iterate all keys in hashmap
-        Iterator it = equipments.entrySet().iterator();
-        while (it.hasNext()) {
 
-            String itemName = (String)it.next(); // maybe will cause problem! 
+        // Generate missing equipment shopping list (hash map).
+        for (Map.Entry<String, Integer> entry : equipment.entrySet()) {
 
-            if (repository.containsKey(itemName) == true) {
+            String equipmentType = entry.getKey();
 
-                // checks if there is enough items in repo
-                if (repository.get(itemName).intValue() >= 
-                        equipments.get(itemName).intValue()) {
+            // If equipment type is in repo.
+            if (repository.containsKey(equipmentType)) {
 
-                } else { // not enough item in repo need to add to map to purchased
+                // If there aren't enought of this equipment type.
+                if ( repository.get(equipmentType).intValue() <
+                        equipment.get(equipmentType).intValue() ) {
 
-                    equipmentsToPurchase.put(new String(itemName),
-                            new Integer(equipments.get(itemName).intValue() -
-                                repository.get(itemName).intValue()));
-                } 
-            } else {
+                    Integer diff = new Integer(
+                            equipment.get(equipmentType).intValue() -
+                            repository.get(equipmentType).intValue());
 
-                equipmentsToPurchase.put(new String(itemName),
-                        new Integer(equipments.get(itemName).intValue()));
-            }
-        }
-        return equipmentsToPurchase;
-    } 
-
-    // buy+add to arraylist + look for the new lab + send to prepareExperimentToExecute
-    public void buyLaboratory(String specialization,
-            RunnableExperiment experiment) {
-
-        this.chief.getStore().purchaseLaboratory (
-                this.chief,
-                this.chief.getStatistics(),
-                specialization); 
-
-        Iterator<HeadOfLaboratory> it = this.chief.getLaboratories().iterator();
-
-        boolean found = false; 
-        //iterate all labs with new lab that just purchased.
-        while(it.hasNext() && ! found) {
-
-            HeadOfLaboratory laboratoryIt = it.next();
-
-            // Find laboratory with same specialization.
-            if (laboratoryIt.getSpecialization()
-                    .equals(experiment.getExperiment()
-                        .getExperimentSpecialization()) == true) {
-
-                if ( ! found ) {
-                    prepareExperimentToExecute(laboratoryIt, experiment);
-                    found = true;  
+                    equipmentToPurchase.put(equipmentType, diff);
                 }
+            } else {  // Equipment type not in repository (at all).
+                Integer amount = new Integer(equipment.get(equipmentType).intValue());
+                equipmentToPurchase.put(equipmentType, amount);
             }
-        } 
-
-        if ( ! found ) {
-            System.out.println("ERROR : Could not buy laboratory of type: " + specialization);
         }
+
+        return equipmentToPurchase;
     }
 
 
@@ -220,7 +169,7 @@ public class ChiefScientistAssistant implements Runnable {
     }
 
 
-    public String toString(){
+    public String toString() {
 
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");

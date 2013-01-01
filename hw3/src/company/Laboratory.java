@@ -26,8 +26,13 @@ public class Laboratory implements Comparable<Laboratory> {
             }
 
 
-    public int compareTo(Laboratory s) {
-        return this.price - s.getPrice();
+    public int compareTo(Laboratory l) {
+        if (this.numberOfScientists == l.getNumOfScientists()) {
+            // Cheap labs appear before expensive labs (we reverse).
+            return - (this.price - l.getPrice());
+        } else {
+            return this.numberOfScientists - l.getNumOfScientists();
+        }
     }
 
 

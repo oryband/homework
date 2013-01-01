@@ -6,6 +6,6 @@ Beaker	2
 Stirrer	1
 BunsenBurner	2
 Laboratories
-ProfA	Haematologyy	1
+ProfA	Haematology	1
 ProfB	Histopathology	1
 ProfC	Cytology	2

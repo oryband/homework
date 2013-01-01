@@ -46,6 +46,23 @@ public class ChiefScientist implements Observer {
 
 
     /**
+     * @param specialization Required laboratory specialization.
+     *
+     * @return Laboratory of requested specialization, or null there aren't any.
+     */
+    public HeadOfLaboratory getAvailableLaboratory(String specialization) {
+
+        for (HeadOfLaboratory headOfLaboratory : this.laboratories) {
+            if (headOfLaboratory.getSpecialization().equals(specialization)) {
+                return headOfLaboratory;
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
      * an experiments inform the chief that he is done.
      * chief need to update the database for rerun the ChiefAssistant by notify 
      * him (wake him up from wait())
@@ -112,7 +129,7 @@ public class ChiefScientist implements Observer {
             if (experimentIt.getExperimentId().equals(expId) == false) { 
 
                 ArrayList<Integer> preRequiredExperiments = experimentIt
-                    .getExperimentPreRequirementsExperiments();
+                    .getRequiredExperiments();
 
                 // get listIterator to iterate backwards
                 preRequiredExpItr = preRequiredExperiments.
