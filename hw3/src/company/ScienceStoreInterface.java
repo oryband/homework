@@ -76,4 +76,7 @@ public interface ScienceStoreInterface {
      * @return True if laboratory is in store (not just in stock).
      **/
     public boolean isLaboratoriesEmpty(String specialization);
+
+
+    public String toString();
 }

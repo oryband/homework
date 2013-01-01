@@ -73,7 +73,7 @@ public class Statistics {
         String NEW_LINE = System.getProperty("line.separator");
 
         result.append("______________________________________" + NEW_LINE);
-        result.append("           ---SATISTICS---: " + NEW_LINE);
+        result.append("           ---Statistics---: " + NEW_LINE);
         result.append("Budget: " + this.budget + NEW_LINE);
         result.append("Reward: " + this.rewards + NEW_LINE);
         result.append("Money Spent: " + this.moneySpent + NEW_LINE);

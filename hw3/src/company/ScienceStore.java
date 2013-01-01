@@ -41,7 +41,7 @@ public class ScienceStore implements ScienceStoreInterface {
         this.scientists = new HashMap(scientists);
         this.laboratories = new HashMap(laboratories);
 
-        // Sort equipment (amount) from largest to smallest,
+        // Sort equipment (amount and price) from largest to smallest,
         // and sorts scientists & labs from cheapest to most expensive.
         for (Map.Entry<String, ArrayList<EquipmentPackage>> entry
                 : this.equipmentPackages.entrySet()) {
@@ -241,5 +241,22 @@ public class ScienceStore implements ScienceStoreInterface {
                     "Science Store: No laboratory for requested specialization '"
                     + requestedSpecialization + "'.");
         }
+    }
+
+
+    public String toString() {
+
+        StringBuilder result = new StringBuilder();
+
+        String NEW_LINE = System.getProperty("line.separator");
+
+        result.append("______________________________________" + NEW_LINE);
+        result.append("         ---Science Store---:" + NEW_LINE);
+
+        result.append("EquipmentPackages: " + NEW_LINE + this.equipmentPackages.values() + NEW_LINE);
+        result.append("Scientists: " + NEW_LINE + this.scientists.values() + NEW_LINE);
+        result.append("Laboratories: " + NEW_LINE + this.laboratories.values() + NEW_LINE);
+
+        return result.toString();
     }
 }

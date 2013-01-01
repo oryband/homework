@@ -11,15 +11,17 @@ public class RunnableExperiment extends Observable implements Runnable {
     private Date date;
     private ChiefScientist chief;
     
+
     // Constructor
-    public RunnableExperiment(Experiment exp, ChiefScientist chief) {
-        this.experiment = exp;
-        addObserver(chief); 
-        this.experimentRealRunTime= 0;
+    public RunnableExperiment(Experiment experiment, ChiefScientist chiefScientist) {
+        this.experiment = experiment;
+        addObserver(chiefScientist); 
+        this.experimentRealRunTime = 0;
         this.chief = chief;
     }
 
-    public void run(){
+
+    public void run() {
 
         // Experiment still in progress
         while (experiment.getExperimentRunTime() != 0) {
@@ -91,5 +93,21 @@ public class RunnableExperiment extends Observable implements Runnable {
     // Getters
     public Experiment getExperiment() {
         return this.experiment;
+    }
+
+
+    public String toString() {
+
+        StringBuilder result = new StringBuilder();
+
+        String NEW_LINE = System.getProperty("line.separator");
+
+        result.append("______________________________________" + NEW_LINE);
+        result.append("         ---Runnable Experiment---:" + NEW_LINE);
+
+        result.append("Experiment: " + NEW_LINE + this.experiment.toString() + NEW_LINE);
+        result.append("Real Run Time: " + this.experimentRealRunTime + NEW_LINE);
+
+        return result.toString();
     }
 }

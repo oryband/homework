@@ -86,7 +86,6 @@ public static void main(String args[]) {
         // Print Tests
         //System.out.println(scientistsForSale.values());
 
-
         ChiefScientist chief = new ChiefScientist(
                 headsOfLaboratory,
                 experiments, 

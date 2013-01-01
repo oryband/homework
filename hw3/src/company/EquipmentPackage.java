@@ -19,8 +19,13 @@ public class EquipmentPackage implements Comparable<EquipmentPackage> {
     }
 
 
+    // Sort by amount then expensive price.
     public int compareTo(EquipmentPackage p) {
-        return this.amount - p.getAmount();
+        if (this.amount == p.getAmount()) {
+            return - (this.price - p.getPrice());  // Expensive appears before cheap.
+        } else {
+            return this.amount - p.getAmount();
+        }
     }
 
 
@@ -47,7 +52,9 @@ public class EquipmentPackage implements Comparable<EquipmentPackage> {
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
 
-        result.append(NEW_LINE + "Type: " + this.type + " ");
+        result.append("______________________________________" + NEW_LINE);
+        result.append("           ---Equipment Packages For Sale---: " + NEW_LINE);
+        result.append("Type: " + this.type + " ");
         result.append("Amount: " + this.amount + " ");
         result.append("Price: " + this.price);
         return result.toString();

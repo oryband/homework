@@ -30,8 +30,11 @@ public class ChiefScientist implements Observer {
         this.repository = repository;
 
         // ChiefAssistant singleton factory.
-        // TODO Understand wtf this is.
-        this.chiefAssistant = chiefAssistant.getInstance(
+        // TODO Finish singleton.
+        //this.chiefAssistant = chiefAssistant.getInstance(
+                //this.experiments, this);
+
+        this.chiefAssistant = new ChiefScientistAssistant(
                 this.experiments, this);
     }
 
@@ -173,19 +176,23 @@ public class ChiefScientist implements Observer {
 
     public String toString() {
 
+
         StringBuilder result = new StringBuilder();
+
         String NEW_LINE = System.getProperty("line.separator");
 
         result.append("______________________________________" + NEW_LINE);
         result.append("           ---ChiefScientist---: " + NEW_LINE);
-        result.append("Laboratories: " + this.laboratories.toString() + NEW_LINE);
-        result.append("Experiments: " + this.experiments.toString() + NEW_LINE);
+        result.append("Laboratories: " + NEW_LINE + this.laboratories.toString() + NEW_LINE);
+
+        // Printed in assistant.
+        //result.append("Experiments: " + NEW_LINE + this.experiments.toString() + NEW_LINE);
+
         result.append("Statistics: " + this.statistics.toString() + NEW_LINE);
         result.append("Store: " + this.store.toString() + NEW_LINE);
         result.append("Repository: " + this.repository.toString() + NEW_LINE);
         result.append("ChiefAssistant " + this.chiefAssistant.toString() + NEW_LINE);
+
         return result.toString();
     }
-
-
 }

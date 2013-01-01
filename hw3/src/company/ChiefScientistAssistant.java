@@ -4,49 +4,47 @@ import java.io.*;
 import java.util.*;
 
 
-public class ChiefScientistAssistant implements Runnable{
+public class ChiefScientistAssistant implements Runnable {
 
     private ArrayList<RunnableExperiment> experiments;
     private int completedExperiments;
-    private ChiefScientist chief;
+    private final ChiefScientist chief;
 
-    // Constructor the singelton 
-
-    private static ChiefScientistAssistant assistant = null;
+    // TODO Finish singleton.
+    // Singleton chief assistant.
+    /*private static ChiefScientistAssistant assistant = null;
 
     public static synchronized ChiefScientistAssistant 
         getInstance(ArrayList<Experiment> experimentsToRun,ChiefScientist chief) {
 
-            if (assistant == null) {
+        if (assistant == null) {
 
-                assistant = new ChiefScientistAssistant(experimentsToRun,chief);
-                return assistant;
+            assistant = new ChiefScientistAssistant(experimentsToRun,chief);
+            return assistant;
 
-            } else {
-                return assistant;
-            }
+        } else {
+            return assistant;
+        }
+    }*/
+
+
+    public ChiefScientistAssistant(
+            ArrayList<Experiment> experimentsToRun, ChiefScientist chief) {
+
+        this.experiments = new ArrayList<RunnableExperiment>();
+
+        for (Experiment e : experimentsToRun) {
+            this.experiments.add(new RunnableExperiment(e, chief));
         }
 
-    private ChiefScientistAssistant(ArrayList<Experiment> experimentsToRun,
-            ChiefScientist chief) {
-
-        Iterator<Experiment> it = experimentsToRun.iterator();
-
-        while (it.hasNext()) {
-            experiments.add(new RunnableExperiment(it.next(), chief));
-        }
-        // will be indicator for finishing scaning experiments.
         this.completedExperiments = 0;
         this.chief = chief;
     }
 
 
-
-
     public void run() {
 
         synchronized (this) {
-            // Program Cycle
             while (this.completedExperiments != this.experiments.size()) {
 
                 // Scaning experiments and find experiments with 
@@ -185,52 +183,55 @@ public class ChiefScientistAssistant implements Runnable{
     public void buyLaboratory(String specialization,
             RunnableExperiment experiment) {
 
-        this.chief.getStore().purchaseLaboratory(
-                    this.chief,
-                    this.chief.getStatistics(),
-                    specialization); 
+        this.chief.getStore().purchaseLaboratory (
+                this.chief,
+                this.chief.getStatistics(),
+                specialization); 
 
-            Iterator<HeadOfLaboratory> it = this.chief.getLaboratories().iterator();
+        Iterator<HeadOfLaboratory> it = this.chief.getLaboratories().iterator();
 
-            boolean found = false; 
-            //iterate all labs with new lab that just purchased.
-            while(it.hasNext() && !found) {
+        boolean found = false; 
+        //iterate all labs with new lab that just purchased.
+        while(it.hasNext() && ! found) {
 
-                HeadOfLaboratory laboratoryIt = it.next();
-                // Find laboratory with same specialization.
-                if (laboratoryIt.getSpecialization()
-                        .equals(experiment.getExperiment()
-                            .getExperimentSpecialization()) == true) {
+            HeadOfLaboratory laboratoryIt = it.next();
 
-                    if (found != true) {
-                        prepareExperimentToExecute(laboratoryIt, experiment);
-                        found = true;  
-                    }
-                            }
-            } 
-            if (found == false) {
-            System.out.println("ERROR : Could not buy laboratory of type: " + specialization);
+            // Find laboratory with same specialization.
+            if (laboratoryIt.getSpecialization()
+                    .equals(experiment.getExperiment()
+                        .getExperimentSpecialization()) == true) {
+
+                if ( ! found ) {
+                    prepareExperimentToExecute(laboratoryIt, experiment);
+                    found = true;  
+                }
             }
+        } 
+
+        if ( ! found ) {
+            System.out.println("ERROR : Could not buy laboratory of type: " + specialization);
+        }
     }
+
 
     // Increase Number Of finishedExperiment by 1;
     public void increaseNumberOfFinishedExperiments() {
         this.completedExperiments += 1;
     }
 
+
     public String toString(){
 
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
-        Iterator<RunnableExperiment> it = experiments.iterator();
 
         result.append("______________________________________" + NEW_LINE);
         result.append("           ---Chief Scientist Assistant---: " + NEW_LINE);
-        while (it.hasNext()) {
-        result.append(it.next().toString() + NEW_LINE);
+
+        for (RunnableExperiment e : this.experiments) {
+            result.append(e.toString() + NEW_LINE);
         }
 
         return result.toString();
     }
-
 }
