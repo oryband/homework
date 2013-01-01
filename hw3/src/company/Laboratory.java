@@ -58,7 +58,7 @@ public class Laboratory implements Comparable<Laboratory> {
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
 
-        result.append("______________________________________" + NEW_LINE);
+        result.append(NEW_LINE + "______________________________________" + NEW_LINE);
         result.append("           ---Laboratory For Sale---: " + NEW_LINE);
         result.append("Name: " + this.name + NEW_LINE);
         result.append("Specialization: " + this.specialization + NEW_LINE);

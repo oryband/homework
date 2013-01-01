@@ -13,6 +13,7 @@ public class Experiment {
 
     private ArrayList<Integer> prerequirementsExperiments;
     private int runTimeInHours;
+    private int runTimeInHoursPrint;
     private String status;
 
 
@@ -31,6 +32,7 @@ public class Experiment {
         this.requiredEquipment = requiredEquipment;
         this.reward = reward;
         this.runTimeInHours = runtime;
+        this.runTimeInHoursPrint = runtime;
         this.status = status;
     }
 
@@ -85,7 +87,7 @@ public class Experiment {
                 prerequirementsExperiments.toString() + NEW_LINE);
 
         result.append("Required Equipment: " + this.requiredEquipment.toString() + NEW_LINE);
-        result.append("Run Time: " + runTimeInHours + NEW_LINE);
+        result.append("Run Time: " + runTimeInHoursPrint + NEW_LINE);
         result.append("Reward: " + reward + NEW_LINE);
         result.append("Status: " + status + NEW_LINE);
         result.append("______________________________________" + NEW_LINE);

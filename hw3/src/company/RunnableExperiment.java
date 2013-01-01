@@ -22,13 +22,13 @@ public class RunnableExperiment extends Observable implements Runnable {
 
     public void run() {
 
+        System.out.println("Experiment start: " + this.experiment.getExperimentId());
         // Experiment still in progress
         while (experiment.getExperimentRunTime() != 0) {
 
             this.date = new Date();
             this.experimentRealRunTime += date.getTime();
 
-            System.out.println("Experiment start: " + this.experiment.getExperimentId());
             // Acuire equipment from repository
 
             Repository repo = this.chief.getRepository();
@@ -39,7 +39,7 @@ public class RunnableExperiment extends Observable implements Runnable {
 
             // Sleep 8 hours
             try {
-                Thread.currentThread().sleep(800);  // Sleep 8 hours ( 1 hour = 100 miliseconds ).
+                Thread.currentThread().sleep(800);  //FIXME need to be 800 Sleep 8 hours ( 1 hour = 100 miliseconds ).
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -73,6 +73,7 @@ public class RunnableExperiment extends Observable implements Runnable {
                 System.out.println("Experiment End with run time:  " + this.experimentRealRunTime); 
         
                 // Notify to observers that experiment is done
+                setChanged();
                 notifyObservers(this.experiment.getExperimentId());
 
             } else {
@@ -88,7 +89,7 @@ public class RunnableExperiment extends Observable implements Runnable {
 
                 // Sleep for 16 hours ~ 16,000 miliseconds
                 try{
-                Thread.currentThread().sleep(16000);
+                Thread.currentThread().sleep(1600);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

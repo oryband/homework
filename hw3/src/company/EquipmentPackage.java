@@ -52,7 +52,7 @@ public class EquipmentPackage implements Comparable<EquipmentPackage> {
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
 
-        result.append("______________________________________" + NEW_LINE);
+        result.append(NEW_LINE + "______________________________________" + NEW_LINE);
         result.append("           ---Equipment Packages For Sale---: " + NEW_LINE);
         result.append("Type: " + this.type + " ");
         result.append("Amount: " + this.amount + " ");
