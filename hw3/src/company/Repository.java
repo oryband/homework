@@ -59,31 +59,29 @@ public class Repository {
      *
      * @param requiredEquipment {type : amount}
      */
+    //TODO remove experiment from decalaration, only for tests
     public synchronized void aquireEquipment(
-            HashMap<String, Integer> requiredEquipment) {
-
-        System.out.println(">>>-2>>>");
+            HashMap<String, Integer> requiredEquipment,
+            Experiment experiment) {
 
         boolean borrowedAllRequiredEquipment = false;
-            System.out.println(">>>-1>>>");
-
 
         while ( ! borrowedAllRequiredEquipment ) {
-            System.out.println(">>>0 >>>");
 
             String type, requestedType;
             Integer amount, requestedAmount;
+
             HashMap<String, Integer> borrowedEquipment =
                 new HashMap<String, Integer>();
+
             boolean missingEquipment = false;
+
             Iterator it = requiredEquipment.entrySet().iterator();
 
-            System.out.println(">>>1 >>>");
             while (it.hasNext() && ! missingEquipment) {
-                // TODO Warning because of unchecked cast.
+                // FIXME Warning because of unchecked cast.
                 Map.Entry<String, Integer> entry =
                     (Map.Entry<String, Integer>) it.next();
-            System.out.println(">>>2 >>>");
 
                 requestedType = entry.getKey();
                 requestedAmount = entry.getValue();
@@ -97,7 +95,6 @@ public class Repository {
                 }
             }
 
-            System.out.println(">>>3 >>>");
             if (missingEquipment) {
                 // Return all borrowed items to repository.
                 for (Map.Entry<String, Integer> entry :
@@ -112,23 +109,44 @@ public class Repository {
                     // Return borrowed amount back to repository.
                     this.equipment.put(type, amountInRepository + amount);
                 }
+
+                // Wait for an experiment to finish,
+                // becuase maybe our missing required items has been returned.
+                try {
+                    System.out.println("In Wait(" + experiment.getExperimentId()+")");
+                    this.wait();
+                    System.out.println("Out of Wait(" + experiment.getExperimentId()+")");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             } else {
                 borrowedAllRequiredEquipment = true;
-            }
-
-            try {
-                System.out.println(">>>WAIT>>>" + Thread.currentThread().getId());
-                this.wait();
-                System.out.println(">>>OUT Of WAIT>>>" + Thread.currentThread().getId());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }
 
 
-    // TODO 
-    public void releaseEquipment(HashMap<String, Integer> equipment) {}
+    /**
+     * Releases equipment, and returns is to repository.
+     * Note function is synchronized, to prevent miscalculating returned
+     * item amounts.
+     *
+     * @param releasedEquipment equipment hash map of returned items.
+     */
+    public void releaseEquipment(HashMap<String, Integer> releasedEquipment) {
+        synchronized(this) {
+            for (Map.Entry<String, Integer> entry : releasedEquipment.entrySet()) {
+                String returnedType = entry.getKey();
+                Integer returnedAmount = entry.getValue(),
+                        repositoryAmount = this.equipment.get(returnedType);
+
+                this.equipment.put(returnedType, repositoryAmount + returnedAmount);
+            }
+
+            // Wake up experiments waiting for released equipment.
+            this.notifyAll();
+        }
+    }
 
 
     public String toString() {

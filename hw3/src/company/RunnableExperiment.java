@@ -28,18 +28,14 @@ public class RunnableExperiment extends Observable implements Runnable {
             this.date = new Date();
             this.experimentRealRunTime += date.getTime();
 
+            System.out.println("Experiment start: " + this.experiment.getExperimentId());
             // Acuire equipment from repository
-
-            System.out.println(">>>>>>>before getting repo> " + this.experiment.getExperimentId());
 
             Repository repo = this.chief.getRepository();
 
-            System.out.println(">>>>>>>after getting repo> " + this.experiment.getExperimentId());
-
             // FIXME Check if items are taken from repository (item numbers)
-            repo.aquireEquipment(this.experiment.getRequiredEquipment()); 
-
-            System.out.println(">>>>>>>> aquireEquipment " + this.experiment.getExperimentId());
+            repo.aquireEquipment(this.experiment.getRequiredEquipment(),
+                    this.experiment); 
 
             // Sleep 8 hours
             try {
@@ -73,7 +69,9 @@ public class RunnableExperiment extends Observable implements Runnable {
                     this.chief.getStatistics().addReward((this.experiment.getExperimentReward() / 100) * 10);
 
                 }
-
+                System.out.println("Experiment End : " + this.experiment.getExperimentId());
+                System.out.println("Experiment End with run time:  " + this.experimentRealRunTime); 
+        
                 // Notify to observers that experiment is done
                 notifyObservers(this.experiment.getExperimentId());
 
