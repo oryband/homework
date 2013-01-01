@@ -171,25 +171,34 @@ public class ScienceStore implements ScienceStoreInterface {
         // Test if is there are is a laboratory from the specialization we
         // need.
         if (this.laboratories.containsKey(requestedSpecialization)) {
-            Laboratory laboratory =
+            ArrayList<Laboratory> laboratories =
                 this.laboratories.get(requestedSpecialization);
 
-            int price = laboratory.getPrice();
+            // getting the lab
+            Laboratory laboratory = laboratories.get(0);
+
+            // TODO Because we delete the lab and pointer sent to statistics,
+            // need to see that all working fine.
             statistics.addPurchasedLaboratory(laboratory);
 
+            int price = laboratory.getPrice();
             String name = laboratory.getName();
             String specialization = laboratory.getSpecialization();
             int numberOfScientists = laboratory.getNumOfScientists();
 
-            // TODO I WAS HERE LAST NIGHT WHEN FINISHED.
-            HeadOfLaboratory HeadOfLaboratory = new HeadOfLaboratory(
+            // creating instance of head of laboratory to be used as
+            // laboratory in chief.
+            HeadOfLaboratory headOfLaboratory = new HeadOfLaboratory(
                     name, specialization, numberOfScientists);
 
             chiefScientist.addLaboratory(headOfLaboratory);
+
+            // need to delete laboratory from store!!!
+            laboratories.remove(0);// removing lab from store
         } else {
             System.out.println(
-                "Science Store: No laboratory for requested specialization '"
-                + requestedSpecialization + "'.");
+                    "Science Store: No laboratory for requested specialization '"
+                    + requestedSpecialization + "'.");
         }
     }
 }
