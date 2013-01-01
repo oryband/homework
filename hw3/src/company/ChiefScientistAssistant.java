@@ -5,50 +5,44 @@ import java.io.*;
 import java.util.*;
 
 
-public class ChiefScientistAssistant implements Runnable {
+public enum ChiefScientistAssistant implements Runnable {
 
-    private ArrayList<RunnableExperiment> experiments;
-    private int completedExperiments;
-    private final ChiefScientist chief;
+    INSTANCE;
 
-    // TODO Finish singleton.
-    // Singleton chief assistant.
-    /*private static ChiefScientistAssistant assistant = null;
+    private ArrayList<RunnableExperiment> runnableExperiments = null;
+    private int completedExperiments = 0;
+    private ChiefScientist chiefScientist = null;
 
-    public static synchronized ChiefScientistAssistant 
-        getInstance(ArrayList<Experiment> experimentsToRun,ChiefScientist chief) {
 
-        if (assistant == null) {
+    public void initChiefScientistAssistant(
+            ArrayList<Experiment> experiments, ChiefScientist chiefScientist) {
 
-            assistant = new ChiefScientistAssistant(experimentsToRun,chief);
-            return assistant;
-
+        if (experiments == null) {
+            throw new RuntimeException(
+                    "Cannot re-initialize runnableExperiments");
         } else {
-            return assistant;
-        }
-    }*/
+            this.runnableExperiments = new ArrayList<RunnableExperiment>();
 
-
-    public ChiefScientistAssistant(
-            ArrayList<Experiment> experimentsToRun, ChiefScientist chief) {
-
-        this.experiments = new ArrayList<RunnableExperiment>();
-
-        for (Experiment e : experimentsToRun) {
-            this.experiments.add(new RunnableExperiment(e, chief));
+            for (Experiment e : experiments) {
+                this.runnableExperiments.add(
+                        new RunnableExperiment(e, chiefScientist));
+            }
         }
 
-        this.completedExperiments = 0;
-        this.chief = chief;
+        if (chiefScientist == null) {
+            throw new RuntimeException("Cannot re-initialize chiefAssistant.");
+        } else {
+            this.chiefScientist = chiefScientist;
+        }
     }
 
 
     public synchronized void run() {
 
-        while (this.completedExperiments != this.experiments.size()) {
+        while (this.completedExperiments != this.runnableExperiments.size()) {
 
             // Find incomplete experiments to execute.
-            for (RunnableExperiment runnableExperiment : this.experiments) {
+            for (RunnableExperiment runnableExperiment : this.runnableExperiments) {
 
                 Experiment experiment = runnableExperiment.getExperiment();
 
@@ -62,20 +56,20 @@ public class ChiefScientistAssistant implements Runnable {
                     // Get laboratory for requested specialization for
                     // current experiment.
                     HeadOfLaboratory headOfLaboratory =
-                        this.chief.getAvailableLaboratory(specialization);
+                        this.chiefScientist.getAvailableLaboratory(specialization);
 
                     // Execute experiment if there's a lab,
                     // or purhcase one and then execute experiment.
                     if (headOfLaboratory == null) {
-                        this.chief.getStore().purchaseLaboratory(
-                                this.chief,
-                                this.chief.getStatistics(),
+                        this.chiefScientist.getStore().purchaseLaboratory(
+                                this.chiefScientist,
+                                this.chiefScientist.getStatistics(),
                                 specialization); 
 
-                        headOfLaboratory = this.chief.getAvailableLaboratory(specialization);
+                        headOfLaboratory = this.chiefScientist.getAvailableLaboratory(specialization);
                     }
 
-                    prepareExperimentToExecute(
+                    executeExperiment(
                             headOfLaboratory, runnableExperiment);
                 }
             }
@@ -89,10 +83,10 @@ public class ChiefScientistAssistant implements Runnable {
             }
         }
 
-        this.chief.shutdownAllLabs();
+        this.chiefScientist.shutdownAllLabs();
 
         // Print statistics.
-        System.out.println(this.chief.getStatistics().toString());
+        System.out.println(this.chiefScientist.getStatistics().toString());
     }
 
 
@@ -101,8 +95,9 @@ public class ChiefScientistAssistant implements Runnable {
      * checks for equipment in repo if missing buying
      * changing status and execute.
      */
-    public void prepareExperimentToExecute(
-            HeadOfLaboratory headOfLaboratory, RunnableExperiment runnableExperiment) {
+    public void executeExperiment(
+            HeadOfLaboratory headOfLaboratory,
+            RunnableExperiment runnableExperiment) {
  
         Experiment experiment = runnableExperiment.getExperiment();
 
@@ -111,14 +106,14 @@ public class ChiefScientistAssistant implements Runnable {
 
         if (shoppingList.size() > 0) {
             // Go and purchase items in HashMap
-            this.chief.getStore().purchaseEquipmentPackages(
-                    this.chief.getRepository(),
-                    this.chief.getStatistics(),
+            this.chiefScientist.getStore().purchaseEquipmentPackages(
+                    this.chiefScientist.getRepository(),
+                    this.chiefScientist.getStatistics(),
                     shoppingList);
         }
 
         experiment.setExperimentStatus("INPROGRESS");
-        headOfLaboratory.addExperimentToExecute(runnableExperiment);
+        headOfLaboratory.executeExperiment(runnableExperiment);
     }
     
 
@@ -135,7 +130,7 @@ public class ChiefScientistAssistant implements Runnable {
             HashMap<String, Integer> equipment) {
 
         HashMap<String,Integer> repository =
-            this.chief.getRepository().getRepository(); 
+            this.chiefScientist.getRepository().getRepository(); 
 
         HashMap<String,Integer> equipmentToPurchase =
             new HashMap<String,Integer>(); 
@@ -183,7 +178,7 @@ public class ChiefScientistAssistant implements Runnable {
         result.append("______________________________________" + NEW_LINE);
         result.append("           ---Chief Scientist Assistant---: " + NEW_LINE);
 
-        for (RunnableExperiment e : this.experiments) {
+        for (RunnableExperiment e : this.runnableExperiments) {
             result.append(e.toString() + NEW_LINE);
         }
 

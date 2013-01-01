@@ -29,12 +29,9 @@ public class ChiefScientist implements Observer {
         this.store = store;
         this.repository = repository;
 
-        // ChiefAssistant singleton factory.
-        // TODO Finish singleton.
-        //this.chiefAssistant = chiefAssistant.getInstance(
-                //this.experiments, this);
-
-        this.chiefAssistant = new ChiefScientistAssistant(
+        // Initialize assitant singleton.
+        this.chiefAssistant = ChiefScientistAssistant.INSTANCE;
+        this.chiefAssistant.initChiefScientistAssistant(
                 this.experiments, this);
     }
 
