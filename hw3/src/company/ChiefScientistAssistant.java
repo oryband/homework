@@ -102,7 +102,7 @@ public class ChiefScientistAssistant implements Runnable {
      * changing status and execute.
      */
     public void prepareExperimentToExecute(
-            HeadOfLaboratory lab, RunnableExperiment runnableExperiment) {
+            HeadOfLaboratory headOfLaboratory, RunnableExperiment runnableExperiment) {
  
         Experiment experiment = runnableExperiment.getExperiment();
 
@@ -118,15 +118,21 @@ public class ChiefScientistAssistant implements Runnable {
         }
 
         experiment.setExperimentStatus("INPROGRESS");
-        lab.addExperimentToExecute(runnableExperiment);
+        headOfLaboratory.addExperimentToExecute(runnableExperiment);
     }
     
 
     /**
-     * Checks in repo for equipments, and if mising, fill hash map with
-     * equipments to buy.
+     * Generates equipment hash map for items missing in repo, for a certain
+     * experiment.
+     *
+     * @param equipment Equipment necessary for experiment.
+     *
+     * @return equipment hash map with missing items from repository, which
+     * should be purchased from the science store.
      */
-    public HashMap<String, Integer> generateShoppingList(HashMap<String, Integer> equipment) {
+    public HashMap<String, Integer> generateShoppingList(
+            HashMap<String, Integer> equipment) {
 
         HashMap<String,Integer> repository =
             this.chief.getRepository().getRepository(); 

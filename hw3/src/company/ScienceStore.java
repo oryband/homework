@@ -86,29 +86,75 @@ public class ScienceStore implements ScienceStoreInterface {
                 this.equipmentPackages.get(requestedType).listIterator();
 
             // Search for the closests matching overexceeding package size.
-            boolean found = false,
-                    tooSmall = false;
-            while (it.hasNext() && ! tooSmall ) {
+            boolean isBiggerPackage = false,
+                    isPackageTooSmall = false;
+
+            // Search for bigger packages.
+            while (it.hasNext() && ! isPackageTooSmall) {
                 equipmentPackage = it.next();
 
                 if (equipmentPackage.getAmount() >= requestedAmount) {
-                    found = true;
+                    isBiggerPackage = true;
                 } else {
-                    tooSmall = true;
+                    isPackageTooSmall = true;
                 }
             }
 
-            if ( ! found ) {
-                System.out.println(
-                        "Science Store: No matching package size for requested item '"
-                        + requestedType + "'.");
-            } else {  // Purchase equipment - Charge budget, do statistics, and add to repo.
-                int amount = equipmentPackage.getAmount();
-                statistics.addPurchasedEquipment(equipmentPackage);
-                equipmentPackage.decrementAmount();
-                repository.addEquipmentToRepository(requestedType, amount);
+            // Buy several small packages if there are no bigger ones.
+            if ( ! isBiggerPackage ) {
+                if (it.hasPrevious()) {
+                    it.previous();
+
+                    // Purchase several small packages until we get our
+                    // requested amount.
+                    while (it.hasNext() && requestedAmount > 0) {
+                        equipmentPackage = it.next();
+
+                        requestedAmount -= equipmentPackage.getAmount();
+                        this.PurchaseSingleEquipmentPackage(
+                                repository, statistics, equipmentPackage);
+                    }
+
+                    // Special case where there aren't enough small packages to
+                    // fill our request.
+                    if (requestedAmount > 0) {
+                        System.out.println(
+                                "Science Store: No matching package size for requested item '"
+                                + requestedType + "'.");
+                    }
+                // Special case where there aren't any packages at all.
+                } else {
+                    System.out.println(
+                            "Science Store: No packages for requested item '"
+                            + requestedType + "'.");
+                }
+            // If there's a big enough package, purchase it.
+            } else {
+                this.PurchaseSingleEquipmentPackage(
+                        repository, statistics, it.previous());
             }
         }
+    }
+
+
+    /**
+     * Adds equipment package to repository, charges budget & updates statistics,
+     * and decrement equipment amount from store (we have 1 less of it in store).
+     *
+     * @param repository for updating repository.
+     * @param statistics for charging from the budget.
+     * @param equipmentPackage shopping list {type : amount}
+     */
+    private void PurchaseSingleEquipmentPackage(
+            Repository repository,
+            Statistics statistics,
+            EquipmentPackage equipmentPackage) {
+
+        int amount = equipmentPackage.getAmount();
+        String equipmentPackageType = equipmentPackage.getType();
+        statistics.addPurchasedEquipment(equipmentPackage);
+        equipmentPackage.decrementAmount(); 
+        repository.addEquipmentToRepository(equipmentPackageType, amount);
     }
 
     /**

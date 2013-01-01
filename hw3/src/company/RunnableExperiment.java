@@ -10,14 +10,13 @@ public class RunnableExperiment extends Observable implements Runnable {
     private long experimentRealRunTime;
     private Date date;
     private ChiefScientist chief;
-    
 
-    // Constructor
+
     public RunnableExperiment(Experiment experiment, ChiefScientist chiefScientist) {
         this.experiment = experiment;
-        addObserver(chiefScientist); 
+        addObserver(chiefScientist);
         this.experimentRealRunTime = 0;
-        this.chief = chief;
+        this.chief = chiefScientist;
     }
 
 
@@ -26,16 +25,25 @@ public class RunnableExperiment extends Observable implements Runnable {
         // Experiment still in progress
         while (experiment.getExperimentRunTime() != 0) {
 
-            // get starting time of experiment
             this.date = new Date();
             this.experimentRealRunTime += date.getTime();
 
             // Acuire equipment from repository
-            this.chief.getRepository().aquireEquipment(this.experiment.getRequiredEquipment()); 
+
+            System.out.println(">>>>>>>before getting repo> " + this.experiment.getExperimentId());
+
+            Repository repo = this.chief.getRepository();
+
+            System.out.println(">>>>>>>after getting repo> " + this.experiment.getExperimentId());
+
+            // FIXME Check if items are taken from repository (item numbers)
+            repo.aquireEquipment(this.experiment.getRequiredEquipment()); 
+
+            System.out.println(">>>>>>>> aquireEquipment " + this.experiment.getExperimentId());
 
             // Sleep 8 hours
-            try{
-            Thread.currentThread().sleep(800);  // Sleep 8 hours ( 1 hour = 100 miliseconds ).
+            try {
+                Thread.currentThread().sleep(800);  // Sleep 8 hours ( 1 hour = 100 miliseconds ).
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -87,7 +95,7 @@ public class RunnableExperiment extends Observable implements Runnable {
                     e.printStackTrace();
                 }
             }
-        } 
+        }
     }
 
     // Getters

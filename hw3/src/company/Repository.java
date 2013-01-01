@@ -35,8 +35,12 @@ public class Repository {
      * @param additionalAmount amount of items added to repository.
      */
     public void addEquipmentToRepository(String type, int additionalAmount) {
-        int currentAmount = this.equipment.get(type);
-        this.equipment.put(type, currentAmount + additionalAmount);
+        if (this.equipment.containsKey(type)) {
+            int currentAmount = this.equipment.get(type);
+            this.equipment.put(type, currentAmount + additionalAmount);
+        } else {
+            this.equipment.put(type, additionalAmount);
+        }
     }
 
 
@@ -48,17 +52,24 @@ public class Repository {
 
     // TODO
     /**
+     * Iterate over each requested type, and borrow it from the repository.
+     * If there isn't enough of a certain type, return all borrowed items
+     * and wait for some experiment to return its equipment,
+     * and try again.
+     *
      * @param requiredEquipment {type : amount}
      */
-    public synchronized void aquireEquipment(HashMap<String, Integer> requiredEquipment) {
+    public synchronized void aquireEquipment(
+            HashMap<String, Integer> requiredEquipment) {
+
+        System.out.println(">>>-2>>>");
+
         boolean borrowedAllRequiredEquipment = false;
+            System.out.println(">>>-1>>>");
 
 
-        // Iterate over each requested type, and borrow it from the repository.
-        // If there isn't enough of a certain type, return all borrowed items
-        // and wait for some experiment to return its equipment,
-        // and try again.
         while ( ! borrowedAllRequiredEquipment ) {
+            System.out.println(">>>0 >>>");
 
             String type, requestedType;
             Integer amount, requestedAmount;
@@ -67,10 +78,12 @@ public class Repository {
             boolean missingEquipment = false;
             Iterator it = requiredEquipment.entrySet().iterator();
 
+            System.out.println(">>>1 >>>");
             while (it.hasNext() && ! missingEquipment) {
                 // TODO Warning because of unchecked cast.
                 Map.Entry<String, Integer> entry =
                     (Map.Entry<String, Integer>) it.next();
+            System.out.println(">>>2 >>>");
 
                 requestedType = entry.getKey();
                 requestedAmount = entry.getValue();
@@ -84,6 +97,7 @@ public class Repository {
                 }
             }
 
+            System.out.println(">>>3 >>>");
             if (missingEquipment) {
                 // Return all borrowed items to repository.
                 for (Map.Entry<String, Integer> entry :
@@ -103,7 +117,9 @@ public class Repository {
             }
 
             try {
+                System.out.println(">>>WAIT>>>" + Thread.currentThread().getId());
                 this.wait();
+                System.out.println(">>>OUT Of WAIT>>>" + Thread.currentThread().getId());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -119,7 +135,7 @@ public class Repository {
 
         StringBuilder result = new StringBuilder();
         String NEW_LINE = System.getProperty("line.separator");
-        
+
         result.append("______________________________________" + NEW_LINE);
         result.append("           ---Repository---: " + NEW_LINE);
         result.append("EquipmentPackage data: " + NEW_LINE);
