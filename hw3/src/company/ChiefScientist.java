@@ -119,8 +119,7 @@ public class ChiefScientist implements Observer {
                 while (preRequiredExpItr.hasPrevious()) {
 
                     Integer i = new Integer(expId);
-                    if (preRequiredExpItr.previous()
-                            .intValue() == i.intValue()) {
+                    if (((Integer)preRequiredExpItr.previous()).intValue() == i.intValue()) {
 
                         // delete from pre required experiments
                         preRequiredExpItr.remove(); // hopefully with no special problems

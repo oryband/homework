@@ -82,7 +82,7 @@ public class Statistics {
         result.append("Equipment Packages Purchased : " + 
                 this.equipmentPackagesPurchased.toString() + NEW_LINE);
         result.append("Laboratoris Purchased: " + 
-                this.labsPurchased.toString() + NEW_LINE);
+                this.laboratoriesPurchased.toString() + NEW_LINE);
         result.append("Scientists Purchased: " + 
                 this.scientistsPurchased.toString() + NEW_LINE);
 

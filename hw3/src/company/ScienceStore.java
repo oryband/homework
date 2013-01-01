@@ -72,7 +72,7 @@ public class ScienceStore implements ScienceStoreInterface {
         // Iterate over each requested equipment type,
         // and search for the closest matching package size that overexceeds 
         // its size.
-        EquipmentPackage equipmentPackage;
+        EquipmentPackage equipmentPackage = null;
         for (Map.Entry<String, Integer> requestedEntry :
                 requestedEquipment.entrySet()) {
 
@@ -108,6 +108,47 @@ public class ScienceStore implements ScienceStoreInterface {
         }
     }
 
+    /**
+     * @param requestedEquipment equipment type (Microscope, burner, etc.)
+     *
+     * @return True if EquipmentPackage is in store (not just in stock).
+     **/
+    public boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {
+        
+        if (this.equipmentPackages.containsKey(EquipmentPackage.getType())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * @param requestedSpecialization Scientist specialization.
+     *
+     * @return True if scientist is in store (not just in stock).
+     **/
+    public boolean isScientistsEmpty(String specialization) {
+    
+        if (this.scientists.containsKey(specialization)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * @param requestedSpecialization Laboratory specialization.
+     *
+     * @return True if laboratory is in store (not just in stock).
+     **/
+    public boolean isLaboratoriesEmpty(String specialization) {
+        
+        if (this.laboratories.containsKey(specialization)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     public void purchaseScientists (
             HeadOfLaboratory headOfLaboratory,

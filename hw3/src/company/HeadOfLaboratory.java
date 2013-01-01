@@ -21,7 +21,7 @@ public class HeadOfLaboratory {
         this.name = new String(headLabName);
         this.specialization = new String(specialization);
         this.numberOfScientists = numberOfScientists;
-        this.executor = Executors.newFixedThreadPool(numOfScientists);
+        this.executor = Executors.newFixedThreadPool(numberOfScientists);
     }
     
 

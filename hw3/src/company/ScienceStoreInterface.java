@@ -52,7 +52,7 @@ public interface ScienceStoreInterface {
      * @PRE Labs are sorted from cheapest to most expensive
      */
     public void purchaseLaboratory (
-            Repository repository,
+            ChiefScientist chiefScientist,
             Statistics statistics,
             String requestedSpecialization);
 

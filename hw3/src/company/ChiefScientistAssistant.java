@@ -133,6 +133,7 @@ public class ChiefScientistAssistant implements Runnable{
             
             // Go and purchase items in HashMap
             this.chief.getStore().purchaseEquipmentPackages(
+                                        this.chief.getRepository(),
                                         this.chief.getStatistics(),
                                         equipmentsToPurchase);
 
@@ -184,8 +185,10 @@ public class ChiefScientistAssistant implements Runnable{
     public void buyLaboratory(String specialization,
             RunnableExperiment experiment) {
 
-        if (this.chief.getStore().purchaseLaboratory(this.chief.getStatistics(),
-                    specialization)) {
+        this.chief.getStore().purchaseLaboratory(
+                    this.chief,
+                    this.chief.getStatistics(),
+                    specialization); 
 
             Iterator<HeadOfLaboratory> it = this.chief.getLaboratories().iterator();
 
@@ -205,9 +208,9 @@ public class ChiefScientistAssistant implements Runnable{
                     }
                             }
             } 
-        } else { 
+            if (found == false) {
             System.out.println("ERROR : Could not buy laboratory of type: " + specialization);
-        }
+            }
     }
 
     // Increase Number Of finishedExperiment by 1;
