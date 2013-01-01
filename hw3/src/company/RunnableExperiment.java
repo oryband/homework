@@ -31,9 +31,12 @@ public class RunnableExperiment extends Observable implements Runnable {
             this.experimentRealRunTime += date.getTime();
 
             Repository repo = this.chief.getRepository();
+            //System.out.println(">>>" + this.chief.getRepository().toString() + " - "+this.experiment.getExperimentId());
 
             repo.aquireEquipment(
                     this.experiment.getRequiredEquipment(), this.experiment); 
+
+            //System.out.println("---" + this.chief.getRepository().toString() +  " - "+this.experiment.getExperimentId());
 
             // Sleep 8 hours
             try {
@@ -59,13 +62,13 @@ public class RunnableExperiment extends Observable implements Runnable {
 
                 // reward claculation and updating statistics
                 if (this.experimentRealRunTime <= 
-                        ((this.experiment.getExperimentRunTime() / 100) * 115)){
+                        ((this.experiment.getExperimentRunTime() / 100.0) * 115)){
                     // reward gained.
                     this.chief.getStatistics().addReward(this.experiment.getExperimentReward());
 
                 } else {
                     // 10% of reward gained.
-                    this.chief.getStatistics().addReward((this.experiment.getExperimentReward() / 100) * 10);
+                    this.chief.getStatistics().addReward((this.experiment.getExperimentReward() / 100.0) * 10);
 
                 }
                 System.out.println("Experiment End : " + this.experiment.getExperimentId());

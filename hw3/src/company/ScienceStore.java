@@ -64,12 +64,10 @@ public class ScienceStore implements ScienceStoreInterface {
     }
 
 
-    public void purchaseEquipmentPackages (
+    public synchronized void purchaseEquipmentPackages (
             Repository repository,
             Statistics statistics,
             Map<String, Integer> requestedEquipment) {
-
-        // FIXME doesn't purchase two small packages if there isn't a large enough one.
 
         // Iterate over each requested equipment type,
         // and search for the closest matching package size that overexceeds 
@@ -133,6 +131,8 @@ public class ScienceStore implements ScienceStoreInterface {
             } else {
                 this.PurchaseSingleEquipmentPackage(
                         repository, statistics, it.previous());
+
+                it.remove();
             }
         }
     }
@@ -146,7 +146,7 @@ public class ScienceStore implements ScienceStoreInterface {
      * @param statistics for charging from the budget.
      * @param equipmentPackage shopping list {type : amount}
      */
-    private void PurchaseSingleEquipmentPackage(
+    private synchronized void PurchaseSingleEquipmentPackage(
             Repository repository,
             Statistics statistics,
             EquipmentPackage equipmentPackage) {
@@ -157,49 +157,8 @@ public class ScienceStore implements ScienceStoreInterface {
         repository.addEquipmentToRepository(equipmentPackageType, amount);
     }
 
-    /**
-     * @param requestedEquipment equipment type (Microscope, burner, etc.)
-     *
-     * @return True if EquipmentPackage is in store (not just in stock).
-     **/
-    public boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {
-        
-        if (this.equipmentPackages.containsKey(EquipmentPackage.getType())) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
-    /**
-     * @param requestedSpecialization Scientist specialization.
-     *
-     * @return True if scientist is in store (not just in stock).
-     **/
-    public boolean isScientistsEmpty(String specialization) {
-    
-        if (this.scientists.containsKey(specialization)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * @param requestedSpecialization Laboratory specialization.
-     *
-     * @return True if laboratory is in store (not just in stock).
-     **/
-    public boolean isLaboratoriesEmpty(String specialization) {
-        
-        if (this.laboratories.containsKey(specialization)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public void purchaseScientists (
+    public synchronized void purchaseScientists (
             HeadOfLaboratory headOfLaboratory,
             Statistics statistics,
             Map<String, Integer> requestedScientists) {
@@ -253,7 +212,7 @@ public class ScienceStore implements ScienceStoreInterface {
     }
 
 
-    public void purchaseLaboratory (
+    public synchronized void purchaseLaboratory (
             ChiefScientist chiefScientist,
             Statistics statistics,
             String requestedSpecialization) {
@@ -285,6 +244,49 @@ public class ScienceStore implements ScienceStoreInterface {
             System.out.println(
                     "Science Store: No laboratory for requested specialization '"
                     + requestedSpecialization + "'.");
+        }
+    }
+
+
+    /**
+     * @param requestedEquipment equipment type (Microscope, burner, etc.)
+     *
+     * @return True if EquipmentPackage is in store (not just in stock).
+     **/
+    public boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {
+        
+        if (this.equipmentPackages.containsKey(EquipmentPackage.getType())) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * @param requestedSpecialization Scientist specialization.
+     *
+     * @return True if scientist is in store (not just in stock).
+     **/
+    public boolean isScientistsEmpty(String specialization) {
+    
+        if (this.scientists.containsKey(specialization)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * @param requestedSpecialization Laboratory specialization.
+     *
+     * @return True if laboratory is in store (not just in stock).
+     **/
+    public boolean isLaboratoriesEmpty(String specialization) {
+        
+        if (this.laboratories.containsKey(specialization)) {
+            return false;
+        } else {
+            return true;
         }
     }
 

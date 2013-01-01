@@ -91,9 +91,10 @@ public enum ChiefScientistAssistant implements Runnable {
 
 
     /**
-     * preparing experiment to be execute
-     * checks for equipment in repo if missing buying
-     * changing status and execute.
+     * Purchases missing equipment for experiment and executes it.
+     *
+     * @param headOfLaboratory lab where the experiment will take place in.
+     * @param runnableExperiment experiment to execute.
      */
     public void executeExperiment(
             HeadOfLaboratory headOfLaboratory,
@@ -101,16 +102,25 @@ public enum ChiefScientistAssistant implements Runnable {
  
         Experiment experiment = runnableExperiment.getExperiment();
 
-        HashMap<String,Integer> shoppingList =
+        HashMap<String, Integer> shoppingList =
             generateShoppingList(experiment.getRequiredEquipment());
 
+
         if (shoppingList.size() > 0) {
+            System.out.println(this.chiefScientist.getRepository());
             // Go and purchase items in HashMap
+            for (Map.Entry<String, Integer> e : shoppingList.entrySet()) {
+                System.out.println("=====CACHING===== " + e.getKey() + "--" + e.getValue());
+            }
+
             this.chiefScientist.getStore().purchaseEquipmentPackages(
                     this.chiefScientist.getRepository(),
                     this.chiefScientist.getStatistics(),
                     shoppingList);
+
+            System.out.println(this.chiefScientist.getRepository());
         }
+
 
         experiment.setExperimentStatus("INPROGRESS");
         headOfLaboratory.executeExperiment(runnableExperiment);

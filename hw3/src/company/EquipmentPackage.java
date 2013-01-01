@@ -22,7 +22,7 @@ public class EquipmentPackage implements Comparable<EquipmentPackage> {
     // Sort by amount then expensive price.
     public int compareTo(EquipmentPackage p) {
         if (this.amount == p.getAmount()) {
-            return - (this.price - p.getPrice());  // Expensive appears before cheap.
+            return - (this.price - p.getPrice());  // Expensive appears before cheap (we reverse after sort).
         } else {
             return this.amount - p.getAmount();
         }
