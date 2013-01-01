@@ -5,13 +5,11 @@ import java.util.*;
 
 
 public class Driver {
-
-
-public static void main(String args[]) {
+    public static void main(String args[]) {
 
         // utilities instance - reads files.
         Util u = new Util();  
-        
+
         // TODO statistics, repos and other objects should be created and handled in chiefScientist.
         Statistics statistics = new Statistics();
         Repository repository = new Repository();
@@ -29,7 +27,7 @@ public static void main(String args[]) {
         HashMap<String, ArrayList<Scientist>> scientistsForSale= 
             new HashMap<String, ArrayList<Scientist>>();
 
-        
+
         // Read data from: InitialData.txt
         u.getDataFromInizialData(
                 "InitialData.txt",
@@ -42,13 +40,13 @@ public static void main(String args[]) {
         // Print Tests
         /*System.out.println("Printing InitialData : " ); 
 
-        System.out.println(statistics.toString());
-        System.out.println(repository.toString());
-        
-        Iterator<HeadOfLaboratory> itr = headsOfLaboratory.iterator();
+          System.out.println(statistics.toString());
+          System.out.println(repository.toString());
 
-        while(itr.hasNext()) {
-       //print to string 
+          Iterator<HeadOfLaboratory> itr = headsOfLaboratory.iterator();
+
+          while(itr.hasNext()) {
+        //print to string 
         System.out.println(itr.next().toString());
         }*/
 
@@ -59,9 +57,9 @@ public static void main(String args[]) {
         // TODO delete us
         //Print Tests
         /*System.out.println("all good , need to print" ); 
-        Iterator<Experiment> it = experiments.iterator();
-        while(it.hasNext()) {
-       //print to string 
+          Iterator<Experiment> it = experiments.iterator();
+          while(it.hasNext()) {
+        //print to string 
         System.out.println(it.next().toString());
         }*/
 
@@ -71,15 +69,15 @@ public static void main(String args[]) {
         // TODO delete us
         // Print Tests
         //System.out.println(equipmentForSale.values());
-        
-        
+
+
         laboratoryForSale = u.getDataFromLaboratoriesForSale("LaboratoriesForSale.txt");
 
         // TODO delete us
         // Print Tests
         //System.out.println(laboratoryForSale.values());
-        
-        
+
+
         scientistsForSale = u.getDataFromScientistsForSale("ScientistsForPurchase.txt");
 
         // TODO delete us

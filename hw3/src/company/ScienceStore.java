@@ -7,7 +7,6 @@
 
 
 import java.util.Comparator;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -113,6 +112,8 @@ public class ScienceStore implements ScienceStoreInterface {
                         requestedAmount -= equipmentPackage.getAmount();
                         this.PurchaseSingleEquipmentPackage(
                                 repository, statistics, equipmentPackage);
+
+                        it.remove();
                     }
 
                     // Special case where there aren't enough small packages to
@@ -153,7 +154,6 @@ public class ScienceStore implements ScienceStoreInterface {
         int amount = equipmentPackage.getAmount();
         String equipmentPackageType = equipmentPackage.getType();
         statistics.addPurchasedEquipment(equipmentPackage);
-        equipmentPackage.decrementAmount(); 
         repository.addEquipmentToRepository(equipmentPackageType, amount);
     }
 

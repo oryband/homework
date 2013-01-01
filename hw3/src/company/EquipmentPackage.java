@@ -29,11 +29,6 @@ public class EquipmentPackage implements Comparable<EquipmentPackage> {
     }
 
 
-    public void decrementAmount() {
-        this.amount --;
-    }
-
-
     public String getType() {
         return this.type;
     }
