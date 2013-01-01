@@ -15,11 +15,11 @@ public class HeadOfLaboratory {
 
     public HeadOfLaboratory(
             String headLabName,
-            String special,
+            String specialization,
             int numberOfScientists) {
 
         this.name = new String(headLabName);
-        this.specialization = new String(special);
+        this.specialization = new String(specialization);
         this.numberOfScientists = numberOfScientists;
         this.executor = Executors.newFixedThreadPool(numOfScientists);
     }

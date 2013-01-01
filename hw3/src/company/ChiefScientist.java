@@ -23,12 +23,16 @@ public class ChiefScientist implements Observer {
             Repository repository) {
 
         // TODO check if need to do deep copy!!!
-        this.laboratories = laboratories;
-        this.experiments = experiments;
+        this.laboratories = new ArrayList<HeadOfLaboratory>(laboratories);
+        this.experiments = new ArrayList<Experiment>(experiments);
         this.statistics = statistics;
         this.store = store;
         this.repository = repository;
-        this.chiefAssistant = chiefAssistant.getInstance(this.experiments,this);
+
+        // ChiefAssistant singleton factory.
+        // TODO Understand wtf this is.
+        this.chiefAssistant = chiefAssistant.getInstance(
+                this.experiments, this);
     }
 
 
@@ -38,37 +42,33 @@ public class ChiefScientist implements Observer {
     }
 
 
-    // an experiments inform the chief that he is done.
-    // chief need to update the database for rerun the ChiefAssistant by notify 
-    // him (wake him up from wait())
-    public synchronized void update(Observable o, Object arg){
+    /**
+     * an experiments inform the chief that he is done.
+     * chief need to update the database for rerun the ChiefAssistant by notify 
+     * him (wake him up from wait())
+     */
+    public synchronized void update(Observable o, Object arg) {
 
-            if (arg instanceof String) {
-                String finishedExperiment = (String) arg;
-                
-                // Removing the experiment from all preRequiredExperiments
-                // of all experiments in chief
-                deletePreExperiments(finishedExperiment);
+        if (arg instanceof String) {
+            String finishedExperiment = (String) arg;
 
-                // Changing status to COMPLETE!
-                changeStatusToComplete(finishedExperiment);
+            deletePreExperiments(finishedExperiment);
+            changeStatusToComplete(finishedExperiment);
+            updateStatisticsFinishedExperiment(finishedExperiment); 
+            this.chiefAssistant.increaseNumberOfFinishedExperiments();
+        } else {
+            throw new RuntimeException(
+                    "ERROR: Problem with casting in Chief:update()");
+        }
 
-                // Updating statistics with finishedExperiment
-                updateStatisticsFinishedExperiment(finishedExperiment); 
-
-                // Updating number of complete experiments in assistant
-                this.chiefAssistant.increaseNumberOfFinishedExperiments();
-
-            } else {
-                System.out.println("ERROR: Problem with casting in Chief:update()");
-            }
-            synchronized(this.chiefAssistant) {
-                this.chiefAssistant.notifyAll();
-            }
+        // Tell assistant to run available, ready experiments.
+        synchronized (this.chiefAssistant) {
+            this.chiefAssistant.notifyAll();
+        }
     }
 
 
-    public addLaboratory(laboratory) {
+    public void addLaboratory(HeadOfLaboratory laboratory) {
         this.laboratories.add(laboratory);
     }
 

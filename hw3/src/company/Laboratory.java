@@ -31,6 +31,18 @@ public class Laboratory implements Comparable<Laboratory> {
     }
 
 
+    public String getName() {
+        return this.name;
+    }
+
+    public String getSpecialization() {
+        return this.specialization;
+    }
+
+    public int getNumOfScientists() {
+        return this.numberOfScientists;
+    }
+
     public int getPrice() {
         return this.price;
     }

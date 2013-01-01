@@ -174,14 +174,22 @@ public class ScienceStore implements ScienceStoreInterface {
             Laboratory laboratory =
                 this.laboratories.get(requestedSpecialization);
 
-
             int price = laboratory.getPrice();
             statistics.addPurchasedLaboratory(laboratory);
-            chiefScientist.addLaboratory(laboratory);
+
+            String name = laboratory.getName();
+            String specialization = laboratory.getSpecialization();
+            int numberOfScientists = laboratory.getNumOfScientists();
+
+            // TODO I WAS HERE LAST NIGHT WHEN FINISHED.
+            HeadOfLaboratory HeadOfLaboratory = new HeadOfLaboratory(
+                    name, specialization, numberOfScientists);
+
+            chiefScientist.addLaboratory(headOfLaboratory);
         } else {
             System.out.println(
-                    "Science Store: No laboratory for requested specialization '"
-                    + requestedSpecialization + "'.");
+                "Science Store: No laboratory for requested specialization '"
+                + requestedSpecialization + "'.");
         }
     }
 }
