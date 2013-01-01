@@ -231,7 +231,7 @@ public class ScienceStore implements ScienceStoreInterface {
                     headOfLaboratory.addScientists(1);
 
                     requestedAmount --;
-                    it.remove();
+                    it.remove();  // Remove scientist from store.
                 }
 
                 // Flag in case there aren't enough scientists from this
@@ -263,11 +263,9 @@ public class ScienceStore implements ScienceStoreInterface {
             ArrayList<Laboratory> laboratories =
                 this.laboratories.get(requestedSpecialization);
 
-            // getting the lab
+            // Get first lab (most scientist, then cheapest).
             Laboratory laboratory = laboratories.get(0);
 
-            // TODO Because we delete the lab and pointer sent to statistics,
-            // need to see that all working fine.
             statistics.addPurchasedLaboratory(laboratory);
 
             int price = laboratory.getPrice();
@@ -282,8 +280,7 @@ public class ScienceStore implements ScienceStoreInterface {
 
             chiefScientist.addLaboratory(headOfLaboratory);
 
-            // need to delete laboratory from store!!!
-            laboratories.remove(0);// removing lab from store
+            laboratories.remove(0);  // Remove lab from store.
         } else {
             System.out.println(
                     "Science Store: No laboratory for requested specialization '"
