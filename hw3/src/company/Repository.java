@@ -7,7 +7,11 @@
 
 
 import java.io.*;
+import java.util.Comparator;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap; 
 
@@ -76,15 +80,22 @@ public class Repository {
 
             boolean missingEquipment = false;
 
-            Iterator it = requiredEquipment.entrySet().iterator();
+            // Sort required equipment by type (string),
+            // in order to prevent deadlocks.
+            List<String> equipmentTypes =
+                new ArrayList<String>(requiredEquipment.keySet());
+
+            Collections.sort(equipmentTypes, new Comparator<String>() {
+                public int compare(String s1, String s2) {
+                    return s1.compareTo(s2);
+                }
+            });
+
+            Iterator<String> it = equipmentTypes.iterator();
 
             while (it.hasNext() && ! missingEquipment) {
-                // FIXME Warning because of unchecked cast.
-                Map.Entry<String, Integer> entry =
-                    (Map.Entry<String, Integer>) it.next();
-
-                requestedType = entry.getKey();
-                requestedAmount = entry.getValue();
+                requestedType = it.next();
+                requestedAmount = requiredEquipment.get(requestedType);
 
                 amount = this.equipment.get(requestedType);
                 if (amount >= requestedAmount) {

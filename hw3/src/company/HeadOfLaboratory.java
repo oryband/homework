@@ -25,7 +25,7 @@ public class HeadOfLaboratory {
     }
     
 
-    public void addExperimentToExecute(Runnable experiment) {
+    public void executeExperiment(Runnable experiment) {
         this.executor.execute(experiment);
     }
 
