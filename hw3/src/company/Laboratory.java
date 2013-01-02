@@ -67,7 +67,7 @@ public class Laboratory implements Comparable<Laboratory> {
         result.append(this.price + "$, ");
         result.append(this.name + ", ");
         result.append(this.specialization + ", ");
-        result.append(this.numberOfScientists + " scientists.");
+        result.append(this.numberOfScientists + " scientists");
 
         return result.toString();
     }
