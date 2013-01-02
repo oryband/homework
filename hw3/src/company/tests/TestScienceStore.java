@@ -3,6 +3,7 @@
  *
  * @author Eldar Damari, Ory Band
  */
+
 package company.tests;
 
 import org.junit.*;
@@ -12,12 +13,6 @@ public class TestScienceStore {
 
     private ScienceStore store;
 
-    //@BeforeClass
-    //public static void oneTimeSetup() {}
-
-    //@AfterClass
-    //public static void oneTimeTearDown() {}
-
     @Before
     public static void setup() {
         // TODO Create hashmaps for constructor.
@@ -25,9 +20,6 @@ public class TestScienceStore {
         // NOTE Statistics will be tested in its own specific file.
         Statistics statistics = new Statistics(/*TODO Add budget, etc.*/);
     }
-
-    //@After
-    //public static void teardown() {}
 
     @Test
     public final void testPurchaseEquipmentPackage() {
