@@ -1,12 +1,12 @@
 /**
- * Represents a company's equipment repository.
+ * Represents the company's equipment repository.
+ * Responsible for lending equipment for different experiments.
  *
  * @author Eldar Damari, Ory Band
  */
-//package company;
 
+package company;
 
-import java.io.*;
 import java.util.Comparator;
 import java.util.Collections;
 import java.util.Iterator;
@@ -16,9 +16,6 @@ import java.util.Map;
 import java.util.HashMap; 
 
 
-/**
- * Responsible for lending equipment for different experiments.
- */
 public class Repository {
 
     private HashMap<String, Integer> equipment;
@@ -35,7 +32,7 @@ public class Repository {
 
 
     /**
-     * @param type added item type.
+     * @param type item's type.
      * @param additionalAmount amount of items added to repository.
      */
     public void addEquipmentToRepository(String type, int additionalAmount) {
@@ -57,19 +54,21 @@ public class Repository {
     // TODO
     /**
      * Iterate over each requested type, and borrow it from the repository.
-     * If there isn't enough of a certain type, return all borrowed items
-     * and wait for some experiment to return its equipment,
-     * and try again.
+     *
+     * If there isn't enough of a certain type:
+     *
+     * 1. Return all borrowed items.
+     * 2. Wait for some experiment to return its equipment.
+     * 3. Try again.
+     *
+     * Synchronized to prevent two experiments taking the same item.
      *
      * @param requiredEquipment {type : amount}
      */
-    //TODO remove experiment from decalaration, only for tests
-    public synchronized void aquireEquipment(
-            HashMap<String, Integer> requiredEquipment,
-            Experiment experiment) {
+    public synchronized void acquireEquipment(
+            HashMap<String, Integer> requiredEquipment) {
 
         boolean borrowedAllRequiredEquipment = false;
-
         while ( ! borrowedAllRequiredEquipment ) {
 
             String type, requestedType;
@@ -80,8 +79,9 @@ public class Repository {
 
             boolean missingEquipment = false;
 
-            // Sort required equipment by type (string),
-            // in order to prevent deadlocks.
+            // Sort required equipment by type (string), in order to prevent
+            // deadlocks where two experiments need the same items but not in
+            // the same order.
             List<String> equipmentTypes =
                 new ArrayList<String>(requiredEquipment.keySet());
 
@@ -91,13 +91,15 @@ public class Repository {
                 }
             });
 
+            // Take items from repository.
             Iterator<String> it = equipmentTypes.iterator();
-
             while (it.hasNext() && ! missingEquipment) {
+
                 requestedType = it.next();
                 requestedAmount = requiredEquipment.get(requestedType);
 
                 amount = this.equipment.get(requestedType);
+
                 if (amount >= requestedAmount) {
                     this.equipment.put(requestedType, amount - requestedAmount);
                     borrowedEquipment.put(requestedType, amount);
@@ -124,9 +126,7 @@ public class Repository {
                 // Wait for an experiment to finish,
                 // becuase maybe our missing required items has been returned.
                 try {
-                    System.out.println("In Wait(" + experiment.getId()+")");
                     this.wait();
-                    System.out.println("Out of Wait(" + experiment.getId()+")");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -163,12 +163,12 @@ public class Repository {
     public String toString() {
 
         StringBuilder result = new StringBuilder();
-        String NEW_LINE = System.getProperty("line.separator");
+        String N = System.getProperty("line.separator");
 
-        result.append("______________________________________" + NEW_LINE);
-        result.append("           ---Repository---: " + NEW_LINE);
-        result.append("EquipmentPackage data: " + NEW_LINE);
-        result.append(this.equipment.toString() + NEW_LINE);
+        result.append(N);
+        result.append("Repository:" + N);
+        result.append("Repository items: " + this.equipment.toString() + N);
+
         return result.toString();
     }
 }

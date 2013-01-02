@@ -1,47 +1,54 @@
-/** @author Eldar Damari, Ory Band */
+/**
+ * Chief Scientist Assistant, the one who is actually doing all the work in
+ * the company's life cycle.
+ *
+ * @author Eldar Damari, Ory Band
+ */
 
-//package company;
+package company;
 
 import java.util.Map;
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 
+/** Singleton class, using ENUM pattern. */
 public enum ChiefScientistAssistant implements Runnable {
 
+    // Singleton pattern.
     INSTANCE;
+    private boolean initialized = false;
 
     private ArrayList<RunnableExperiment> runnableExperiments = null;
-    private int completedExperiments = 0;
+    private int numberOfCompletedExperiments = 0;
     private ChiefScientist chiefScientist = null;
-
 
     public void initChiefScientistAssistant(
             ArrayList<Experiment> experiments, ChiefScientist chiefScientist) {
 
-        if (experiments == null) {
-            throw new RuntimeException(
-                    "Cannot re-initialize runnableExperiments");
-        } else {
+        if ( ! initialized ) {
             this.runnableExperiments = new ArrayList<RunnableExperiment>();
 
             for (Experiment e : experiments) {
                 this.runnableExperiments.add(
                         new RunnableExperiment(e, chiefScientist));
+                this.chiefScientist = chiefScientist;
             }
-        }
 
-        if (chiefScientist == null) {
-            throw new RuntimeException("Cannot re-initialize chiefAssistant.");
+            this.initialized = true;
         } else {
-            this.chiefScientist = chiefScientist;
+            throw new RuntimeException(
+                    "Re-initializing ChiefScientistAssistant singleton.");
         }
     }
 
 
+    /**
+     * Main company life-cycle.
+     */
     public synchronized void run() {
 
-        while (this.completedExperiments != this.runnableExperiments.size()) {
+        while (this.numberOfCompletedExperiments != this.runnableExperiments.size()) {
 
             // Find incomplete experiments to execute.
             for (RunnableExperiment runnableExperiment : this.runnableExperiments) {
@@ -55,24 +62,25 @@ public enum ChiefScientistAssistant implements Runnable {
 
                     String specialization = experiment.getSpecialization();
 
-                    // Get laboratory for requested specialization for
-                    // current experiment.
+                    // Get laboratory for requested specialization for current
+                    // experiment.
                     HeadOfLaboratory headOfLaboratory =
                         this.chiefScientist.getAvailableLaboratory(specialization);
 
                     // Execute experiment if there's a lab,
-                    // or purhcase one and then execute experiment.
+                    // or purchase one and then execute experiment.
                     if (headOfLaboratory == null) {
                         this.chiefScientist.getScienceStore().purchaseLaboratory(
                                 this.chiefScientist,
                                 this.chiefScientist.getStatistics(),
                                 specialization); 
 
-                        headOfLaboratory = this.chiefScientist.getAvailableLaboratory(specialization);
+                        headOfLaboratory =
+                            this.chiefScientist.getAvailableLaboratory(
+                                    specialization);
                     }
 
-                    executeExperiment(
-                            headOfLaboratory, runnableExperiment);
+                    executeExperiment(headOfLaboratory, runnableExperiment);
                 }
             }
 
@@ -85,9 +93,9 @@ public enum ChiefScientistAssistant implements Runnable {
             }
         }
 
-        this.chiefScientist.shutdownAllLabs();
+        this.chiefScientist.shutdownAllLabs();  // Graceful lab shutdown.
 
-        // Print statistics.
+        // Print statistics at end of company's life-cycle.
         System.out.println(this.chiefScientist.getStatistics().toString());
     }
 
@@ -107,15 +115,13 @@ public enum ChiefScientistAssistant implements Runnable {
         HashMap<String, Integer> shoppingList =
             generateShoppingList(experiment.getRequiredEquipment());
 
-
+        // Purchase items in shopping list.
         if (shoppingList.size() > 0) {
-            // Purchase items in shopping list.
             this.chiefScientist.getScienceStore().purchaseEquipmentPackages(
                     this.chiefScientist.getRepository(),
                     this.chiefScientist.getStatistics(),
                     shoppingList);
         }
-
 
         experiment.setStatus("INPROGRESS");
         headOfLaboratory.executeExperiment(runnableExperiment);
@@ -169,22 +175,21 @@ public enum ChiefScientistAssistant implements Runnable {
     }
 
 
-    // Increase Number Of finishedExperiment by 1;
-    public void increaseNumberOfFinishedExperiments() {
-        this.completedExperiments += 1;
+    public void incrementNumberOfFinishedExperiments() {
+        this.numberOfCompletedExperiments ++;
     }
 
 
     public String toString() {
 
         StringBuilder result = new StringBuilder();
-        String NEW_LINE = System.getProperty("line.separator");
+        String N = System.getProperty("line.separator");
 
-        result.append("______________________________________" + NEW_LINE);
-        result.append("           ---Chief Scientist Assistant---: " + NEW_LINE);
+        result.append(N);
+        result.append("Chief Scientist Assistant:" + N);
 
         for (RunnableExperiment e : this.runnableExperiments) {
-            result.append(e.toString() + NEW_LINE);
+            result.append(e.toString() + N);
         }
 
         return result.toString();

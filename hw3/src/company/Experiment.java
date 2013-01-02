@@ -1,8 +1,10 @@
-//package company;
+/** @author Eldar Damari, Ory Band */
+
+package company;
 
 import java.util.Comparator;
-import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 
 public class Experiment {
@@ -13,27 +15,27 @@ public class Experiment {
     private final int reward;
 
     private ArrayList<Integer> prerequirementsExperiments;
-    private int currentRunTime;
-    private final int requiredRunTime;
+    private int currentRunTime;  // ms.
+    private final int requiredRunTime;  // ms.
     private String status;
 
 
     public Experiment(
             String id,
-            ArrayList<Integer> preExperiments,
+            ArrayList<Integer> requiredExperiments,
             String specialization,
             HashMap<String,Integer> requiredEquipment,
-            int runtime,
+            int runTime,
             int reward,
             String status) {
 
         this.id = id;
         this.specialization = specialization;
-        this.prerequirementsExperiments = preExperiments;
+        this.prerequirementsExperiments = requiredExperiments;
         this.requiredEquipment = requiredEquipment;
         this.reward = reward;
-        this.currentRunTime = runtime;
-        this.requiredRunTime = runtime;
+        this.currentRunTime = runTime;
+        this.requiredRunTime = runTime;
         this.status = status;
     }
 
@@ -73,7 +75,7 @@ public class Experiment {
 
 
     // Setters
-    public void setRealRunTime(int runtime){
+    public void setRealRunTime(int runtime) {
         this.currentRunTime = runtime;
     }
 
@@ -82,23 +84,20 @@ public class Experiment {
     }
 
 
-
-    public String toString(){
+    public String toString() {
 
         StringBuilder result = new StringBuilder();
-        String NEW_LINE = System.getProperty("line.separator");
+        String N = System.getProperty("line.separator");
 
-        result.append("______________________________________" + NEW_LINE);
-        result.append("Experiment id: " + id + NEW_LINE);
-        result.append("Specialization: " + specialization + NEW_LINE);
-        result.append("PrerequirementsExperiments: " +
-                prerequirementsExperiments.toString() + NEW_LINE);
+        result.append("Experiment:" + N);
+        result.append("id: " + id + N);
+        result.append("Run Time: " + requiredRunTime + N);
+        result.append("Reward: " + reward + N);
+        result.append("Status: " + status + N);
+        result.append("Specialization: " + specialization + N);
+        result.append("Required Experiments: " + prerequirementsExperiments.toString() + N);
+        result.append("Required Equipment: " + this.requiredEquipment.toString() + N);
 
-        result.append("Required Equipment: " + this.requiredEquipment.toString() + NEW_LINE);
-        result.append("Run Time: " + requiredRunTime + NEW_LINE);
-        result.append("Reward: " + reward + NEW_LINE);
-        result.append("Status: " + status + NEW_LINE);
-        result.append("______________________________________" + NEW_LINE);
         return result.toString();
     }
 }

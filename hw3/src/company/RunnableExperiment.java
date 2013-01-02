@@ -1,7 +1,10 @@
-//package company;
+/** @author Eldar Damari, Ory Band */
 
-import java.io.*;
-import java.util.*;
+package company;
+
+import java.util.Observable;
+import java.util.Date;
+import java.lang.Runnable;
 
 
 public class RunnableExperiment extends Observable implements Runnable {
@@ -23,7 +26,8 @@ public class RunnableExperiment extends Observable implements Runnable {
 
     public void run() {
 
-        System.out.println("Start: " + this.experiment.getId());
+        System.out.println(
+                "Experiment " + this.experiment.getId() + " started.");
 
         // Experiment still in progress
         while (experiment.getCurrentRunTime() > 0) {
@@ -32,10 +36,9 @@ public class RunnableExperiment extends Observable implements Runnable {
 
             Repository repo = this.chief.getRepository();
 
-            repo.aquireEquipment(
-                    this.experiment.getRequiredEquipment(), this.experiment); 
+            repo.acquireEquipment(this.experiment.getRequiredEquipment()); 
 
-            // Sleep 8 hours (1 hour = 100 miliseconds).
+            // Sleep 8 hours (1 hour = 100 ms.)
             try {
                 Thread.sleep(800);
             } catch (InterruptedException e) {
@@ -55,17 +58,20 @@ public class RunnableExperiment extends Observable implements Runnable {
 
                 // Reward calculation.
                 if (this.experimentRealRunTime <= 
-                        (this.experiment.getRequiredRunTime() * 115)) {
+                        this.experiment.getRequiredRunTime() * 115) {
 
-                    // 115% of reard gain.
-                    this.chief.getStatistics().addReward(this.experiment.getReward());
+                    // 100% of reward gained.
+                    this.chief.getStatistics().addReward(
+                            this.experiment.getReward());
 
                 } else {  // 10% of reward gained.
-                    this.chief.getStatistics().addReward((this.experiment.getReward()) * 10);
+                    this.chief.getStatistics().addReward(
+                            this.experiment.getReward() / 10);
                 }
 
-                System.out.println("Experiment End : " + this.experiment.getId());
-                System.out.println("Experiment End with run time:  " + this.experimentRealRunTime); 
+                System.out.println(
+                        "Experiment " + this.experiment.getId() + " ended: "
+                        + this.experimentRealRunTime + " hours.");
         
                 // Notify observers (ChiefScientist) that experiment is complete.
                 setChanged();
@@ -76,7 +82,7 @@ public class RunnableExperiment extends Observable implements Runnable {
 
                 this.experimentRealRunTime -= new Date().getTime();
 
-                // Sleep for 16 hours ~ 16,000 miliseconds
+                // Sleep for 16 hours = 1600 ms.
                 try {
                     Thread.sleep(1600);
                 } catch (InterruptedException e) {
@@ -86,7 +92,7 @@ public class RunnableExperiment extends Observable implements Runnable {
         }
     }
 
-    // Getters
+
     public Experiment getExperiment() {
         return this.experiment;
     }
@@ -96,13 +102,12 @@ public class RunnableExperiment extends Observable implements Runnable {
 
         StringBuilder result = new StringBuilder();
 
-        String NEW_LINE = System.getProperty("line.separator");
+        String N = System.getProperty("line.separator");
 
-        result.append("______________________________________" + NEW_LINE);
-        result.append("         ---Runnable Experiment---:" + NEW_LINE);
-
-        result.append("Experiment: " + NEW_LINE + this.experiment.toString() + NEW_LINE);
-        result.append("Real Run Time: " + this.experimentRealRunTime + NEW_LINE);
+        result.append(N);
+        result.append("Runnable Experiment:" + N);
+        result.append("Real Run Time: " + this.experimentRealRunTime + N);
+        result.append(this.experiment.toString() + N);
 
         return result.toString();
     }

@@ -1,4 +1,4 @@
-//package company;
+package company;
 
 import java.lang.Comparable;
 import java.io.*;

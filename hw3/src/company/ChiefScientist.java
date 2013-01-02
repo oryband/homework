@@ -1,6 +1,10 @@
-/** @author Eldar Damari, Ory Band */
+/**
+ * Chief Scientist, responsible for the company's life cycle.
+ *
+ * @author Eldar Damari, Ory Band
+ */
 
-//package company;
+package company;
 
 import java.util.Observer;
 import java.util.Observable;
@@ -9,7 +13,6 @@ import java.util.ListIterator;
 import java.util.ArrayList;
 
 
-/** Chief Scientist, responsible for the company's life cycle. */
 public class ChiefScientist implements Observer {
 
     private ArrayList<HeadOfLaboratory> laboratories;
@@ -77,7 +80,7 @@ public class ChiefScientist implements Observer {
             removedPrerequiredExperiments(finishedExperiment);
             changeStatusToComplete(finishedExperiment);
             updateStatisticsFinishedExperiment(finishedExperiment); 
-            this.assitant.increaseNumberOfFinishedExperiments();
+            this.assitant.incrementNumberOfFinishedExperiments();
         } else {
             throw new RuntimeException(
                     "ChiefScientist.update() - Bad argument, failed casting.");

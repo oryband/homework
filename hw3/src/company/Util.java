@@ -1,4 +1,4 @@
-//package company;
+package company;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
