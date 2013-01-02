@@ -88,7 +88,7 @@ public class ScienceStore implements ScienceStoreInterface {
             // Search for bigger packages.
             while (it.hasNext() && ! isPackageTooSmall) {
                 equipmentPackage = it.next();
-
+                
                 if (equipmentPackage.getAmount() >= requestedAmount) {
                     isBiggerPackage = true;
                 } else {
@@ -98,6 +98,7 @@ public class ScienceStore implements ScienceStoreInterface {
 
             // Buy several small packages if there are no bigger ones.
             if ( ! isBiggerPackage ) {
+
                 if (it.hasPrevious()) {
                     it.previous();
 
@@ -128,8 +129,14 @@ public class ScienceStore implements ScienceStoreInterface {
                 }
             // If there's a big enough package, purchase it.
             } else {
-                this.PurchaseSingleEquipmentPackage(
-                        repository, statistics, it.previous());
+                EquipmentPackage e = it.previous();
+
+                // Get the last 'bigger' package if there is one.
+                if (isPackageTooSmall) {
+                    e = it.previous();
+                }
+
+                this.PurchaseSingleEquipmentPackage(repository, statistics, e);
 
                 it.remove();
             }
@@ -151,9 +158,10 @@ public class ScienceStore implements ScienceStoreInterface {
             EquipmentPackage equipmentPackage) {
 
         int amount = equipmentPackage.getAmount();
-        String equipmentPackageType = equipmentPackage.getType();
+        String type = equipmentPackage.getType();
+
         statistics.addPurchasedEquipment(equipmentPackage);
-        repository.addEquipmentToRepository(equipmentPackageType, amount);
+        repository.addEquipmentToRepository(type, amount);
     }
 
 

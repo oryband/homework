@@ -107,18 +107,11 @@ public enum ChiefScientistAssistant implements Runnable {
 
 
         if (shoppingList.size() > 0) {
-            System.out.println(this.chiefScientist.getRepository());
-            // Go and purchase items in HashMap
-            for (Map.Entry<String, Integer> e : shoppingList.entrySet()) {
-                System.out.println("=====CACHING===== " + e.getKey() + "--" + e.getValue());
-            }
-
+            // Purchase items in shopping list.
             this.chiefScientist.getStore().purchaseEquipmentPackages(
                     this.chiefScientist.getRepository(),
                     this.chiefScientist.getStatistics(),
                     shoppingList);
-
-            System.out.println(this.chiefScientist.getRepository());
         }
 
 
