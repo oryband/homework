@@ -62,13 +62,13 @@ public class RunnableExperiment extends Observable implements Runnable {
 
                 // reward claculation and updating statistics
                 if (this.experimentRealRunTime <= 
-                        ((this.experiment.getExperimentRunTime() / 100.0) * 115)){
+                        ((this.experiment.getExperimentRunTime() / 100) * 115)){
                     // reward gained.
                     this.chief.getStatistics().addReward(this.experiment.getExperimentReward());
 
                 } else {
                     // 10% of reward gained.
-                    this.chief.getStatistics().addReward((this.experiment.getExperimentReward() / 100.0) * 10);
+                    this.chief.getStatistics().addReward((this.experiment.getExperimentReward() / 100) * 10);
 
                 }
                 System.out.println("Experiment End : " + this.experiment.getExperimentId());
