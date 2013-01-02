@@ -28,7 +28,8 @@ public class ScienceStore implements ScienceStoreInterface {
     /**
      * Besides initializing members,
      * sorts packages by amount, from largest to smallest,
-     * and sorts scientists by price, from most expensive to cheapest.
+     * and then by price, from cheapest to most expensive.
+     * Scientists and labs are sorted by price the same way.
      */
     public ScienceStore( 
             HashMap<String, ArrayList<EquipmentPackage>> equipmentPackages,
@@ -39,8 +40,10 @@ public class ScienceStore implements ScienceStoreInterface {
         this.scientists = scientists;
         this.laboratories = laboratories;
 
-        // Sort equipment (amount and price) from largest to smallest,
+        // Sort equipment (by amount, then by price) from largest to smallest,
         // and sorts scientists & labs from cheapest to most expensive.
+        //
+        // See compareTo() implementation in corresponding classes.
         for (Map.Entry<String, ArrayList<EquipmentPackage>> entry
                 : this.equipmentPackages.entrySet()) {
 
@@ -111,7 +114,7 @@ public class ScienceStore implements ScienceStoreInterface {
                         this.PurchaseSingleEquipmentPackage(
                                 repository, statistics, equipmentPackage);
 
-                        it.remove();
+                        it.remove();  // Remove package from store.
                     }
 
                     // Special case where there aren't enough small packages to
@@ -131,22 +134,21 @@ public class ScienceStore implements ScienceStoreInterface {
             } else {
                 EquipmentPackage e = it.previous();
 
-                // Get the last 'bigger' package if there is one.
+                // Get the last 'bigger' package if there was one.
                 if (isPackageTooSmall) {
                     e = it.previous();
                 }
 
                 this.PurchaseSingleEquipmentPackage(repository, statistics, e);
-
-                it.remove();
+                it.remove();  // Remove package from store
             }
         }
     }
 
 
     /**
-     * Adds equipment package to repository, charges budget & updates statistics,
-     * and decrement equipment amount from store (we have 1 less of it in store).
+     * Adds equipment package to repository, charges budget & updates statistics.
+     * Note this function is synchronized to prevent bad statistics.
      *
      * @param repository for updating repository.
      * @param statistics for charging from the budget.
@@ -251,49 +253,6 @@ public class ScienceStore implements ScienceStoreInterface {
             System.out.println(
                     "Science Store: No laboratory for requested specialization '"
                     + requestedSpecialization + "'.");
-        }
-    }
-
-
-    /**
-     * @param requestedEquipment equipment type (Microscope, burner, etc.)
-     *
-     * @return True if EquipmentPackage is in store (not just in stock).
-     **/
-    public boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage) {
-        
-        if (this.equipmentPackages.containsKey(EquipmentPackage.getType())) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * @param requestedSpecialization Scientist specialization.
-     *
-     * @return True if scientist is in store (not just in stock).
-     **/
-    public boolean isScientistsEmpty(String specialization) {
-    
-        if (this.scientists.containsKey(specialization)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * @param requestedSpecialization Laboratory specialization.
-     *
-     * @return True if laboratory is in store (not just in stock).
-     **/
-    public boolean isLaboratoriesEmpty(String specialization) {
-        
-        if (this.laboratories.containsKey(specialization)) {
-            return false;
-        } else {
-            return true;
         }
     }
 

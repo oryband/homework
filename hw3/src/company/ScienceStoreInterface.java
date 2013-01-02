@@ -1,8 +1,4 @@
-/**
- * Science Store interface.
- *
- * @author Eldar Damari, Ory Band
- */
+/** @author Eldar Damari, Ory Band */
 //package company;
 
 import java.util.Map;
@@ -55,27 +51,6 @@ public interface ScienceStoreInterface {
             ChiefScientist chiefScientist,
             Statistics statistics,
             String requestedSpecialization);
-
-    /**
-     * @param requestedEquipment equipment type (Microscope, burner, etc.)
-     *
-     * @return True if EquipmentPackage is in store (not just in stock).
-     **/
-    public boolean isEquipmentPackageEmpty(EquipmentPackage EquipmentPackage);
-
-    /**
-     * @param requestedSpecialization Scientist specialization.
-     *
-     * @return True if scientist is in store (not just in stock).
-     **/
-    public boolean isScientistsEmpty(String specialization);
-
-    /**
-     * @param requestedSpecialization Laboratory specialization.
-     *
-     * @return True if laboratory is in store (not just in stock).
-     **/
-    public boolean isLaboratoriesEmpty(String specialization);
 
 
     public String toString();
