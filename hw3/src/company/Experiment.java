@@ -55,6 +55,10 @@ public class Experiment {
     }
 
     public int getExperimentRunTime() {
+        return this.runTimeInHoursPrint;
+    }
+
+    public int getExperimentRealRunTime() {
         return this.runTimeInHours;
     }
 
@@ -67,7 +71,7 @@ public class Experiment {
     }
 
     // Setters
-    public void setExperimentRunTime(int runtime){
+    public void setExperimentRealRunTime(int runtime){
         this.runTimeInHours = runtime;
     }
     public void setExperimentStatus(String status) {

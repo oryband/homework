@@ -8,7 +8,6 @@ public class RunnableExperiment extends Observable implements Runnable {
 
     private Experiment experiment;
     private long experimentRealRunTime;
-    private Date date;
     private ChiefScientist chief;
 
 
@@ -24,52 +23,45 @@ public class RunnableExperiment extends Observable implements Runnable {
 
     public void run() {
 
-        System.out.println("Experiment start: " + this.experiment.getExperimentId());
+        System.out.println("Start: " + this.experiment.getExperimentId());
 
         // Experiment still in progress
-        while (experiment.getExperimentRunTime() != 0) {
+        while (experiment.getExperimentRealRunTime() > 0) {
 
-            this.date = new Date();
-            this.experimentRealRunTime += date.getTime();
+            this.experimentRealRunTime += new Date().getTime();
 
             Repository repo = this.chief.getRepository();
-            //System.out.println(">>>" + this.chief.getRepository().toString() + " - "+this.experiment.getExperimentId());
 
             repo.aquireEquipment(
                     this.experiment.getRequiredEquipment(), this.experiment); 
 
-            //System.out.println("---" + this.chief.getRepository().toString() +  " - "+this.experiment.getExperimentId());
-
-            // Sleep 8 hours
+            // Sleep 8 hours (1 hour = 100 miliseconds).
             try {
-                // Sleep 8 hours (1 hour = 100 miliseconds).
                 Thread.sleep(800);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            if (this.experiment.getExperimentRunTime() <= 8) {
+            // Return equipment taken for the day.
+            this.chief.getRepository().releaseEquipment(
+                    this.experiment.getRequiredEquipment());
 
-                this.experiment.setExperimentRunTime(0);
+            if (this.experiment.getExperimentRealRunTime() <= 8) {
 
-                //Release equipment back to repo - if someone is buying right  now?
-                //problem with returning & purchasing? - check sync carefully in repo!!
+                this.experiment.setExperimentRealRunTime(0);
 
-                this.chief.getRepository().releaseEquipment
-                    (this.experiment.getRequiredEquipment());
-
-                date = new Date();
                 this.experimentRealRunTime = 
-                    date.getTime() - this.experimentRealRunTime;
+                    new Date().getTime() - this.experimentRealRunTime;
 
                 // Reward calculation.
                 if (this.experimentRealRunTime <= 
-                        ((this.experiment.getExperimentRunTime() / 100) * 115)) {
+                        (this.experiment.getExperimentRunTime() * 115)) {
+
                     // 115% of reard gain.
                     this.chief.getStatistics().addReward(this.experiment.getExperimentReward());
 
                 } else {  // 10% of reward gained.
-                    this.chief.getStatistics().addReward((this.experiment.getExperimentReward() / 100) * 10);
+                    this.chief.getStatistics().addReward((this.experiment.getExperimentReward()) * 10);
                 }
 
                 System.out.println("Experiment End : " + this.experiment.getExperimentId());
@@ -79,19 +71,14 @@ public class RunnableExperiment extends Observable implements Runnable {
                 setChanged();
                 notifyObservers(this.experiment.getExperimentId());
             } else {
+                this.experiment.setExperimentRealRunTime(
+                        this.experiment.getExperimentRealRunTime() - 8);
 
-                this.experiment.setExperimentRunTime
-                    (this.experiment.getExperimentRunTime() - 8);
-                // Release equipment back to repository. 
-                this.chief.getRepository().releaseEquipment
-                    (this.experiment.getRequiredEquipment());
-
-                date = new Date();
-                this.experimentRealRunTime -= date.getTime();
+                this.experimentRealRunTime -= new Date().getTime();
 
                 // Sleep for 16 hours ~ 16,000 miliseconds
-                try{
-                Thread.sleep(1600);
+                try {
+                    Thread.sleep(1600);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
