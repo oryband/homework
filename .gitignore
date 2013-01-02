@@ -20,6 +20,7 @@ bin/
 # Eclipse.
 Debug/
 .metadata
+.classpath
 .cproject
 .project
 
