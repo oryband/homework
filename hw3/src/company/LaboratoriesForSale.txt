@@ -1,5 +1,0 @@
-ProfA	Histopathology	1	100
-ProfB	Bacteriology	3	200
-ProfC	Serology	2	300
-ProfD	Virology	3	150
-ProfE	Mycobacteriology	2	1000

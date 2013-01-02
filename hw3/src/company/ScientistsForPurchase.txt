@@ -1,5 +1,0 @@
-DrA	Histopathology	55
-DrB	Histopathology	60
-DrC	Haematology	550
-DrD	Mycobacteriology	100
-DrE	Mycobacteriology	250
