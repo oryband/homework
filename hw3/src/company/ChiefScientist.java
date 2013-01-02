@@ -116,7 +116,7 @@ public class ChiefScientist implements Observer {
     public void deletePreExperiments(String expId) {
 
         Iterator<Experiment> experimentItr = this.experiments.iterator();
-        ListIterator preRequiredExpItr = null; 
+        ListIterator<Integer> preRequiredExpItr = null; 
 
         // Iterate all Experiments
         while (experimentItr.hasNext()) {
@@ -136,7 +136,7 @@ public class ChiefScientist implements Observer {
                 while (preRequiredExpItr.hasPrevious()) {
 
                     Integer i = new Integer(expId);
-                    if (((Integer)preRequiredExpItr.previous()).intValue() == i.intValue()) {
+                    if ((preRequiredExpItr.previous()).intValue() == i.intValue()) {
 
                         // delete from pre required experiments
                         preRequiredExpItr.remove(); // hopefully with no special problems

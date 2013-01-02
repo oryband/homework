@@ -12,7 +12,9 @@ public class RunnableExperiment extends Observable implements Runnable {
     private ChiefScientist chief;
 
 
-    public RunnableExperiment(Experiment experiment, ChiefScientist chiefScientist) {
+    public RunnableExperiment(
+            Experiment experiment, ChiefScientist chiefScientist) {
+
         this.experiment = experiment;
         addObserver(chiefScientist);
         this.experimentRealRunTime = 0;
@@ -41,7 +43,7 @@ public class RunnableExperiment extends Observable implements Runnable {
             // Sleep 8 hours
             try {
                 // Sleep 8 hours (1 hour = 100 miliseconds).
-                Thread.currentThread().sleep(800);
+                Thread.sleep(800);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -60,24 +62,22 @@ public class RunnableExperiment extends Observable implements Runnable {
                 this.experimentRealRunTime = 
                     date.getTime() - this.experimentRealRunTime;
 
-                // reward claculation and updating statistics
+                // Reward calculation.
                 if (this.experimentRealRunTime <= 
-                        ((this.experiment.getExperimentRunTime() / 100) * 115)){
-                    // reward gained.
+                        ((this.experiment.getExperimentRunTime() / 100) * 115)) {
+                    // 115% of reard gain.
                     this.chief.getStatistics().addReward(this.experiment.getExperimentReward());
 
-                } else {
-                    // 10% of reward gained.
+                } else {  // 10% of reward gained.
                     this.chief.getStatistics().addReward((this.experiment.getExperimentReward() / 100) * 10);
-
                 }
+
                 System.out.println("Experiment End : " + this.experiment.getExperimentId());
                 System.out.println("Experiment End with run time:  " + this.experimentRealRunTime); 
         
-                // Notify to observers that experiment is done
+                // Notify observers (ChiefScientist) that experiment is complete.
                 setChanged();
                 notifyObservers(this.experiment.getExperimentId());
-
             } else {
 
                 this.experiment.setExperimentRunTime
@@ -91,7 +91,7 @@ public class RunnableExperiment extends Observable implements Runnable {
 
                 // Sleep for 16 hours ~ 16,000 miliseconds
                 try{
-                Thread.currentThread().sleep(1600);
+                Thread.sleep(1600);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -35,10 +35,9 @@ public class ScienceStore implements ScienceStoreInterface {
             HashMap<String, ArrayList<Scientist>> scientists,
             HashMap<String, ArrayList<Laboratory>> laboratories) {
 
-        // FIXME Produces warnings since arguments are unchecked.
-        this.equipmentPackages = new HashMap(equipmentPackages);
-        this.scientists = new HashMap(scientists);
-        this.laboratories = new HashMap(laboratories);
+        this.equipmentPackages = equipmentPackages;
+        this.scientists = scientists;
+        this.laboratories = laboratories;
 
         // Sort equipment (amount and price) from largest to smallest,
         // and sorts scientists & labs from cheapest to most expensive.
