@@ -31,7 +31,6 @@ public class Statistics {
     }
 
     // Setters
-    // TODO Remove this, and set budget in constructor (used in util).
     public void setBudget(int i) {
         this.budget = i;
     }

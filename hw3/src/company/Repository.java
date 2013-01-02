@@ -25,7 +25,6 @@ public class Repository {
         this.equipment = new HashMap<String, Integer>(equipment);
     }
 
-    // TODO Do we really need to init empty member?
     public Repository() {
         this.equipment = new HashMap<String, Integer>();
     }
@@ -45,13 +44,11 @@ public class Repository {
     }
 
 
-    // TODO Delete this. Used in util for initialization Repository. This should be done in the constructor.
     public HashMap<String, Integer> getRepository() {
         return equipment;
     }
 
 
-    // TODO
     /**
      * Iterate over each requested type, and borrow it from the repository.
      *
