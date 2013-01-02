@@ -1,3 +1,5 @@
+/** @author Eldar Damari, Ory Band */
+
 package company;
 
 import java.lang.Comparable;
@@ -19,16 +21,21 @@ public class EquipmentPackage implements Comparable<EquipmentPackage> {
     }
 
 
-    // Sort by amount then expensive price.
+    /**
+     * Sorts by amount, then by price - from most expensive to cheapest.
+     *
+     * @param p equipment package to compare against.
+     */
     public int compareTo(EquipmentPackage p) {
         if (this.amount == p.getAmount()) {
-            return - (this.price - p.getPrice());  // Expensive appears before cheap (we reverse after sort).
+            return - (this.price - p.getPrice());
         } else {
             return this.amount - p.getAmount();
         }
     }
 
 
+    // Getters.
     public String getType() {
         return this.type;
     }
@@ -45,13 +52,13 @@ public class EquipmentPackage implements Comparable<EquipmentPackage> {
     public String toString() {
 
         StringBuilder result = new StringBuilder();
-        String NEW_LINE = System.getProperty("line.separator");
+        String N = System.getProperty("line.separator");
 
-        result.append(NEW_LINE + "______________________________________" + NEW_LINE);
-        result.append("           ---Equipment Packages For Sale---: " + NEW_LINE);
-        result.append("Type: " + this.type + " ");
-        result.append("Amount: " + this.amount + " ");
-        result.append("Price: " + this.price);
+        result.append(N);
+        result.append(this.amount + " ");
+        result.append(this.type + "s ");
+        result.append(this.price + "$");
+
         return result.toString();
     }
 }

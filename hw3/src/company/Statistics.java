@@ -2,8 +2,7 @@
 
 package company;
 
-import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
 
 
 public class Statistics {
@@ -80,22 +79,21 @@ public class Statistics {
         result.append("Statistics:" + N);
 
         result.append("Finished Experiments: " + 
-                this.experiments.toString() + N);
+                this.experiments.toString() + N + N);
 
         result.append("Equipment Packages Purchased : " + 
-                this.equipmentPackagesPurchased.toString() + N);
-
-        result.append("Laboratories Purchased: " + 
-                this.laboratoriesPurchased.toString() + N);
+                this.equipmentPackagesPurchased.toString() + N + N);
 
         result.append("Scientists Purchased: " + 
-                this.scientistsPurchased.toString() + N);
+                this.scientistsPurchased.toString() + N + N);
 
-        result.append(N);
-        result.append("Budget Summary:" + N);
-        result.append("Budget: " + this.budget + N);
-        result.append("Rewards (Money Gained): " + this.rewards + N);
-        result.append("Money Spent: " + this.moneySpent + N);
+        result.append("Laboratories Purchased: " + 
+                this.laboratoriesPurchased.toString() + N + N);
+
+        result.append("Budget Summary: ");
+        result.append("+" + this.rewards + "$, ");
+        result.append("-" + this.moneySpent + "$, ");
+        result.append(this.budget + "$ budget total.");
 
         return result.toString();
     }

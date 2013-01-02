@@ -1,8 +1,13 @@
+/**
+ * Represents a laboratory.
+ *
+ * @author Eldar Damari, Ory Band.
+ */
+
 package company;
 
-import java.io.*;
-import java.util.concurrent.*;
-import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class HeadOfLaboratory {
@@ -25,28 +30,31 @@ public class HeadOfLaboratory {
     }
     
 
+    /**
+     * Executes an experiment.
+     *
+     * @param experiment experiment to execute.
+     */
     public void executeExperiment(Runnable experiment) {
         this.executor.execute(experiment);
     }
 
+    /**
+     * Adds scientists to the laboratory.
+     *
+     * @param amount amount of scientists to add.
+     */
     public void addScientists(int amount) {
         this.numberOfScientists += amount;
     }
+
 
     public String getSpecialization() {
         return this.specialization;
     }
 
-    // TODO need to think about how to stop all threads and to add (by buying new scintist)
-    // assume ChiefAssistat will get all the same experiments by specialization
-    // add calculate if HeadOfLaboratory should buy new scientist from store - 
-    // we should do it after everything is working!
-   // public function(){
-    //}
 
-    // Initiates an orderly shutdown in which previously
-    // submitted tasks are executed, but no new tasks will be accepted.
-    // consider if needed: shutdownNow()
+    /** Graceful shutdown. */
     public void shutdownLab() {
         this.executor.shutdown();
     }
@@ -55,13 +63,14 @@ public class HeadOfLaboratory {
     public String toString() {
 
         StringBuilder result = new StringBuilder();
-        String NEW_LINE = System.getProperty("line.separator");
+        String N = System.getProperty("line.separator");
         
-        result.append("______________________________________" + NEW_LINE);
-        result.append("           ---Head Of Laboratory---: " + NEW_LINE);
-        result.append("Name: " + this.name + NEW_LINE);
-        result.append("Specialization: " + this.specialization + NEW_LINE);
-        result.append("Number Of Scientists: " + this.numberOfScientists + NEW_LINE);
+        result.append(N);
+        result.append("Head Of Laboratory: ");
+        result.append(this.name + ", ");
+        result.append(this.specialization);
+        result.append(this.numberOfScientists + " scientists." + N);
+
         return result.toString();
     }
 }

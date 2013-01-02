@@ -27,7 +27,7 @@ public class RunnableExperiment extends Observable implements Runnable {
     public void run() {
 
         System.out.println(
-                "Experiment " + this.experiment.getId() + " started.");
+                "#" + this.experiment.getId() + " started.");
 
         // Experiment still in progress
         while (experiment.getCurrentRunTime() > 0) {
@@ -70,7 +70,7 @@ public class RunnableExperiment extends Observable implements Runnable {
                 }
 
                 System.out.println(
-                        "Experiment " + this.experiment.getId() + " ended: "
+                        "#" + this.experiment.getId() + " ended: "
                         + this.experimentRealRunTime + " hours.");
         
                 // Notify observers (ChiefScientist) that experiment is complete.

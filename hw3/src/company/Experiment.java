@@ -89,14 +89,14 @@ public class Experiment {
         StringBuilder result = new StringBuilder();
         String N = System.getProperty("line.separator");
 
-        result.append("Experiment:" + N);
-        result.append("id: " + id + N);
-        result.append("Run Time: " + requiredRunTime + N);
-        result.append("Reward: " + reward + N);
-        result.append("Status: " + status + N);
-        result.append("Specialization: " + specialization + N);
-        result.append("Required Experiments: " + prerequirementsExperiments.toString() + N);
-        result.append("Required Equipment: " + this.requiredEquipment.toString() + N);
+        result.append(N);
+        result.append("#" + id + ", ");
+        result.append(status + ", ");
+        result.append(requiredRunTime + "hours, ");
+        result.append(reward + "$, ");
+        result.append(specialization + ", ");
+        result.append(prerequirementsExperiments.toString() + ", ");
+        result.append(this.requiredEquipment.toString());
 
         return result.toString();
     }

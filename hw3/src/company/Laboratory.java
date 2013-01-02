@@ -1,8 +1,8 @@
+/** @author Eldar Damari, Ory Band. */
+
 package company;
 
 import java.lang.Comparable;
-import java.io.*;
-import java.util.*;
 
 
 public class Laboratory implements Comparable<Laboratory> {
@@ -15,20 +15,24 @@ public class Laboratory implements Comparable<Laboratory> {
 
     public Laboratory(
             String headLabName,
-            String special,
+            String specialization,
             int numOfScientists,
             int price) {
 
         this.name = new String(headLabName);
-        this.specialization = new String(special);
+        this.specialization = new String(specialization);
         this.numberOfScientists = numOfScientists;
         this.price = price;
-            }
+    }
 
 
+    /**
+     * Sorts labs by most scientists, then by cheapest price.
+     *
+     * @param l lab to compare against.
+     */
     public int compareTo(Laboratory l) {
         if (this.numberOfScientists == l.getNumOfScientists()) {
-            // Cheap labs appear before expensive labs (we reverse).
             return - (this.price - l.getPrice());
         } else {
             return this.numberOfScientists - l.getNumOfScientists();
@@ -36,6 +40,7 @@ public class Laboratory implements Comparable<Laboratory> {
     }
 
 
+    // Getters.
     public String getName() {
         return this.name;
     }
@@ -56,14 +61,14 @@ public class Laboratory implements Comparable<Laboratory> {
     public String toString() {
 
         StringBuilder result = new StringBuilder();
-        String NEW_LINE = System.getProperty("line.separator");
+        String N = System.getProperty("line.separator");
 
-        result.append(NEW_LINE + "______________________________________" + NEW_LINE);
-        result.append("           ---Laboratory For Sale---: " + NEW_LINE);
-        result.append("Name: " + this.name + NEW_LINE);
-        result.append("Specialization: " + this.specialization + NEW_LINE);
-        result.append("Number Of Scientists: " + this.numberOfScientists + NEW_LINE);
-        result.append("Price: " + this.price + NEW_LINE);
+        result.append(N);
+        result.append(this.price + "$, ");
+        result.append(this.name + ", ");
+        result.append(this.specialization + ", ");
+        result.append(this.numberOfScientists + " scientists.");
+
         return result.toString();
     }
 }

@@ -1,8 +1,8 @@
+/** @author Eldar Damari, Ory Band */
+
 package company;
 
 import java.lang.Comparable;
-import java.io.*;
-import java.util.*;
 
 
 public class Scientist implements Comparable<Scientist> {
@@ -19,11 +19,17 @@ public class Scientist implements Comparable<Scientist> {
     }
 
 
+    /**
+     * Sorts by cheapest price.
+     *
+     * @param s Scientist to compare against.
+     */
     public int compareTo(Scientist s) {
         return this.price - s.getPrice();
     }
 
 
+    // Getters.
     public String getSpecialization() {
         return this.specialization;
     }
@@ -36,13 +42,13 @@ public class Scientist implements Comparable<Scientist> {
     public String toString() {
 
         StringBuilder result = new StringBuilder();
-        String NEW_LINE = System.getProperty("line.separator");
+        String N = System.getProperty("line.separator");
 
-        result.append("______________________________________" + NEW_LINE);
-        result.append("           ---Scientists For Sale---: " + NEW_LINE);
-        result.append("Name: " + this.name + NEW_LINE);
-        result.append("Specialization: " + this.specialization + NEW_LINE);
-        result.append("Price: " + this.price + NEW_LINE);
+        result.append(N);
+        result.append(this.price + "$, ");
+        result.append(this.name + ", ");
+        result.append(this.specialization + N);
+
         return result.toString();
     }
 }
