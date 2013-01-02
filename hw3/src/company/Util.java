@@ -1,222 +1,265 @@
+/**
+ * Responsible for extracting data from .txt files.
+ *
+ * @author Eldar Damari, Ory Band.
+ */
+
 package company;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+
 import java.util.Scanner;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap; 
 
 
-public class Util{
+// Singleton.
+public enum Util {
 
-    // Get lines from files.
+    INSTANCE;  // Singleton pattern.
+
+
+    /**
+     * Reads lines from files.
+     *
+     * @param filePath file to read from.
+     *
+     * @return lines from file.
+     */
     public ArrayList<String> getLines(String filePath) throws IOException {
 
-        String thisLine; // TODO all  need to be private - geting error.
+        String thisLine;
         BufferedReader br = null;
         ArrayList<String> lines = new ArrayList<String>();
+
         try {
-            br  = new BufferedReader(new FileReader(filePath));
-            while ((thisLine = br.readLine()) != null ) {
+            br = new BufferedReader(new FileReader(filePath));
+
+            while ((thisLine = br.readLine()) != null) {
                 lines.add(thisLine);
             }
-        } catch (IOException e){
-            System.err.println("Error: " + e);
+        } catch (IOException e) {
             e.printStackTrace();
-
         } finally {
-            try{ 
+            try { 
                 br.close();
             }
-            catch (IOException ex){
-                System.err.println("Error: closing file " + ex);
-                ex.printStackTrace();
+            catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
         return lines;
     }
 
-    // need to return ArrayList
-    public ArrayList<String> divideLinesByDelimiter(ArrayList<String> arr,
-            String delimeter){
 
-        ArrayList<String> lines = new ArrayList<String>();
-        Iterator<String> itr = arr.iterator();
+    /**
+     * Divides lines by a delimeter given as argument.
+     *
+     * @param lines lines to divide.
+     * @param delimeter delimeter to split by.
+     */
+    public ArrayList<String> split(
+            ArrayList<String> inputLines, String delimeter) {
 
-        // Iterate all lines
-        while (itr.hasNext()) {
-            Scanner s = new Scanner(itr.next());
-            if (delimeter.equals("TAB") == true) {
-                s.useDelimiter("\t");   // Use delimeter Tab.
-            }
-            else if (delimeter.equals("COMMA") == true) {
-                s.useDelimiter("[, ]");    // User delimeter comma.
-            }
-            else if (delimeter.equals("SPACE") == true) {
-                s.useDelimiter("\\s");    // User delimeter comma.
+        ArrayList<String> outputLines = new ArrayList<String>();
+
+        for (String line : inputLines) {
+            Scanner s = new Scanner(line);
+
+            if (delimeter.equals("TAB")) {
+                s.useDelimiter("\t");
+            } else if (delimeter.equals("COMMA")) {
+                s.useDelimiter("[, ]");
+            } else if (delimeter.equals("SPACE")) {
+                s.useDelimiter("\\s");
             }
 
-            while (s.hasNext()) {  // Divide each line by tab and add to arr.
-                lines.add(s.next());
+            while (s.hasNext()) {
+                outputLines.add(s.next());
             }
+
             s.close();
         }
-        return lines;
+
+        return outputLines;
     }
 
-    public void getDataFromInizialData(String filePath,
-            Statistics stat,
-            Repository repo,
-            ArrayList<HeadOfLaboratory> headsOfLaboratory) {
+
+    /**
+     * Reads data from initaldata.txt file.
+     *
+     * @param filePath .txt file path.
+     * @param statistics Statistics object.
+     * @param repository Repository object.
+     * @param laboratories list of [HeadOfLaboratory].
+     */
+    public void readInitialData(
+            String filePath,
+            Statistics statistics,
+            Repository repository,
+            ArrayList<HeadOfLaboratory> laboratories) {
 
         ArrayList<String> words = new ArrayList<String>();
-        try{
-            words = divideLinesByDelimiter(getLines(filePath),"TAB");
+
+        try {
+            words = split(getLines(filePath), "TAB");
         } catch (IOException e) {
-            System.err.println("Error: Can't get data from file: "+ e);
             e.printStackTrace();
         }
 
-        for (int i=0; i < words.size() ; i++) {
-            // Assign Budget
-            if (words.get(i).equals("Budget") == true) {
-                stat.setBudget(Integer.parseInt(words.get(i+1))); // Sets budget.
-                //TODO TEST!
-                //System.out.println(words.get(i+1));
+        for (int i=0; i < words.size(); i++) {
+
+            if (words.get(i).equals("Budget")) {
+                statistics.setBudget(
+                        Integer.parseInt(words.get(i+1)));
             }
-            // Assign equipment to repository 
-            if (words.get(i).equals("Repository") == true) {
-                while (words.get(i+1).equals("Laboratories") == false) {
-                    repo.getRepository().put(new String(words.get(i+1)),
+
+            // Reads equipment.
+            if (words.get(i).equals("Repository")) {
+                while ( ! words.get(i+1).equals("Laboratories") ) {
+
+                    repository.getRepository().put(
+                            new String(words.get(i+1)),
                             new Integer(Integer.parseInt(words.get(i+2))));
-                    //TODO TEST!
-                   // System.out.println(words.get(i+1));
-                   // System.out.println(words.get(i+2));
+
                     i += 2;
                 }
             }
-            if (words.get(i).equals("Laboratories") == true) {
-                while (i != words.size()-1){
 
-                    headsOfLaboratory.add(new HeadOfLaboratory(
-                      words.get(i+1),
-                      words.get(i+2),
-                      Integer.parseInt(words.get(i+3))));
-                    //TODO TEST!
-                    //System.out.println(words.get(i+1));
-                    //System.out.println(words.get(i+2));
-                    //System.out.println(words.get(i+3));
+            // Reads labs.
+            if (words.get(i).equals("Laboratories")) {
+                while (i != words.size() -1) {
+
+                    laboratories.add(
+                            new HeadOfLaboratory(
+                                words.get(i+1),
+                                words.get(i+2),
+                                Integer.parseInt(words.get(i+3))));
+
                     i += 3;
                 }
             }
         }
     }
 
-    public ArrayList<Experiment> getDataFromExperimentsList(String filePath){
 
+    /**
+     * Reads data from experimentlist.txt
+     *
+     * @param filePath file path.
+     *
+     * @return experiments read from file.
+     */
+    public ArrayList<Experiment> readExperimentsList(String filePath){
         ArrayList<String> lines = new ArrayList<String>();
         ArrayList<Experiment> experiments = new ArrayList<Experiment>();
-        Iterator<String> it = null; 
-        try{
+
+        try {
             lines = getLines(filePath);
         } catch (IOException e) {
-            System.err.println("Error: Can't get data from file: "
-                    + filePath + e);
             e.printStackTrace();
         }
-        //TODO TESTT
-        it = lines.iterator();
-        while(it.hasNext()) {
+
+        for (String line : lines) {
 
             ArrayList<String> words = new ArrayList<String>();
+
             ArrayList<String> analyzeWords0 = new ArrayList<String>();
-            analyzeWords0.add(it.next());
+            analyzeWords0.add(line);
             
-            words = divideLinesByDelimiter(analyzeWords0,"TAB");
+            words = split(analyzeWords0,"TAB");
 
             String id = new String(words.get(0));
 
             ArrayList<Integer> preExperiments = new ArrayList<Integer>();
-            ArrayList<String> dividedWords = new ArrayList<String>();
-            ArrayList<String> analyzeWords1 = new ArrayList<String>();
-            analyzeWords1.add(words.get(1));
-            dividedWords = divideLinesByDelimiter(analyzeWords1,
-                    "SPACE");
 
-            // Convert String array to int array
-            for (int k=0 ; k < dividedWords.size() ; k++) {
-                // if there is no preExperiments required the ArrayList will be empty
-                if (dividedWords.get(k).equals("0") != true ) {
-                    preExperiments.add(Integer.parseInt(
-                                dividedWords.get(k)));
+            ArrayList<String> splitWords    = new ArrayList<String>(),
+                              analyzeWords1 = new ArrayList<String>();
+
+            analyzeWords1.add(words.get(1));
+
+            splitWords = split(analyzeWords1, "SPACE");
+
+            // Convert String to int.
+            for (int k=0 ; k < splitWords.size() ; k++) {
+                // if there is no preExperiments required,
+                // the list will be empty.
+                if ( ! splitWords.get(k).equals("0") ) {
+                    preExperiments.add(Integer.parseInt(splitWords.get(k)));
                 }
-                //TODO TEST
-                //System.out.println("The # is :" + Integer.parseInt(dividedWords.get(k)));
             }
 
             String specialization = new String(words.get(2));
 
             ArrayList<String> equipments = new ArrayList<String>();
             ArrayList<String> analyzeWords = new ArrayList<String>();
-            analyzeWords.add(words.get(3));
-                //TODO TEST
-                //System.out.println(lines.get(3));
 
-            equipments = divideLinesByDelimiter(analyzeWords,"COMMA");
+            analyzeWords.add(words.get(3));
+
+            equipments = split(analyzeWords, "COMMA");
 
             HashMap<String,Integer> equipmentsMap = 
                 new HashMap<String,Integer>();
 
             for (int e=0 ; e < equipments.size() ; e += 2) {
-                //TODO TEST
-                //System.out.println(equipments.size());
-                equipmentsMap.put(new String(equipments.get(e)),
+                equipmentsMap.put(
+                        new String(equipments.get(e)),
                         new Integer(Integer.parseInt(equipments.get(e+1))));
             }
            
             int runtime = Integer.parseInt(words.get(4));
             int reward = Integer.parseInt(words.get(5));
 
-            // Creating instance of Experiment and push to array list.
-            Experiment experiment = new Experiment(id,
+            // Create instance and add to list.
+            Experiment experiment = new Experiment(
+                    id,
                     preExperiments,
                     specialization,
                     equipmentsMap,
                     runtime,
                     reward,
                     "INCOMPLETE");
+
             experiments.add(experiment);
         }
+
         return experiments;
     }
 
+
+    /**
+     * Reads equipment for sile file.
+     *
+     * @param filePath equipment file path.
+     *
+     * @return equipment hash map { type : [packages] }
+     */
     public HashMap<String, ArrayList<EquipmentPackage>>
-        getDataFromEquipmentForSale(String equipment) {
+        readEquipmentForSale(String filePath) {
     
         ArrayList<String> lines = new ArrayList<String>();
         HashMap<String, ArrayList<EquipmentPackage>> equipmentPackages =
             new HashMap<String, ArrayList<EquipmentPackage>>(); 
 
-        Iterator<String> it = null; 
-        try{
-            lines = getLines(equipment);
+        try {
+            lines = getLines(filePath);
         } catch (IOException e) {
-            System.err.println("Error: Can't get data from file: "
-                    + equipment + e);
             e.printStackTrace();
         }
         
-        it = lines.iterator();
-        while (it.hasNext()) {
+        for (String line : lines) {
 
-            // Get words from line
-            ArrayList<String> words = new ArrayList<String>();
-            ArrayList<String> analyzeWords = new ArrayList<String>();
-            analyzeWords.add(it.next());
-            words = divideLinesByDelimiter(analyzeWords,"TAB");
+            ArrayList<String> words = new ArrayList<String>(),
+                              analyzeWords = new ArrayList<String>();
+
+            analyzeWords.add(line);
+
+            words = split(analyzeWords,"TAB");
             
             // Check for double entries.
             if (equipmentPackages.containsKey(words.get(0))) {
@@ -226,49 +269,48 @@ public class Util{
                             Integer.parseInt(words.get(1)),
                             Integer.parseInt(words.get(2))));
             } else {
-
-                equipmentPackages.put(new String(words.get(0)),
+                equipmentPackages.put(
+                        new String(words.get(0)),
                         new ArrayList<EquipmentPackage>());
+
                 if (equipmentPackages.containsKey(words.get(0))) {
 
                     equipmentPackages.get(words.get(0)).add(
                                 new EquipmentPackage(words.get(0),
                                     Integer.parseInt(words.get(1)),
                                     Integer.parseInt(words.get(2))));
-                            } else {
-                                System.out.println("Error: Can't find specific etry");
-                            }
+                } else {
+                    System.out.println(
+                            "Util.readEquipmentForSale(): Can't find specific entry");
+                }
             }
         }
-        //TODO TEST
-       //System.out.println(equipmentPackages.values());
+
         return equipmentPackages;
     }
+
     
     public HashMap<String, ArrayList<Laboratory>>
-        getDataFromLaboratoriesForSale(String laboratories) {
+        readLaboratoriesForSale(String laboratories) {
     
         ArrayList<String> lines = new ArrayList<String>();
         HashMap<String, ArrayList<Laboratory>> labs =
             new HashMap<String, ArrayList<Laboratory>>(); 
 
-        Iterator<String> it = null; 
-        try{
+        try {
             lines = getLines(laboratories);
         } catch (IOException e) {
-            System.err.println("Error: Can't get data from file: "
-                    + laboratories + e);
             e.printStackTrace();
         }
         
-        it = lines.iterator();
-        while (it.hasNext()) {
+        for (String line : lines) {
 
-            // Get words from line
-            ArrayList<String> words = new ArrayList<String>();
-            ArrayList<String> analyzeWords = new ArrayList<String>();
-            analyzeWords.add(it.next());
-            words = divideLinesByDelimiter(analyzeWords,"TAB");
+            ArrayList<String> words = new ArrayList<String>(),
+                              analyzeWords = new ArrayList<String>();
+
+            analyzeWords.add(line);
+
+            words = split(analyzeWords,"TAB");
             
             // Check for double entries.
             if (labs.containsKey(words.get(1))) {
@@ -279,50 +321,51 @@ public class Util{
                             Integer.parseInt(words.get(2)),
                             Integer.parseInt(words.get(3))));
             } else {
-
                 labs.put(new String(words.get(1)),
                         new ArrayList<Laboratory>());
-                if (labs.containsKey(words.get(1))) {
 
+                if (labs.containsKey(words.get(1))) {
                     labs.get(words.get(1)).add(
-                                new Laboratory(words.get(0),
-                                    words.get(1),
-                                    Integer.parseInt(words.get(2)),
-                                    Integer.parseInt(words.get(3))));
-                            } else {
-                                System.out.println("Error: Can't find specific etry");
-                            }
+                            new Laboratory(words.get(0),
+                                words.get(1),
+                                Integer.parseInt(words.get(2)),
+                                Integer.parseInt(words.get(3))));
+                } else {
+                    System.out.println(
+                            "Util.readLaboratoriesForSale(): Can't find specific entry");
+                }
             }
         }
-        //TODO TEST
-       //System.out.println(equipmentPackages.values());
+
         return labs;
     }
     
+
+    /**
+     * Reads scientists for sale file.
+     *
+     * @param filePath file to read from.
+     *
+     * @return Scientists hash map { type : [scientists] }
+     */
     public HashMap<String, ArrayList<Scientist>>
-        getDataFromScientistsForSale(String scientistsFilePath) {
-    
+            readScientistsForSale(String filePath) {
+
         ArrayList<String> lines = new ArrayList<String>();
         HashMap<String, ArrayList<Scientist>> scientists =
             new HashMap<String, ArrayList<Scientist>>(); 
 
-        Iterator<String> it = null; 
-        try{
-            lines = getLines(scientistsFilePath);
+        try {
+            lines = getLines(filePath);
         } catch (IOException e) {
-            System.err.println("Error: Can't get data from file: "
-                    + scientists + e);
             e.printStackTrace();
         }
-        
-        it = lines.iterator();
-        while (it.hasNext()) {
 
-            // Get words from line
-            ArrayList<String> words = new ArrayList<String>();
-            ArrayList<String> analyzeWords = new ArrayList<String>();
-            analyzeWords.add(it.next());
-            words = divideLinesByDelimiter(analyzeWords,"TAB");
+        for (String line : lines) {
+            ArrayList<String> words = new ArrayList<String>(),
+                              analyzeWords = new ArrayList<String>();
+            analyzeWords.add(line);
+            words = split(analyzeWords,"TAB");
 
             // Check for double entries.
             if (scientists.containsKey(words.get(1))) {
@@ -332,7 +375,6 @@ public class Util{
                             words.get(1),
                             Integer.parseInt(words.get(2))));
             } else {
-
                 scientists.put(new String(words.get(1)),
                         new ArrayList<Scientist>());
                 if (scientists.containsKey(words.get(1))) {
@@ -342,15 +384,12 @@ public class Util{
                                 words.get(1),
                                 Integer.parseInt(words.get(2))));
                 } else {
-                    System.out.println("Error: Can't find specific etry");
-                            }
+                    System.out.println(
+                            "Util.readScientistsForSale(): Can't find specific entry");
+                }
             }
         }
-        //TODO TEST
-       //System.out.println(equipmentPackages.values());
+
         return scientists;
     }
-
-
 }
-

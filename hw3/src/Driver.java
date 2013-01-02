@@ -9,9 +9,8 @@ import java.util.ArrayList;
 public class Driver {
     public static void main(String args[]) {
 
-        Util u = new Util();  // File reader.
+        Util u = Util.INSTANCE;  // File reader.
 
-        // TODO statistics, repos and other objects should be created and handled in chiefScientist.
         Statistics statistics = new Statistics();
         Repository repository = new Repository();
         ArrayList<HeadOfLaboratory> laboratories = new ArrayList<HeadOfLaboratory>();
@@ -20,12 +19,12 @@ public class Driver {
         HashMap<String, ArrayList<Laboratory>> laboratoryForSale;
         HashMap<String, ArrayList<Scientist>> scientistsForSale;
 
-        u.getDataFromInizialData("InitialData.txt", statistics, repository, laboratories);
+        u.readInitialData("InitialData.txt", statistics, repository, laboratories);
 
-        experiments = u.getDataFromExperimentsList("ExperimentsList.txt");
-        equipmentForSale = u.getDataFromEquipmentForSale("EquipmentForSale.txt");
-        laboratoryForSale = u.getDataFromLaboratoriesForSale("LaboratoriesForSale.txt");
-        scientistsForSale = u.getDataFromScientistsForSale("ScientistsForPurchase.txt");
+        experiments = u.readExperimentsList("ExperimentsList.txt");
+        equipmentForSale = u.readEquipmentForSale("EquipmentForSale.txt");
+        laboratoryForSale = u.readLaboratoriesForSale("LaboratoriesForSale.txt");
+        scientistsForSale = u.readScientistsForSale("ScientistsForPurchase.txt");
 
         ScienceStore store = new ScienceStore(
                 equipmentForSale, scientistsForSale, laboratoryForSale);
