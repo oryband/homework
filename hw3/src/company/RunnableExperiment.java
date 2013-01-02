@@ -80,8 +80,7 @@ public class RunnableExperiment extends Observable implements Runnable {
                     fullReward = false;
 
                     int reward = this.experiment.getReward();
-                    this.chief.getStatistics().addReward(
-                            this.experiment.getReward() / 10);
+                    this.chief.getStatistics().addReward(reward / 10);
                 }
 
                 System.out.print(

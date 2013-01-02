@@ -8,7 +8,6 @@ package company;
 
 import java.util.Observer;
 import java.util.Observable;
-import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.ArrayList;
 

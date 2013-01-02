@@ -6,7 +6,6 @@
 
 package company;
 
-import java.util.Comparator;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -84,7 +83,7 @@ public class ScienceStore implements ScienceStoreInterface {
             ListIterator<EquipmentPackage> it =
                 this.equipmentPackages.get(requestedType).listIterator();
 
-            // Search for the closests matching overexceeding package size.
+            // Search for the closest matching overexceeding package size.
             boolean isBiggerPackage = false,
                     isPackageTooSmall = false;
 
@@ -194,7 +193,6 @@ public class ScienceStore implements ScienceStoreInterface {
                 while (it.hasNext() && requestedAmount > 0) {
                     scientist = it.next();
 
-                    int price = scientist.getPrice();
                     statistics.addPurchasedScientist(scientist);
                     headOfLaboratory.addScientists(1);
 
@@ -236,7 +234,6 @@ public class ScienceStore implements ScienceStoreInterface {
 
             statistics.addPurchasedLaboratory(laboratory);
 
-            int price = laboratory.getPrice();
             String name = laboratory.getName();
             String specialization = laboratory.getSpecialization();
             int numberOfScientists = laboratory.getNumOfScientists();

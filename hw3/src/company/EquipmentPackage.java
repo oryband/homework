@@ -3,8 +3,6 @@
 package company;
 
 import java.lang.Comparable;
-import java.io.*;
-import java.util.*;
 
 
 public class EquipmentPackage implements Comparable<EquipmentPackage> {
