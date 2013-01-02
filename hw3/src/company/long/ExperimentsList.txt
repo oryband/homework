@@ -1,0 +1,12 @@
+1	0	Histopathology	Microscope,2 Stirrer,2	90	100
+2	0	Haematology	Microscope,2 Bottle,6 Buret,5	59	10
+3	1 2	Bacteriology	Microscope,1 Beaker,2	90	105
+4	0	Histopathology	Stirrer,2 BunsenBurner,1	55	44
+5	1 2 4	Virology	FumeHood,3 HotPlate,2	75	150
+6	3	Serology	Crucible,10	100	200
+7	3	Serology	Microscope,2 Stirrer,2 Crucible,2	50	150
+8	3	Serology	Stirrer,2 BunsenBurner,1 Crucible,2	10	100
+9	3	Serology	Bottle,6 Buret,5	20	100
+10	3	Serology	FumeHood,3 Microscope,1	35	100
+11	3	Serology	Buret,5 EvaporatingDish,5	66	625
+12	6 7 8 9 10 11	Mycobacteriology	Crucible,10 Bottle,6 Buret,5 EvaporatingDish,5 ErlenmeyerFlash,2	100	15000

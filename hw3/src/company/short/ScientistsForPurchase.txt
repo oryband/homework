@@ -1,0 +1,3 @@
+DrA	Histopathology	55
+DrB	Histopathology	60
+DrC	Haematology	550

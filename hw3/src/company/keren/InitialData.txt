@@ -1,0 +1,11 @@
+Budget
+400
+Repository
+Microscope	2
+Beaker	3
+Stirrer	1
+BunsenBurner	2
+Laboratories
+ProfA	Haematology	1
+ProfB	Histopathology	1
+ProfC	Cytology	2

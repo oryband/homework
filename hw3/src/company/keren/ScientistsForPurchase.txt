@@ -1,0 +1,16 @@
+DrA	bli	55
+DrB	Histopathology	60
+DrC	bli	550
+DrD	hh	60
+DrE	ahh	50
+DrF	Histopathology	40
+DrG	hh	40
+DrH	Histopathology	50
+DrI	ahh	75
+DrJ	hh	55
+DrK	Histopathology	60
+DrL	Histopathology	55
+DrM	hh	55
+DrN	bloo	30
+DrO	bloo	100
+DrP	ahh	55
