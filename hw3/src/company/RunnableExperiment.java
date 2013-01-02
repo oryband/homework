@@ -23,10 +23,10 @@ public class RunnableExperiment extends Observable implements Runnable {
 
     public void run() {
 
-        System.out.println("Start: " + this.experiment.getExperimentId());
+        System.out.println("Start: " + this.experiment.getId());
 
         // Experiment still in progress
-        while (experiment.getExperimentRealRunTime() > 0) {
+        while (experiment.getCurrentRunTime() > 0) {
 
             this.experimentRealRunTime += new Date().getTime();
 
@@ -46,33 +46,33 @@ public class RunnableExperiment extends Observable implements Runnable {
             this.chief.getRepository().releaseEquipment(
                     this.experiment.getRequiredEquipment());
 
-            if (this.experiment.getExperimentRealRunTime() <= 8) {
+            if (this.experiment.getCurrentRunTime() <= 8) {
 
-                this.experiment.setExperimentRealRunTime(0);
+                this.experiment.setRealRunTime(0);
 
                 this.experimentRealRunTime = 
                     new Date().getTime() - this.experimentRealRunTime;
 
                 // Reward calculation.
                 if (this.experimentRealRunTime <= 
-                        (this.experiment.getExperimentRunTime() * 115)) {
+                        (this.experiment.getRequiredRunTime() * 115)) {
 
                     // 115% of reard gain.
-                    this.chief.getStatistics().addReward(this.experiment.getExperimentReward());
+                    this.chief.getStatistics().addReward(this.experiment.getReward());
 
                 } else {  // 10% of reward gained.
-                    this.chief.getStatistics().addReward((this.experiment.getExperimentReward()) * 10);
+                    this.chief.getStatistics().addReward((this.experiment.getReward()) * 10);
                 }
 
-                System.out.println("Experiment End : " + this.experiment.getExperimentId());
+                System.out.println("Experiment End : " + this.experiment.getId());
                 System.out.println("Experiment End with run time:  " + this.experimentRealRunTime); 
         
                 // Notify observers (ChiefScientist) that experiment is complete.
                 setChanged();
-                notifyObservers(this.experiment.getExperimentId());
+                notifyObservers(this.experiment.getId());
             } else {
-                this.experiment.setExperimentRealRunTime(
-                        this.experiment.getExperimentRealRunTime() - 8);
+                this.experiment.setRealRunTime(
+                        this.experiment.getCurrentRunTime() - 8);
 
                 this.experimentRealRunTime -= new Date().getTime();
 

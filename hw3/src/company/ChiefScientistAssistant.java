@@ -1,3 +1,5 @@
+/** @author Eldar Damari, Ory Band */
+
 //package company;
 
 import java.util.Map;
@@ -61,7 +63,7 @@ public enum ChiefScientistAssistant implements Runnable {
                     // Execute experiment if there's a lab,
                     // or purhcase one and then execute experiment.
                     if (headOfLaboratory == null) {
-                        this.chiefScientist.getStore().purchaseLaboratory(
+                        this.chiefScientist.getScienceStore().purchaseLaboratory(
                                 this.chiefScientist,
                                 this.chiefScientist.getStatistics(),
                                 specialization); 
@@ -108,14 +110,14 @@ public enum ChiefScientistAssistant implements Runnable {
 
         if (shoppingList.size() > 0) {
             // Purchase items in shopping list.
-            this.chiefScientist.getStore().purchaseEquipmentPackages(
+            this.chiefScientist.getScienceStore().purchaseEquipmentPackages(
                     this.chiefScientist.getRepository(),
                     this.chiefScientist.getStatistics(),
                     shoppingList);
         }
 
 
-        experiment.setExperimentStatus("INPROGRESS");
+        experiment.setStatus("INPROGRESS");
         headOfLaboratory.executeExperiment(runnableExperiment);
     }
     

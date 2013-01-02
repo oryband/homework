@@ -124,9 +124,9 @@ public class Repository {
                 // Wait for an experiment to finish,
                 // becuase maybe our missing required items has been returned.
                 try {
-                    System.out.println("In Wait(" + experiment.getExperimentId()+")");
+                    System.out.println("In Wait(" + experiment.getId()+")");
                     this.wait();
-                    System.out.println("Out of Wait(" + experiment.getExperimentId()+")");
+                    System.out.println("Out of Wait(" + experiment.getId()+")");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

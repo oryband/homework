@@ -13,8 +13,8 @@ public class Experiment {
     private final int reward;
 
     private ArrayList<Integer> prerequirementsExperiments;
-    private int runTimeInHours;
-    private int runTimeInHoursPrint;
+    private int currentRunTime;
+    private final int requiredRunTime;
     private String status;
 
 
@@ -32,13 +32,14 @@ public class Experiment {
         this.prerequirementsExperiments = preExperiments;
         this.requiredEquipment = requiredEquipment;
         this.reward = reward;
-        this.runTimeInHours = runtime;
-        this.runTimeInHoursPrint = runtime;
+        this.currentRunTime = runtime;
+        this.requiredRunTime = runtime;
         this.status = status;
     }
 
 
-    public String getExperimentId() {
+    // Getters
+    public String getId() {
         return this.id;
     }
 
@@ -54,15 +55,15 @@ public class Experiment {
         return this.requiredEquipment;
     }
 
-    public int getExperimentRunTime() {
-        return this.runTimeInHoursPrint;
+    public int getRequiredRunTime() {
+        return this.requiredRunTime;
     }
 
-    public int getExperimentRealRunTime() {
-        return this.runTimeInHours;
+    public int getCurrentRunTime() {
+        return this.currentRunTime;
     }
 
-    public int getExperimentReward() {
+    public int getReward() {
         return this.reward;
     }
 
@@ -70,11 +71,13 @@ public class Experiment {
         return this.status;
     }
 
+
     // Setters
-    public void setExperimentRealRunTime(int runtime){
-        this.runTimeInHours = runtime;
+    public void setRealRunTime(int runtime){
+        this.currentRunTime = runtime;
     }
-    public void setExperimentStatus(String status) {
+
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -92,7 +95,7 @@ public class Experiment {
                 prerequirementsExperiments.toString() + NEW_LINE);
 
         result.append("Required Equipment: " + this.requiredEquipment.toString() + NEW_LINE);
-        result.append("Run Time: " + runTimeInHoursPrint + NEW_LINE);
+        result.append("Run Time: " + requiredRunTime + NEW_LINE);
         result.append("Reward: " + reward + NEW_LINE);
         result.append("Status: " + status + NEW_LINE);
         result.append("______________________________________" + NEW_LINE);

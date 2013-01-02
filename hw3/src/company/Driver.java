@@ -96,6 +96,6 @@ public class Driver {
         // Print Tets
         //System.out.println(chief.toString());
 
-        chief.simulate();
+        chief.simulateCompany();
     }
 }
