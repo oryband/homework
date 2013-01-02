@@ -1,4 +1,4 @@
-/** @autor Eldar Damari, Ory Band */
+/** @author Eldar Damari, Ory Band */
 
 import company.*;
 

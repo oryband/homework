@@ -15,8 +15,8 @@ public class Experiment {
     private final int reward;
 
     private ArrayList<Integer> prerequirementsExperiments;
-    private int currentRunTime;  // ms.
-    private final int requiredRunTime;  // ms.
+    private int currentRunTime;  // hours.
+    private final int requiredRunTime;  // hours.
     private String status;
 
 
@@ -75,8 +75,8 @@ public class Experiment {
 
 
     // Setters
-    public void setRealRunTime(int runtime) {
-        this.currentRunTime = runtime;
+    public void setCurrentRunTime(int currentRunTime) {
+        this.currentRunTime = currentRunTime;
     }
 
     public void setStatus(String status) {
@@ -91,11 +91,11 @@ public class Experiment {
 
         result.append(N);
         result.append("#" + id + ", ");
-        result.append(status + ", ");
-        result.append(requiredRunTime + "hours, ");
-        result.append(reward + "$, ");
-        result.append(specialization + ", ");
-        result.append(prerequirementsExperiments.toString() + ", ");
+        result.append(this.status + ", ");
+        result.append(this.requiredRunTime + " hours, ");
+        result.append(this.reward + "$, ");
+        result.append(this.specialization + ", ");
+        result.append(this.prerequirementsExperiments.toString() + ", ");
         result.append(this.requiredEquipment.toString());
 
         return result.toString();

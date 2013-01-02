@@ -76,7 +76,7 @@ public class Statistics {
         String N = System.getProperty("line.separator");
 
         result.append(N);
-        result.append("Statistics:" + N);
+        result.append("Statistics:" + N + N);
 
         result.append("Finished Experiments: " + 
                 this.experiments.toString() + N + N);
