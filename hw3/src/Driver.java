@@ -1,4 +1,8 @@
-/** @author Eldar Damari, Ory Band */
+/** SPL Assignment #3
+ * http://www.cs.bgu.ac.il/~spl131/Assignments/Assignment_3
+ *
+ * @author Ory Band oryb@post.bgu.ac.il; Eldar Damari damariel@post.bgu.ac.il
+*/
 
 import company.*;
 
