@@ -232,7 +232,7 @@ public enum Util {
 
 
     /**
-     * Reads equipment for sile file.
+     * Reads equipment for sale file.
      *
      * @param filePath equipment file path.
      *
@@ -288,7 +288,13 @@ public enum Util {
         return equipmentPackages;
     }
 
-    
+    /**
+     * Reads Laboratories for sale file.
+     *
+     * @param laboratorie laboratories file path.
+     *
+     * @return laboratories hash map { type : [packages] }
+     */
     public HashMap<String, ArrayList<Laboratory>>
         readLaboratoriesForSale(String laboratories) {
     
