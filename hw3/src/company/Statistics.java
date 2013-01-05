@@ -89,10 +89,10 @@ public class Statistics {
         result.append("Laboratories Purchased: " + 
                 this.laboratoriesPurchased.toString() + N + N);
 
-        result.append("Budget Summary: ");
-        result.append("+" + this.rewards + "$, ");
-        result.append("-" + this.moneySpent + "$, ");
-        result.append(this.budget + "$ budget total.");
+        result.append("**Budget Summary** " + N);
+        result.append("Reward: +" + this.rewards + "$ " + N);
+        result.append("Money Spent: -" + this.moneySpent + "$ " + N);
+        result.append("Total Budget: " + this.budget + N);
 
         return result.toString();
     }

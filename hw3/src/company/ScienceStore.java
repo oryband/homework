@@ -119,15 +119,15 @@ public class ScienceStore implements ScienceStoreInterface {
                     // Special case where there aren't enough small packages to
                     // fill our request.
                     if (requestedAmount > 0) {
-                        System.out.println(
+                        /*System.out.println(
                                 "Science Store: No matching package size for requested item '"
-                                + requestedType + "'.");
+                                + requestedType + "'.");*/
                     }
                 // Special case where there aren't any packages at all.
                 } else {
-                    System.out.println(
+                    /*System.out.println(
                             "Science Store: No packages for requested item '"
-                            + requestedType + "'.");
+                            + requestedType + "'.");*/
                 }
             // If there's a big enough package, purchase it.
             } else {
