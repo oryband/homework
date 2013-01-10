@@ -10,74 +10,41 @@ INCLUDEDIR = ./include/
 BINDIR = ./bin/
 
 INCLUDES = -I$(INCLUDEDIR)
-OPENCV = -L/usr/lib -I/usr/include/opencv -lopencv_core -lopencv_highgui -lopencv_imgproc
-IMAGES = $(BINDIR)ImageLoader.o $(BINDIR)ImageOperations.o
+LIBS = -L/usr/lib -L/usr/local/lib
 
 CC = g++
-CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES)
+CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES) $(LIBS)
 
 
-all: $(IMAGES) $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o
+all: bin $(BINDIR)ConnectionHandler.o $(BINDIR)ProtocolHandler.o $(BINDIR)Client.o $(BINDIR)run_client.o
 	@echo -n 'Building target all: '
-	$(CC) $(CPPFLAGS) -o $(BINDIR)RandomU $(IMAGES) $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o $(BINDIR)Uni.o $(BINDIR)RandomU.o $(OPENCV)
+	$(CC) $(CPPFLAGS) -o $(BINDIR)run_client $(BINDIR)ConnectionHandler.o $(BINDIR)ProtocolHandler.o $(BINDIR)Client.o $(BINDIR)run_client.o
 
 
-
-$(BINDIR)RandomU.o: $(SRCDIR)RandomU.cpp $(BINDIR)Uni.o
-	@echo -n 'Building target RandomU.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)RandomU.o $(SRCDIR)RandomU.cpp
-
-
-$(BINDIR)util.o: $(SRCDIR)util.cpp $(INCLUDEDIR)util.h $(INCLUDEDIR)consts.h
-	@echo -n 'Building target util.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)util.o $(SRCDIR)util.cpp
+bin:
+	@echo -n 'Creating bin/: '
+	mkdir -p $(BINDIR)
 
 
-$(BINDIR)Uni.o: $(SRCDIR)Uni.cpp $(INCLUDEDIR)Uni.h $(IMAGES) $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Student.o $(BINDIR)CsStudent.o $(BINDIR)PgStudent.o $(BINDIR)Course.o $(BINDIR)CsCourse.o $(BINDIR)PgCourse.o $(BINDIR)ElCourse.o
-	@echo -n 'Building target Uni.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)Uni.o $(SRCDIR)Uni.cpp
+$(BINDIR)run_client.o: bin $(SRCDIR)run_client.cpp
+	@echo -n 'Building target run_client.o: '
+	$(CC) $(CPPFLAGS) -c -o $(BINDIR)run_client.o $(SRCDIR)run_client.cpp
 
 
-$(BINDIR)ImageLoader.o: $(SRCDIR)ImageLoader.cpp $(INCLUDEDIR)ImageLoader.h
-	@echo -n 'Building ImageLoader.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)ImageLoader.o $(SRCDIR)ImageLoader.cpp
+$(BINDIR)Client.o: bin $(SRCDIR)Client.cpp
+	@echo -n 'Building target Client.o: '
+	$(CC) $(CPPFLAGS) -c -o $(BINDIR)Client.o $(SRCDIR)Client.cpp
 
-$(BINDIR)ImageOperations.o: $(SRCDIR)ImageOperations.cpp $(INCLUDEDIR)ImageOperations.h
-	@echo -n 'Building target ImageOperations.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)ImageOperations.o $(SRCDIR)ImageOperations.cpp
+$(BINDIR)ConnectionHandler.o: bin $(SRCDIR)ConnectionHandler.cpp
+	@echo -n 'Building target ConnectionHandler.o: '
+	$(CC) $(CPPFLAGS) -c -o $(BINDIR)ConnectionHandler.o $(SRCDIR)ConnectionHandler.cpp
 
-
-$(BINDIR)CsStudent.o: $(SRCDIR)CsStudent.cpp $(INCLUDEDIR)CsStudent.h $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Student.o
-	@echo -n 'Building target CsStudent.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)CsStudent.o $(SRCDIR)CsStudent.cpp
-
-$(BINDIR)PgStudent.o: $(SRCDIR)PgStudent.cpp $(INCLUDEDIR)PgStudent.h $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Student.o
-	@echo -n 'Building target PgStudent.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)PgStudent.o $(SRCDIR)PgStudent.cpp
-
-$(BINDIR)Student.o: $(SRCDIR)Student.cpp $(INCLUDEDIR)Student.h $(INCLUDEDIR)consts.h
-	@echo -n 'Building target Student.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)Student.o $(SRCDIR)Student.cpp
-
-
-$(BINDIR)CsCourse.o: $(SRCDIR)CsCourse.cpp $(INCLUDEDIR)CsCourse.h $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Course.o 
-	@echo -n 'Building target CsCourse.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)CsCourse.o $(SRCDIR)CsCourse.cpp
-
-$(BINDIR)PgCourse.o: $(SRCDIR)PgCourse.cpp $(INCLUDEDIR)PgCourse.h $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Course.o 
-	@echo -n 'Building target PgCourse.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)PgCourse.o $(SRCDIR)PgCourse.cpp
-
-$(BINDIR)ElCourse.o: $(SRCDIR)ElCourse.cpp $(INCLUDEDIR)ElCourse.h $(INCLUDEDIR)consts.h $(BINDIR)util.o $(BINDIR)Course.o 
-	@echo -n 'Building target ElCourse.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)ElCourse.o $(SRCDIR)ElCourse.cpp
-
-$(BINDIR)Course.o: $(SRCDIR)Course.cpp $(INCLUDEDIR)Course.h $(INCLUDEDIR)consts.h
-	@echo -n 'Building target Course.o: '
-	$(CC) -c $(CPPFLAGS) -o $(BINDIR)Course.o $(SRCDIR)Course.cpp
+$(BINDIR)ProtocolHandler.o: bin $(SRCDIR)ProtocolHandler.cpp
+	@echo -n 'Building target ProtocolHandler.o: '
+	$(CC) $(CPPFLAGS) -c -o $(BINDIR)ProtocolHandler.o $(SRCDIR)ProtocolHandler.cpp
 
 
 .PHONY: clean
 clean:
 	@echo -n 'Cleaning $(BINDIR): '
-	rm -f $(BINDIR)*.jpg $(BINDIR)*.o $(BINDIR)RandomU $(BINDIR)random.log
+	rm -f $(BINDIR)*.o $(BINDIR)run_client
