@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="hw3">
+
+  <property environment="env"/>
+
+  <!--DEBUG-->
+  <property name="debugtoggle" value="false"/>
+  <property name="debuglevel" value="source,lines,vars"/>
+
+  <!--Java version-->
+  <property name="target" value="1.7"/>
+  <property name="source" value="1.7"/>
+
+  <path id="hw3.classpath">
+    <pathelement location="src"/>
+  </path>
+
+  <target name="init">
+    <mkdir dir="src"/>
+    <copy includeemptydirs="false" todir="src">
+      <fileset dir="src">
+        <exclude name="**/*.java"/>
+        <exclude name="company/tests/"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="clean">
+    <delete>
+      <fileset dir="src" includes="*.class"/>
+    </delete>
+    <delete>
+      <fileset dir="src/company" includes="*.class"/>
+    </delete>
+  </target>
+
+  <target depends="clean" name="cleanall"/>
+
+  <target depends="build-subprojects,build-project" name="build"/>
+
+  <target name="build-subprojects"/>
+
+  <target depends="init" name="build-project">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+    <javac debug="${debugtoggle}" debuglevel="${debuglevel}" destdir="src" includeantruntime="false" source="${source}" target="${target}">
+      <src path="src"/>
+      <exclude name="company/tests/"/>
+      <classpath refid="hw3.classpath"/>
+    </javac>
+  </target>
+
+  <target name="Driver">
+    <java classname="Driver" dir="src" failonerror="true" fork="yes">
+      <classpath refid="hw3.classpath"/>
+    </java>
+  </target>
+
+</project>
