@@ -1,4 +1,4 @@
-Eldar: working on getting the server up!
+Eldar: next: write a simple protocol and test system!
 Ory: Studying hard!
 
 # Client
