@@ -1,4 +1,4 @@
-package irc;
+/*package irc;*/
 
 
 import java.io.InputStreamReader;
@@ -9,16 +9,18 @@ import java.io.IOException;
 
 public class MessageTokenizer implements TokenizerInterface {
 
-    final char delimiter;
-    InputStreamReader isr;
-    boolean closed;
+    private final char delimiter;
+    private InputStreamReader isr;
+    private boolean closed;
 
-    public MessageTokenizer(InputStreamReader inputstream,
+    public MessageTokenizer(
+            InputStreamReader inputstream,
             char delimiter) {
 
         this.isr = inputstream;
         this.delimiter = delimiter;
-    }
+        this.closed = false;
+            }
     /**
      * Indicate if reading to StringBuffer failed.
      */
@@ -33,32 +35,35 @@ public class MessageTokenizer implements TokenizerInterface {
      */
     public String nextToken() throws IOException {
 
-        if (!isAlive()) {
-            throw new IOException();
-        } else {
+        try {
+            if (!isAlive()) {
+                throw new IOException();
+            } else {
 
-            String ans = null;
+                String ans = null;
 
-            try {
-                int c = 0;
-                StringBuffer sb = new StringBuffer();
-                while ((c = this.isr.read()) != -1) {
+                try {
+                    int c = 0;
+                    StringBuffer sb = new StringBuffer();
+                    while ((c = this.isr.read()) != -1) {
 
-                    if (c == this.delimiter) {
-                        break;
-                    } else {
-                        sb.append(c);
+                        if ((char)c == this.delimiter) {
+                            break;
+                        } else {
+                            sb.append((char)c);
+                        }
                     }
+                    ans = sb.toString();
+                } 
+                catch (IOException e) {
 
+                    this.closed = true;
+                    throw e;
                 }
-                ans = sb.toString();
-            } 
-            catch (IOException e) {
-
-                this.closed = true;
-                throw e;
+                return ans;
             }
-            return ans;
+        } catch (IOException e) {
+            throw e;
         }
     }
 }

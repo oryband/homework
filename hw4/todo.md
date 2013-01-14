@@ -1,4 +1,5 @@
-Eldar: next: write a simple protocol and test system!
+Eldar: next: ThreadPerClientServer working well - now need to wrirte the protocol
+            by the irc protocol.
 Ory: Studying hard!
 
 # Client

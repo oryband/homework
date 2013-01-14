@@ -1,11 +1,11 @@
-package irc;
+//package irc;
 
 
 import java.lang.String;
 
 
 public class Protocol implements ProtocolInterface {
-        
+
     private boolean shouldClose;
 
 
@@ -18,17 +18,21 @@ public class Protocol implements ProtocolInterface {
     }
 
     public boolean isEnd(String msg) {
-        return msg.equals("bye");
+        String trimed = msg.substring(0,msg.length()-1);
+        System.out.println(trimed);
+        System.out.println(trimed.length());
+        return trimed.equals("bye");
     }
 
     public String processInput(String msg) {
 
         if (isEnd(msg)) {
             this.shouldClose = true;
+            return null;
         } else {
+
             System.out.println(msg);
             return msg;
         }
-        return null;
     }
 }

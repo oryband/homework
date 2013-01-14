@@ -1,4 +1,4 @@
-package irc;
+//package irc;
 
 
 import java.lang.String;
