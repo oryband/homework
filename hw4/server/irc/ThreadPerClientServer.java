@@ -1,6 +1,7 @@
 //package irc;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.io.*;
 import java.net.*;
 import java.lang.System;
@@ -9,11 +10,13 @@ public class ThreadPerClientServer implements Runnable{
 
     private ServerSocket serverSocket;
     private int listenPort;
+    private Oper oper;
 
     public ThreadPerClientServer(
             int port) {
-        serverSocket = null;
-        listenPort = port;
+        this.serverSocket = null;
+        this.listenPort = port;
+        this.oper = new Oper();
             }
 
     public void run() {
@@ -34,13 +37,17 @@ public class ThreadPerClientServer implements Runnable{
                     MessageTokenizer tokenizer = 
                         new MessageTokenizer(isr ,'\n');
 
-                    ProtocolInterface protocol = new Protocol();
-                    ConnectionHandler handler = new ConnectionHandler(
+                    ProtocolInterface protocol = new Protocol(this);
+                    Client client = new Client(
                             tokenizer,
                             encoder,
                             protocol,
-                            socket);
-                    new Thread(handler).start();
+                            socket,
+                            this);
+                    // Add client to list
+                    this.oper.addClient(client);
+                    // Run thread...Run!!
+                    new Thread(client).start();
                 }
                 catch (IOException e)
                 {
@@ -63,4 +70,18 @@ public class ThreadPerClientServer implements Runnable{
     {
         serverSocket.close();
     }
+
+    /*public boolean isNickNameExist(String nick) {
+
+        Iterator<Client> it = this.clients.iterator();
+
+        while (it.hasNext()) {
+
+            if (it.next().getNick().equals(nick)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }*/
 }	

@@ -1,5 +1,4 @@
-Eldar: next: ThreadPerClientServer working well - now need to wrirte the protocol
-            by the irc protocol.
+Eldar: working on protocol!
 Ory: Studying hard!
 
 # Client
@@ -45,3 +44,27 @@ Fileds:
 Methods:
 1.isAlive().
 2.nextToken().
+
+#Protocol
+
+todo: 
+* write numericError printer.
+* think how to send to user from protocol without having socket inside protocol
+* write a function to know if we have message or data
+
+Fileds:
+1. boolean shouldClose.
+2. ThreadPerClientServer server.
+
+
+# Oper - (Handels all data base)
+
+Fileds:
+1. Clients.
+2. Channels.
+3. Commans.
+
+Methods:
+1. addClient.
+2. isCommandExist.
+3. isNickNameExist.
