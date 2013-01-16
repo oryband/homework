@@ -2,6 +2,8 @@
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Iterator;
+
 import java.lang.String;
 
 
@@ -22,38 +24,43 @@ public class Protocol implements ProtocolInterface {
         this.shouldClose = true;
     }
 
-    // TODO need to repalce by QUIT command!!!
-    public boolean isEnd(String msg) {
-        String trimed = msg.substring(0,msg.length()-1);
-        return trimed.equals("bye");
-    }
-
     public void processInput(String msg, Client client) {
 
         // Check if argument is 
-        boolean haveNick = false;
-        ArrayList<String> words = splitWords(msg);
+        ArrayList<String> words = split(msg);
 
-        if (!haveNick) {
-            
-            if (words[0].equals("NICK")) {
-                if (!this.oper.isNickNameExist()) {
-                client.setNickName(words[1]);
-                haveNick = true;
+        // COMMAND Message!
+        if (this.oper.getCommands().containsKey(words.get(0))) {
+
+            // Executing task upon message and command
+            this.oper.getCommands().get(words.get(0)).run(client, words);
+        }
+        // DATA Message!
+        else { 
+
+            // Sending o all users in the channel the message
+            String line = buildString(words);
+            client.getChannel().sendAll(client.getNickName(), line); 
+        }
+
+        /*if (client.getNickName() == null) {
+
+            if (words.get(0).equals("NICK") == true) {
+                if (!this.oper.isNickNameExist(words.get(1))) {
+                    client.setNickName(words.get(1));
+                    haveNick = true;
+
+                    client.sendMessage("Cool you have nick name");
                 } else {
-                    sendNumericError("NICKEXSIT"); // TODO implemet
+                    //sendNumericError("NICKEXSIT"); // TODO implemet
                 }
             } else {
-                sendNumericError("NICK");
+                //sendNumericError("NICK");
             }
-        }
-        
-        
+        }*/
 
-
-        }
     }
-    
+
     /**
      * Divides lines by a delimeter given as argument.
      *
@@ -63,6 +70,12 @@ public class Protocol implements ProtocolInterface {
     public ArrayList<String> split(String msg) {
 
         ArrayList<String> outputLines = new ArrayList<String>();
+
+        if (this.oper.getCommands().containsKey(msg)) {
+            
+            outputLines.add(msg);
+            return outputLines;
+        }
 
         Scanner s = new Scanner(msg);
         s.useDelimiter("\\s");
@@ -78,8 +91,10 @@ public class Protocol implements ProtocolInterface {
                 str.append(s.next());
                 str.append(" ");
             }
+        System.out.println("here is each word" + str.toString());
         }
 
+        System.out.println("here is the message" + str.toString());
         String words = str.toString();
         words = words.substring(0, words.length()-1);
         outputLines.add(words);
@@ -87,5 +102,21 @@ public class Protocol implements ProtocolInterface {
         s.close();
 
         return outputLines;
+    }
+
+    public String buildString(ArrayList<String> words) {
+
+        Iterator it = words.iterator();
+        StringBuilder str = new StringBuilder();
+
+        while (it.hasNext()) {
+            str.append(it.next());
+            str.append(" ");
+        }
+
+        String line = str.toString();
+        line = line.substring(0, line.length()-1);
+
+        return line;
     }
 }

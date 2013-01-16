@@ -10,10 +10,11 @@ public class Client implements Runnable {
     private EncoderInterface encoder;
     private MessageTokenizer tokenizer;
     private ProtocolInterface protocol;
-    private ThreadPerClientServer server;
+    private Oper oper;
 
     private String nickName;
     private String user;
+    private Channel channel;
 
 
     public Client(
@@ -21,25 +22,21 @@ public class Client implements Runnable {
             EncoderInterface encoder,
             ProtocolInterface protocol,
             Socket socket,
-            ThreadPerClientServer server) {
+            Oper oper ){
 
         this.socket = socket;
         this.encoder = encoder;
         this.tokenizer = tokenizer;
         this.protocol = protocol;
-        this.server = server;
+        this.oper = oper;
         this.nickName = new String();
         this.user = new String();
+        this.channel = null;
 
-        String NEW_LINE = System.getProperty("line.separator");
         String msg = "**Welcome To miniIRC server** ; Your Host"
-            + socket.getInetAddress() + ":" + socket.getPort()+'\n';
-        byte[] buf = this.encoder.toBytes(msg);
-        try {
-            this.socket.getOutputStream().write(buf,0,buf.length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            + socket.getInetAddress() + ":" + socket.getPort();
+
+        this.sendMessage(msg);
             }
 
     public void run() {
@@ -69,6 +66,19 @@ public class Client implements Runnable {
         }
     }
 
+    // Getters
+    public Socket getSocket() {
+        return this.socket;
+    }
+    public String getNickName() {
+        return this.nickName;
+    }
+    public Channel getChannel() {
+        return this.channel;
+    }
+    public Oper getOper() {
+        return this.oper;
+    }
     // Setters
     public void setNickName(String nick) {
         this.nickName = nick;
@@ -77,4 +87,17 @@ public class Client implements Runnable {
     public void setUser(String user) {
         this.user = user;
     }
+
+    public void sendMessage(String msg) {
+
+        String NEW_LINE = System.getProperty("line.separator");
+        String newmsg = msg + NEW_LINE; 
+        byte[] buf = this.encoder.toBytes(newmsg);
+        try {
+            this.socket.getOutputStream().write(buf,0,buf.length);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

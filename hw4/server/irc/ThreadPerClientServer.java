@@ -37,13 +37,13 @@ public class ThreadPerClientServer implements Runnable{
                     MessageTokenizer tokenizer = 
                         new MessageTokenizer(isr ,'\n');
 
-                    ProtocolInterface protocol = new Protocol(this);
+                    ProtocolInterface protocol = new Protocol(this.oper);
                     Client client = new Client(
                             tokenizer,
                             encoder,
                             protocol,
                             socket,
-                            this);
+                            oper);
                     // Add client to list
                     this.oper.addClient(client);
                     // Run thread...Run!!
@@ -71,17 +71,4 @@ public class ThreadPerClientServer implements Runnable{
         serverSocket.close();
     }
 
-    /*public boolean isNickNameExist(String nick) {
-
-        Iterator<Client> it = this.clients.iterator();
-
-        while (it.hasNext()) {
-
-            if (it.next().getNick().equals(nick)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }*/
 }	
