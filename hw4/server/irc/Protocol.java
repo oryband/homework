@@ -71,9 +71,19 @@ public class Protocol implements ProtocolInterface {
 
         ArrayList<String> outputLines = new ArrayList<String>();
 
-        if (this.oper.getCommands().containsKey(msg)) {
+        // We check if the user entered a single command with no parameters
+        String message = msg.substring(0,msg.length()-1);
+        System.out.println("This is msg"+ msg);
+        System.out.println("Size of:"+ msg.length());
+
+
+        System.out.println("This is message"+ message);
+        System.out.println("Size of:"+ message.length());
+
+        if (this.oper.getCommands().containsKey(message)) {
             
-            outputLines.add(msg);
+            outputLines.add(message);
+
             return outputLines;
         }
 
