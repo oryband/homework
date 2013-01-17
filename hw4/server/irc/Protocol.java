@@ -81,7 +81,7 @@ public class Protocol implements ProtocolInterface {
         System.out.println("Size of:"+ message.length());
 
         if (this.oper.getCommands().containsKey(message)) {
-            
+
             outputLines.add(message);
 
             return outputLines;

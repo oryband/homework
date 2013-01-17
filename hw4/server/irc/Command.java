@@ -1,4 +1,4 @@
-// package irc;
+//package irc;
 
 import java.util.ArrayList;
 
@@ -18,12 +18,11 @@ public class Command{
 
     public void run(Client client, ArrayList<String> words) {
 
-        if (words.get(0).equals("NICK") == true) {
+        if (name.equals("NICK") == true) {
 
             if (words.size() == 1) {
 
                 client.sendMessage("431 No nickname given"); 
-
             } else 
                 if (words.size() == 2) {
 
@@ -39,8 +38,33 @@ public class Command{
                 }
 
         } else {
+            if (name.equals("USER") == true) {
 
+                if (words.size() == 1) {
+
+                    client.sendMessage("461 USER :Not enough parameters"); 
+                } else 
+                    if (words.size() == 2) {
+
+                        if (!client.isUserNameExist()) {
+
+                            client.setUser(words.get(1));
+                            client.sendMessage("402");
+                        } else {
+
+                            client.sendMessage("462 :You may not reregister");
+                        }
+                    }
+
+
+
+            } else {
+                if (name.equals("QUIT") == true) {
+
+
+                }
+            }
         }
-    }
 
+    }
 }

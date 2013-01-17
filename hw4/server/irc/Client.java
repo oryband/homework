@@ -87,6 +87,14 @@ public class Client implements Runnable {
     public void setUser(String user) {
         this.user = user;
     }
+    public boolean isUserNameExist() {
+
+        if (this.user.length() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     public void sendMessage(String msg) {
 
