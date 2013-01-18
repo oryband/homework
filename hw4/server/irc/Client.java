@@ -54,8 +54,6 @@ public class Client implements Runnable {
                     // Analazing message upon protocol!
                     this.protocol.processInput(msg,this); 
 
-                    System.out.println("11111111111");
-
                 } catch (IOException e) {
                     System.out.println("ERROR: can't Analize message");
                 }
@@ -68,7 +66,6 @@ public class Client implements Runnable {
         catch (IOException e) {
             System.out.println("Error in closing");
         }
-        System.out.println("2222222");
     }
 
     // Setters

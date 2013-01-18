@@ -56,17 +56,10 @@ public class Protocol implements ProtocolInterface {
 
         // We check if the user entered a single command with no parameters
         String message = msg.substring(0,msg.length()-1);
-        System.out.println("This is msg"+ msg);
-        System.out.println("Size of:"+ msg.length());
-
-
-        System.out.println("This is message"+ message);
-        System.out.println("Size of:"+ message.length());
 
         if (this.oper.getCommands().containsKey(message)) {
 
             outputLines.add(message);
-
             return outputLines;
         }
 
@@ -84,16 +77,16 @@ public class Protocol implements ProtocolInterface {
                 str.append(s.next());
                 str.append(" ");
             }
-        System.out.println("here is each word" + str.toString());
         }
 
-        System.out.println("here is the message" + str.toString());
+        if (str.length() == 0) {
+            return outputLines;
+        }
         String words = str.toString();
         words = words.substring(0, words.length()-1);
         outputLines.add(words);
 
         s.close();
-
         return outputLines;
     }
 

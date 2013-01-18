@@ -1,5 +1,7 @@
-Eldar: working on protocol!
-Ory: Studying hard!
+Eldar: working on sendall function !
+Ory: work on client in c++!
+
+**IMPORATANT: This file is NOT fullt updated, please contact me!
 
 # Client
 
@@ -49,8 +51,7 @@ Methods:
 
 todo: 
 * write numericError printer.
-* think how to send to user from protocol without having socket inside protocol
-* write a function to know if we have message or data
+* If in Channel there is only 1 person he will become admin!!!!
 
 Fileds:
 1. boolean shouldClose.
