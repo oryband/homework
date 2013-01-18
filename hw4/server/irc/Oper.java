@@ -68,6 +68,12 @@ public class Oper {
     public void addClient(Client client) {
         this.clients.add(client);
     }
+    public void addChannel(String name, Client admin) {
+        this.channels.add(new Channel(name, admin));
+    }
+    public void removeChannel(Channel channel) {
+        this.channels.remove(this.channels.indexOf(channel));
+    }
 
     // Getters
     public boolean isCommandExist(String command) {
