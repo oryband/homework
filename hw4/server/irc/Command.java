@@ -32,45 +32,12 @@ public class Command{
 
             // NICK
             case 1: 
-
-                if (words.size() == 1) {
-
-                    client.sendMessage("431 No nickname given"); 
-                } else { 
-                    if (words.size() == 2) {
-
-                        if (client.getOper().isNickNameExist(words.get(1))) {
-
-                            client.sendMessage("433 <"+words.get(1)+
-                                    "> :Nickname is already in use"); 
-                        } else {
-
-                            client.setNickName(words.get(1));
-                            client.sendMessage("401");
-                        }
-                    }
-                }
+                this.runNick(client,words);
                 break;
 
                 // USER
             case 2:
-
-                if (words.size() == 1) {
-
-                    client.sendMessage("461 USER :Not enough parameters"); 
-                } else { 
-                    if (words.size() == 2) {
-
-                        if (!client.isUserNameExist()) {
-
-                            client.setUser(words.get(1));
-                            client.sendMessage("402");
-                        } else {
-
-                            client.sendMessage("462 :You may not reregister");
-                        }
-                    }
-                }
+                this.runUser(client,words);
                 break;
 
                 // QUIT 
@@ -79,60 +46,112 @@ public class Command{
 
                 // JOIN
             case 4: 
+                this.runJoin(client, words);
+                break;
+        }
 
-                if (words.size() == 1) {
 
-                    client.sendMessage("461 USER :Not enough parameters"); 
-                } else { 
+    }
 
-                    if (words.size() == 2) {
+    private void runNick(Client client, ArrayList<String> words) {
 
-                        if (client.getOper().
-                                isChannelExist(words.get(1)) == null) {
+        if (words.size() == 1) {
+            client.sendMessage("431 No nickname given"); 
+        } else { 
+            if (words.size() == 2) {
 
-                            if (client.isInChannel() == true) {
+                if (client.getOper().isNickNameExist(words.get(1))) {
+                    client.sendMessage("433 <"+words.get(1)+
+                            "> :Nickname is already in use"); 
+                } else {
+                    client.setNickName(words.get(1));
+                    client.sendMessage("401");
+                }
+            }
+        }
+    }
 
-                                client.removeFromChannel();
-                            }
+    private void runUser(Client client, ArrayList<String> words) {
+        if (words.size() == 1) {
+
+            client.sendMessage("461 USER :Not enough parameters"); 
+        } else { 
+            if (words.size() == 2) {
+
+                if (!client.isUserNameExist()) {
+
+                    client.setUser(words.get(1));
+                    client.sendMessage("402");
+                } else {
+
+                    client.sendMessage("462 :You may not reregister");
+                }
+            }
+        }
+    }
+
+    private void runJoin(Client client, ArrayList<String> words) {
+        if (words.size() == 1) {
+            client.sendMessage("461 USER :Not enough parameters"); 
+        } else { 
+
+            if (words.size() == 2) {
+
+                // Client already in a channel 
+                if (client.isInChannel() == true) {
+
+                    // Trying to get inside the same cahnnel!
+                    if (client.getChannel().getName().
+                            equals(words.get(1)) == true) {
+
+                    } else {
+
+                        // Removing the client from the channel he is in!
+                        client.removeFromChannel();
+
+                        Channel channel = client.getOper()
+                            .isChannelExist(words.get(1));
+
+                        // Is the channel exist?
+                        if (channel == null) {
+
                             // Creating new channel with client as admin
                             client.getOper().addChannel(words.get(1),client);
-                                    
-                            client.addChannel(
-                                    client.getOper()
+                            client.addChannel(client.getOper()
                                     .isChannelExist(words.get(1)));
 
-                            client.sendMessage("366 "+words.get(1)+
-                                    " :End of /NAMES list");
-                        } else {
+                            client.sendMessage(client.getChannel().getNameReply());
 
-                            if (client.isInChannel() == false) {
+                        } else { // Channel exist!
 
-                                // JOIN him to an exist channel   
-                                Channel channel = client.getOper()
-                                    .isChannelExist(words.get(1));
-
-                                channel.addUser(client);
-
-                                client.sendMessage(channel.getNameReply());
-
-                            } else {
-
-                                if (client.getChannel().getName().
-                                        equals(words.get(1)) == false) {
-                                System.out.println("YES THE iiiiiROOM NAME ARE EVEM!");
-
-                                    // Removing client from current channel
-                                    client.removeFromChannel();
-
-                                    client.getOper().isChannelExist(words.get(1)).
-                                        addUser(client);
-                                        }
-                                System.out.println("YES THE ROOM NAME ARE EVEM!");
-                            }
+                            client.addChannel(channel);
+                            client.sendMessage(channel.getNameReply());
                         }
+                    } 
+                } else { // new user need new channel
+
+                    Channel channel = client.getOper()
+                        .isChannelExist(words.get(1));
+
+                    // lets see if channel already exist
+                    if (channel == null) {
+
+                        // Creating new channel with client as admin
+                        client.getOper().addChannel(words.get(1),client);
+                        client.addChannel(client.getOper()
+                                .isChannelExist(words.get(1)));
+
+                        client.sendMessage(client.getChannel().getNameReply());
+
+                    } else { // Channel exist!
+
+                        client.addChannel(channel);
+                        client.sendMessage(channel.getNameReply());
+
                     }
                 }
-                break;
+            }
+            System.out.println("All channels: " + client.getOper().getChannels().toString());
         }
     }
 }

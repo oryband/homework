@@ -42,23 +42,6 @@ public class Protocol implements ProtocolInterface {
             String line = buildString(words);
             client.getChannel().sendAll(client.getNickName(), line); 
         }
-
-        /*if (client.getNickName() == null) {
-
-            if (words.get(0).equals("NICK") == true) {
-                if (!this.oper.isNickNameExist(words.get(1))) {
-                    client.setNickName(words.get(1));
-                    haveNick = true;
-
-                    client.sendMessage("Cool you have nick name");
-                } else {
-                    //sendNumericError("NICKEXSIT"); // TODO implemet
-                }
-            } else {
-                //sendNumericError("NICK");
-            }
-        }*/
-
     }
 
     /**

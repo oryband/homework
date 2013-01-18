@@ -16,8 +16,7 @@ public class Channel {
         this.name = name;
         this.admin = admin;
         this.users = new ArrayList<Client>();
-        this.users.add(admin);
-        this.admin.setIsInChannel(true);
+//        this.users.add(admin);
     }
 
     // Getters
@@ -65,8 +64,6 @@ public class Channel {
 
     public synchronized void addUser(Client client) {
         this.users.add(client);
-        client.setIsInChannel(true);
-        client.addChannel(this);
     }
 
     public void removeUser(Client client) {

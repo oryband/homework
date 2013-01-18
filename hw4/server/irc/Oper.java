@@ -97,6 +97,10 @@ public class Oper {
         }
         return null;
     }
+    public ArrayList<Channel> getChannels() {
+        return this.channels;
+        
+    }
 
     // Checks if nick name exist!
     public boolean isNickNameExist(String nick) {

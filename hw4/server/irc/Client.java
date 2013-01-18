@@ -68,16 +68,17 @@ public class Client implements Runnable {
         catch (IOException e) {
             System.out.println("Error in closing");
         }
-                    System.out.println("2222222");
+        System.out.println("2222222");
     }
-    
-    // Setters
 
+    // Setters
     public void setIsInChannel(boolean status) {
         this.inChannel = status;
     }
     public void addChannel(Channel channel) {
         this.channel = channel;
+        this.inChannel = true;
+        channel.addUser(this);
     } 
 
     // Getters
@@ -125,10 +126,9 @@ public class Client implements Runnable {
         if (this.channel.isEmpty()) {
             // Channel is empty, need to delete it.
             this.oper.removeChannel(this.channel);
-        } else {
-            this.inChannel = false;
-            this.channel = null;
         }
+            this.channel = null;
+            this.inChannel = false;
     }
 
 
