@@ -26,7 +26,7 @@ ConnectionHandler :: ~ConnectionHandler() {
 
 
 const bool ConnectionHandler :: connect() {
-    cout << "Connecting to " << _host << ":" << _port << endl;
+    cout << "Connecting to " << _host << ":" << _port << " ..." << endl;
 
     try {
         // Server's end-point.
@@ -39,7 +39,7 @@ const bool ConnectionHandler :: connect() {
             throw system_error(error);
         }
     } catch (exception& e) {
-        cerr << "connect() failed (Error: " << e.what() << ")" << endl;
+        cerr << "connect() failed (" << e.what() << ")" << endl;
         return false;
     }
 
@@ -72,7 +72,7 @@ const bool ConnectionHandler :: getBytes(
             throw system_error(error);
         }
     } catch (exception e) {
-        cerr << "getBytes() failed (Error: " << e.what() << ")" << endl;
+        cerr << "getBytes() failed (" << e.what() << ")" << endl;
         return false;
     }
 
@@ -95,7 +95,7 @@ const bool ConnectionHandler :: sendBytes(
 			throw system_error(error);
         }
     } catch (exception& e) {
-        cerr << "sendBytes() failed (Error: " << e.what() << ")" << endl;
+        cerr << "sendBytes() failed (" << e.what() << ")" << endl;
         return false;
     }
 
@@ -123,7 +123,7 @@ const bool ConnectionHandler :: getFrameAscii(
             frame.append(1, ch);
         } while (delimeter != ch);
     } catch (exception& e) {
-        cerr << "getFrameAscii() failed (Error: " << e.what() << ")" << endl;
+        cerr << "getFrameAscii() failed (" << e.what() << ")" << endl;
         return false;
     }
 

@@ -10,15 +10,17 @@ INCLUDEDIR = ./include/
 BINDIR = ./bin/
 
 INCLUDES = -I$(INCLUDEDIR)
+BOOST = -lboost_system-mt
 LIBS = -L/usr/lib -L/usr/local/lib
 
+CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES)
+
 CC = g++
-CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES) $(LIBS)
 
 
-all: bin $(BINDIR)ConnectionHandler.o $(BINDIR)ProtocolHandler.o $(BINDIR)Client.o $(BINDIR)run_client.o
+all: bin $(BINDIR)ConnectionHandler.o $(BINDIR)ProtocolHandler.o $(BINDIR)run_client.o
 	@echo -n 'Building target all: '
-	$(CC) $(CPPFLAGS) -o $(BINDIR)run_client $(BINDIR)ConnectionHandler.o $(BINDIR)ProtocolHandler.o $(BINDIR)Client.o $(BINDIR)run_client.o
+	$(CC) $(CPPFLAGS) $(LIBS) $(BOOST) -o $(BINDIR)run_client $(BINDIR)ConnectionHandler.o $(BINDIR)ProtocolHandler.o $(BINDIR)run_client.o
 
 
 bin:
@@ -30,10 +32,6 @@ $(BINDIR)run_client.o: bin $(SRCDIR)run_client.cpp
 	@echo -n 'Building target run_client.o: '
 	$(CC) $(CPPFLAGS) -c -o $(BINDIR)run_client.o $(SRCDIR)run_client.cpp
 
-
-$(BINDIR)Client.o: bin $(SRCDIR)Client.cpp
-	@echo -n 'Building target Client.o: '
-	$(CC) $(CPPFLAGS) -c -o $(BINDIR)Client.o $(SRCDIR)Client.cpp
 
 $(BINDIR)ConnectionHandler.o: bin $(SRCDIR)ConnectionHandler.cpp
 	@echo -n 'Building target ConnectionHandler.o: '
