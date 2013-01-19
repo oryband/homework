@@ -1,7 +1,38 @@
-Eldar: working on sendall function !
+Eldar:
+* working on LIST - done!
+* working on NAMES! - done!
+* working on PART - done!
+* working on QUIT! - done!
+* working on NICK,JOIN - done!
+* if user left alone in a room, he become admin - done!
+
+
 Ory: work on client in c++!
 
+****************************************************************
+
 **IMPORATANT: This file is NOT fullt updated, please contact me!
+1. The server is working fine ( you can log in as client)
+2. After you log in with a Client
+3. You can user the numeric replyies: NICK,USER,JOIN.
+****************************************************************
+
+
+TODO:
+1. in QUIT section - need to think how to implements "if for some reason
+a client connection is closed without the client issing a QUIT comman the
+server required to inform upon the nature of the enent"
+2. When a client enter NICK and then JOIN and THEN try to write shit
+   he need to gey nothing  - now is crashing.
+
+--**Do if any time left**--
+* if user leave/join room notify all memebers!
+
+
+# Command
+todo:
+- need to fix the parameter with #!!!! - done (DO WE NEED AT PART?)
+
 
 # Client
 

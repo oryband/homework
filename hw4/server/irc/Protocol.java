@@ -16,32 +16,68 @@ public class Protocol implements ProtocolInterface {
         this.oper = oper;
     }
 
-    public boolean shouldClose() {
+    // Setters
+    public void setShouldClose(boolean stat) {
+        this.shouldClose  = stat;
+    }
+    
+    public boolean getShouldClose() {
         return this.shouldClose;
     }
 
     public void connectionTerminated() {
-        this.shouldClose = true;
+        this.setShouldClose(true);
     }
 
     public void processInput(String msg, Client client) {
 
-        // Check if argument is 
-        ArrayList<String> words = split(msg);
 
-        // COMMAND Message!
-        if (this.oper.getCommands().containsKey(words.get(0))) {
+            // Check if argument is 
+            ArrayList<String> words = split(msg);
+            
+            if (words.size() == 0) {
+                return;
+            }
 
-            // Executing task upon message and command
-            this.oper.getCommands().get(words.get(0)).run(client, words);
-        }
-        // DATA Message!
-        else { 
+            // PUser must enter NICK and USER command
+            if (client.newUser()) {
 
-            // Sending o all users in the channel the message
-            String line = buildString(words);
-            client.getChannel().sendAll(client.getNickName(), line); 
-        }
+                if (!client.hasNickname()) { 
+
+                    if (words.get(0).equals("NICK")) {
+                        // Executing task upon message and command
+                        this.oper.getCommands().get(words.get(0)).run(client, words);
+                    } else {
+                        client.sendMessage("451 :You have not registered");
+                    }
+                } else {
+
+                    if (!client.hasUser()) {
+
+                        if (words.get(0).equals("USER")) {
+                            // Executing task upon message and command
+                            this.oper.getCommands().get(words.get(0)).run(client, words);
+                        } else {
+                            client.sendMessage("451 :You have not registered");
+                        }
+                    }
+                }
+            } else { 
+                if (client.canRegister()) {
+
+                    // COMMAND Message!
+                    if (this.oper.getCommands().containsKey(words.get(0))) {
+                        // Executing task upon message and command
+                        this.oper.getCommands().get(words.get(0)).run(client, words);
+                    }
+                    // DATA Message!
+                    else { 
+                        // Sending o all users in the channel the message
+                        String line = buildString(words);
+                        client.getChannel().sendAll(client.getNickName(), line); 
+                    }
+                }
+            }
     }
 
     /**

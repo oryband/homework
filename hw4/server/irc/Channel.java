@@ -16,7 +16,7 @@ public class Channel {
         this.name = name;
         this.admin = admin;
         this.users = new ArrayList<Client>();
-//        this.users.add(admin);
+        this.admin.setAsAdmin();
     }
 
     // Getters
@@ -40,21 +40,24 @@ public class Channel {
         }
     }
 
-    public String getNameReply() {
+    public String getNameReply(boolean finalline) {
 
         Iterator<Client> it = this.users.iterator();
 
         StringBuilder str = new StringBuilder();
         String N = System.getProperty("line.separator");
 
-        str.append("<" + this.getName() + ">");
+        str.append("353 #" + this.getName() + " ");
+        
         while (it.hasNext()) {
 
-            str.append("<" + it.next().getNickName() + ">");
+            str.append(it.next().getNickName() + " ");
         }
+            str.append(N);
         // Add new line
-        str.append(N);
-        str.append("<" + this.getName() + "> :End of /NAMES list");
+        if (finalline) {
+            str.append("366 #"+ this.getName() + " :End of /NAMES list");
+        }
         return str.toString();
     }
 
@@ -66,8 +69,21 @@ public class Channel {
         this.users.add(client);
     }
 
-    public void removeUser(Client client) {
-        this.users.remove(this.users.indexOf(client));
+    public synchronized void removeUser(Client client) {
+
+        if (this.users.size() == 2 &&
+                client.isAdmin()) { 
+            this.users.remove(this.users.indexOf(client));
+            client.setAsNotAdmin();
+            // Setting the only user left in the channel as admin 
+            this.users.get(0).setAsAdmin();
+            this.admin = this.users.get(0);
+        } else {
+            if (this.users.size() == 1) {
+                client.setAsNotAdmin();
+             } 
+                this.users.remove(this.users.indexOf(client));
+        }
     }
 
     // Sending a message to all users in this channgel
@@ -78,5 +94,14 @@ public class Channel {
         while (it.hasNext()) {
             it.next().sendMessage(nickname+": "+msg);
         }
+    }
+    public void sendAllSystemMessage(String msg) {
+        
+        Iterator<Client> it = this.users.iterator();
+
+        while (it.hasNext()) {
+            it.next().sendMessage(msg);
+        }
+
     }
 }

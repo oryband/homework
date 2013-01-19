@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
 
-
 public class Oper {
 
-    private ArrayList<Client> clients;
+    public ArrayList<Client> clients;
     private ArrayList<Channel> channels;
     private final HashMap<String, Command> commands;
 
@@ -74,6 +73,9 @@ public class Oper {
     public void removeChannel(Channel channel) {
         this.channels.remove(this.channels.indexOf(channel));
     }
+    public void removeClient(Client client) {
+        this.clients.remove(this.clients.indexOf(client));
+    }
 
     // Getters
     public boolean isCommandExist(String command) {
@@ -99,8 +101,23 @@ public class Oper {
     }
     public ArrayList<Channel> getChannels() {
         return this.channels;
-        
+
     }
+    public String getListReply() {
+
+        StringBuilder listchannels = new StringBuilder();
+        Iterator<Channel> it = this.channels.iterator();
+
+        listchannels.append("321 "+'\n');
+        while (it.hasNext()) {
+            listchannels.append("322 #" + it.next().getName() + '\n');
+        }
+        listchannels.append("323 :End of /LIST " + '\n');
+
+        return listchannels.toString();
+    }
+
+
 
     // Checks if nick name exist!
     public boolean isNickNameExist(String nick) {
@@ -109,8 +126,20 @@ public class Oper {
 
         while (it.hasNext()) {
 
-            if (it.next().getNickName().equals(nick)) {
+            String nickname = it.next().getNickName();
+            int namelength = nickname.length();
+
+            if (nickname.equals(nick) == true ) {
                 return true;
+            } else {
+                // Checking if client name with @  - indicates for admin
+                if (namelength >= 2) {
+
+                    if (nickname.substring(1, nickname.length()).
+                            equals(nick)) {
+                                    return true;
+                                }
+                }
             }
         }
         return false;
@@ -135,3 +164,4 @@ public class Oper {
         this.channels.add(newCH);
     }
 }
+
