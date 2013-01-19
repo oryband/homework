@@ -47,7 +47,7 @@ public class Client implements Runnable {
 
     public void run() {
 
-        while (!socket.isClosed() && !protocol.shouldClose()) {
+        while (!socket.isClosed() && !protocol.getShouldClose()) {
 
             if (!this.tokenizer.isAlive()) {
                 this.protocol.connectionTerminated();
@@ -64,7 +64,10 @@ public class Client implements Runnable {
             }
         }
         try {
+            this.oper.removeClient(this);
             System.out.println("Connection lost dude ... bye bye!");
+            System.out.println("All the users alive are: "+
+                    this.oper.clients.toString());
             this.socket.close();
         } 
         catch (IOException e) {
@@ -96,6 +99,9 @@ public class Client implements Runnable {
     public void setAsNotAdmin() {
         this.isAdmin = false;
         this.nickName = this.nickName.substring(1, this.nickName.length());
+    }
+    public void setProtocolShouldClose() {
+        this.protocol.setShouldClose(true);
     }
 
 

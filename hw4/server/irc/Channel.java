@@ -92,4 +92,13 @@ public class Channel {
             it.next().sendMessage(nickname+": "+msg);
         }
     }
+    public void sendAllSystemMessage(String msg) {
+        
+        Iterator<Client> it = this.users.iterator();
+
+        while (it.hasNext()) {
+            it.next().sendMessage(msg);
+        }
+
+    }
 }

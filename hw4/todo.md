@@ -1,9 +1,10 @@
 Eldar:
-* if user leave room notify all memebers!
-* if user left alone in a room, he become admin
-* if someone join the room notify all
-* countiue with numeric work!
-*
+
+* working on PART
+* working on QUIT! - done!
+* if user left alone in a room, he become admin - done!
+
+
 Ory: work on client in c++!
 
 ****************************************************************
@@ -13,6 +14,20 @@ Ory: work on client in c++!
 2. After you log in with a Client
 3. You can user the numeric replyies: NICK,USER,JOIN.
 ****************************************************************
+
+
+TODO:
+1. in QUIT section - need to think how to implements "if for some reason
+a client connection is closed without the client issing a QUIT comman the
+server required to inform upon the nature of the enent"
+2. When a client enter NICK and then JOIN and THEN try to write shit
+   he need to gey nothing  - now is crashing.
+
+--**Do if any time left**--
+* if user leave/join room notify all memebers!
+
+
+
 
 # Client
 

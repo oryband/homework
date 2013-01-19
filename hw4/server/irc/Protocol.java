@@ -16,12 +16,17 @@ public class Protocol implements ProtocolInterface {
         this.oper = oper;
     }
 
-    public boolean shouldClose() {
+    // Setters
+    public void setShouldClose(boolean stat) {
+        this.shouldClose  = stat;
+    }
+    
+    public boolean getShouldClose() {
         return this.shouldClose;
     }
 
     public void connectionTerminated() {
-        this.shouldClose = true;
+        this.setShouldClose(true);
     }
 
     public void processInput(String msg, Client client) {

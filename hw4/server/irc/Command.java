@@ -42,7 +42,8 @@ public class Command{
 
                 // QUIT 
             case 3:
-                break; //TODO
+                this.runQuit(client, words);
+                break; 
 
                 // JOIN
             case 4: 
@@ -151,7 +152,25 @@ public class Command{
                     }
                 }
             }
-            System.out.println("All channels: " + client.getOper().getChannels().toString());
         }
     }
+
+    private void runQuit(Client client, ArrayList<String> words) {
+        
+        if (words.size() == 1) {
+
+            // SYSTEM means it a system message and not from user
+            client.getChannel().sendAllSystemMessage
+                ("<"+client.getNickName()+"> has left the channel"); 
+
+        } else { 
+            
+            // SYSTEM means it a system message and not from user
+            client.getChannel().sendAllSystemMessage
+                ("<"+client.getNickName()+"> " + words.get(1)); 
+        }
+            client.removeFromChannel(); 
+            client.setProtocolShouldClose();
+
+        }
 }
