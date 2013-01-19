@@ -103,6 +103,21 @@ public class Oper {
         return this.channels;
 
     }
+    public String getListReply() {
+
+        StringBuilder listchannels = new StringBuilder();
+        Iterator<Channel> it = this.channels.iterator();
+
+        listchannels.append("321 "+'\n');
+        while (it.hasNext()) {
+            listchannels.append("322 #" + it.next().getName() + '\n');
+        }
+        listchannels.append("323 :End of /LIST " + '\n');
+
+        return listchannels.toString();
+    }
+
+
 
     // Checks if nick name exist!
     public boolean isNickNameExist(String nick) {

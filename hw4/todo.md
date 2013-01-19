@@ -1,5 +1,5 @@
 Eldar:
-* working on LIST
+* working on LIST - done!
 * working on NAMES! - done!
 * working on PART - done!
 * working on QUIT! - done!

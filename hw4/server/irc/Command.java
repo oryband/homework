@@ -35,28 +35,29 @@ public class Command{
             case 1: 
                 this.runNick(client,words);
                 break;
-
                 // USER
             case 2:
                 this.runUser(client,words);
                 break;
-
                 // QUIT 
             case 3:
                 this.runQuit(client, words);
-                break; 
-
+                break;
                 // JOIN
             case 4: 
                 this.runJoin(client, words);
                 break;
-
+                // PART
             case 5: 
                 this.runPart(client, words);
                 break;
-
+                // NAMES
             case 6: 
                 this.runNames(client, words);
+                break;
+                // LIST
+            case 7: 
+                this.runList(client, words);
                 break;
         }
 
@@ -246,6 +247,13 @@ public class Command{
             } else {
                 client.sendMessage("403 <"+words.get(1)+"> :No such channel"); 
             }
+        }
+    }
+    
+    private void runList(Client client, ArrayList<String> words) {
+        
+        if (words.size() == 1) {
+            client.sendMessage(client.getOper().getListReply());
         }
     }
 }
