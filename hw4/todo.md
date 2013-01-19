@@ -1,6 +1,6 @@
 Eldar:
-
-* working on NAMES!
+* working on LIST
+* working on NAMES! - done!
 * working on PART - done!
 * working on QUIT! - done!
 * working on NICK,JOIN - done!
@@ -29,6 +29,9 @@ server required to inform upon the nature of the enent"
 * if user leave/join room notify all memebers!
 
 
+# Command
+todo:
+- need to fix the parameter with #!!!! - done (DO WE NEED AT PART?)
 
 
 # Client

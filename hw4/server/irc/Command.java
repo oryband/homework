@@ -3,6 +3,7 @@
 import java.util.ArrayList;
 
 import java.lang.String;
+import java.util.Iterator;
 
 
 public class Command{
@@ -53,6 +54,10 @@ public class Command{
             case 5: 
                 this.runPart(client, words);
                 break;
+
+            case 6: 
+                this.runNames(client, words);
+                break;
         }
 
 
@@ -96,18 +101,27 @@ public class Command{
     }
 
     private void runJoin(Client client, ArrayList<String> words) {
+            
+
         if (words.size() == 1) {
             client.sendMessage("461 USER :Not enough parameters"); 
         } else { 
 
             if (words.size() == 2) {
 
+                // checking if there is #before and id channel exist
+                String channelname = words.get(1);
+                if (channelname.charAt(0) != '#') {
+                    return;
+                }
+                channelname = channelname.substring(1, channelname.length());
+
                 // Client already in a channel 
                 if (client.isInChannel() == true) {
 
                     // Trying to get inside the same cahnnel!
                     if (client.getChannel().getName().
-                            equals(words.get(1)) == true) {
+                            equals(channelname) == true) {
 
                     } else {
 
@@ -115,43 +129,43 @@ public class Command{
                         client.removeFromChannel();
 
                         Channel channel = client.getOper()
-                            .isChannelExist(words.get(1));
+                            .isChannelExist(channelname);
 
                         // Is the channel exist?
                         if (channel == null) {
 
                             // Creating new channel with client as admin
-                            client.getOper().addChannel(words.get(1),client);
+                            client.getOper().addChannel(channelname,client);
                             client.addChannel(client.getOper()
-                                    .isChannelExist(words.get(1)));
+                                    .isChannelExist(channelname));
 
-                            client.sendMessage(client.getChannel().getNameReply());
+                            client.sendMessage(client.getChannel().getNameReply(true));
 
                         } else { // Channel exist!
 
                             client.addChannel(channel);
-                            client.sendMessage(channel.getNameReply());
+                            client.sendMessage(channel.getNameReply(true));
                         }
                     } 
                 } else { // new user need new channel
 
                     Channel channel = client.getOper()
-                        .isChannelExist(words.get(1));
+                        .isChannelExist(channelname);
 
                     // lets see if channel already exist
                     if (channel == null) {
 
                         // Creating new channel with client as admin
-                        client.getOper().addChannel(words.get(1),client);
+                        client.getOper().addChannel(channelname,client);
                         client.addChannel(client.getOper()
-                                .isChannelExist(words.get(1)));
+                                .isChannelExist(channelname));
 
-                        client.sendMessage(client.getChannel().getNameReply());
+                        client.sendMessage(client.getChannel().getNameReply(true));
 
                     } else { // Channel exist!
 
                         client.addChannel(channel);
-                        client.sendMessage(channel.getNameReply());
+                        client.sendMessage(channel.getNameReply(true));
 
                     }
                 }
@@ -196,6 +210,41 @@ public class Command{
                         client.sendMessage("403 <"+words.get(1)+"> :No such channel"); 
                     }
                 }
+            }
+        }
+    }
+
+    private void runNames(Client client, ArrayList<String> words) {
+
+        if (words.size() == 1) {
+
+            StringBuilder names = new StringBuilder();
+
+            Iterator<Channel> it = client.getOper().getChannels().iterator();
+
+            // Building a string with all data
+            while (it.hasNext()) {
+
+                names.append(it.next().getNameReply(false));
+            }
+            
+            names.append("366 :End of /NAMES list" + '\n');
+
+            String finalnames = names.toString();
+            client.sendMessage(finalnames); 
+
+        } else {
+
+            String channel = words.get(1);
+            // checking if there is #before and id channel exist
+            channel = channel.substring(1, channel.length());
+
+            if (client.getOper().isChannelExist(channel) != null) {
+
+                client.sendMessage(client.getOper().
+                        isChannelExist(channel).getNameReply(true));
+            } else {
+                client.sendMessage("403 <"+words.get(1)+"> :No such channel"); 
             }
         }
     }

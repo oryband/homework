@@ -40,21 +40,24 @@ public class Channel {
         }
     }
 
-    public String getNameReply() {
+    public String getNameReply(boolean finalline) {
 
         Iterator<Client> it = this.users.iterator();
 
         StringBuilder str = new StringBuilder();
         String N = System.getProperty("line.separator");
 
-        str.append("<" + this.getName() + ">");
+        str.append("353 #" + this.getName() + " ");
+        
         while (it.hasNext()) {
 
-            str.append("<" + it.next().getNickName() + ">");
+            str.append(it.next().getNickName() + " ");
         }
+            str.append(N);
         // Add new line
-        str.append(N);
-        str.append("<" + this.getName() + "> :End of /NAMES list");
+        if (finalline) {
+            str.append("366 #"+ this.getName() + " :End of /NAMES list");
+        }
         return str.toString();
     }
 
