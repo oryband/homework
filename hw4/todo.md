@@ -1,7 +1,18 @@
-Eldar: working on sendall function !
+Eldar:
+* if user leave room notify all memebers!
+* if user left alone in a room, he become admin
+* if someone join the room notify all
+* countiue with numeric work!
+*
 Ory: work on client in c++!
 
+****************************************************************
+
 **IMPORATANT: This file is NOT fullt updated, please contact me!
+1. The server is working fine ( you can log in as client)
+2. After you log in with a Client
+3. You can user the numeric replyies: NICK,USER,JOIN.
+****************************************************************
 
 # Client
 
