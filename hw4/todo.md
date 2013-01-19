@@ -1,4 +1,5 @@
 Eldar:
+* working on KICK - done!
 * working on LIST - done!
 * working on NAMES! - done!
 * working on PART - done!
@@ -19,11 +20,13 @@ Ory: work on client in c++!
 
 
 TODO:
+
 1. in QUIT section - need to think how to implements "if for some reason
 a client connection is closed without the client issing a QUIT comman the
 server required to inform upon the nature of the enent"
 2. When a client enter NICK and then JOIN and THEN try to write shit
-   he need to gey nothing  - now is crashing.
+   he need to gey nothing  - fixed!
+3. Need to Syncorinized more methods!
 
 --**Do if any time left**--
 * if user leave/join room notify all memebers!

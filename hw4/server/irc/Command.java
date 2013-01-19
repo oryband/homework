@@ -24,7 +24,7 @@ public class Command{
         if (this.name.equals("PART")) { id = 5 ;}
         if (this.name.equals("NAMES")) { id = 6 ;}
         if (this.name.equals("LIST")) { id = 7 ;}
-        if (this.name.equals("KICK")) { id = 7 ;}
+        if (this.name.equals("KICK")) { id = 8 ;}
     }
 
     public void run(Client client, ArrayList<String> words) {
@@ -58,6 +58,10 @@ public class Command{
                 // LIST
             case 7: 
                 this.runList(client, words);
+                break;
+                // LIST
+            case 8: 
+                this.runKick(client, words);
                 break;
         }
 
@@ -179,16 +183,19 @@ public class Command{
         if (words.size() == 1) {
 
             // SYSTEM means it a system message and not from user
+            if (client.isInChannel()) {
             client.getChannel().sendAllSystemMessage
                 ("<"+client.getNickName()+"> has left the channel"); 
+            client.removeFromChannel(); 
+            }
 
         } else { 
             
             // SYSTEM means it a system message and not from user
             client.getChannel().sendAllSystemMessage
                 ("<"+client.getNickName()+"> " + words.get(1)); 
-        }
             client.removeFromChannel(); 
+        }
             client.setProtocolShouldClose();
 
         }
@@ -254,6 +261,50 @@ public class Command{
         
         if (words.size() == 1) {
             client.sendMessage(client.getOper().getListReply());
+        }
+    }
+    
+    private void runKick(Client client, ArrayList<String> words) {
+
+        if (words.size() == 1) {
+            client.sendMessage("461 KICK :Not enough parameters"); 
+        } else {
+
+            if (client.isInChannel()) {
+            
+                // check if admin requseting service
+                if (client.getNickName().charAt(0) == '@') {
+
+                    // check if user name in server
+                    if (client.getOper().isNickNameExist(words.get(1))) {
+
+
+                        Client clienttokick = 
+                            client.getOper().getClient(words.get(1));
+                        String adminname = client.getNickName().substring(1,
+                                client.getNickName().length());
+                        if (!clienttokick.isInChannel()) {
+                            return;
+                        }
+                        String kickname = clienttokick.getChannel().getName();
+                        // Check if admin and user in the same channel!
+                        // and that admin dont try to kick himself
+
+                        if (client.getChannel().getName().equals
+                                (kickname) == true &&
+                                adminname.equals
+                                (words.get(1)) == false) {
+
+                                   System.out.println("im in");
+                            // KICK him!
+                            clienttokick.removeFromChannel();
+                                }
+                    }
+                } else {
+                    client.sendMessage("482 #" + client.getChannel().getName() +
+                            " Your'e not channel operator"); 
+                }
+            }
         }
     }
 }
