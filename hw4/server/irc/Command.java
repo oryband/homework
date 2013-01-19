@@ -49,6 +49,10 @@ public class Command{
             case 4: 
                 this.runJoin(client, words);
                 break;
+
+            case 5: 
+                this.runPart(client, words);
+                break;
         }
 
 
@@ -173,4 +177,26 @@ public class Command{
             client.setProtocolShouldClose();
 
         }
+
+    private void runPart(Client client, ArrayList<String> words) {
+
+        if (words.size() == 1) {
+            client.sendMessage("461 USER :Not enough parameters"); 
+        } else { 
+            if (words.size() == 2) {
+
+                if (client.isInChannel()) {
+
+                    if (client.getChannel().getName().equals(words.get(1))) {
+
+                        client.removeFromChannel();
+                        client.sendMessage("405"); 
+                    } else {
+
+                        client.sendMessage("403 <"+words.get(1)+"> :No such channel"); 
+                    }
+                }
+            }
+        }
+    }
 }

@@ -144,8 +144,6 @@ public class Client implements Runnable {
     public boolean canRegister() {
         if (this.nickName.length() != 0 &&
                 this.user.length() != 0) {
-        System.out.println("Size of the guys" + this.nickName.length() + 
-                this.user.length());
             return true;
         } else {
             return true;

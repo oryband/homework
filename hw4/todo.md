@@ -1,7 +1,9 @@
 Eldar:
 
-* working on PART
+* working on NAMES!
+* working on PART - done!
 * working on QUIT! - done!
+* working on NICK,JOIN - done!
 * if user left alone in a room, he become admin - done!
 
 
