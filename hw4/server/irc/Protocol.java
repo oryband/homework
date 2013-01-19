@@ -72,9 +72,11 @@ public class Protocol implements ProtocolInterface {
                     }
                     // DATA Message!
                     else { 
-                        // Sending o all users in the channel the message
-                        String line = buildString(words);
-                        client.getChannel().sendAll(client.getNickName(), line); 
+                        if (client.isInChannel()) {
+                            // Sending o all users in the channel the message
+                            String line = buildString(words);
+                            client.getChannel().sendAll(client.getNickName(), line); 
+                        }
                     }
                 }
             }

@@ -117,6 +117,25 @@ public class Oper {
         return listchannels.toString();
     }
 
+    public Client getClient(String nickname) {
+
+        if (!this.isNickNameExist(nickname)) {
+            return null;
+        } else {
+
+            Iterator<Client> it = this.clients.iterator();
+
+            while (it.hasNext()) {
+
+                Client client = it.next();
+                if (client.getNickName().equals(nickname) ||
+                        client.getNickName().equals("@"+nickname)) {
+                    return client;
+                }
+            }
+        }
+        return null;
+    }
 
 
     // Checks if nick name exist!
