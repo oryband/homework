@@ -16,6 +16,8 @@ public class Client implements Runnable {
     private String user;
     private Channel channel;
     private boolean inChannel;
+    private boolean newUser;
+    private boolean isAdmin;
 
 
     public Client(
@@ -34,6 +36,8 @@ public class Client implements Runnable {
         this.user = new String();
         this.channel = null;
         this.inChannel = false;
+        this.newUser = true;
+        this.isAdmin = false;
 
         String msg = "**Welcome To miniIRC server** ; Your Host"
             + socket.getInetAddress() + ":" + socket.getPort();
@@ -77,13 +81,45 @@ public class Client implements Runnable {
         this.inChannel = true;
         channel.addUser(this);
     } 
+    public void setNickName(String nick) {
+        this.nickName = nick;
+        this.checkNewUser();
+    }
+    public void setUser(String user) {
+        this.user = user;
+        this.checkNewUser();
+    }
+    public void setAsAdmin() {
+        this.isAdmin = true;
+        this.nickName = "@"+this.nickName;
+    }
+    public void setAsNotAdmin() {
+        this.isAdmin = false;
+        this.nickName = this.nickName.substring(1, this.nickName.length());
+    }
+
 
     // Getters
+    public boolean isUserNameExist() {
+
+        if (this.user.length() == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    private void checkNewUser() {
+
+        if (this.hasNickname() &&
+                this.hasUser()) {
+            this.newUser = false;
+        }
+    }
+
     public Socket getSocket() {
         return this.socket;
     }
     public boolean isInChannel() {
-
         if (this.inChannel) {
             return true;
         } else {
@@ -99,23 +135,33 @@ public class Client implements Runnable {
     public Oper getOper() {
         return this.oper;
     }
-    // Setters
-    public void setNickName(String nick) {
-        this.nickName = nick;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-    public boolean isUserNameExist() {
-
-        if (this.user.length() == 0) {
-            return false;
+    public boolean canRegister() {
+        if (this.nickName.length() != 0 &&
+                this.user.length() != 0) {
+        System.out.println("Size of the guys" + this.nickName.length() + 
+                this.user.length());
+            return true;
         } else {
             return true;
         }
     }
-
+    public boolean hasNickname() {
+        if (this.nickName.length() != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean hasUser() {
+        if (this.user.length() != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean newUser() {
+        return this.newUser;
+    }
     public void removeFromChannel() {
 
         this.channel.removeUser(this);
@@ -126,6 +172,13 @@ public class Client implements Runnable {
         }
             this.channel = null;
             this.inChannel = false;
+    }
+    public boolean isAdmin() {
+        if (this.isAdmin == true) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

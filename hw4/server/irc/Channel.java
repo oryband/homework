@@ -16,7 +16,7 @@ public class Channel {
         this.name = name;
         this.admin = admin;
         this.users = new ArrayList<Client>();
-//        this.users.add(admin);
+        this.admin.setAsAdmin();
     }
 
     // Getters
@@ -66,8 +66,21 @@ public class Channel {
         this.users.add(client);
     }
 
-    public void removeUser(Client client) {
-        this.users.remove(this.users.indexOf(client));
+    public synchronized void removeUser(Client client) {
+
+        if (this.users.size() == 2 &&
+                client.isAdmin()) { 
+            this.users.remove(this.users.indexOf(client));
+            client.setAsNotAdmin();
+            // Setting the only user left in the channel as admin 
+            this.users.get(0).setAsAdmin();
+            this.admin = this.users.get(0);
+        } else {
+            if (this.users.size() == 1) {
+                client.setAsNotAdmin();
+             } 
+                this.users.remove(this.users.indexOf(client));
+        }
     }
 
     // Sending a message to all users in this channgel
