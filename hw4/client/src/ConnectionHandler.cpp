@@ -71,7 +71,7 @@ const bool ConnectionHandler :: getBytes(
         if (error) {
             throw system_error(error);
         }
-    } catch (exception e) {
+    } catch (exception& e) {
         cerr << "getBytes() failed (" << e.what() << ")" << endl;
         return false;
     }
@@ -117,15 +117,18 @@ const bool ConnectionHandler :: getFrameAscii(
         string& frame, const char delimeter) {
     char ch;
 
-    try {
-        do {
-            getBytes(&ch, 1);
+    do {
+        if ( ! getBytes(&ch, 1) ) {
+            return false;
+        }
+
+        try {
             frame.append(1, ch);
-        } while (delimeter != ch);
-    } catch (exception& e) {
-        cerr << "getFrameAscii() failed (" << e.what() << ")" << endl;
-        return false;
-    }
+        } catch (exception& e) {
+            cerr << "getFrameAscii() failed (" << e.what() << ")" << endl;
+            return false;
+        }
+    } while (delimeter != ch);
 
     return true;
 }
