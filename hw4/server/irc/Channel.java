@@ -87,7 +87,7 @@ public class Channel {
     }
 
     // Sending a message to all users in this channgel
-    public void sendAll(String nickname, String msg) {
+    public synchronized void sendAll(String nickname, String msg) {
 
         Iterator<Client> it = this.users.iterator();
 
@@ -95,7 +95,7 @@ public class Channel {
             it.next().sendMessage(nickname+": "+msg);
         }
     }
-    public void sendAllSystemMessage(String msg) {
+    public synchronized void sendAllSystemMessage(String msg) {
         
         Iterator<Client> it = this.users.iterator();
 
