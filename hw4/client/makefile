@@ -18,9 +18,9 @@ CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES)
 CC = g++
 
 
-all: bin $(BINDIR)ConnectionHandler.o $(BINDIR)ProtocolHandler.o $(BINDIR)run_client.o
+all: bin $(BINDIR)ConnectionHandler.o $(BINDIR)run_client.o
 	@echo -n 'Building target all: '
-	$(CC) $(CPPFLAGS) $(LIBS) $(BOOST) -o $(BINDIR)run_client $(BINDIR)ConnectionHandler.o $(BINDIR)ProtocolHandler.o $(BINDIR)run_client.o
+	$(CC) $(CPPFLAGS) $(LIBS) $(BOOST) -o $(BINDIR)run_client $(BINDIR)ConnectionHandler.o $(BINDIR)run_client.o
 
 
 bin:
@@ -37,9 +37,6 @@ $(BINDIR)ConnectionHandler.o: bin $(SRCDIR)ConnectionHandler.cpp
 	@echo -n 'Building target ConnectionHandler.o: '
 	$(CC) $(CPPFLAGS) -c -o $(BINDIR)ConnectionHandler.o $(SRCDIR)ConnectionHandler.cpp
 
-$(BINDIR)ProtocolHandler.o: bin $(SRCDIR)ProtocolHandler.cpp
-	@echo -n 'Building target ProtocolHandler.o: '
-	$(CC) $(CPPFLAGS) -c -o $(BINDIR)ProtocolHandler.o $(SRCDIR)ProtocolHandler.cpp
 
 
 .PHONY: clean
