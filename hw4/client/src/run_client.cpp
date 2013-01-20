@@ -61,9 +61,10 @@ const bool handleAnswer(string& answer) {
 void ioLoop(ConnectionHandler& connection) {
     const short bufsize = 1024;
     char buf[bufsize];
-    string answer;
 
     while (true) {
+        string answer;
+
         if ( ! receive(connection, buf, answer) ) {
             return;
         }
