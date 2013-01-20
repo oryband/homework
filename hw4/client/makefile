@@ -10,7 +10,7 @@ INCLUDEDIR = ./include/
 BINDIR = ./bin/
 
 INCLUDES = -I$(INCLUDEDIR)
-BOOST = -lboost_system-mt
+BOOST = -lboost_system-mt -lboost_thread-mt
 LIBS = -L/usr/lib -L/usr/local/lib
 
 CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES)

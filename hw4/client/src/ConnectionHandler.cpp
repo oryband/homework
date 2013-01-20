@@ -72,7 +72,7 @@ const bool ConnectionHandler :: getBytes(
             throw system_error(error);
         }
     } catch (exception& e) {
-        cerr << "getBytes() failed (" << e.what() << ")" << endl;
+        //cerr << "getBytes() failed (" << e.what() << ")" << endl;
         return false;
     }
 
@@ -95,7 +95,7 @@ const bool ConnectionHandler :: sendBytes(
 			throw system_error(error);
         }
     } catch (exception& e) {
-        cerr << "sendBytes() failed (" << e.what() << ")" << endl;
+        //cerr << "sendBytes() failed (" << e.what() << ")" << endl;
         return false;
     }
 

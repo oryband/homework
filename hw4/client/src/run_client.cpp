@@ -1,3 +1,5 @@
+#include <boost/thread.hpp>
+
 #include "ConnectionHandler.h"
 
 
@@ -6,40 +8,36 @@ using std::cout;
 using std::cin;
 using std::endl;
 
+using boost::thread;
+using boost::thread_group;
 using boost::system::error_code;
 using boost::system::system_error;
 
 
-void send(ConnectionHandler& connection, char buf[], const int bufsize) {
-    int len;
+void sendLoop(ConnectionHandler* connection, char buf[], const int bufSize) {
+    while (true) {
+        cout << "$ ";
+        cin.getline(buf, bufSize);
 
-    cout << "$ ";
-    cin.getline(buf, bufsize);
+        string line(buf);
 
-    string line(buf);
-    len = line.length();
+        if ( ! connection->sendLine(line) ) {
+            return;
+        }
 
-    if ( ! connection.sendLine(line) ) {
-        cout << "Disconnected from server. Exiting." << endl << endl;
-
-        return;
+        // Print length of message sent.
+        //cout << "--- " << line.length() + 1 << " bytes." << endl;
     }
-
-    //cout << ">>> " << len + 1 << " bytes." << endl;
 }
 
 
 const bool receive(ConnectionHandler& connection, char buf[], string& answer) {
-    int len;
-
     if ( ! connection.getLine(answer) ) {
-        cout << "Disconnected from server. Exiting." << endl << endl;
-
         return false;
     }
 
     // Replace '\n' with C EOS delimeter.
-    len = answer.length();
+    int len = answer.length();
     answer.resize(len - 1);
 
     cout << "<<< " << answer << "(" << len << ")" << endl;
@@ -58,20 +56,12 @@ const bool handleAnswer(string& answer) {
 }
 
 
-void ioLoop(ConnectionHandler& connection) {
-    const short bufsize = 1024;
-    char buf[bufsize];
-
+void receiveLoop(ConnectionHandler& connection, char buf[], const int bufSize) {
     while (true) {
         string answer;
 
-        if ( ! receive(connection, buf, answer) ) {
-            return;
-        }
-
-        send(connection, buf, bufsize);
-
-        if ( ! handleAnswer(answer) ) {
+        if ( ! receive(connection, buf, answer)
+                || ! handleAnswer(answer) ) {
             return;
         }
     }
@@ -83,20 +73,31 @@ int main(int argc, char* argv[]) {
         cout <<
             "Not enough or too many arguments. Use 'run_client [host]'" << endl;
         exit(1);
-    } else {
-        const string host = string(argv[1]);
-
-        ConnectionHandler connection(host, 6667);
-
-        if ( ! connection.connect() ) {
-            cout << "Exiting." << endl << endl;
-            exit(1);
-        } else {
-            cout << "Connected." << endl;
-        }
-
-        ioLoop(connection);
     }
 
+    const string host = string(argv[1]);
+
+    ConnectionHandler connection(host, 6667);
+
+    if ( ! connection.connect() ) {
+        cout << "Exiting." << endl << endl;
+        exit(1);
+    } else {
+        cout << "Connected." << endl;
+    }
+
+    const short bufsize = 1024;
+    char buf[bufsize];
+
+    // Read messages from stdin and send to server in another thread.
+    thread* inputThread = new thread(sendLoop, &connection, buf, bufsize);
+    thread_group threadGroup;
+    threadGroup.add_thread(inputThread);
+
+    // Receive messages from server in this thread.
+    receiveLoop(connection, buf, bufsize);
+
+    threadGroup.remove_thread(inputThread); // Close & free input thread.
+    cout << "Disconnected from server. Exiting." << endl << endl;
     return 0;
 }
