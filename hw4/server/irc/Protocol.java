@@ -92,6 +92,9 @@ public class Protocol implements ProtocolInterface {
 
         ArrayList<String> outputLines = new ArrayList<String>();
 
+        if (msg.length() == 0) {
+            return outputLines;
+        }
         // We check if the user entered a single command with no parameters
         String message = msg.substring(0,msg.length()-1);
 
