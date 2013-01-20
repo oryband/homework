@@ -95,8 +95,6 @@ int main(int argc, char* argv[]) {
             cout << "Connected." << endl;
         }
 
-        //Encoder encoder();
-
         ioLoop(connection);
     }
 
