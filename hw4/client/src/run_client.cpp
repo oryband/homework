@@ -1,6 +1,4 @@
 #include "ConnectionHandler.h"
-//#include "ProtocolHandler.h"
-//#include "Encoder.h"
 
 
 using std::string;
@@ -15,6 +13,7 @@ using boost::system::system_error;
 void send(ConnectionHandler& connection, char buf[], const int bufsize) {
     int len;
 
+    cout << "$ ";
     cin.getline(buf, bufsize);
 
     string line(buf);
@@ -26,7 +25,7 @@ void send(ConnectionHandler& connection, char buf[], const int bufsize) {
         return;
     }
 
-    cout << ">>> " << len + 1 << " bytes." << endl;
+    //cout << ">>> " << len + 1 << " bytes." << endl;
 }
 
 
@@ -65,11 +64,11 @@ void ioLoop(ConnectionHandler& connection) {
     string answer;
 
     while (true) {
-        send(connection, buf, bufsize);
-
         if ( ! receive(connection, buf, answer) ) {
             return;
         }
+
+        send(connection, buf, bufsize);
 
         if ( ! handleAnswer(answer) ) {
             return;
