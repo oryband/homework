@@ -71,7 +71,7 @@ void receiveLoop(ConnectionHandler& connection, char buf[], const int bufSize) {
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         cout <<
-            "Not enough or too many arguments. Use 'run_client [host]'" << endl;
+            "Not enough or too many arguments. Use 'client [host]'" << endl;
         exit(1);
     }
 
