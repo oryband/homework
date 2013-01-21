@@ -16,7 +16,6 @@ using boost::system::system_error;
 
 void sendLoop(ConnectionHandler* connection, char buf[], const int bufSize) {
     while (true) {
-        cout << "$ ";
         cin.getline(buf, bufSize);
 
         string line(buf);
@@ -40,7 +39,10 @@ const bool receive(ConnectionHandler& connection, char buf[], string& answer) {
     int len = answer.length();
     answer.resize(len - 1);
 
-    cout << "<<< " << answer << "(" << len << ")" << endl;
+    cout << endl << "<<< " << answer << endl;
+
+    // Also show messages length.
+    //cout << "<<< " << answer << "(" << len << ")" << endl;
 
     return true;
 }
