@@ -21,54 +21,75 @@ public class IrcProtocol implements ProtocolInterface {
         NOTREGISTERED     ( 451, "You have not registered"     ),
         NEEDMOREPARAMS    ( 461, "Not enough parameters"       ),
         ALREADYREGISTERED ( 462, "You may not reregister"      ),
-        CHANOPRIVSNEEDED  ( 482, "You’re not channel operator" );
+        CHANOPRIVSNEEDED  ( 482, "You’re not channel operator" ),
 
         // Reply codes.
-        NAMEREPLY    ( 353 ),
-        ENDOFNAMES   ( 366 ),
-        LISTSTART    ( 321 ),
-        LIST         ( 322 ),
-        LISTEND      ( 323 ),
-        NICKACCEPTED ( 401 ),
-        USERACCEPTED ( 402 ),
-        USERKICKED   ( 404 ),
-        PARTSUCCESS  ( 405 );
+        NAMEREPLY    ( 353                       ),
+        ENDOFNAMES   ( 366, "End of /NAMES list" ),
+        LISTSTART    ( 321                       ),
+        LIST         ( 322                       ),
+        LISTEND      ( 323                       ),
+        NICKACCEPTED ( 401                       ),
+        USERACCEPTED ( 402                       ),
+        USERKICKED   ( 404                       ),
+        PARTSUCCESS  ( 405                       );
 
 
         private final int    _number;
         private final String _text;
 
-        STATUS(int number) { 
-            _number = number; 
-            _text = "";
+        STATUS(int number) {
+            _number = number;
+            _text   = number + "";  // Use number string representation.
         }
 
-        STATUS(int number, String text) { 
-            _number = number; 
+        STATUS(int number, String text) {
+            _number = number;
             _text = text;
         }
 
-        public int getNummber() { 
-            return this._number; 
+        public int getNumber() {
+            return this._number;
         }
 
-        public String getText() { 
-            return this._text; 
+        public String getText() {
+            return this._text;
         }
     };
-
-
-    public Protocol(Oper oper) {
-        this.oper = oper;
-    }
 
 
     /**
      * @param reply STATUS reply to send to client.
      * @param client client to send reply to.
      */
-    private void reply(IrcProtocol.STATUS reply, Client client) {
-        client.sendMessage(reply.getNumber() + " " + reply.getText());
+    public static void reply(IrcProtocol.STATUS reply, Client client) {
+        client.sendMessage(reply.getNumber() + " :" + reply.getText());
+    }
+
+    public static void numericReply(IrcProtocol.STATUS reply, Client client) {
+        client.sendMessage(reply.getNumber() + "");
+    }
+
+    public static void textReply(IrcProtocol.STATUS reply, Client client) {
+        client.sendMessage(reply.getText());
+    }
+
+    public static void replyNotEnoughParams(Client client, String command) {
+        client.sendMessage(
+                IrcProtocol.STATUS.NEEDMOREPARAMS.getNumber() +
+                " " + command + " :" +
+                IrcProtocol.STATUS.NEEDMOREPARAMS.getText());
+    }
+
+    public static void replyBrackets(
+            IrcProtocol.STATUS reply, Client client, String brackets) {
+
+        client.sendMessage(
+                reply.getNumber() + "<" + brackets + "> :" + reply.getText()); 
+    }
+
+    public IrcProtocol(Oper oper) {
+        this.oper = oper;
     }
 
 
@@ -96,7 +117,7 @@ public class IrcProtocol implements ProtocolInterface {
             return;
         }
 
-        String command = word.get(0);
+        String command = words.get(0);
 
         // Set up new client if it has just connected.
         if (client.newUser()) {
@@ -107,7 +128,7 @@ public class IrcProtocol implements ProtocolInterface {
                 if (command.equals("NICK")) {
                     this.oper.getCommands().get(command).run(client, words);
                 } else {
-                    reply(IrcProtocl.STATUS.NOTREGISTERED, client);
+                    reply(IrcProtocol.STATUS.NOTREGISTERED, client);
                 }
             // Wait for USER command afterwards.
             } else {
@@ -115,7 +136,7 @@ public class IrcProtocol implements ProtocolInterface {
                     if (command.equals("USER")) {
                         this.oper.getCommands().get(command).run(client, words);
                     } else {
-                        reply(IrcProtocl.STATUS.NOTREGISTERED, client);
+                        reply(IrcProtocol.STATUS.NOTREGISTERED, client);
                     }
                 }
             }

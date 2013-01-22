@@ -1,5 +1,6 @@
 package irc;
 
+import java.net.Socket;
 import java.net.ServerSocket;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -7,14 +8,14 @@ import java.io.IOException;
 
 public class ThreadPerClientServer implements Runnable {
 
-    private ServerSocket socket;
+    private ServerSocket serverSocket;
     private int port;
     private String charset;
     private Oper oper;
 
 
     public ThreadPerClientServer(int port, String charset) {
-        this.socket = null;
+        this.serverSocket = null;
         this.port = port;
         this.charset = charset;
         this.oper = new Oper();
@@ -27,10 +28,10 @@ public class ThreadPerClientServer implements Runnable {
      */
     public void run() {
         try {  // Init socket.
-            this.socket = new ServerSocket(this.port);
+            this.serverSocket = new ServerSocket(this.port);
         } catch (IOException e) {
             System.out.println(
-                    "Error (Cannot listen on 0.0.0.0:" + this.port + "). \nExiting.");
+                    "Error (Cannot listen on 0.0.0.0:" + this.port + ").\nExiting.");
         }
 
         EncoderInterface encoder = new IrcEncoder(this.charset);
@@ -39,10 +40,23 @@ public class ThreadPerClientServer implements Runnable {
                 "Server started. Listening on 0.0.0.0:" + this.port + " ...");
 
         while (true) {
-            Socket socket = socket.accept();  // Wait for a client to connect.
+            // Wait for a client to connect.
+            Socket socket;
+            try {
+                socket = this.serverSocket.accept();
+            } catch (IOException e) {
+                System.out.println("Failed to accept connection from client.");
+                continue;
+            }
 
-            InputStreamReader stream = new InputStreamReader(
-                    socket.getInputStream(), encoder.getCharSet());
+            InputStreamReader stream;
+            try {
+                stream = new InputStreamReader(
+                        socket.getInputStream(), encoder.getCharSet());
+            } catch (IOException e) {
+                System.out.println("Failed to init stream reader upon client connection.");
+                continue;
+            }
 
             // Set end-of-message char to be the newline '\n'.
             MessageTokenizer tokenizer = new MessageTokenizer(stream ,'\n');
@@ -57,19 +71,6 @@ public class ThreadPerClientServer implements Runnable {
             new Thread(client).start();
         }
 
-        socket.close();  // TODO move this to Client.java ?
-    }
-
-
-    public static void main(String[] args) {
-        ThreadPerClientServer server = new ThreadPerClientServer(6667, "US-ASCII");
-        Thread serverThread = new Thread(server);
-        serverThread.start();
-
-        try {
-            serverThread.join();
-        } catch (InterruptedException e) {
-            System.out.println("Server stopped, exiting.");
-        }
+        //this.serverSocket.close();  // TODO Is this OK?
     }
 }

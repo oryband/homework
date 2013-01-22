@@ -1,21 +1,19 @@
-//package irc;
+/** @author Eldar Damari, Ory Band. */
 
+package irc;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 
 public class Channel {
-
     private String name;
     private Client admin;
     private ArrayList<Client> users;
 
     public Channel(String name, Client admin) {
-
-        this.name = name;
-        this.admin = admin;
+        this.name  = name;
         this.users = new ArrayList<Client>();
+        this.admin = admin;
         this.admin.setAsAdmin();
     }
 
@@ -29,52 +27,61 @@ public class Channel {
     }
 
     public boolean isEmpty() {
-
         if (this.users.size() == 0) {
-            
             System.out.println(this.users.size());
-            
             return true;
         } else {
             return false;
         }
     }
 
-    public String getNameReply(boolean finalline) {
-
-        Iterator<Client> it = this.users.iterator();
-
+    /**
+     * @param finalLine states whether to add end-of-list message at the end.
+     *
+     * @return name reply string, ready to be sent to users in a certain channel.
+     */
+    public String getNameReply(boolean finalLine) {
         StringBuilder str = new StringBuilder();
         String N = System.getProperty("line.separator");
 
-        str.append("353 #" + this.getName() + " ");
+        // Append channel.
+        str.append(
+                IrcProtocol.STATUS.NAMEREPLY.getNumber() +
+                " #" + this.getName() + " ");
         
-        while (it.hasNext()) {
+        // Append users in channel.
+        for (Client client : this.users) {
+            str.append(client.getNickName() + " ");
+        }
 
-            str.append(it.next().getNickName() + " ");
+        // Append new-line.
+        str.append(N);
+
+        // Add "end-of-list" message at the end.
+        if (finalLine) {
+            str.append(
+                    IrcProtocol.STATUS.ENDOFNAMES.getNumber() +
+                    " #" + this.getName() + " :End of /NAMES list");
         }
-            str.append(N);
-        // Add new line
-        if (finalline) {
-            str.append("366 #"+ this.getName() + " :End of /NAMES list");
-        }
+
         return str.toString();
     }
+
 
     public ArrayList<Client> getUsers() {
         return this.users;
     }
+
 
     public synchronized void addUser(Client client) {
         this.users.add(client);
     }
 
     public synchronized void removeUser(Client client) {
-
-        if (this.users.size() == 2 &&
-                client.isAdmin()) { 
+        if (this.users.size() == 2 && client.isAdmin()) { 
             this.users.remove(this.users.indexOf(client));
             client.setAsNotAdmin();
+
             // Setting the only user left in the channel as admin 
             this.users.get(0).setAsAdmin();
             this.admin = this.users.get(0);
@@ -82,26 +89,22 @@ public class Channel {
             if (this.users.size() == 1) {
                 client.setAsNotAdmin();
              } 
-                this.users.remove(this.users.indexOf(client));
+
+            this.users.remove(this.users.indexOf(client));
         }
     }
 
-    // Sending a message to all users in this channgel
+
     public synchronized void sendAll(String nickname, String msg) {
-
-        Iterator<Client> it = this.users.iterator();
-
-        while (it.hasNext()) {
-            it.next().sendMessage(nickname+": "+msg);
+        for (Client client : this.users) {
+            client.sendMessage(nickname + ": " + msg);
         }
     }
+
+
     public synchronized void sendAllSystemMessage(String msg) {
-        
-        Iterator<Client> it = this.users.iterator();
-
-        while (it.hasNext()) {
-            it.next().sendMessage(msg);
+        for (Client client : this.users) {
+            client.sendMessage(msg);
         }
-
     }
 }

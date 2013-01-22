@@ -12,26 +12,28 @@ import java.net.Socket;
 
 public class Client implements Runnable {
 
-    private Socket socket;
-    private EncoderInterface encoder;
-    private MessageTokenizer tokenizer;
+    private Socket            socket;
+    private EncoderInterface  encoder;
+    private MessageTokenizer  tokenizer;
     private ProtocolInterface protocol;
-    private Oper oper;
+    private Oper              oper;
 
     private String nickName;
     private String user;
+
     private Channel channel;
     private boolean inChannel;
-    private boolean newUser;
     private boolean isAdmin;
+
+    private boolean newUser;
 
 
     public Client(
-            MessageTokenizer tokenizer,
-            EncoderInterface encoder,
+            MessageTokenizer  tokenizer,
+            EncoderInterface  encoder,
             ProtocolInterface protocol,
-            Socket socket,
-            Oper oper) {
+            Socket            socket,
+            Oper              oper) {
 
         this.socket    = socket;
         this.encoder   = encoder;
@@ -42,9 +44,9 @@ public class Client implements Runnable {
         this.nickName = new String();
         this.user     = new String();
 
-        this.channel = null;
+        this.channel   = null;
         this.inChannel = false;
-        this.isAdmin = false;
+        this.isAdmin   = false;
 
         this.newUser = true;
 
@@ -54,86 +56,106 @@ public class Client implements Runnable {
                 + socket.getInetAddress() + ":" + socket.getPort());
     }
 
+
     public void run() {
 
-        while (!socket.isClosed() && !protocol.getShouldClose()) {
-
-            if (!this.tokenizer.isAlive()) {
-                this.protocol.connectionTerminated();
+        while ( ! socket.isClosed() && ! protocol.getShouldClose()) {
+            if ( ! this.tokenizer.isAlive() ) {
+                this.protocol.close();
             } else {
-
                 try {
                     String msg = this.tokenizer.nextToken();
-                    // Analazing message upon protocol!
-                    this.protocol.processInput(msg,this); 
-
+                    this.protocol.processInput( msg,this); 
                 } catch (IOException e) {
-                    System.out.println("ERROR: can't Analize message");
+                    System.out.println(
+                            "Error analyzing message from client '" +
+                            this.user + "/" + this.nickName + "'.");
+
+                    continue;
                 }
             }
         }
+
+        // Connection has closed.
+        this.oper.removeClient(this);
+        System.out.println(
+                "Client " + this.user + "/" + this.nickName +
+                " has disconnected.");
+        System.out.println(
+                "Currently connected users: " +
+                this.oper.clients.toString());
+
         try {
-            this.oper.removeClient(this);
-            System.out.println("Connection lost dude ... bye bye!");
-            System.out.println("All the users alive are: "+
-                    this.oper.clients.toString());
             this.socket.close();
-        } 
-        catch (IOException e) {
-            System.out.println("Error in closing");
+        } catch (IOException e) {
+            System.out.println(
+                    "Error closing socket for client " +
+                    this.user + "/" + this.nickName + "'.");
         }
     }
 
-    // Setters
-    public void setIsInChannel(boolean status) {
-        this.inChannel = status;
-    }
+
     public void addChannel(Channel channel) {
         this.channel = channel;
         this.inChannel = true;
         channel.addUser(this);
     } 
+
+
+    public void setIsInChannel(boolean status) {
+        this.inChannel = status;
+    }
+
     public void setNickName(String nick) {
         this.nickName = nick;
         this.checkNewUser();
     }
+
     public void setUser(String user) {
         this.user = user;
         this.checkNewUser();
     }
+
     public void setAsAdmin() {
         this.isAdmin = true;
         this.nickName = "@"+this.nickName;
     }
+
     public void setAsNotAdmin() {
         this.isAdmin = false;
         this.nickName = this.nickName.substring(1, this.nickName.length());
     }
+
     public void setProtocolShouldClose() {
         this.protocol.setShouldClose(true);
     }
 
 
-    // Getters
-    public boolean isUserNameExist() {
+    public Socket getSocket() {
+        return this.socket;
+    }
 
+    public String getNickName() {
+        return this.nickName;
+    }
+
+    public Channel getChannel() {
+        return this.channel;
+    }
+
+    public Oper getOper() {
+        return this.oper;
+    }
+
+
+    public boolean isUserNameExist() {
         if (this.user.length() == 0) {
             return false;
         } else {
             return true;
         }
     }
-    private void checkNewUser() {
 
-        if (this.hasNickname() &&
-                this.hasUser()) {
-            this.newUser = false;
-        }
-    }
-
-    public Socket getSocket() {
-        return this.socket;
-    }
     public boolean isInChannel() {
         if (this.inChannel) {
             return true;
@@ -141,23 +163,12 @@ public class Client implements Runnable {
             return false;
         }
     }
-    public String getNickName() {
-        return this.nickName;
+
+    public boolean isAdmin() {
+        return this.isAdmin;
     }
-    public Channel getChannel() {
-        return this.channel;
-    }
-    public Oper getOper() {
-        return this.oper;
-    }
-    public boolean canRegister() {
-        if (this.nickName.length() != 0 &&
-                this.user.length() != 0) {
-            return true;
-        } else {
-            return true;
-        }
-    }
+
+
     public boolean hasNickname() {
         if (this.nickName.length() != 0) {
             return true;
@@ -165,6 +176,7 @@ public class Client implements Runnable {
             return false;
         }
     }
+
     public boolean hasUser() {
         if (this.user.length() != 0) {
             return true;
@@ -172,39 +184,51 @@ public class Client implements Runnable {
             return false;
         }
     }
+
     public boolean newUser() {
         return this.newUser;
     }
-    public void removeFromChannel() {
 
-        this.channel.removeUser(this);
 
-        if (this.channel.isEmpty()) {
-            // Channel is empty, need to delete it.
-            this.oper.removeChannel(this.channel);
+    /** Sets user has 'not new' if it has already set up a NICK and USER. */
+    private void checkNewUser() {
+        if (this.hasNickname() && this.hasUser()) {
+            this.newUser = false;
         }
-            this.channel = null;
-            this.inChannel = false;
     }
-    public boolean isAdmin() {
-        if (this.isAdmin == true) {
+
+
+    public boolean canRegister() {
+        if (this.nickName.length() != 0 && this.user.length() != 0) {
             return true;
         } else {
-            return false;
+            return true;
         }
+    }
+
+
+    public void removeFromChannel() {
+        this.channel.removeUser(this);
+
+        // Delete channel if empty.
+        if (this.channel.isEmpty()) {
+            this.oper.removeChannel(this.channel);
+        }
+
+        this.channel = null;
+        this.inChannel = false;
     }
 
 
     public void sendMessage(String msg) {
-
         String NEW_LINE = System.getProperty("line.separator");
         String newmsg = msg + NEW_LINE; 
         byte[] buf = this.encoder.toBytes(newmsg);
+
         try {
-            this.socket.getOutputStream().write(buf,0,buf.length);
+            this.socket.getOutputStream().write(buf, 0, buf.length);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
