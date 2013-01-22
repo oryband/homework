@@ -103,6 +103,6 @@ int main(int argc, char* argv[]) {
     receiveLoop(connection, buf, bufsize);
 
     threadGroup.remove_thread(inputThread); // Close & free input thread.
-    cout << "Disconnected from server. Exiting." << endl << endl;
+    cout << "Disconnected from server.\nExiting." << endl << endl;
     return 0;
 }
