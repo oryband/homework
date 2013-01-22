@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="hw3">
+<project basedir="." default="build" name="hw4">
 
   <property environment="env"/>
 
@@ -11,7 +11,7 @@
   <property name="target" value="1.6"/>
   <property name="source" value="1.6"/>
 
-  <path id="hw3.classpath">
+  <path id="hw4.classpath">
     <pathelement location="src"/>
   </path>
 
@@ -20,7 +20,6 @@
     <copy includeemptydirs="false" todir="src">
       <fileset dir="src">
         <exclude name="**/*.java"/>
-        <exclude name="company/tests/"/>
       </fileset>
     </copy>
   </target>
@@ -30,7 +29,7 @@
       <fileset dir="src" includes="*.class"/>
     </delete>
     <delete>
-      <fileset dir="src/company" includes="*.class"/>
+      <fileset dir="src/irc" includes="*.class"/>
     </delete>
   </target>
 
@@ -44,14 +43,13 @@
     <echo message="${ant.project.name}: ${ant.file}"/>
     <javac debug="${debugtoggle}" debuglevel="${debuglevel}" destdir="src" includeantruntime="false" source="${source}" target="${target}">
       <src path="src"/>
-      <exclude name="company/tests/"/>
-      <classpath refid="hw3.classpath"/>
+      <classpath refid="hw4.classpath"/>
     </javac>
   </target>
 
-  <target name="Driver">
-    <java classname="Driver" dir="src" failonerror="true" fork="yes">
-      <classpath refid="hw3.classpath"/>
+  <target name="Server">
+    <java classname="Server" dir="src" failonerror="true" fork="yes">
+      <classpath refid="hw4.classpath"/>
     </java>
   </target>
 
