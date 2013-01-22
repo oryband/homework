@@ -77,7 +77,10 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    const string host = string(argv[1]);
+    string host = string(argv[1]);
+    if (host == "localhost") {
+        host = "127.0.0.1";
+    }
 
     ConnectionHandler connection(host, 6667);
 
