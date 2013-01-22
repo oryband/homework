@@ -1,69 +1,63 @@
-/*package irc;*/
+/** @author Eldar Damari, Ory Band */
 
+package irc;
 
-import java.io.InputStreamReader;
 import java.lang.StringBuffer;
-import java.lang.String;
+import java.io.InputStreamReader;
 import java.io.IOException;
 
 
 public class MessageTokenizer implements TokenizerInterface {
-
     private final char delimiter;
-    private InputStreamReader isr;
+    private InputStreamReader stream;
     private boolean closed;
 
-    public MessageTokenizer(
-            InputStreamReader inputstream,
-            char delimiter) {
 
-        this.isr = inputstream;
-        this.delimiter = delimiter;
-        this.closed = false;
-            }
     /**
-     * Indicate if reading to StringBuffer failed.
+     * @param stream Stream to tokenize.
+     * @param delimeter delimeter character. i.e. '\n'.
      */
-    public boolean isAlive() {
-        return !this.closed;
+    public MessageTokenizer(InputStreamReader stream, char delimiter) {
+        this.stream    = stream;
+        this.delimiter = delimiter;
+        this.closed    = false;
     }
 
-    /**
-     * Analize given inputstrem and returns a string.
-     *
-     * @return string after croped from input stream.
-     */
+
+    public boolean isAlive() {
+        return ! this.closed;
+    }
+
+
     public String nextToken() throws IOException {
+        // Don't tokenize if some error happened before reaching here.
+        if ( ! isAlive() ) {
+            throw new IOException("Can't tokenize - Tokenizer is closed.");
+        }
+
+        String ans = null;
 
         try {
-            if (!isAlive()) {
-                throw new IOException();
-            } else {
+            int c = 0;
+            StringBuffer buffer = new StringBuffer();
 
-                String ans = null;
-
-                try {
-                    int c = 0;
-                    StringBuffer sb = new StringBuffer();
-                    while ((c = this.isr.read()) != -1) {
-
-                        if ((char)c == this.delimiter) {
-                            break;
-                        } else {
-                            sb.append((char)c);
-                        }
-                    }
-                    ans = sb.toString();
-                } 
-                catch (IOException e) {
-
-                    this.closed = true;
-                    throw e;
+            // Keep reading from stream until delimeter or end of
+            // message is reached.
+            while ( (c = this.stream.read()) != -1) {
+                if ( (char) c == this.delimiter ) {
+                    break;
+                } else {
+                    buffer.append( (char) c );
                 }
-                return ans;
             }
+
+            ans = buffer.toString();
+
         } catch (IOException e) {
+            this.closed = true;  // Close tokenizer in case of error.
             throw e;
         }
+
+        return ans;
     }
 }

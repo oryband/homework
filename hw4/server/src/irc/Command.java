@@ -1,30 +1,30 @@
-//package irc;
+/** @author Eldar Damari, Ory Band. */
+
+package irc;
 
 import java.util.ArrayList;
-
-import java.lang.String;
 import java.util.Iterator;
 
 
-public class Command{
-
+public class Command {
     private String name;
     private int id;
     private ArrayList<Integer> numerics;
 
-    public Command(String name, ArrayList<Integer> numerics) {
 
+    public Command(String name, ArrayList<Integer> numerics) {
         this.name = name;
         this.numerics = numerics;
 
-        if (this.name.equals("NICK")) { id = 1 ;}
-        if (this.name.equals("USER")) { id = 2 ;}
-        if (this.name.equals("QUIT")) { id = 3 ;}
-        if (this.name.equals("JOIN")) { id = 4 ;}
-        if (this.name.equals("PART")) { id = 5 ;}
-        if (this.name.equals("NAMES")) { id = 6 ;}
-        if (this.name.equals("LIST")) { id = 7 ;}
-        if (this.name.equals("KICK")) { id = 8 ;}
+        // TODO Change to switch and use enum.
+        if (this.name.equals("NICK"))  { id = 1; }
+        if (this.name.equals("USER"))  { id = 2; }
+        if (this.name.equals("QUIT"))  { id = 3; }
+        if (this.name.equals("JOIN"))  { id = 4; }
+        if (this.name.equals("PART"))  { id = 5; }
+        if (this.name.equals("NAMES")) { id = 6; }
+        if (this.name.equals("LIST"))  { id = 7; }
+        if (this.name.equals("KICK"))  { id = 8; }
     }
 
     public void run(Client client, ArrayList<String> words) {

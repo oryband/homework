@@ -1,13 +1,22 @@
-//package irc;
+/**
+ * Handles message/stream tokenizing.
+ *
+ * @author Eldar Damari, Ory Band
+ */
 
+package irc;
 
-import java.lang.String;
 import java.io.IOException;
 
 
 public interface TokenizerInterface {
+    /**
+     * @return tokenized (delimeter-cropped) string.
+     */
+    public String  nextToken() throws IOException;
 
-    public String nextToken() throws IOException;
+    /**
+     * Indicates whether reading to StringBuffer has failed.
+     */
     public boolean isAlive();
 }
-

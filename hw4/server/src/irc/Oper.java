@@ -1,13 +1,16 @@
-// package irc
+/** @author Eldar Damari, Ory Band. */
 
+package irc;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.HashMap;
 
+
 public class Oper {
 
     public ArrayList<Client> clients;
+
     private ArrayList<Channel> channels;
     private final HashMap<String, Command> commands;
 
@@ -183,4 +186,3 @@ public class Oper {
         this.channels.add(newCH);
     }
 }
-

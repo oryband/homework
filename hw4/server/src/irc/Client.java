@@ -1,4 +1,10 @@
-//package irc;
+/**
+ * Represents a client session.
+ *
+ * @author Eldar Damari, Ory Band.
+ */
+
+package irc;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -25,25 +31,28 @@ public class Client implements Runnable {
             EncoderInterface encoder,
             ProtocolInterface protocol,
             Socket socket,
-            Oper oper ){
+            Oper oper) {
 
-        this.socket = socket;
-        this.encoder = encoder;
+        this.socket    = socket;
+        this.encoder   = encoder;
         this.tokenizer = tokenizer;
-        this.protocol = protocol;
-        this.oper = oper;
+        this.protocol  = protocol;
+        this.oper      = oper;
+
         this.nickName = new String();
-        this.user = new String();
+        this.user     = new String();
+
         this.channel = null;
         this.inChannel = false;
-        this.newUser = true;
         this.isAdmin = false;
 
-        String msg = "**Welcome To miniIRC server** ; Your Host"
-            + socket.getInetAddress() + ":" + socket.getPort();
+        this.newUser = true;
 
-        this.sendMessage(msg);
-            }
+        // Welcome message.
+        this.sendMessage(
+                "Connected to miniIRC server on "
+                + socket.getInetAddress() + ":" + socket.getPort());
+    }
 
     public void run() {
 
