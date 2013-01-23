@@ -102,7 +102,6 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 		this.connectionTerminated = true;
 	}
 
-
     public boolean isEnd(String msg) {
         // Don't process an empty message.
         if (msg.length() == 0) {
@@ -115,7 +114,6 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
         return command == IrcProtocol.COMMAND.QUIT;
     }
-
 
     public String processMessage(String msg) {
         // Silently drop an empty message.
