@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JobRequest>
+	<InputRepresentation id="image1.jpg"/>
+	<EffectsList>
+		<cvtColor>
+			<code> CV_RGB2GRAY </code>
+		</cvtColor>
+		<Resize>
+			<scaleFactorX> 0.5 </scaleFactorX>
+			<scaleFactorY> 0.5 </scaleFactorY>
+			<interpolation> INTER_LINEAR </interpolation>
+		</resize>
+		<GaussianBlur>
+			<kSize> 3 </kSize>
+			<sigmaX> 2 </sigmaX>
+			<sigmaY> 2 </sigmaY>
+			<borderType> BORDER_REPLICATE </borderType>
+		</GaussianBlur>
+	</EffectsList>
+</JobRequest>
