@@ -14,7 +14,7 @@ public class Client implements Runnable {
 
     private Socket            socket;
     private EncoderInterface  encoder;
-    private MessageTokenizer  tokenizer;
+    private IrcTokenizer      tokenizer;
     private ProtocolInterface protocol;
     private Oper              oper;
 
@@ -29,7 +29,7 @@ public class Client implements Runnable {
 
 
     public Client(
-            MessageTokenizer  tokenizer,
+            IrcTokenizer      tokenizer,
             EncoderInterface  encoder,
             ProtocolInterface protocol,
             Socket            socket,

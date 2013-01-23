@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 
 
-public class MessageTokenizer implements TokenizerInterface {
+public class IrcTokenizer implements TokenizerInterface {
     private final char delimiter;
     private InputStreamReader stream;
     private boolean closed;
@@ -17,7 +17,7 @@ public class MessageTokenizer implements TokenizerInterface {
      * @param stream Stream to tokenize.
      * @param delimeter delimeter character. i.e. '\n'.
      */
-    public MessageTokenizer(InputStreamReader stream, char delimiter) {
+    public IrcTokenizer(InputStreamReader stream, char delimiter) {
         this.stream    = stream;
         this.delimiter = delimiter;
         this.closed    = false;

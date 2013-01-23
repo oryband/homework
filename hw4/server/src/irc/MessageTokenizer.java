@@ -1,63 +1,33 @@
-/** @author Eldar Damari, Ory Band */
+package tokenizer;
 
-package irc;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
 
-import java.lang.StringBuffer;
-import java.io.InputStreamReader;
-import java.io.IOException;
+public interface MessageTokenizer<T> {
 
+   
+   /**
+    * Add some bytes to the message stream.
+    * @param bytes an array of bytes to be appended to the message stream.
+    */
+   void addBytes(ByteBuffer bytes);
 
-public class MessageTokenizer implements TokenizerInterface {
-    private final char delimiter;
-    private InputStreamReader stream;
-    private boolean closed;
+   /**
+    * Is there a complete message ready?.
+    * @return true the next call to nextMessage() will not return null, false otherwise.
+    */
+   boolean hasMessage();
 
+   /**
+    * Get the next complete message if it exists, advancing the tokenizer to the next message.
+    * @return the next complete message, and null if no complete message exist.
+    */
+   T nextMessage();
 
-    /**
-     * @param stream Stream to tokenize.
-     * @param delimeter delimeter character. i.e. '\n'.
-     */
-    public MessageTokenizer(InputStreamReader stream, char delimiter) {
-        this.stream    = stream;
-        this.delimiter = delimiter;
-        this.closed    = false;
-    }
+   /**
+    * Convert the String message into bytes representation, taking care of encoding and framing.
+    * @return a ByteBuffer with the message content converted to bytes, after framing information has been added.
+    */
+   ByteBuffer getBytesForMessage(T msg) throws CharacterCodingException;
 
-
-    public boolean isAlive() {
-        return ! this.closed;
-    }
-
-
-    public String nextToken() throws IOException {
-        // Don't tokenize if some error happened before reaching here.
-        if ( ! isAlive() ) {
-            throw new IOException("Can't tokenize - Tokenizer is closed.");
-        }
-
-        String ans = null;
-
-        try {
-            int c = 0;
-            StringBuffer buffer = new StringBuffer();
-
-            // Keep reading from stream until delimeter or end of
-            // message is reached.
-            while ( (c = this.stream.read()) != -1) {
-                if ( (char) c == this.delimiter ) {
-                    break;
-                } else {
-                    buffer.append( (char) c );
-                }
-            }
-
-            ans = buffer.toString();
-
-        } catch (IOException e) {
-            this.closed = true;  // Close tokenizer in case of error.
-            throw e;
-        }
-
-        return ans;
-    }
 }
