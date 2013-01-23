@@ -49,7 +49,7 @@ const bool receive(ConnectionHandler& connection, char buf[], string& answer) {
 
 
 const bool handleAnswer(string& answer) {
-    if (answer == "bye") {
+    if (answer == "Goodbye.") {
         cout << "Exiting." << endl << endl;
         return false;
     } else {
