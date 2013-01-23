@@ -10,8 +10,9 @@ INCLUDEDIR = ./include/
 BINDIR = ./bin/
 
 INCLUDES = -I$(INCLUDEDIR)
-BOOST = -lboost_system-mt -lboost_thread-mt
-LIBS = -L/usr/lib -L/usr/local/lib
+#BOOST = -lboost_system-mt -lboost_thread-mt
+BOOST = -lboost_system -lboost_thread
+LIBS = -L/usr/local/lib -L/usr/local/include
 
 CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES)
 
@@ -20,7 +21,7 @@ CC = g++
 
 all: bin $(BINDIR)ConnectionHandler.o $(BINDIR)client.o
 	@echo -n 'Building target all: '
-	$(CC) $(CPPFLAGS) $(LIBS) $(BOOST) -o $(BINDIR)client $(BINDIR)ConnectionHandler.o $(BINDIR)client.o
+	$(CC) $(CPPFLAGS) -o $(BINDIR)client $(BINDIR)ConnectionHandler.o $(BINDIR)client.o $(LIBS) $(BOOST)
 
 
 bin:
