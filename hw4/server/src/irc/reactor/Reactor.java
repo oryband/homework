@@ -199,25 +199,53 @@ public class Reactor<T> implements Runnable {
 	 * number of threads in the thread pool are read from the command line.
 	 */
 	public static void main(String args[]) {
+        // Test for errors.
 		if (args.length != 2) {
-			System.err.println("Usage: java Reactor <port> <pool_size>");
+			System.err.println(
+                    "Not enough or too many arguments. " +
+                    "use 'java Reactor <port> <pool_size>");
 			System.exit(1);
 		}
 
 		try {
-			int port = Integer.parseInt(args[0]);
+			int port     = Integer.parseInt(args[0]);
 			int poolSize = Integer.parseInt(args[1]);
 
 			//Reactor<HttpMessage> reactor = startHttpServer(port, poolSize);
-			Reactor<StringMessage> reactor = startEchoServer(port, poolSize);
+            //Reactor<StringMessage> reactor = startEchoServer(port, poolSize);
+			Reactor<StringMessage> reactor = startIrcServer(port, poolSize);
 
 			Thread thread = new Thread(reactor);
 			thread.start();
-			logger.info("Reactor is ready on port " + reactor.getPort());
+			logger.info(
+                    "Reactor listening on 0.0.0.0:" + reactor.getPort() + " ...");
 			thread.join();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static Reactor<StringMessage> startIrcServer(int port, int poolSize){
+		ServerProtocolFactory<StringMessage> protocolMaker = new ServerProtocolFactory<StringMessage>() {
+
+			public AsyncServerProtocol<StringMessage> create() {
+				return new IrcProtocol();
+			}
+		};
+
+		
+		final Charset charset = Charset.forName("UTF-8");
+
+		TokenizerFactory<StringMessage> tokenizerMaker = new TokenizerFactory<StringMessage>() {
+			public MessageTokenizer<StringMessage> create() {
+				return new FixedSeparatorMessageTokenizer("\n", charset);
+			}
+		};
+
+		Reactor<StringMessage> reactor = new Reactor<StringMessage>(
+                port, poolSize, protocolMaker, tokenizerMaker);
+
+		return reactor;
 	}
 
 	public static Reactor<StringMessage> startEchoServer(int port, int poolSize){
