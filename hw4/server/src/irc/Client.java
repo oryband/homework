@@ -12,11 +12,11 @@ import java.net.Socket;
 
 public class Client implements Runnable {
 
-    private Socket            socket;
-    private EncoderInterface  encoder;
-    private IrcTokenizer      tokenizer;
-    private ProtocolInterface protocol;
-    private Oper              oper;
+    private Socket           socket;
+    private EncoderInterface encoder;
+    private IrcTokenizer     tokenizer;
+    private IrcProtocol      protocol;
+    private Oper             oper;
 
     private String nickName;
     private String user;
@@ -29,17 +29,18 @@ public class Client implements Runnable {
 
 
     public Client(
-            IrcTokenizer      tokenizer,
-            EncoderInterface  encoder,
-            ProtocolInterface protocol,
-            Socket            socket,
-            Oper              oper) {
+            IrcTokenizer     tokenizer,
+            EncoderInterface encoder,
+            Socket           socket,
+            Oper             oper) {
+
 
         this.socket    = socket;
         this.encoder   = encoder;
         this.tokenizer = tokenizer;
-        this.protocol  = protocol;
         this.oper      = oper;
+
+        this.protocol = new IrcProtocol(this.oper, this);
 
         this.nickName = new String();
         this.user     = new String();
@@ -58,14 +59,14 @@ public class Client implements Runnable {
 
 
     public void run() {
-
-        while ( ! socket.isClosed() && ! protocol.getShouldClose()) {
+        while ( ! socket.isClosed() && ! protocol.shouldClose()) {
             if ( ! this.tokenizer.isAlive() ) {
                 this.protocol.close();
             } else {
                 try {
                     String msg = this.tokenizer.nextToken();
-                    this.protocol.processInput( msg,this); 
+                    String reply = this.protocol.processMessage(msg); 
+                    sendMessage(reply);
                 } catch (IOException e) {
                     System.out.println(
                             "Error analyzing message from client '" +
@@ -78,12 +79,13 @@ public class Client implements Runnable {
 
         // Connection has closed.
         this.oper.removeClient(this);
+
         System.out.println(
                 "Client " + this.user + "/" + this.nickName +
                 " has disconnected.");
+
         System.out.println(
-                "Currently connected users: " +
-                this.oper.clients.toString());
+                "Currently connected users: " + this.oper.clients.toString());
 
         try {
             this.socket.close();
@@ -118,7 +120,7 @@ public class Client implements Runnable {
 
     public void setAsAdmin() {
         this.isAdmin = true;
-        this.nickName = "@"+this.nickName;
+        this.nickName = "@" + this.nickName;
     }
 
     public void setAsNotAdmin() {
@@ -149,19 +151,11 @@ public class Client implements Runnable {
 
 
     public boolean isUserNameExist() {
-        if (this.user.length() == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return this.user.length() != 0;
     }
 
     public boolean isInChannel() {
-        if (this.inChannel) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.inChannel;
     }
 
     public boolean isAdmin() {
@@ -170,19 +164,11 @@ public class Client implements Runnable {
 
 
     public boolean hasNickname() {
-        if (this.nickName.length() != 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.nickName.length() != 0;
     }
 
     public boolean hasUser() {
-        if (this.user.length() != 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.user.length() != 0;
     }
 
     public boolean newUser() {
@@ -199,11 +185,7 @@ public class Client implements Runnable {
 
 
     public boolean canRegister() {
-        if (this.nickName.length() != 0 && this.user.length() != 0) {
-            return true;
-        } else {
-            return true;
-        }
+        return this.nickName.length() != 0 && this.user.length() != 0;
     }
 
 

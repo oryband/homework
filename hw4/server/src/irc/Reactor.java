@@ -1,4 +1,4 @@
-package reactor;
+package irc;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,10 +13,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import protocol.*;
-import tokenizer.*;
-import tokenizer.http.HttpMessage;
-import tokenizer.http.HttpMessageTokenizer;
 
 /**
  * An implementation of the Reactor pattern.
@@ -211,8 +207,6 @@ public class Reactor<T> implements Runnable {
 			int port     = Integer.parseInt(args[0]);
 			int poolSize = Integer.parseInt(args[1]);
 
-			//Reactor<HttpMessage> reactor = startHttpServer(port, poolSize);
-            //Reactor<StringMessage> reactor = startEchoServer(port, poolSize);
 			Reactor<StringMessage> reactor = startIrcServer(port, poolSize);
 
 			Thread thread = new Thread(reactor);
@@ -245,42 +239,6 @@ public class Reactor<T> implements Runnable {
 		Reactor<StringMessage> reactor = new Reactor<StringMessage>(
                 port, poolSize, protocolMaker, tokenizerMaker);
 
-		return reactor;
-	}
-
-	public static Reactor<StringMessage> startEchoServer(int port, int poolSize){
-		ServerProtocolFactory<StringMessage> protocolMaker = new ServerProtocolFactory<StringMessage>() {
-			public AsyncServerProtocol<StringMessage> create() {
-				return new EchoProtocol();
-			}
-		};
-
-		
-		final Charset charset = Charset.forName("UTF-8");
-		TokenizerFactory<StringMessage> tokenizerMaker = new TokenizerFactory<StringMessage>() {
-			public MessageTokenizer<StringMessage> create() {
-				return new FixedSeparatorMessageTokenizer("\n", charset);
-			}
-		};
-
-		Reactor<StringMessage> reactor = new Reactor<StringMessage>(port, poolSize, protocolMaker, tokenizerMaker);
-		return reactor;
-	}
-
-	public static Reactor<HttpMessage> startHttpServer(int port, int poolSize) throws Exception{
-		ServerProtocolFactory<HttpMessage> protocolMaker = new ServerProtocolFactory<HttpMessage>() {
-			public AsyncServerProtocol<HttpMessage> create() {
-				return new HttpProtocol();
-			}
-		};
-
-		TokenizerFactory<HttpMessage> tokenizerMaker = new TokenizerFactory<HttpMessage>() {
-			public MessageTokenizer<HttpMessage> create() {
-				return new HttpMessageTokenizer();
-			}
-		};
-
-		Reactor<HttpMessage> reactor = new Reactor<HttpMessage>(port, poolSize, protocolMaker, tokenizerMaker);
 		return reactor;
 	}
 }

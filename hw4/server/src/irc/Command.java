@@ -50,83 +50,74 @@ public class Command {
     /**
      * Runs command on client.
      */
-    public void run(Client client, ArrayList<String> words) {
+    public String run(Client client, ArrayList<String> words) {
         switch(this.command) {
             case NICK:
-                this.runNick(client,words);
-                break;
+                return this.runNick(client,words);
             case USER:
-                this.runUser(client,words);
-                break;
+                return this.runUser(client,words);
             case QUIT:
-                this.runQuit(client, words);
-                break;
+                return this.runQuit(client, words);
             case JOIN:
-                this.runJoin(client, words);
-                break;
+                return this.runJoin(client, words);
             case PART:
-                this.runPart(client, words);
-                break;
+                return this.runPart(client, words);
             case NAMES:
-                this.runNames(client, words);
-                break;
+                return this.runNames(client, words);
             case LIST:
-                this.runList(client, words);
-                break;
+                return this.runList(client, words);
             case KICK:
-                this.runKick(client, words);
-                break;
+                return this.runKick(client, words);
+            default:
+                return "ERROR";
         }
     }
 
 
-    private void runNick(Client client, ArrayList<String> words) {
+    private String runNick(Client client, ArrayList<String> words) {
         if (words.size() == 1) {
-            IrcProtocol.reply(IrcProtocol.STATUS.NONICKNAMEGIVEN, client);
-        } else {
-            if (words.size() == 2) {
-                if (client.getOper().isNickNameExist(words.get(1))) {
-                    IrcProtocol.replyBrackets(
-                            IrcProtocol.STATUS.NICKNAMEINUSE,
-                            client,
-                            words.get(1));
-                } else {
-                    client.setNickName(words.get(1));
-                    client.sendMessage(
-                            IrcProtocol.STATUS.NICKACCEPTED.getText());
-                }
+            return IrcProtocol.reply(IrcProtocol.STATUS.NONICKNAMEGIVEN);
+        } else if (words.size() == 2) {
+            if (client.getOper().isNickNameExist(words.get(1))) {
+                return IrcProtocol.replyBrackets(
+                        IrcProtocol.STATUS.NICKNAMEINUSE,
+                        words.get(1));
+            } else {
+                client.setNickName(words.get(1));
+                return IrcProtocol.textReply(
+                        IrcProtocol.STATUS.NICKACCEPTED);
             }
-        }
-    }
-
-
-    private void runUser(Client client, ArrayList<String> words) {
-        if (words.size() == 1) {
-            IrcProtocol.replyNotEnoughParams(client, COMMAND.USER.getText());
         } else {
-            if (words.size() == 2) {
-                if ( !client.isUserNameExist() ) {
-                    client.setUser(words.get(1));
-                    client.sendMessage(
-                            IrcProtocol.STATUS.USERACCEPTED.getText());
-                } else {
-                    IrcProtocol.reply(
-                            IrcProtocol.STATUS.ALREADYREGISTERED, client);
-                }
-            }
+            return "";
         }
     }
 
 
-    private void runJoin(Client client, ArrayList<String> words) {
+    private String runUser(Client client, ArrayList<String> words) {
         if (words.size() == 1) {
-            IrcProtocol.replyNotEnoughParams(client, COMMAND.JOIN.getText());
+            return IrcProtocol.replyNotEnoughParams(COMMAND.USER.getText());
+        } else if (words.size() == 2) {
+            if ( ! client.isUserNameExist() ) {
+                client.setUser(words.get(1));
+                return IrcProtocol.textReply(IrcProtocol.STATUS.USERACCEPTED);
+            } else {
+                return IrcProtocol.reply(IrcProtocol.STATUS.ALREADYREGISTERED);
+            }
+        } else {
+            return "";
+        }
+    }
+
+
+    private String runJoin(Client client, ArrayList<String> words) {
+        if (words.size() == 1) {
+            return IrcProtocol.replyNotEnoughParams(COMMAND.JOIN.getText());
         } else {
             if (words.size() == 2) {
                 // Check for '#' before channel name.
                 String channelName = words.get(1);
                 if (channelName.charAt(0) != '#') {
-                    return;
+                    return "";  // Silently drop illegal command.
                 }
 
                 channelName = channelName.substring(1, channelName.length());
@@ -146,21 +137,23 @@ public class Command {
                 if (channel == null) {
                     client.getOper().addChannel(channelName, client);
                     client.addChannel(
-                            client.getOper()
-                            .isChannelExist(channelName));
+                            client.getOper().isChannelExist(channelName));
 
-                    client.sendMessage(client.getChannel().getNameReply(true));
+
+                    return client.getChannel().getNameReply(true);
                 // Add client to channel if it already exists.
                 } else {
                     client.addChannel(channel);
-                    client.sendMessage(channel.getNameReply(true));
+                    return channel.getNameReply(true);
                 }
+            } else {
+                return "";
             }
         }
     }
 
 
-    private void runQuit(Client client, ArrayList<String> words) {
+    private String runQuit(Client client, ArrayList<String> words) {
         // Send standard QUIT message.
         if (words.size() == 1) {
             if (client.isInChannel()) {
@@ -175,32 +168,32 @@ public class Command {
 
         client.removeFromChannel();
         client.setProtocolShouldClose();
+
+        return "";
     }
 
 
-    private void runPart(Client client, ArrayList<String> words) {
+    private String runPart(Client client, ArrayList<String> words) {
         if (words.size() == 1) {
-            IrcProtocol.replyNotEnoughParams(client, COMMAND.PART.getText());
-        } else { 
-            if (words.size() == 2) {
-                if (client.isInChannel()) {
-                    if (client.getChannel().getName().equals(words.get(1))) {
-                        client.removeFromChannel();
-                        IrcProtocol.numericReply(
-                                IrcProtocol.STATUS.PARTSUCCESS,
-                                client);
-                    } else {
-                        IrcProtocol.replyBrackets(
-                                IrcProtocol.STATUS.NOSUCHCHANNEL,
-                                client,
-                                words.get(1));
-                    }
-                }
+            return IrcProtocol.replyNotEnoughParams(COMMAND.PART.getText());
+        } else if (words.size() == 2 && client.isInChannel()) {
+            if (client.getChannel().getName().equals(words.get(1))) {
+                client.removeFromChannel();
+
+                return IrcProtocol.numericReply(
+                        IrcProtocol.STATUS.PARTSUCCESS);
+            } else {
+                return IrcProtocol.replyBrackets(
+                        IrcProtocol.STATUS.NOSUCHCHANNEL,
+                        words.get(1));
             }
+        } else {
+            return "";
         }
     }
 
-    private void runNames(Client client, ArrayList<String> words) {
+
+    private String runNames(Client client, ArrayList<String> words) {
         if (words.size() == 1) {
             StringBuilder names = new StringBuilder();
 
@@ -213,10 +206,9 @@ public class Command {
                     IrcProtocol.STATUS.ENDOFNAMES.getNumber() + " :" +
                     IrcProtocol.STATUS.ENDOFNAMES.getText() + '\n');
 
-            String finalnames = names.toString();
+            String finalNames = names.toString();
 
-            client.sendMessage(finalnames); 
-
+            return finalNames; 
         } else {
             String channel = words.get(1);
 
@@ -224,60 +216,64 @@ public class Command {
             channel = channel.substring(1, channel.length());
 
             if (client.getOper().isChannelExist(channel) != null) {
-                client.sendMessage(
-                        client.getOper().
-                        isChannelExist(channel).getNameReply(true));
+                return client.getOper().
+                        isChannelExist(channel).getNameReply(true);
             } else {
-                IrcProtocol.replyBrackets(
-                        IrcProtocol.STATUS.NOSUCHCHANNEL, client, channel);
+                return IrcProtocol.replyBrackets(
+                        IrcProtocol.STATUS.NOSUCHCHANNEL, channel);
             }
         }
     }
     
 
-    private void runList(Client client, ArrayList<String> words) {
+    private String runList(Client client, ArrayList<String> words) {
         if (words.size() == 1) {
-            client.sendMessage(client.getOper().getListReply());
-        }
-    }
-
-    
-    private void runKick(Client client, ArrayList<String> words) {
-        if (words.size() == 1) {
-            IrcProtocol.replyNotEnoughParams(client, COMMAND.KICK.getText());
+            return client.getOper().getListReply();
         } else {
-            if (client.isInChannel()) {
-                // check if admin requseting service
-                if (client.getNickName().charAt(0) == '@') {
-                    // check if user name in server
-                    if (client.getOper().isNickNameExist(words.get(1))) {
-                        Client clientToKick = client.getOper().
-                            getClient(words.get(1));
+            return "";
+        }
+    }
 
-                        String adminName = client.getNickName().substring(
-                                1, client.getNickName().length());
+    
+    private String runKick(Client client, ArrayList<String> words) {
+        if (words.size() == 1) {
+            return IrcProtocol.replyNotEnoughParams(COMMAND.KICK.getText());
+        } else if (client.isInChannel()) {
+            // check if admin requseting service
+            if (client.getNickName().charAt(0) == '@') {
+                // check if user name in server
+                if (client.getOper().isNickNameExist(words.get(1))) {
+                    Client clientToKick = client.getOper().
+                        getClient(words.get(1));
 
-                        if ( ! clientToKick.isInChannel() ) {
-                            return;
-                        }
+                    String adminName = client.getNickName().substring(
+                            1, client.getNickName().length());
 
-                        String kickName = clientToKick.getChannel().getName();
-
-                        // Check if admin and user in the same channel!
-                        // and that admin dont try to kick himself
-                        if (client.getChannel().getName().equals(kickName) &&
-                                ! adminName.equals(words.get(1))) {
-
-                            clientToKick.removeFromChannel();
-                        }
+                    if ( ! clientToKick.isInChannel() ) {
+                        return "";
                     }
+
+                    String kickName = clientToKick.getChannel().getName();
+
+                    // Check if admin and user in the same channel!
+                    // and that admin dont try to kick himself
+                    if (client.getChannel().getName().equals(kickName) &&
+                            ! adminName.equals(words.get(1))) {
+
+                        clientToKick.removeFromChannel();
+                    }
+
+                    return "";
                 } else {
-                    client.sendMessage(
-                            IrcProtocol.STATUS.CHANOPRIVSNEEDED.getNumber() +
-                            " #" + client.getChannel().getName() + " " +
-                            IrcProtocol.STATUS.CHANOPRIVSNEEDED.getText()); 
+                    return "";
                 }
+            } else {
+                return IrcProtocol.STATUS.CHANOPRIVSNEEDED.getNumber() +
+                    " #" + client.getChannel().getName() + " " +
+                    IrcProtocol.STATUS.CHANOPRIVSNEEDED.getText();
             }
+        } else {
+            return "";
         }
     }
 }

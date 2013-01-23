@@ -61,10 +61,8 @@ public class ThreadPerClientServer implements Runnable {
             // Set end-of-message char to be the newline '\n'.
             IrcTokenizer tokenizer = new IrcTokenizer(stream ,'\n');
 
-            ProtocolInterface protocol = new IrcProtocol(this.oper);
-
             Client client = new Client(
-                    tokenizer, encoder, protocol, socket, oper);
+                    tokenizer, encoder, socket, oper);
 
             this.oper.addClient(client);
 
