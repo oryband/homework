@@ -1,11 +1,10 @@
-package tokenizer.http;
+package irc;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import tokenizer.Message;
 
 public abstract class HttpMessage implements Message<HttpMessage> {
 	public final String protocol;

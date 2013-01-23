@@ -1,9 +1,10 @@
-package tokenizer.http;
+package irc;
 
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
 
 public class HttpResponseMessage extends HttpMessage{
 	public final HttpResponseCode responseCode;

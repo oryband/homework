@@ -1,4 +1,4 @@
-package tokenizer;
+package irc;
 
 public interface Message<T> {
 

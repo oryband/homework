@@ -1,4 +1,4 @@
-package tokenizer;
+package irc;
 
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;

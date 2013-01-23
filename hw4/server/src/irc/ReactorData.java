@@ -1,10 +1,8 @@
-package reactor;
+package irc;
 
 import java.util.concurrent.ExecutorService;
 import java.nio.channels.Selector;
 
-import protocol.*;
-import tokenizer.*;
 
 /**
  * a simple data structure that hold information about the reactor, including getter methods

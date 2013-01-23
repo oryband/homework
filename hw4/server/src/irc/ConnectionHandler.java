@@ -1,4 +1,4 @@
-package reactor;
+package irc;
 
 import java.nio.channels.SocketChannel;
 import java.nio.channels.SelectionKey;
@@ -9,8 +9,6 @@ import java.net.SocketAddress;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import protocol.*;
-import tokenizer.*;
 
 /**
  * Handles messages from clients

@@ -1,10 +1,8 @@
-package reactor;
+package irc;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 
-import protocol.*;
-import tokenizer.*;
 
 /**
  * This class supplies some data to the protocol, which then processes the data,

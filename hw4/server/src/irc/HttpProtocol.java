@@ -1,4 +1,4 @@
-package protocol;
+package irc;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +9,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import tokenizer.http.*;
 
 /**
  * a simple implementation of the server protocol interface

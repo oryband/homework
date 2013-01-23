@@ -1,4 +1,4 @@
-package protocol;
+package irc;
 
 /**
  * A protocol that describes the behabiour of the server.

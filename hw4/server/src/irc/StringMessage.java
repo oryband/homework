@@ -1,4 +1,4 @@
-package tokenizer;
+package irc;
 
 public class StringMessage implements Message<StringMessage> {
 	private final String message;

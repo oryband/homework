@@ -1,4 +1,4 @@
-package tokenizer;
+package irc;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;

@@ -1,6 +1,5 @@
-package protocol;
+package irc;
 
-import tokenizer.StringMessage;
 
 /**
  * a simple implementation of the server protocol interface

@@ -1,4 +1,5 @@
-package tokenizer.http;
+package irc;
+
 
 public enum HttpOperator {
 	GET, PUT

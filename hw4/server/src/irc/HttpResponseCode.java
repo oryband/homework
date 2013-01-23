@@ -1,4 +1,5 @@
-package tokenizer.http;
+package irc;
+
 
 public enum HttpResponseCode {
 	S200 (200, "OK"),

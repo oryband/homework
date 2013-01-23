@@ -1,4 +1,4 @@
-package tokenizer.http;
+package irc;
 
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import tokenizer.MessageTokenizer;
 
 public class HttpMessageTokenizer implements MessageTokenizer<HttpMessage> {
 	private final Vector<ByteBuffer> _messageBuf = new Vector<ByteBuffer>();
