@@ -1,188 +1,144 @@
-/** @author Eldar Damari, Ory Band. */
+/**
+ * Singleton that handles all channel/client operations.
+ *
+ * @author Eldar Damari, Ory Band.
+ * */
 
 package irc;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.HashMap;
 
 
-public class Oper {
+public enum IrcOperations {
+    INSTANCE;  // Singleton pattern.
+    
+    private ArrayList<Client>  clients  = new ArrayList<Client>();
+    private ArrayList<Channel> channels = new ArrayList<Channel>();
 
-    public ArrayList<Client> clients;
 
-    private ArrayList<Channel> channels;
-    private final HashMap<String, Command> commands;
-
-        public Oper() {
-            this.clients = new ArrayList<Client>();
-            this.channels = new ArrayList<Channel>();
-
-            // Initializing all commands data!
-            this.commands = new HashMap<String, Command>();
-            ArrayList<Integer> numbers = new ArrayList<Integer>();
-
-            numbers.add(431);
-            numbers.add(433);
-            numbers.add(401);
-            this.commands.put("NICK",new Command("NICK",numbers));
-            numbers.clear();
-
-            numbers.add(461);
-            numbers.add(462);
-            numbers.add(402);
-            this.commands.put("USER", new Command("USER", numbers));
-            numbers.clear();
-
-            this.commands.put("QUIT", new Command("QUIT", numbers));
-
-            numbers.add(461);
-            numbers.add(353);
-            numbers.add(366);
-            this.commands.put("JOIN", new Command("JOIN", numbers));
-            numbers.clear();
-
-            numbers.add(461);
-            numbers.add(403);
-            numbers.add(405);
-            this.commands.put("PART", new Command("PART" , numbers));
-            numbers.clear();
-
-            numbers.add(353);
-            numbers.add(366);
-            numbers.add(403);
-            this.commands.put("NAMES", new Command("NAMES", numbers));
-            numbers.clear();
-            
-            numbers.add(321);
-            numbers.add(323);
-            numbers.add(322);
-            this.commands.put("LIST", new Command("LIST", numbers));
-            numbers.clear();
-
-            numbers.add(461);
-            numbers.add(404);
-            numbers.add(483);
-            this.commands.put("KICK", new Command("KICK", numbers));
-    }
-
-    // Setters
+    /**
+     * @param client client to add.
+     */
     public void addClient(Client client) {
         this.clients.add(client);
     }
-    public void addChannel(String name, Client admin) {
-        this.channels.add(new Channel(name, admin));
-    }
-    public void removeChannel(Channel channel) {
-        this.channels.remove(this.channels.indexOf(channel));
-    }
+
+    /**
+     * @param client to delete from server.
+     */
     public void removeClient(Client client) {
         this.clients.remove(this.clients.indexOf(client));
     }
 
-    // Getters
-    public boolean isCommandExist(String command) {
-
-        return this.commands.containsKey(command);
+    /**
+     * @param name channel name to create.
+     * @param client client make chanop.
+     */
+    public void addChannel(String name, Client admin) {
+        this.channels.add(new Channel(name, admin));
     }
-    public HashMap<String, Command> getCommands() {
-        return this.commands;
+
+    /**
+     * @param channel channel to remove.
+     */
+    public void removeChannel(Channel channel) {
+        this.channels.remove(this.channels.indexOf(channel));
     }
 
-    // Checks if channel exist!
-    public Channel isChannelExist(String channelName) {
-
-        Iterator<Channel> it = this.channels.iterator();
-
-        while (it.hasNext()) {
-            Channel channel = it.next();
+    /**
+     * @param channelName channel to check if exists.
+     */
+    public Channel getChannel(String channelName) {
+        for (Channel channel : this.channels) {
             if (channel.getName().equals(channelName)) {
-                return channel ;
+                return channel;
             }
         }
+
         return null;
     }
+
+    /**
+     * @return channel list.
+     */
     public ArrayList<Channel> getChannels() {
         return this.channels;
 
     }
+
+
+    /**
+     * @return LIST reply - channel list.
+     */
     public String getListReply() {
+        StringBuilder channelList = new StringBuilder();
 
-        StringBuilder listchannels = new StringBuilder();
-        Iterator<Channel> it = this.channels.iterator();
+        channelList.append(IrcProtocol.STATUS.LISTSTART+ " \n");
 
-        listchannels.append("321 "+'\n');
-        while (it.hasNext()) {
-            listchannels.append("322 #" + it.next().getName() + '\n');
+        for (Channel channel : this.channels) {
+            channelList.append(
+                    IrcProtocol.STATUS.LIST + " #" + channel.getName() + '\n');
         }
-        listchannels.append("323 :End of /LIST " + '\n');
 
-        return listchannels.toString();
+        channelList.append(
+                IrcProtocol.STATUS.LISTEND.getNumber() + " " +
+                IrcProtocol.STATUS.LISTEND.getText() + '\n');
+
+        return channelList.toString();
     }
 
+
+    /**
+     * @param nickname client nickname to search for.
+     *
+     * @return client matched by nickname, or null if not found.
+     */
     public Client getClient(String nickname) {
+        for (Client client : this.clients) {
+            if (client.getNickname().equals(nickname) ||
+                    client.getNickname().equals("@" + nickname)) {
 
-        if (!this.isNickNameExist(nickname)) {
-            return null;
-        } else {
-
-            Iterator<Client> it = this.clients.iterator();
-
-            while (it.hasNext()) {
-
-                Client client = it.next();
-                if (client.getNickName().equals(nickname) ||
-                        client.getNickName().equals("@"+nickname)) {
-                    return client;
-                }
+                return client;
             }
         }
+
         return null;
     }
 
 
-    // Checks if nick name exist!
-    public boolean isNickNameExist(String nick) {
+    /**
+     * @param nick nickname to search for.
+     *
+     * @return true if client matching given nickname is found, false otherwise.
+     */
+    public boolean isNicknameExist(String nick) {
+        for (Client client : this.clients) {
+            String nickname = client.getNickname();
 
-        Iterator<Client> it = this.clients.iterator();
+            // Compare nickname or @nickname.
+            if (nickname.equals(nick) ||
+                    nickname.substring(1, nickname.length()).equals(nick)) {
 
-        while (it.hasNext()) {
-
-            String nickname = it.next().getNickName();
-            int namelength = nickname.length();
-
-            if (nickname.equals(nick) == true ) {
                 return true;
-            } else {
-                // Checking if client name with @  - indicates for admin
-                if (namelength >= 2) {
-
-                    if (nickname.substring(1, nickname.length()).
-                            equals(nick)) {
-                                    return true;
-                                }
-                }
-            }
+                    }
         }
+
         return false;
     }
 
-    public void addToChannel(String channelName,Client client) {
 
-        //Check if channel exist!
-        Channel channel = this.isChannelExist(channelName);
+    /**
+     * @param channelName channel to add client into.
+     * @param client client to add to given channel.
+     */
+    public void addToChannel(String channelName, Client client) {
+        Channel channel = getChannel(channelName);
 
         if (channel != null) {
             channel.addUser(client);
+            // Create channel if non-existent, and set client as chanop.
         } else {
-            this.createChannel(channelName, client);
+            this.channels.add(new Channel(channelName, client));
         }
-    }
-
-    // Creating a new channel with a new admin!
-    public void createChannel(String channelName, Client admin) {
-
-        Channel newCH = new Channel(channelName, admin);
-        this.channels.add(newCH);
     }
 }

@@ -16,40 +16,40 @@ public class Client implements Runnable {
     private EncoderInterface encoder;
     private IrcTokenizer     tokenizer;
     private IrcProtocol      protocol;
-    private Oper             oper;
+    private IrcOperations    ircOperations;
 
-    private String nickName;
-    private String user;
+    private String nickname;
+    private String username;
 
     private Channel channel;
     private boolean inChannel;
-    private boolean isAdmin;
+    private boolean isChanop;
 
-    private boolean newUser;
+    private boolean isNewClient;
 
 
     public Client(
             IrcTokenizer     tokenizer,
             EncoderInterface encoder,
             Socket           socket,
-            Oper             oper) {
+            IrcOperations    ircOperations) {
 
 
-        this.socket    = socket;
-        this.encoder   = encoder;
-        this.tokenizer = tokenizer;
-        this.oper      = oper;
+        this.socket        = socket;
+        this.encoder       = encoder;
+        this.tokenizer     = tokenizer;
+        this.ircOperations = ircOperations;
 
-        this.protocol = new IrcProtocol(this.oper, this);
+        this.protocol = new IrcProtocol(this.ircOperations, this);
 
-        this.nickName = new String();
-        this.user     = new String();
+        this.nickname = new String();
+        this.username = new String();
 
         this.channel   = null;
         this.inChannel = false;
-        this.isAdmin   = false;
+        this.isChanop   = false;
 
-        this.newUser = true;
+        this.isNewClient = true;
 
         // Welcome message.
         this.sendMessage(
@@ -64,13 +64,13 @@ public class Client implements Runnable {
                 this.protocol.close();
             } else {
                 try {
-                    String msg = this.tokenizer.nextToken();
-                    String reply = this.protocol.processMessage(msg); 
+                    String msg   = this.tokenizer.nextToken();
+                    String reply = this.protocol.processMessage(msg);
                     sendMessage(reply);
                 } catch (IOException e) {
                     System.out.println(
                             "Error analyzing message from client '" +
-                            this.user + "/" + this.nickName + "'.");
+                            this.username + "/" + this.nickname + "'.");
 
                     continue;
                 }
@@ -78,130 +78,176 @@ public class Client implements Runnable {
         }
 
         // Connection has closed.
-        this.oper.removeClient(this);
+        this.ircOperations.removeClient(this);
 
         System.out.println(
-                "Client " + this.user + "/" + this.nickName +
+                "Client " + this.username + "/" + this.nickname +
                 " has disconnected.");
 
         System.out.println(
-                "Currently connected users: " + this.oper.clients.toString());
+                "Currently connected users: " + this.ircOperations.clients.toString());
 
         try {
             this.socket.close();
         } catch (IOException e) {
             System.out.println(
                     "Error closing socket for client " +
-                    this.user + "/" + this.nickName + "'.");
+                    this.username + "/" + this.nickname + "'.");
         }
     }
 
 
-    public void addChannel(Channel channel) {
+    /**
+     * @param channel channel to add client into.
+     */
+    public void addToChannel(Channel channel) {
+        channel.addUser(this);
         this.channel = channel;
         this.inChannel = true;
-        channel.addUser(this);
     } 
 
 
-    public void setIsInChannel(boolean status) {
-        this.inChannel = status;
+    /**
+     * @param nick nickname to set client with.
+     */
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+        checkNewUser();
     }
 
-    public void setNickName(String nick) {
-        this.nickName = nick;
-        this.checkNewUser();
+    /**
+     * @param username username to set client with.
+     */
+    public void setUsername(String username) {
+        checkNewUser();
+        this.username = username;
     }
 
-    public void setUser(String user) {
-        this.user = user;
-        this.checkNewUser();
-    }
-
-    public void setAsAdmin() {
-        this.isAdmin = true;
-        this.nickName = "@" + this.nickName;
-    }
-
-    public void setAsNotAdmin() {
-        this.isAdmin = false;
-        this.nickName = this.nickName.substring(1, this.nickName.length());
-    }
-
-    public void setProtocolShouldClose() {
-        this.protocol.setShouldClose(true);
+    /**
+     * Sets client as chanop
+     */
+    public void setChanop() {
+        this.isChanop = true;
+        this.nickname = "@" + this.nickname;
     }
 
 
+    /**
+     * Remove chanop status from client.
+     */
+    public void removeChanop() {
+        this.isChanop = false;
+        this.nickname = this.nickname.substring(1, this.nickname.length());
+    }
+
+
+    /**
+     * @return client's socket.
+     */
     public Socket getSocket() {
         return this.socket;
     }
 
-    public String getNickName() {
-        return this.nickName;
+    /**
+     * @return client's nickname.
+     */
+    public String getNickname() {
+        return this.nickname;
     }
 
+    /**
+     * @return client's channel, or null if client isn't in channel.
+     */
     public Channel getChannel() {
         return this.channel;
     }
 
-    public Oper getOper() {
-        return this.oper;
+    /**
+     * @return client's associated IrcOperations object.
+     */
+    public IrcOperations getIrcOperations() {
+        return this.ircOperations;
     }
 
 
-    public boolean isUserNameExist() {
-        return this.user.length() != 0;
+    /**
+     * @return whether client has username already set.
+     */
+    public boolean isUsernameExist() {
+        return this.username.length() != 0;
     }
 
+    /**
+     * @return whether client has joined a channel.
+     */
     public boolean isInChannel() {
         return this.inChannel;
     }
 
-    public boolean isAdmin() {
-        return this.isAdmin;
+    /**
+     * @return whether client is chanop in the channel he is in.
+     */
+    public boolean isChanop() {
+        return this.isChanop;
     }
 
-
+    /**
+     * @return whether client has nickname already set.
+     */
     public boolean hasNickname() {
-        return this.nickName.length() != 0;
+        return this.nickname.length() != 0;
     }
 
-    public boolean hasUser() {
-        return this.user.length() != 0;
+    /**
+     * @return whether client has username already set.
+     */
+    public boolean hasUsername() {
+        return this.username.length() != 0;
     }
 
-    public boolean newUser() {
-        return this.newUser;
+    /**
+     * @return whether client is a new client.
+     */
+    public boolean isNewClient() {
+        return this.isNewClient;
     }
 
 
-    /** Sets user has 'not new' if it has already set up a NICK and USER. */
+    /** Sets user as 'not new' if it has already set up a NICK and USER. */
     private void checkNewUser() {
-        if (this.hasNickname() && this.hasUser()) {
-            this.newUser = false;
+        if (this.hasNickname() && this.hasUsername()) {
+            this.isNewClient = false;
         }
     }
 
 
+    /**
+     * @return whether client has set nick and user, and can be registered.
+     */
     public boolean canRegister() {
-        return this.nickName.length() != 0 && this.user.length() != 0;
+        return this.nickname.length() != 0 && this.username.length() != 0;
     }
 
 
+    /** removes client from his channel. */
     public void removeFromChannel() {
-        this.channel.removeUser(this);
+        if (this.channel != null) {
+            this.channel.removeUser(this);
 
-        // Delete channel if empty.
-        if (this.channel.isEmpty()) {
-            this.oper.removeChannel(this.channel);
+            // Delete channel if empty.
+            if (this.channel.isEmpty()) {
+                this.ircOperations.removeChannel(this.channel);
+            }
+
+            this.channel   = null;
+            this.inChannel = false;
         }
-
-        this.channel = null;
-        this.inChannel = false;
     }
 
 
+    /**
+     * @param msg message to send to client.
+     */
     public void sendMessage(String msg) {
         String NEW_LINE = System.getProperty("line.separator");
         String newmsg = msg + NEW_LINE; 

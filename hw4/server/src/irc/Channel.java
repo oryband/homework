@@ -14,7 +14,7 @@ public class Channel {
         this.name  = name;
         this.users = new ArrayList<Client>();
         this.admin = admin;
-        this.admin.setAsAdmin();
+        this.admin.setChanop();
     }
 
     // Getters
@@ -51,7 +51,7 @@ public class Channel {
         
         // Append users in channel.
         for (Client client : this.users) {
-            str.append(client.getNickName() + " ");
+            str.append(client.getNickname() + " ");
         }
 
         // Append new-line.
@@ -78,16 +78,16 @@ public class Channel {
     }
 
     public synchronized void removeUser(Client client) {
-        if (this.users.size() == 2 && client.isAdmin()) { 
+        if (this.users.size() == 2 && client.isChanop()) { 
             this.users.remove(this.users.indexOf(client));
-            client.setAsNotAdmin();
+            client.removeChanop();
 
             // Setting the only user left in the channel as admin 
-            this.users.get(0).setAsAdmin();
+            this.users.get(0).setChanop();
             this.admin = this.users.get(0);
         } else {
             if (this.users.size() == 1) {
-                client.setAsNotAdmin();
+                client.removeChanop();
              } 
 
             this.users.remove(this.users.indexOf(client));
