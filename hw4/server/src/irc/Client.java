@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 
-public class Client implements Runnable {
+public class Client {
 
     // Static members and methods.
 
@@ -103,46 +103,6 @@ public class Client implements Runnable {
         this.isChanop  = false;
 
         this.isNewClient = true;
-    }
-
-
-    public void run() {
-        while ( ! connectionHandler.isClosed() && ! protocol.shouldClose()) {
-            if ( ! this.tokenizer.isAlive() ) {
-                this.protocol.close();
-            } else {
-                try {
-                    //String msg   = this.tokenizer.nextToken();
-                    String msg   = this.tokenizer.nextMessage();
-                    String reply = this.protocol.processMessage(msg);
-                    sendMessage(reply);
-                } catch (IOException e) {
-                    System.out.println(
-                            "Error analyzing message from client '" +
-                            this.username + "/" + this.nickname + "'.");
-
-                    continue;
-                }
-            }
-        }
-
-        // Connection has closed.
-        removeClient(this);
-
-        System.out.println(
-                "Client " + this.username + "/" + this.nickname +
-                " has disconnected.");
-
-        System.out.println(
-                "Currently connected users: " + getClientsString());
-
-        try {
-            this.connectionHandler.close();
-        } catch (IOException e) {
-            System.out.println(
-                    "Error closing connectionHandler for client " +
-                    this.username + "/" + this.nickname + "'.");
-        }
     }
 
 

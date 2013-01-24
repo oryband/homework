@@ -60,7 +60,6 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
 
     public synchronized void run() {
         // go over all complete messages and process them.
-        // TODO add writing, flipping, copy from 07_NIO echoclient 
         while (_tokenizer.hasMessage()) {
             String msg = _tokenizer.nextMessage();
             String response = this._protocol.processMessage(msg);
@@ -78,10 +77,6 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
     }
 
 
-	public synchronized void addOutData(ByteBuffer buf) {
-		_outData.add(buf);
-	}
-
 	private void closeConnection() {
 		// remove from the selector.
 		try {
@@ -91,6 +86,7 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
             System.out.println("Error closing connectionHandler.");
 		}
 	}
+
 
 	/**
 	 * Reads incoming data from the client:
@@ -136,45 +132,11 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
 		//add the buffer to the protocol task
 		buf.flip();
         this._tokenizer.addBytes(buf);
-		// add the protocol task to the reactor
-		//_task.addBytes(buf);
-		//_data.getExecutor().execute(_task);
 	}
 
 
-
-    /**
-     * @param msg message to send to client.
-     */
-    public void write() {
-        ByteBuffer outbuf = this._tokenizer.getBytesForMessage(msg);
-
-        //ByteBuffer outbuf = ByteBuffer.wrap(
-                //msg.getBytes(
-                    //this._tokenizer.getCharsetString()));
-
-        while (outbuf.remaining() > 0) {
-            this._sChannel.write(outbuf);
-        }
-
-        // -- OLD IMPLEMENTATION -- TODO remove this.
-        //String NEW_LINE = System.getProperty("line.separator");
-        //String newmsg = msg + NEW_LINE; 
-        //byte[] buf = this.encoder.toBytes(newmsg);
-
-        /*try {
-            this.connectionHandler.getOutputStream().write(buf, 0, buf.length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-    }
-
-
 	/**
-	 * attempts to send data to the client<br/>
-	 * if all the data has been successfully sent, the ConnectionHandler will
-	 * automatically switch to read only mode, otherwise it'll stay in it's
-	 * current mode (which is read / write).
+	 * attempts to send data to the client
 	 * 
 	 * @throws IOException
 	 *             if the write operation fails
@@ -182,12 +144,12 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
 	 *             if the channel have been closed while registering to the Selector
 	 */
 	public synchronized void write() {
+        // if nothing left in the output string, return.
 		if (_outData.size() == 0) {
-			// if nothing left in the output string, return.
 			return;
 		}
 
-		// if there is something to send
+		// if there is something to send, send it.
 		ByteBuffer buf = _outData.remove(0);
 		if (buf.remaining() != 0) {
 			try {
@@ -201,6 +163,7 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
 				_outData.add(0, buf);
 			}
 		}
+
 		// check if the protocol indicated close.
 		if (_protocol.shouldClose()) {
 			if (buf.remaining() == 0) {
@@ -209,5 +172,13 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
 				logger.info("disconnecting client on " + address);
 			}
 		}
+	}
+
+
+    /**
+     * @param buf byte string to be added to message queue.
+     */
+	public synchronized void addOutData(ByteBuffer buf) {
+		_outData.add(buf);
 	}
 }

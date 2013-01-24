@@ -7,8 +7,6 @@ import java.net.InetSocketAddress;
 import java.io.InputStreamReader;
 import java.io.IOException;
 
-import ConnectionHandler;
-
 
 public class ThreadPerClientServer implements Runnable {
     private ServerSocketChannel serverSocketChannel;
@@ -28,17 +26,14 @@ public class ThreadPerClientServer implements Runnable {
      * and sets up a new client object for each one, each run in its own thread.
      */
     public void run() {
-        this.serverSocketChannel = ServerSocketChannel.open();
-        this.serverSocketChannel.configureBlocking(true);
-
         try {  // Init socket.
+            this.serverSocketChannel = ServerSocketChannel.open();
+            this.serverSocketChannel.configureBlocking(true);
             this.serverSocketChannel.socket().bind(new InetSocketAddress(port));
         } catch (IOException e) {
             System.out.println(
                     "Error (Cannot listen on 0.0.0.0:" + this.port + ").\nExiting.");
         }
-
-        //IrcEncoder encoder = new IrcEncoder(this.charset);
 
         System.out.println(
                 "Server started. Listening on 0.0.0.0:" + this.port + " ...");
@@ -49,24 +44,11 @@ public class ThreadPerClientServer implements Runnable {
             // Wait (block) for a client to connect.
             try {
                 socketChannel = this.serverSocketChannel.accept();
+                socketChannel.configureBlocking(true);
             } catch (IOException e) {
                 System.out.println("Failed to accept connection from client.");
                 continue;
             }
-
-            socketChannel.configureBlocking(true);
-
-            /*InputStreamReader stream;
-            try {
-                stream = new InputStreamReader(
-                        socketChannel.getInputStream(), encoder.getCharSet());
-            } catch (IOException e) {
-                System.out.println("Failed to init stream reader upon client connection.");
-                continue;
-            }*/
-
-            // Set end-of-message char to be the newline '\n'.
-            //IrcTokenizer tokenizer = new IrcTokenizer(stream ,'\n');
 
             FixedSeparatorMessageTokenizer tokenizer =
                 new FixedSeparatorMessageTokenizer(
@@ -74,12 +56,10 @@ public class ThreadPerClientServer implements Runnable {
 
             IrcProtocol protocol = new IrcProtocol();
 
-            ConnectionHandler<String> connectionHandler =
-                new ConnectionHandler<String>(
-                        socketChannel, encoder, tokenizer, protocol);
+            TpcConnectionHandler<String> connectionHandler =
+                TpcConnectionHandler.create(socketChannel, protocol, tokenizer);
 
-            ( (IrcProtocol) protocol ).setConnectionHandler(
-                    (ConnectionHandler) connectionHandler);
+            protocol.setConnectionHandler(connectionHandler);
 
             new Thread(connectionHandler).start()  ;
         }
