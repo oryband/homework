@@ -1,56 +1,74 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="hw4">
+<project basedir="." default="build" name="Server">
+  <presetdef name="javac">
+    <javac includeantruntime="false" />
+  </presetdef>    
 
   <property environment="env"/>
 
-  <!--DEBUG-->
-  <property name="debugtoggle" value="false"/>
-  <property name="debuglevel" value="source,lines,vars"/>
+  <property name="src.dir"     value="./src"/>
+  <property name="irc.dir"     value="${src.dir}/irc"/>
+  <property name="build.dir"   value="."/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="jar.dir"     value="${build.dir}/jar"/>
 
-  <!--Java version-->
-  <property name="target" value="1.7"/>
-  <property name="source" value="1.7"/>
+  <property name="main-class"  value="ThreadPerClientServer"/>
+
 
   <path id="hw4.classpath">
-    <pathelement location="src"/>
+    <pathelement location="${src.dir}"/>
   </path>
 
+
   <target name="init">
-    <mkdir dir="src"/>
-    <copy includeemptydirs="false" todir="src">
-      <fileset dir="src">
+    <copy includeemptydirs="false" todir=".">
+      <fileset dir="${src.dir}">
+        <exclude name="**/*.launch"/>
         <exclude name="**/*.java"/>
+        <exclude name="**/.lvimrc"/>  <!-- Vim configuration file -->
       </fileset>
     </copy>
   </target>
 
   <target name="clean">
     <delete>
-      <fileset dir="src" includes="*.class"/>
-    </delete>
-    <delete>
-      <fileset dir="src/irc" includes="*.class"/>
+      <fileset dir="${classes.dir}" includes="**/*.class"/>
     </delete>
   </target>
 
   <target depends="clean" name="cleanall"/>
 
-  <target depends="build-subprojects,build-project" name="build"/>
-
-  <target name="build-subprojects"/>
-
-  <target depends="init" name="build-project">
+  <target depends="init" name="build">
     <echo message="${ant.project.name}: ${ant.file}"/>
-    <javac debug="${debugtoggle}" debuglevel="${debuglevel}" destdir="src" includeantruntime="false" source="${source}" target="${target}">
-      <src path="src"/>
+    <javac destdir=".">
+      <src path="${src.dir}"/>
       <classpath refid="hw4.classpath"/>
     </javac>
   </target>
 
-  <target name="Server">
-    <java classname="Server" dir="src" failonerror="true" fork="yes">
-      <classpath refid="hw4.classpath"/>
-    </java>
+  <target name="compile">
+    <mkdir dir="${classes.dir}"/>
+    <javac includeantruntime="false" srcdir="${irc.dir}" destdir="${classes.dir}">
+      <exclude name="Reactor.java"/>
+      <exclude name="ReactorData.java"/>
+      <exclude name="ProtocolTask.java"/>
+      <exclude name="ConnectionAcceptor.java"/>
+      <exclude name="ReactorConnectionHandler.java"/>
+    </javac>
   </target>
 
+  <target name="jar" depends="compile">
+    <mkdir dir="${jar.dir}"/>
+    <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+      <manifest>
+        <attribute name="Main-Class" value="${main-class}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="run" depends="jar">
+    <java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
+      <arg value="${arg0}" />
+    </java>
+  </target>
 </project>
