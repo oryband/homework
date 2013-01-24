@@ -26,7 +26,6 @@
       <exclude name="ReactorConnectionHandler.java"/>
       <exclude name="ReactorData.java"/>
       <exclude name="ServerProtocolFactory.java"/>
-      <exclude name="StringMessage.java"/>
       <exclude name="TokenizerFactory.java"/>
     </javac>
   </target>
@@ -69,7 +68,7 @@
   <target name="run-reactor" depends="jar-reactor">
     <echo message="${ant.project.name}: ${ant.file}"/>
     <java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
-      <arg value="${arg0}" />
+      <arg value="4" />
     </java>
   </target>
 
