@@ -9,13 +9,17 @@ import java.nio.charset.CharacterCodingException;
  * possibly returning a reply. This class is implemented as an executor task.
  * 
  */
-public class ProtocolTask<T> implements Runnable {
+public class ReactorProtocolTask<T> implements Runnable {
 
 	private final ServerProtocol<T> _protocol;
 	private final MessageTokenizer<T> _tokenizer;
 	private final ConnectionHandler<T> _handler;
 
-	public ProtocolTask(final ServerProtocol<T> protocol, final MessageTokenizer<T> tokenizer, final ConnectionHandler<T> h) {
+	public ReactorProtocolTask(
+            final ServerProtocol<T> protocol,
+            final MessageTokenizer<T> tokenizer,
+            final ConnectionHandler<T> h) {
+
 		this._protocol = protocol;
 		this._tokenizer = tokenizer;
 		this._handler = h;

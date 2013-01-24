@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class IrcProtocol implements AsyncServerProtocol<String> {
     private Client client;
+    private ConnectionHandler<String> connectionHandler;
 
     private boolean shouldClose;
     private boolean connectionTerminated;
@@ -84,6 +85,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
     public IrcProtocol() {
         this.client = Client.createClient();
+        this.connectionHandler = null;
 
         this.shouldClose = false;
         this.connectionTerminated = false;
@@ -93,8 +95,10 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
     /**
      * @param connectionHandler object to set protocol's user with.
      */
-    public void setConnectionHandler(ConnectionHandler connectionHandler) {
-        this.client.setConnectionHandler(connectionHandler);
+    public void setConnectionHandler(
+            ConnectionHandler<String> connectionHandler) {
+
+        this.connectionHandler = connectionHandler;
     }
 
 
@@ -126,7 +130,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
     public String processMessage(String msg) {
         // Silently drop an empty message.
         if (msg.length() == 0 || this.connectionTerminated) {
-            return "";
+            return null;
         }
 
         ArrayList<String> words = split(msg);
@@ -174,7 +178,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
             }
         }
 
-        return "";  // Don't reply anything back to the client.
+        return null;  // Don't reply anything back to the client.
     }
 
 
@@ -352,7 +356,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
             case KICK:
                 return this.executeKick(client, words);
             default:  // command == null
-                return "";
+                return null;
         }
     }
 
@@ -379,7 +383,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
                         IrcProtocol.STATUS.NICKACCEPTED);
             }
         } else {
-            return "";
+            return null;
         }
     }
 
@@ -404,7 +408,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
                 return IrcProtocol.reply(IrcProtocol.STATUS.ALREADYREGISTERED);
             }
         } else {
-            return "";
+            return null;
         }
     }
 
@@ -426,7 +430,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
                 // Check for '#' before channel name.
                 String channelName = words.get(1);
                 if (channelName.charAt(0) != '#') {
-                    return "";  // Silently drop illegal command.
+                    return null;  // Silently drop illegal command.
                 }
 
                 channelName = channelName.substring(1, channelName.length());
@@ -456,7 +460,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
                     return channel.getNameReply(true);
                 }
             } else {
-                return "";
+                return null;
             }
         }
     }
@@ -484,6 +488,12 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
         }
 
         client.removeFromChannel();
+        Client.removeClient(this.client);
+
+        System.out.println(
+                "Client " + this.client.getUsername() + "/" +
+                this.client.getNickname() + " has disconnected.");
+
         close();
 
         return "Goodbye.";
@@ -514,7 +524,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
                         words.get(1));
             }
         } else {
-            return "";
+            return null;
         }
     }
 
@@ -571,7 +581,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
         if (words.size() == 1) {
             return Channel.getListReply();
         } else {
-            return "";
+            return null;
         }
     }
 
@@ -599,7 +609,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
                             1, client.getNickname().length());
 
                     if ( ! clientToKick.isInChannel() ) {
-                        return "";
+                        return null;
                     }
 
                     String kickName = clientToKick.getChannel().getName();
@@ -611,18 +621,14 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
                         clientToKick.removeFromChannel();
                     }
-
-                    return "";
-                } else {
-                    return "";
                 }
             } else {
                 return IrcProtocol.STATUS.CHANOPRIVSNEEDED.getNumber() +
                     " #" + client.getChannel().getName() + " " +
                     IrcProtocol.STATUS.CHANOPRIVSNEEDED.getText();
             }
-        } else {
-            return "";
         }
+
+        return null;
     }
 }

@@ -6,6 +6,10 @@ import java.nio.charset.CharacterCodingException;
 
 public interface MessageTokenizer<T> {
 
+    /**
+     * @return charset string i.e. "UTF-8".
+     */
+    public String getCharsetString();
    
    /**
     * Add some bytes to the message stream.

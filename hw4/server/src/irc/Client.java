@@ -6,6 +6,8 @@
 
 package irc;
 
+import java.nio.channels.SocketChannel;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.io.IOException;
 
@@ -82,12 +84,6 @@ public class Client implements Runnable {
 
     // Non-static members and methods.
 
-    private ConnectionHandler connectionHandler;
-
-    private IrcEncoder        encoder;
-    private IrcTokenizer      tokenizer;
-    private IrcProtocol       protocol;
-
     private String nickname;
     private String username;
 
@@ -99,12 +95,6 @@ public class Client implements Runnable {
 
 
     public Client() {
-        this.connectionHandler = null;
-
-        this.protocol  = null;
-        this.encoder   = null;
-        this.tokenizer = null;
-
         this.nickname = new String();
         this.username = new String();
 
@@ -122,7 +112,8 @@ public class Client implements Runnable {
                 this.protocol.close();
             } else {
                 try {
-                    String msg   = this.tokenizer.nextToken();
+                    //String msg   = this.tokenizer.nextToken();
+                    String msg   = this.tokenizer.nextMessage();
                     String reply = this.protocol.processMessage(msg);
                     sendMessage(reply);
                 } catch (IOException e) {
@@ -154,34 +145,6 @@ public class Client implements Runnable {
         }
     }
 
-
-    /**
-     * @param protocol protocol to set.
-     */
-    public void setProtocol(IrcProtocol protocol) {
-        this.protocol = protocol;
-    }
-
-    /**
-     * @param connectionHandler connectionHandler to set.
-     */
-    public void setconnectionHandler(ConnectionHandler connectionHandler) {
-        this.connectionHandler = connectionHandler;
-    }
-
-    /**
-     * @param tokenizer tokenizer to set.
-     */
-    public void setTokenizer(IrcTokenizer tokenizer) {
-        this.tokenizer = tokenizer;
-    }
-
-    /**
-     * @param encoder encoder to set.
-     */
-    public void setEncoder(IrcEncoder tokenizer) {
-        this.encoder = encoder;
-    }
 
     /**
      * @param channel channel to add client into.
@@ -228,17 +191,17 @@ public class Client implements Runnable {
 
 
     /**
-     * @return client's connectionHandler.
-     */
-    public ConnectionHandler getConnectionHandler() {
-        return this.connectionHandler;
-    }
-
-    /**
      * @return client's nickname.
      */
     public String getNickname() {
         return this.nickname;
+    }
+
+    /**
+     * @return client's username.
+     */
+    public String getUsername() {
+        return this.username;
     }
 
     /**
@@ -320,22 +283,6 @@ public class Client implements Runnable {
 
             this.channel   = null;
             this.inChannel = false;
-        }
-    }
-
-
-    /**
-     * @param msg message to send to client.
-     */
-    public void sendMessage(String msg) {
-        String NEW_LINE = System.getProperty("line.separator");
-        String newmsg = msg + NEW_LINE; 
-        byte[] buf = this.encoder.toBytes(newmsg);
-
-        try {
-            this.connectionHandler.getOutputStream().write(buf, 0, buf.length);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
