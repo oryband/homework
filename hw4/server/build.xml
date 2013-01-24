@@ -23,6 +23,7 @@
       <exclude name="ConnectionAcceptor.java"/>
       <exclude name="ProtocolTask.java"/>
       <exclude name="Reactor.java"/>
+      <exclude name="ReactorConnectionAcceptor.java"/>
       <exclude name="ReactorConnectionHandler.java"/>
       <exclude name="ReactorData.java"/>
       <exclude name="ServerProtocolFactory.java"/>
