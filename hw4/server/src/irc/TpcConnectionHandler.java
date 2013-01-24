@@ -63,16 +63,23 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
 
     public synchronized void run() {
         // go over all complete messages and process them.
-        while (_tokenizer.hasMessage()) {
-            T msg = _tokenizer.nextMessage();
-            T response = this._protocol.processMessage(msg);
+        while ( ! _protocol.shouldClose() ) {
+            read();
 
-            // Reply to client if necessary.
-            if (response != null) {
-                try {
-                    ByteBuffer bytes = _tokenizer.getBytesForMessage(response);
-                    addOutData(bytes);
-                } catch (CharacterCodingException e) { e.printStackTrace(); }
+            while (_tokenizer.hasMessage()) {
+                T msg = _tokenizer.nextMessage();
+
+                T response = this._protocol.processMessage(msg);
+
+                // Reply to client if necessary.
+                if (response != null) {
+                    try {
+                        ByteBuffer bytes = _tokenizer.getBytesForMessage(response);
+                        addOutData(bytes);
+                    } catch (CharacterCodingException e) { e.printStackTrace(); }
+
+                    write();
+                }
             }
         }
 
@@ -81,6 +88,10 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
 
 
 	private void closeConnection() {
+        logger.info(
+                _sChannel.socket().getInetAddress().toString() +
+                " disconnected.");
+
 		// remove from the selector.
 		try {
 			_sChannel.close();
@@ -92,15 +103,7 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
 
 
 	/**
-	 * Reads incoming data from the client:
-	 * <UL>
-	 * <LI>Reads some bytes from the SocketChannel
-	 * <LI>create a protocolTask, to process this data, possibly generating an
-	 * answer
-	 * <LI>Inserts the Task to the ThreadPool
-	 * </UL>
-	 * 
-	 * @throws
+	 * Reads some bytes from the SocketChannel
 	 * 
 	 * @throws IOException
 	 *             in case of an IOException during reading
@@ -113,7 +116,6 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
 		}
 
 		SocketAddress address = _sChannel.socket().getRemoteSocketAddress();
-		logger.info("Reading from " + address);
 
 		ByteBuffer buf = ByteBuffer.allocate(BUFFER_SIZE);
 		int numBytesRead = 0;
@@ -124,10 +126,6 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
 		}
 		// is the channel closed??
 		if (numBytesRead == -1) {
-			// No more bytes can be read from the channel
-			logger.info("client on " + address + " has disconnected");
-			closeConnection();
-			// tell the protocol that the connection terminated.
 			_protocol.connectionTerminated();
 			return;
 		}
@@ -153,27 +151,21 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
 		}
 
 		// if there is something to send, send it.
-		ByteBuffer buf = _outData.remove(0);
-		if (buf.remaining() != 0) {
+        ByteBuffer buf = _outData.remove(0);
+		while (buf.remaining() > 0) {
 			try {
 				_sChannel.write(buf);
 			} catch (IOException e) {
 				// this should never happen.
 				e.printStackTrace();
 			}
-			// check if the buffer contains more data
-			if (buf.remaining() != 0) {
-				_outData.add(0, buf);
-			}
-		}
 
-		// check if the protocol indicated close.
-		if (_protocol.shouldClose()) {
-			if (buf.remaining() == 0) {
-				closeConnection();
-				SocketAddress address = _sChannel.socket().getRemoteSocketAddress();
-				logger.info("disconnecting client on " + address);
-			}
+			// check if the buffer contains more data
+            if (buf.remaining() == 0) {
+                if (_outData.size() > 0) {
+                    buf = _outData.remove(0);
+                }
+            }
 		}
 	}
 

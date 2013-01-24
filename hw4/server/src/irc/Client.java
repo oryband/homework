@@ -71,11 +71,12 @@ public class Client {
             String nickname = client.getNickname();
 
             // Compare nickname or @nickname.
-            if (nickname.equals(nick) ||
-                    nickname.substring(1, nickname.length()).equals(nick)) {
+            if (nickname.length() > 0 &&
+                    (nickname.equals(nick) ||
+                     nickname.substring(1, nickname.length()).equals(nick))) {
 
                 return true;
-                    }
+            }
         }
 
         return false;
@@ -147,8 +148,8 @@ public class Client {
      * @param username username to set client with.
      */
     public void setUsername(String username) {
-        checkNewUser();
         this.username = username;
+        checkNewUser();
     }
 
     /**
@@ -164,8 +165,10 @@ public class Client {
      * Remove chanop status from client.
      */
     public void removeChanop() {
-        this.isChanop = false;
-        this.nickname = this.nickname.substring(1, this.nickname.length());
+        if (this.isChanop) {
+            this.isChanop = false;
+            this.nickname = this.nickname.substring(1, this.nickname.length());
+        }
     }
 
 

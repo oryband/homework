@@ -28,6 +28,7 @@ public class FixedSeparatorMessageTokenizer implements MessageTokenizer<String> 
 
 
     public FixedSeparatorMessageTokenizer(String separator, Charset charset) {
+
         this._messageSeparator = separator;
 
         this.charsetString = charset.toString();

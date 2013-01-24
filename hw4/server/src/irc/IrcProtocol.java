@@ -112,6 +112,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
 	public void connectionTerminated() {
 		this.connectionTerminated = true;
+        close();
 	}
 
     public boolean isEnd(String msg) {
@@ -129,7 +130,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
     public String processMessage(String msg) {
         // Silently drop an empty message.
-        if (msg.length() == 0 || this.connectionTerminated) {
+        if (msg == null || msg.length() == 0 || this.connectionTerminated) {
             return null;
         }
 
@@ -645,6 +646,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
         for (Client client : channel.getClients()) {
             client.getConnectionHandler().addOutData(nickname + ": " + msg);
+            client.getConnectionHandler().write();
         }
     }
 
@@ -656,6 +658,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
     public synchronized void sendAllSystemMessage(Channel channel, String msg) {
         for (Client client : channel.getClients()) {
             client.getConnectionHandler().addOutData(msg);
+            client.getConnectionHandler().write();
         }
     }
 }
