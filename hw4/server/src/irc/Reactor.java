@@ -99,13 +99,13 @@ public class Reactor<T> implements Runnable {
 		}
 
 		_data = new ReactorData<T>(executor, selector, _protocolFactory, _tokenizerFactory);
-		ConnectionAcceptor<T> connectionAcceptor = new ConnectionAcceptor<T>( ssChannel, _data);
+		ReactorConnectionAcceptor<T> ReactorconnectionAcceptor = new ReactorConnectionAcceptor<T>( ssChannel, _data);
 
 		// Bind the server socket channel to the selector, with the new
 		// acceptor as attachment
 
 		try {
-			ssChannel.register(selector, SelectionKey.OP_ACCEPT, connectionAcceptor);
+			ssChannel.register(selector, SelectionKey.OP_ACCEPT, ReactorconnectionAcceptor);
 		} catch (ClosedChannelException e) {
 			logger.info("server channel seems to be closed!");
 			return;
@@ -135,7 +135,7 @@ public class Reactor<T> implements Runnable {
 				// Check if it's a connection request
 				if (selKey.isValid() && selKey.isAcceptable()) {
 					logger.info("Accepting a connection");
-					ConnectionAcceptor<T> acceptor = (ConnectionAcceptor<T>) selKey.attachment();
+					ReactorConnectionAcceptor<T> acceptor = (ReactorConnectionAcceptor<T>) selKey.attachment();
 					try {
 						acceptor.accept();
 					} catch (IOException e) {
@@ -146,13 +146,13 @@ public class Reactor<T> implements Runnable {
 				}
 				// Check if a message has been sent
 				if (selKey.isValid() && selKey.isReadable()) {
-					ConnectionHandler<T> handler = (ConnectionHandler<T>) selKey.attachment();
+					ReactorConnectionHandler<T> handler = (ReactorConnectionHandler<T>) selKey.attachment();
 					logger.info("Channel is ready for reading");
 					handler.read();
 				}
 				// Check if there are messages to send
 				if (selKey.isValid() && selKey.isWritable()) {
-					ConnectionHandler<T> handler = (ConnectionHandler<T>) selKey.attachment();
+					ReactorConnectionHandler<T> handler = (ReactorConnectionHandler<T>) selKey.attachment();
 					logger.info("Channel is ready for writing");
 					handler.write();
 				}
