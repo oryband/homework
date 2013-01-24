@@ -20,20 +20,23 @@
   <target name="compile-thread">
     <mkdir dir="${classes.dir}"/>
     <javac includeantruntime="false" srcdir="${irc.dir}" destdir="${classes.dir}">
-      <exclude name="Reactor.java"/>
-      <exclude name="ReactorData.java"/>
-      <exclude name="ProtocolTask.java"/>
-      <exclude name="ProtocolTask.java"/>
-      <exclude name="StringMessage.java"/>
-      <exclude name="ServerProtocolFactory.java"/>
       <exclude name="ConnectionAcceptor.java"/>
+      <exclude name="ProtocolTask.java"/>
+      <exclude name="Reactor.java"/>
       <exclude name="ReactorConnectionHandler.java"/>
+      <exclude name="ReactorData.java"/>
+      <exclude name="ServerProtocolFactory.java"/>
+      <exclude name="StringMessage.java"/>
+      <exclude name="TokenizerFactory.java"/>
     </javac>
   </target>
 
   <target name="compile-reactor">
     <mkdir dir="${classes.dir}"/>
-    <javac includeantruntime="false" srcdir="${irc.dir}" destdir="${classes.dir}"/>
+    <javac includeantruntime="false" srcdir="${irc.dir}" destdir="${classes.dir}">
+      <exclude name="ThreadPerClient.java"/>
+      <exclude name="TpcConnectionHandler.java"/>
+    </javac>
   </target>
 
 
