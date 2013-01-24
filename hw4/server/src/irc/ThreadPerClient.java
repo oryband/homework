@@ -37,7 +37,7 @@ public class ThreadPerClient implements Runnable {
         }
 
         System.out.println(
-                "Server started. Listening on 0.0.0.0:" + this.port + " ...");
+                "Thread-Per-Client server started. Listening on 0.0.0.0:" + this.port + " ...");
 
         while (true) {
             SocketChannel socketChannel = null;
