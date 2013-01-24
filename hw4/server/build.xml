@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project basedir="." default="build" name="Server">
+<project basedir="." default="run" name="ThreadPerClientServer">
+
   <presetdef name="javac">
     <javac includeantruntime="false" />
   </presetdef>    
@@ -12,39 +13,8 @@
   <property name="classes.dir" value="${build.dir}/classes"/>
   <property name="jar.dir"     value="${build.dir}/jar"/>
 
-  <property name="main-class"  value="ThreadPerClientServer"/>
+  <property name="main-class"  value="irc/ThreadPerClientServer"/>
 
-
-  <path id="hw4.classpath">
-    <pathelement location="${src.dir}"/>
-  </path>
-
-
-  <target name="init">
-    <copy includeemptydirs="false" todir=".">
-      <fileset dir="${src.dir}">
-        <exclude name="**/*.launch"/>
-        <exclude name="**/*.java"/>
-        <exclude name="**/.lvimrc"/>  <!-- Vim configuration file -->
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="clean">
-    <delete>
-      <fileset dir="${classes.dir}" includes="**/*.class"/>
-    </delete>
-  </target>
-
-  <target depends="clean" name="cleanall"/>
-
-  <target depends="init" name="build">
-    <echo message="${ant.project.name}: ${ant.file}"/>
-    <javac destdir=".">
-      <src path="${src.dir}"/>
-      <classpath refid="hw4.classpath"/>
-    </javac>
-  </target>
 
   <target name="compile">
     <mkdir dir="${classes.dir}"/>
@@ -52,6 +22,9 @@
       <exclude name="Reactor.java"/>
       <exclude name="ReactorData.java"/>
       <exclude name="ProtocolTask.java"/>
+      <exclude name="ProtocolTask.java"/>
+      <exclude name="StringMessage.java"/>
+      <exclude name="ServerProtocolFactory.java"/>
       <exclude name="ConnectionAcceptor.java"/>
       <exclude name="ReactorConnectionHandler.java"/>
     </javac>
@@ -67,8 +40,22 @@
   </target>
 
   <target name="run" depends="jar">
+    <echo message="${ant.project.name}: ${ant.file}"/>
     <java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
       <arg value="${arg0}" />
+      <arg value="${arg1}" />
+      <arg value="${arg2}" />
+      <arg value="${arg3}" />
+      <arg value="${arg4}" />
     </java>
   </target>
+
+  <target name="clean">
+    <delete>
+      <fileset dir="${classes.dir}" includes="**/*.class"/>
+      <fileset dir="${jar.dir}" includes="**/*.jar"/>
+    </delete>
+  </target>
+
+  <target depends="clean" name="cleanall"/>
 </project>
