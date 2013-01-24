@@ -19,9 +19,9 @@ CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES)
 CC = g++
 
 
-all: bin $(BINDIR)ConnectionHandler.o $(BINDIR)client.o
+all: bin $(BINDIR)ConnectionHandler.o $(BINDIR)Client.o
 	@echo -n 'Building target all: '
-	$(CC) $(CPPFLAGS) -o $(BINDIR)client $(BINDIR)ConnectionHandler.o $(BINDIR)client.o $(LIBS) $(BOOST)
+	$(CC) $(CPPFLAGS) -o $(BINDIR)Client $(BINDIR)ConnectionHandler.o $(BINDIR)Client.o $(LIBS) $(BOOST)
 
 
 bin:
@@ -29,9 +29,9 @@ bin:
 	mkdir -p $(BINDIR)
 
 
-$(BINDIR)client.o: bin $(SRCDIR)client.cpp
-	@echo -n 'Building target client.o: '
-	$(CC) $(CPPFLAGS) -c -o $(BINDIR)client.o $(SRCDIR)client.cpp
+$(BINDIR)Client.o: bin $(SRCDIR)Client.cpp
+	@echo -n 'Building target Client.o: '
+	$(CC) $(CPPFLAGS) -c -o $(BINDIR)Client.o $(SRCDIR)Client.cpp
 
 
 $(BINDIR)ConnectionHandler.o: bin $(SRCDIR)ConnectionHandler.cpp
