@@ -6,24 +6,107 @@ import java.util.ArrayList;
 
 
 public class Channel {
+    // Static members and methods.
+
+    private static ArrayList<Channel> channels = new ArrayList<Channel>();
+
+
+    /**
+     * @param name channel name to create.
+     * @param client client make chanop.
+     */
+    public static void createChannel(String name, Client chanop) {
+        channels.add(new Channel(name, chanop));
+    }
+
+    /**
+     * @param channel channel to remove.
+     */
+    public static void removeChannel(Channel channel) {
+        channels.remove(channels.indexOf(channel));
+    }
+
+    /**
+     * @param channelName channel to check if exists.
+     */
+    public static Channel getChannel(String channelName) {
+        for (Channel channel : channels) {
+            if (channel.getName().equals(channelName)) {
+                return channel;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return channel list.
+     */
+    public static ArrayList<Channel> getChannels() {
+        return channels;
+
+    }
+
+
+    /**
+     * @return LIST reply - channel list.
+     */
+    public static String getListReply() {
+        StringBuilder channelList = new StringBuilder();
+
+        channelList.append(IrcProtocol.STATUS.LISTSTART+ " \n");
+
+        for (Channel channel : channels) {
+            channelList.append(
+                    IrcProtocol.STATUS.LIST + " #" + channel.getName() + '\n');
+        }
+
+        channelList.append(
+                IrcProtocol.STATUS.LISTEND.getNumber() + " " +
+                IrcProtocol.STATUS.LISTEND.getText() + '\n');
+
+        return channelList.toString();
+    }
+
+
+    /**
+     * @param channelName channel to add client into.
+     * @param client client to add to given channel.
+     */
+    public static void addToChannel(String channelName, Client client) {
+        Channel channel = getChannel(channelName);
+
+        if (channel != null) {
+            channel.addUser(client);
+            // Create channel if non-existent, and set client as chanop.
+        } else {
+            channels.add(new Channel(channelName, client));
+        }
+    }
+
+
+    // Non-static members and methods.
+
     private String name;
-    private Client admin;
+    private Client chanop;
     private ArrayList<Client> users;
 
-    public Channel(String name, Client admin) {
-        this.name  = name;
-        this.users = new ArrayList<Client>();
-        this.admin = admin;
-        this.admin.setChanop();
+
+    public Channel(String name, Client chanop) {
+        this.users  = new ArrayList<Client>();
+        this.name   = name;
+        this.chanop = chanop;
+        this.chanop.setChanop();
     }
+
 
     // Getters
     public String getName() {
         return this.name;
     }
 
-    public Client getAdmin() {
-        return this.admin;
+    public Client getchanop() {
+        return this.chanop;
     }
 
     public boolean isEmpty() {
@@ -82,9 +165,9 @@ public class Channel {
             this.users.remove(this.users.indexOf(client));
             client.removeChanop();
 
-            // Setting the only user left in the channel as admin 
+            // Setting the only user left in the channel as chanop 
             this.users.get(0).setChanop();
-            this.admin = this.users.get(0);
+            this.chanop = this.users.get(0);
         } else {
             if (this.users.size() == 1) {
                 client.removeChanop();

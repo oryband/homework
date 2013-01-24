@@ -61,12 +61,15 @@ public class ThreadPerClientServer implements Runnable {
             // Set end-of-message char to be the newline '\n'.
             IrcTokenizer tokenizer = new IrcTokenizer(stream ,'\n');
 
-            Client client = new Client(
-                    tokenizer, encoder, socket, oper);
+            IrcProtocol protocol = new IrcProtocol();
 
-            this.oper.addClient(client);
+            Runnable connectionHandler = new ConnectionHandler(
+                    socket, encoder, tokenizer, protocol);
 
-            new Thread(client).start();
+            ( (IrcProtocol) protocol ).setConnectionHandler(
+                    (ConnectionHandler) connectionHandler);
+
+            new Thread(connectionHandler).start()  ;
         }
 
         //this.serverSocket.close();  // TODO Is this OK?

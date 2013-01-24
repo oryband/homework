@@ -6,17 +6,87 @@
 
 package irc;
 
+import java.util.ArrayList;
 import java.io.IOException;
-import java.net.Socket;
 
 
 public class Client implements Runnable {
 
-    private Socket           socket;
-    private EncoderInterface encoder;
-    private IrcTokenizer     tokenizer;
-    private IrcProtocol      protocol;
-    private IrcOperations    ircOperations;
+    // Static members and methods.
+
+    /** Static singleton instance of all connected clients. */
+    private static ArrayList<Client> clients  = new ArrayList<Client>();
+
+    /**
+     * @param client client to add to client list.
+     */
+    public static Client createClient() {
+        Client client = new Client();
+        clients.add(client);
+        return client;
+    }
+
+    /**
+     * @param client to delete from client list.
+     */
+    public static void removeClient(Client client) {
+        clients.remove(clients.indexOf(client));
+    }
+
+    /**
+     * @param nickname client nickname to search for.
+     *
+     * @return client matched by nickname, or null if not found.
+     */
+    public static Client getClient(String nickname) {
+        for (Client client : clients) {
+            if (client.getNickname().equals(nickname) ||
+                    client.getNickname().equals("@" + nickname)) {
+
+                return client;
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * @return string list representations of client nicknames.
+     */
+    public static String getClientsString() {
+        return clients.toString();
+    }
+
+
+    /**
+     * @param nick nickname to search for.
+     *
+     * @return true if client matching given nickname is found, false otherwise.
+     */
+    public static boolean isNicknameExist(String nick) {
+        for (Client client : clients) {
+            String nickname = client.getNickname();
+
+            // Compare nickname or @nickname.
+            if (nickname.equals(nick) ||
+                    nickname.substring(1, nickname.length()).equals(nick)) {
+
+                return true;
+                    }
+        }
+
+        return false;
+    }
+
+
+    // Non-static members and methods.
+
+    private ConnectionHandler connectionHandler;
+
+    private IrcEncoder        encoder;
+    private IrcTokenizer      tokenizer;
+    private IrcProtocol       protocol;
 
     private String nickname;
     private String username;
@@ -28,38 +98,26 @@ public class Client implements Runnable {
     private boolean isNewClient;
 
 
-    public Client(
-            IrcTokenizer     tokenizer,
-            EncoderInterface encoder,
-            Socket           socket,
-            IrcOperations    ircOperations) {
+    public Client() {
+        this.connectionHandler = null;
 
-
-        this.socket        = socket;
-        this.encoder       = encoder;
-        this.tokenizer     = tokenizer;
-        this.ircOperations = ircOperations;
-
-        this.protocol = new IrcProtocol(this.ircOperations, this);
+        this.protocol  = null;
+        this.encoder   = null;
+        this.tokenizer = null;
 
         this.nickname = new String();
         this.username = new String();
 
         this.channel   = null;
         this.inChannel = false;
-        this.isChanop   = false;
+        this.isChanop  = false;
 
         this.isNewClient = true;
-
-        // Welcome message.
-        this.sendMessage(
-                "Connected to miniIRC server on "
-                + socket.getInetAddress() + ":" + socket.getPort());
     }
 
 
     public void run() {
-        while ( ! socket.isClosed() && ! protocol.shouldClose()) {
+        while ( ! connectionHandler.isClosed() && ! protocol.shouldClose()) {
             if ( ! this.tokenizer.isAlive() ) {
                 this.protocol.close();
             } else {
@@ -78,24 +136,52 @@ public class Client implements Runnable {
         }
 
         // Connection has closed.
-        this.ircOperations.removeClient(this);
+        removeClient(this);
 
         System.out.println(
                 "Client " + this.username + "/" + this.nickname +
                 " has disconnected.");
 
         System.out.println(
-                "Currently connected users: " + this.ircOperations.clients.toString());
+                "Currently connected users: " + getClientsString());
 
         try {
-            this.socket.close();
+            this.connectionHandler.close();
         } catch (IOException e) {
             System.out.println(
-                    "Error closing socket for client " +
+                    "Error closing connectionHandler for client " +
                     this.username + "/" + this.nickname + "'.");
         }
     }
 
+
+    /**
+     * @param protocol protocol to set.
+     */
+    public void setProtocol(IrcProtocol protocol) {
+        this.protocol = protocol;
+    }
+
+    /**
+     * @param connectionHandler connectionHandler to set.
+     */
+    public void setconnectionHandler(ConnectionHandler connectionHandler) {
+        this.connectionHandler = connectionHandler;
+    }
+
+    /**
+     * @param tokenizer tokenizer to set.
+     */
+    public void setTokenizer(IrcTokenizer tokenizer) {
+        this.tokenizer = tokenizer;
+    }
+
+    /**
+     * @param encoder encoder to set.
+     */
+    public void setEncoder(IrcEncoder tokenizer) {
+        this.encoder = encoder;
+    }
 
     /**
      * @param channel channel to add client into.
@@ -142,10 +228,10 @@ public class Client implements Runnable {
 
 
     /**
-     * @return client's socket.
+     * @return client's connectionHandler.
      */
-    public Socket getSocket() {
-        return this.socket;
+    public ConnectionHandler getConnectionHandler() {
+        return this.connectionHandler;
     }
 
     /**
@@ -160,13 +246,6 @@ public class Client implements Runnable {
      */
     public Channel getChannel() {
         return this.channel;
-    }
-
-    /**
-     * @return client's associated IrcOperations object.
-     */
-    public IrcOperations getIrcOperations() {
-        return this.ircOperations;
     }
 
 
@@ -236,7 +315,7 @@ public class Client implements Runnable {
 
             // Delete channel if empty.
             if (this.channel.isEmpty()) {
-                this.ircOperations.removeChannel(this.channel);
+                Channel.removeChannel(this.channel);
             }
 
             this.channel   = null;
@@ -254,7 +333,7 @@ public class Client implements Runnable {
         byte[] buf = this.encoder.toBytes(newmsg);
 
         try {
-            this.socket.getOutputStream().write(buf, 0, buf.length);
+            this.connectionHandler.getOutputStream().write(buf, 0, buf.length);
         } catch (IOException e) {
             e.printStackTrace();
         }

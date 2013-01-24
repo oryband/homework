@@ -82,11 +82,19 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
     };
 
 
-    public IrcProtocol(Client client) {
-        this.client = client;
+    public IrcProtocol() {
+        this.client = Client.createClient();
 
         this.shouldClose = false;
         this.connectionTerminated = false;
+    }
+
+
+    /**
+     * @param connectionHandler object to set protocol's user with.
+     */
+    public void setConnectionHandler(ConnectionHandler connectionHandler) {
+        this.client.setConnectionHandler(connectionHandler);
     }
 
 
@@ -361,7 +369,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
         if (words.size() == 1) {
             return IrcProtocol.reply(IrcProtocol.STATUS.NONICKNAMEGIVEN);
         } else if (words.size() == 2) {
-            if (client.getIrcOperations().isNicknameExist(words.get(1))) {
+            if (this.client.isNicknameExist(words.get(1))) {
                 return IrcProtocol.replyBrackets(
                         IrcProtocol.STATUS.NICKNAMEINUSE,
                         words.get(1));
@@ -431,14 +439,14 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
                     client.removeFromChannel();
                 }
 
-                Channel channel = client.getIrcOperations().getChannel(channelName);
+                Channel channel = Channel.getChannel(channelName);
 
                 // If this is a new (non-existent) channel,
                 // create channel and set client as chanop.
                 if (channel == null) {
-                    client.getIrcOperations().addToChannel(channelName, client);
-                    client.addToChannel(
-                            client.getIrcOperations().getChannel(channelName));
+                    Channel.addToChannel(channelName, client);
+
+                    this.client.addToChannel(Channel.getChannel(channelName));
 
 
                     return client.getChannel().getNameReply(true);
@@ -524,7 +532,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
             StringBuilder names = new StringBuilder();
 
             // Build string with all data.
-            for (Channel channel : client.getIrcOperations().getChannels()) {
+            for (Channel channel : Channel.getChannels()) {
                 names.append(channel.getNameReply(false));
             }
             
@@ -535,17 +543,17 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
             return finalNames; 
         } else {
-            String channel = words.get(1);
+            String channelName = words.get(1);
 
             // Check if there is # before and id channel exist.
-            channel = channel.substring(1, channel.length());
+            channelName = channelName.substring(1, channelName.length());
+            Channel channel = Channel.getChannel(channelName);
 
-            if (client.getIrcOperations().getChannel(channel) != null) {
-                return client.getIrcOperations().
-                        getChannel(channel).getNameReply(true);
+            if (channel != null) {
+                return channel.getNameReply(true);
             } else {
                 return IrcProtocol.replyBrackets(
-                        IrcProtocol.STATUS.NOSUCHCHANNEL, channel);
+                        IrcProtocol.STATUS.NOSUCHCHANNEL, channelName);
             }
         }
     }
@@ -561,7 +569,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
      */
     private String executeList(Client client, ArrayList<String> words) {
         if (words.size() == 1) {
-            return client.getIrcOperations().getListReply();
+            return Channel.getListReply();
         } else {
             return "";
         }
@@ -584,9 +592,8 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
             // check if admin requseting service
             if (client.getNickname().charAt(0) == '@') {
                 // check if user name in server
-                if (client.getIrcOperations().isNicknameExist(words.get(1))) {
-                    Client clientToKick = client.getIrcOperations().
-                        getClient(words.get(1));
+                if (Client.isNicknameExist(words.get(1))) {
+                    Client clientToKick = Client.getClient(words.get(1));
 
                     String adminName = client.getNickname().substring(
                             1, client.getNickname().length());
