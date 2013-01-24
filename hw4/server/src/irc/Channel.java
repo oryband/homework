@@ -89,13 +89,13 @@ public class Channel {
 
     private String name;
     private Client chanop;
-    private ArrayList<Client> users;
+    private ArrayList<Client> clients;
 
 
     public Channel(String name, Client chanop) {
-        this.users  = new ArrayList<Client>();
-        this.name   = name;
-        this.chanop = chanop;
+        this.clients = new ArrayList<Client>();
+        this.name    = name;
+        this.chanop  = chanop;
         this.chanop.setChanop();
     }
 
@@ -110,8 +110,8 @@ public class Channel {
     }
 
     public boolean isEmpty() {
-        if (this.users.size() == 0) {
-            System.out.println(this.users.size());
+        if (this.clients.size() == 0) {
+            System.out.println(this.clients.size());
             return true;
         } else {
             return false;
@@ -133,7 +133,7 @@ public class Channel {
                 " #" + this.getName() + " ");
         
         // Append users in channel.
-        for (Client client : this.users) {
+        for (Client client : this.clients) {
             str.append(client.getNickname() + " ");
         }
 
@@ -151,43 +151,30 @@ public class Channel {
     }
 
 
-    public ArrayList<Client> getUsers() {
-        return this.users;
+    public ArrayList<Client> getClients() {
+        return this.clients;
     }
 
 
     public synchronized void addUser(Client client) {
-        this.users.add(client);
+        this.clients.add(client);
     }
 
+
     public synchronized void removeUser(Client client) {
-        if (this.users.size() == 2 && client.isChanop()) { 
-            this.users.remove(this.users.indexOf(client));
+        if (this.clients.size() == 2 && client.isChanop()) { 
+            this.clients.remove(this.clients.indexOf(client));
             client.removeChanop();
 
             // Setting the only user left in the channel as chanop 
-            this.users.get(0).setChanop();
-            this.chanop = this.users.get(0);
+            this.clients.get(0).setChanop();
+            this.chanop = this.clients.get(0);
         } else {
-            if (this.users.size() == 1) {
+            if (this.clients.size() == 1) {
                 client.removeChanop();
              } 
 
-            this.users.remove(this.users.indexOf(client));
-        }
-    }
-
-
-    public synchronized void sendAll(String nickname, String msg) {
-        for (Client client : this.users) {
-            client.sendMessage(nickname + ": " + msg);
-        }
-    }
-
-
-    public synchronized void sendAllSystemMessage(String msg) {
-        for (Client client : this.users) {
-            client.sendMessage(msg);
+            this.clients.remove(this.clients.indexOf(client));
         }
     }
 }

@@ -1,3 +1,9 @@
+/**
+ * Handles messages from clients
+ *
+ * @author Eldar Damari, Ory Band.
+ */
+
 package irc;
 
 import java.nio.channels.SocketChannel;
@@ -11,17 +17,14 @@ import java.util.Vector;
 import java.util.logging.Logger;
 
 
-/**
- * Handles messages from clients
- */
-public class TpcConnectionHandler<String> implements ConnectionHandler<String>, Runnable {
+public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
 
 	private static final int BUFFER_SIZE = 1024;
 
 	protected final SocketChannel _sChannel;
 
-	protected final AsyncServerProtocol<String> _protocol;
-	protected final MessageTokenizer<String> _tokenizer;
+	protected final AsyncServerProtocol<T> _protocol;
+	protected final MessageTokenizer<T> _tokenizer;
 
 	protected Vector<ByteBuffer> _outData = new Vector<ByteBuffer>();
 
@@ -38,8 +41,8 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
 	 */
 	private TpcConnectionHandler(
             SocketChannel sChannel,
-            AsyncServerProtocol<String> protocol,
-            MessageTokenizer<String> tokenizer) {
+            AsyncServerProtocol<T> protocol,
+            MessageTokenizer<T> tokenizer) {
 
 		_sChannel  = sChannel;
 		_protocol  = protocol;
@@ -47,12 +50,12 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
 	}
 
 
-	public static <String> TpcConnectionHandler<String> create(
+	public static <T> TpcConnectionHandler<T> create(
             SocketChannel sChannel,
-            AsyncServerProtocol<String> protocol,
-            MessageTokenizer<String> tokenizer) {
+            AsyncServerProtocol<T> protocol,
+            MessageTokenizer<T> tokenizer) {
 
-		TpcConnectionHandler<String> h = new TpcConnectionHandler<String>(sChannel, protocol, tokenizer);
+		TpcConnectionHandler<T> h = new TpcConnectionHandler<T>(sChannel, protocol, tokenizer);
 
 		return h;
 	}
@@ -61,8 +64,8 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
     public synchronized void run() {
         // go over all complete messages and process them.
         while (_tokenizer.hasMessage()) {
-            String msg = _tokenizer.nextMessage();
-            String response = this._protocol.processMessage(msg);
+            T msg = _tokenizer.nextMessage();
+            T response = this._protocol.processMessage(msg);
 
             // Reply to client if necessary.
             if (response != null) {
@@ -180,5 +183,18 @@ public class TpcConnectionHandler<String> implements ConnectionHandler<String>, 
      */
 	public synchronized void addOutData(ByteBuffer buf) {
 		_outData.add(buf);
+	}
+
+
+    /**
+     * @param msg string to be added to message queue.
+     */
+	public synchronized void addOutData(T msg) {
+        try {
+            ByteBuffer bytes = _tokenizer.getBytesForMessage(msg);
+            addOutData(bytes);
+        } catch (CharacterCodingException e) {
+            e.printStackTrace();
+        }
 	}
 }

@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 
 public interface ConnectionHandler<T> {
 	public void addOutData(ByteBuffer buf);
+	public void addOutData(T msg);
 	public void read();
 	public void write();
 }

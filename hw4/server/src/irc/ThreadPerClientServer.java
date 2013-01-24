@@ -1,3 +1,5 @@
+/** @author Eldar Damari, Ory Band */
+
 package irc;
 
 import java.nio.channels.SocketChannel;

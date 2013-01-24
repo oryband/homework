@@ -2,16 +2,17 @@
 
 package irc;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 
 public class IrcProtocol implements AsyncServerProtocol<String> {
     private Client client;
-    private ConnectionHandler<String> connectionHandler;
 
     private boolean shouldClose;
     private boolean connectionTerminated;
+
 
     /** Enumerates all error/reply codes. */
     public enum STATUS {
@@ -85,7 +86,6 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
     public IrcProtocol() {
         this.client = Client.createClient();
-        this.connectionHandler = null;
 
         this.shouldClose = false;
         this.connectionTerminated = false;
@@ -98,7 +98,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
     public void setConnectionHandler(
             ConnectionHandler<String> connectionHandler) {
 
-        this.connectionHandler = connectionHandler;
+        this.client.setConnectionHandler(connectionHandler);
     }
 
 
@@ -172,7 +172,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
                 } else {
                     if (this.client.isInChannel()) {
                         String data = buildDataMessage(words);
-                        client.getChannel().sendAll(client.getNickname(), data);
+                        sendAll(client.getChannel(), client.getNickname(), data);
                     }
                 }
             }
@@ -478,12 +478,14 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
         // Send standard QUIT message.
         if (words.size() == 1) {
             if (client.isInChannel()) {
-                client.getChannel().sendAllSystemMessage(
+                sendAllSystemMessage(
+                        client.getChannel(),
                         "<" + client.getNickname() + "> has left the channel");
             }
         // Send custom QUIT message ("QUIT Goodbye world!").
         } else {
-            client.getChannel().sendAllSystemMessage(
+            sendAllSystemMessage(
+                    client.getChannel(),
                     "<" + client.getNickname() + "> " + words.get(1)); 
         }
 
@@ -630,5 +632,30 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
         }
 
         return null;
+    }
+
+
+    /**
+     * @param channel channel to send message to.
+     * @param nickname data message origin client nickname.
+     * @param msg data message that the client has sent.
+     */
+    public synchronized void sendAll(
+            Channel channel, String nickname, String msg) {
+
+        for (Client client : channel.getClients()) {
+            client.getConnectionHandler().addOutData(nickname + ": " + msg);
+        }
+    }
+
+
+    /**
+     * @param channel channel to send message to.
+     * @param msg system message to be sent to all clients in channel.
+     */
+    public synchronized void sendAllSystemMessage(Channel channel, String msg) {
+        for (Client client : channel.getClients()) {
+            client.getConnectionHandler().addOutData(msg);
+        }
     }
 }

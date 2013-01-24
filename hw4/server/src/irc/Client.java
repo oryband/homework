@@ -83,6 +83,7 @@ public class Client {
 
 
     // Non-static members and methods.
+    public ConnectionHandler<String> connectionHandler;
 
     private String nickname;
     private String username;
@@ -95,6 +96,8 @@ public class Client {
 
 
     public Client() {
+        this.connectionHandler = null;
+
         this.nickname = new String();
         this.username = new String();
 
@@ -103,6 +106,22 @@ public class Client {
         this.isChanop  = false;
 
         this.isNewClient = true;
+    }
+
+
+    /**
+     * @param h Connection handler to set client onto.
+     */
+    public void setConnectionHandler(ConnectionHandler<String> h) {
+        this.connectionHandler = h;
+    }
+
+
+    /**
+     * @return client's connection handler.
+     */
+    public ConnectionHandler<String> getConnectionHandler() {
+        return this.connectionHandler;
     }
 
 
