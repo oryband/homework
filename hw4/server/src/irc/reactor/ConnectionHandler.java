@@ -1,4 +1,4 @@
-package irc;
+package irc.reactor;
 
 import java.nio.channels.SocketChannel;
 import java.nio.channels.SelectionKey;

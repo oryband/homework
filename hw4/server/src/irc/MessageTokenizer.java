@@ -3,6 +3,7 @@ package irc;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 
+
 public interface MessageTokenizer<T> {
 
    
@@ -29,5 +30,4 @@ public interface MessageTokenizer<T> {
     * @return a ByteBuffer with the message content converted to bytes, after framing information has been added.
     */
    ByteBuffer getBytesForMessage(T msg) throws CharacterCodingException;
-
 }

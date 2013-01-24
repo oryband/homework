@@ -9,11 +9,11 @@ package irc;
 import java.io.IOException;
 
 
-public interface TokenizerInterface {
+public interface Tokenizer {
     /**
      * @return tokenized (delimeter-cropped) string.
      */
-    public String  nextToken() throws IOException;
+    public String nextToken() throws IOException;
 
     /**
      * Indicates whether reading to StringBuffer has failed.

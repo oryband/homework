@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 
 
-public class IrcTokenizer implements TokenizerInterface {
+public class IrcTokenizer implements Tokenizer {
     private final char delimiter;
     private InputStreamReader stream;
     private boolean closed;

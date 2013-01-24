@@ -5,7 +5,7 @@ package irc;
 import java.nio.charset.Charset;
 
 
-public class IrcEncoder implements EncoderInterface {
+public class IrcEncoder implements Encoder {
     private Charset charset;
 
 
