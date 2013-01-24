@@ -10,16 +10,14 @@ Eldar:
 
 Ory: work on client in c++!
 
-****************************************************************
 
-**IMPORATANT: This file is NOT fullt updated, please contact me!
+# IMPORATANT: This file is NOT fullt updated, please contact me!
 1. The server is working fine ( you can log in as client)
 2. After you log in with a Client
 3. You can user the numeric replyies: NICK,USER,JOIN.
-****************************************************************
 
 
-TODO:
+# TODO:
 
 1. in QUIT section - need to think how to implements "if for some reason
 a client connection is closed without the client issing a QUIT comman the
