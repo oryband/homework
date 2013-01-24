@@ -196,33 +196,33 @@ public class Reactor<T> implements Runnable {
 	 */
 	public static void main(String args[]) {
         // Test for errors.
-		if (args.length != 2) {
+		if (args.length != 1) {
 			System.err.println(
                     "Not enough or too many arguments. " +
-                    "use 'java Reactor <port> <pool_size>");
+                    "use 'java Reactor <pool_size>");
 			System.exit(1);
 		}
 
 		try {
-			int port     = Integer.parseInt(args[0]);
-			int poolSize = Integer.parseInt(args[1]);
+			int port     = 6667;
+			int poolSize = Integer.parseInt(args[0]);
 
-			Reactor<StringMessage> reactor = startIrcServer(port, poolSize);
+			Reactor<String> reactor = startIrcServer(port, poolSize);
 
 			Thread thread = new Thread(reactor);
 			thread.start();
 			logger.info(
-                    "Reactor listening on 0.0.0.0:" + reactor.getPort() + " ...");
+                    "Reactor listening on 0.0.0.0:" + port + " ...");
 			thread.join();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static Reactor<StringMessage> startIrcServer(int port, int poolSize){
-		ServerProtocolFactory<StringMessage> protocolMaker = new ServerProtocolFactory<StringMessage>() {
+	public static Reactor<String> startIrcServer(int port, int poolSize){
+		ServerProtocolFactory<String> protocolMaker = new ServerProtocolFactory<String>() {
 
-			public AsyncServerProtocol<StringMessage> create() {
+			public AsyncServerProtocol<String> create() {
 				return new IrcProtocol();
 			}
 		};
@@ -230,13 +230,13 @@ public class Reactor<T> implements Runnable {
 		
 		final Charset charset = Charset.forName("UTF-8");
 
-		TokenizerFactory<StringMessage> tokenizerMaker = new TokenizerFactory<StringMessage>() {
-			public MessageTokenizer<StringMessage> create() {
+		TokenizerFactory<String> tokenizerMaker = new TokenizerFactory<String>() {
+			public MessageTokenizer<String> create() {
 				return new FixedSeparatorMessageTokenizer("\n", charset);
 			}
 		};
 
-		Reactor<StringMessage> reactor = new Reactor<StringMessage>(
+		Reactor<String> reactor = new Reactor<String>(
                 port, poolSize, protocolMaker, tokenizerMaker);
 
 		return reactor;

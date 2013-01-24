@@ -11,7 +11,7 @@ import java.nio.channels.SocketChannel;
  * objects, which can produce new SocketChannels for new clients using its
  * <CODE>accept</CODE> method.
  */
-public class ConnectionAcceptor<T> {
+public class ReactorConnectionAcceptor<T> {
 	protected ServerSocketChannel _ssChannel;
 
 	protected ReactorData<T> _data;
@@ -24,7 +24,7 @@ public class ConnectionAcceptor<T> {
 	 * @param data
 	 *            a reference to ReactorData object
 	 */
-	public ConnectionAcceptor(ServerSocketChannel ssChannel, ReactorData<T> data) {
+	public ReactorConnectionAcceptor(ServerSocketChannel ssChannel, ReactorData<T> data) {
 		_ssChannel = ssChannel;
 		_data = data;
 	}
@@ -54,7 +54,7 @@ public class ConnectionAcceptor<T> {
 			sChannel.configureBlocking(false);
 			SelectionKey key = sChannel.register(_data.getSelector(), 0);
 
-			ConnectionHandler<T> handler = ConnectionHandler.create(sChannel, _data, key);
+			ConnectionHandler<T> handler = ReactorConnectionHandler.create(sChannel, _data, key);
 			handler.switchToReadOnlyMode(); // set the handler to read only mode
 		}
 	}

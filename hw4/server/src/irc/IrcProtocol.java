@@ -646,7 +646,6 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
         for (Client client : channel.getClients()) {
             client.getConnectionHandler().addOutData(nickname + ": " + msg);
-            client.getConnectionHandler().write();
         }
     }
 
@@ -658,7 +657,6 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
     public synchronized void sendAllSystemMessage(Channel channel, String msg) {
         for (Client client : channel.getClients()) {
             client.getConnectionHandler().addOutData(msg);
-            client.getConnectionHandler().write();
         }
     }
 }

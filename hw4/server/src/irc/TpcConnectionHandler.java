@@ -11,8 +11,8 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.ClosedChannelException;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
-import java.io.IOException;
 import java.net.SocketAddress;
+import java.io.IOException;
 import java.util.Vector;
 import java.util.logging.Logger;
 
@@ -77,8 +77,6 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
                         ByteBuffer bytes = _tokenizer.getBytesForMessage(response);
                         addOutData(bytes);
                     } catch (CharacterCodingException e) { e.printStackTrace(); }
-
-                    write();
                 }
             }
         }
@@ -175,6 +173,7 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
      */
 	public synchronized void addOutData(ByteBuffer buf) {
 		_outData.add(buf);
+        write();
 	}
 
 
@@ -189,4 +188,10 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
             e.printStackTrace();
         }
 	}
+
+
+    // Irrelevant for thread-per-client model.
+	public void switchToReadOnlyMode()  {}
+	public void switchToWriteOnlyMode() {}
+	public void switchToReadWriteMode() {}
 }

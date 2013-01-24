@@ -1,8 +1,9 @@
-package irc.reactor;
+package irc;
 
 import java.nio.channels.SocketChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ClosedChannelException;
+import java.nio.charset.CharacterCodingException;
 import java.nio.ByteBuffer;
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * Handles messages from clients
  */
-public class ConnectionHandler<T> {
+public class ReactorConnectionHandler<T> implements ConnectionHandler<T> {
 
 	private static final int BUFFER_SIZE = 1024;
 
@@ -40,10 +41,11 @@ public class ConnectionHandler<T> {
 	 * @param data
 	 *            a reference to a ReactorData object
 	 */
-	private ConnectionHandler(SocketChannel sChannel, ReactorData<T> data, SelectionKey key) {
+	private ReactorConnectionHandler(SocketChannel sChannel, ReactorData<T> data, SelectionKey key) {
 		_sChannel = sChannel;
 		_data = data;
 		_protocol = _data.getProtocolMaker().create();
+        _protocol.setConnectionHandler(this);
 		_tokenizer = _data.getTokenizerMaker().create();
 		_skey = key;
 	}
@@ -54,8 +56,8 @@ public class ConnectionHandler<T> {
 		_task = new ProtocolTask<T>(_protocol, _tokenizer, this);
 	}
 
-	public static <T> ConnectionHandler<T> create(SocketChannel sChannel, ReactorData<T> data, SelectionKey key) {
-		ConnectionHandler<T> h = new ConnectionHandler<T>(sChannel, data, key);
+	public static <T> ReactorConnectionHandler<T> create(SocketChannel sChannel, ReactorData<T> data, SelectionKey key) {
+		ReactorConnectionHandler<T> h = new ReactorConnectionHandler<T>(sChannel, data, key);
 		h.initialize();
 		return h;
 	}
@@ -64,6 +66,15 @@ public class ConnectionHandler<T> {
 		_outData.add(buf);
 		switchToReadWriteMode();
 	}
+
+	public synchronized void addOutData(T msg) {
+        try {
+            ByteBuffer bytes = _tokenizer.getBytesForMessage(msg);
+            addOutData(bytes);
+        } catch (CharacterCodingException e) {
+            e.printStackTrace();
+        }
+    }
 
 	private void closeConnection() {
 		// remove from the selector.

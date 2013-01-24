@@ -32,4 +32,9 @@ public interface AsyncServerProtocol<T> extends ServerProtocol<T> {
 	 */
 	public void connectionTerminated();
 
+
+    /**
+     * @param h connection handler to set protocol with.
+     */
+    public void setConnectionHandler(ConnectionHandler<T> h);
 }
