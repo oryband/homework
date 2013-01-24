@@ -17,6 +17,8 @@
 *.class
 
 bin/
+jar/
+classes/
 
 # Eclipse.
 Debug/
