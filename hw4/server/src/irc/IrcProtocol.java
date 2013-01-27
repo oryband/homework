@@ -164,17 +164,15 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
                 }
             }
         // Process command if client has registered properly.
-        } else {
+        } else if (this.client.canRegister()) {
             // COMMAND type message.
-            if (this.client.canRegister()) {
-                if (command != null) {
-                    return executeCommand(this.client, command, words);
-                // DATA type message.
-                } else {
-                    if (this.client.isInChannel()) {
-                        String data = buildDataMessage(words);
-                        sendAll(client.getChannel(), client.getNickname(), data);
-                    }
+            if (command != null) {
+                return executeCommand(this.client, command, words);
+            // DATA type message.
+            } else {
+                if (this.client.isInChannel()) {
+                    String data = buildDataMessage(words);
+                    sendAll(client.getChannel(), client.getNickname(), data);
                 }
             }
         }
@@ -244,13 +242,12 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
         // Append words to string.
         for (String word : words) {
-            str.append(word);
-            str.append(" ");
+            str.append(word + " ");
         }
 
         String line = str.toString();
 
-        line = line.substring(0, line.length() - 1);  // Remove EOS char.
+        line = line.substring(0, line.length() - 1);  // Remove last space char.
 
         return line;
     }
