@@ -117,7 +117,7 @@ public class IrcProtocol implements AsyncServerProtocol<String> {
 
     public boolean isEnd(String msg) {
         // Don't process an empty message.
-        if (msg.length() == 0) {
+        if (msg == null || msg.length() == 0) {
             return false;
         }
 
