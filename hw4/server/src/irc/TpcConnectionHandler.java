@@ -61,7 +61,7 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
 	}
 
 
-    public synchronized void run() {
+    public void run() {
         // go over all complete messages and process them.
         while ( ! _protocol.shouldClose() ) {
             read();
@@ -142,7 +142,7 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
 	 * @throws ClosedChannelException
 	 *             if the channel have been closed while registering to the Selector
 	 */
-	public synchronized void write() {
+	public void write() {
         // if nothing left in the output string, return.
 		if (_outData.size() == 0) {
 			return;
@@ -171,7 +171,7 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
     /**
      * @param buf byte string to be added to message queue.
      */
-	public synchronized void addOutData(ByteBuffer buf) {
+	public void addOutData(ByteBuffer buf) {
 		_outData.add(buf);
         write();
 	}
@@ -180,7 +180,7 @@ public class TpcConnectionHandler<T> implements ConnectionHandler<T>, Runnable {
     /**
      * @param msg string to be added to message queue.
      */
-	public synchronized void addOutData(T msg) {
+	public void addOutData(T msg) {
         try {
             ByteBuffer bytes = _tokenizer.getBytesForMessage(msg);
             addOutData(bytes);
