@@ -9,42 +9,35 @@ import java.net.InetSocketAddress;
 import java.io.IOException;
 
 
-public class ThreadPerClient implements Runnable {
-    private ServerSocketChannel serverSocketChannel;
-    private int port;
-    private String charset;
-
-
-    public ThreadPerClient(int port, String charset) {
-        this.serverSocketChannel = null;
-        this.port = port;
-        this.charset = charset;
-    }
-
-
+public class ThreadPerClient {
     /**
      * Repeatedly listens for, and accepts connections,
      * and sets up a new client object for each one, each run in its own thread.
      */
-    public void run() {
+    public static void main(String[] args) {
+        int port = 6667;
+        String charset = "UTF-8";
+        ServerSocketChannel serverSocketChannel = null;
+
         try {  // Init socket.
-            this.serverSocketChannel = ServerSocketChannel.open();
-            this.serverSocketChannel.configureBlocking(true);
-            this.serverSocketChannel.socket().bind(new InetSocketAddress(port));
+            serverSocketChannel = ServerSocketChannel.open();
+            serverSocketChannel.configureBlocking(true);
+            serverSocketChannel.socket().bind(new InetSocketAddress(port));
         } catch (IOException e) {
             System.out.println(
-                    "Error (Cannot listen on 0.0.0.0:" + this.port + ").\nExiting.");
+                    "Error (Cannot listen on 0.0.0.0:" + port + ").\nExiting.");
         }
 
         System.out.println(
-                "Thread-Per-Client server started. Listening on 0.0.0.0:" + this.port + " ...");
+                "Thread-Per-Client server started. " +
+                "Listening on 0.0.0.0:" + port + " ...");
 
         while (true) {
             SocketChannel socketChannel = null;
 
             // Wait (block) for a client to connect.
             try {
-                socketChannel = this.serverSocketChannel.accept();
+                socketChannel = serverSocketChannel.accept();
                 socketChannel.configureBlocking(true);
             } catch (IOException e) {
                 System.out.println("Failed to accept connection from client.");
@@ -53,7 +46,7 @@ public class ThreadPerClient implements Runnable {
 
             FixedSeparatorMessageTokenizer tokenizer =
                 new FixedSeparatorMessageTokenizer(
-                        "\n", Charset.forName(this.charset));
+                        "\n", Charset.forName(charset));
 
             IrcProtocol protocol = new IrcProtocol();
 
@@ -63,21 +56,6 @@ public class ThreadPerClient implements Runnable {
             protocol.setConnectionHandler(connectionHandler);
 
             new Thread(connectionHandler).start()  ;
-        }
-
-        //this.serverSocket.close();  // TODO Is this OK?
-    }
-
-
-    public static void main(String[] args) {
-        ThreadPerClient server = new ThreadPerClient(6667, "UTF-8");
-        Thread serverThread = new Thread(server);
-        serverThread.start();
-
-        try {
-            serverThread.join();
-        } catch (InterruptedException e) {
-            System.out.println("Server stopped.\nExiting.");
         }
     }
 }
