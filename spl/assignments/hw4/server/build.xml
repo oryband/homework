@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="run-thread" name="IrcServer">
+
+  <presetdef name="javac">
+    <javac includeantruntime="false" />
+  </presetdef>    
+
+  <property environment="env"/>
+
+  <property name="src.dir"     value="./src"/>
+  <property name="irc.dir"     value="${src.dir}/irc"/>
+  <property name="build.dir"   value="."/>
+  <property name="classes.dir" value="${build.dir}/classes"/>
+  <property name="jar.dir"     value="${build.dir}/jar"/>
+
+  <property name="ThreadPerClient"  value="irc/ThreadPerClient"/>
+  <property name="Reactor"  value="irc/Reactor"/>
+
+
+  <target name="compile-thread">
+    <mkdir dir="${classes.dir}"/>
+    <javac includeantruntime="false" srcdir="${irc.dir}" destdir="${classes.dir}">
+      <exclude name="ConnectionAcceptor.java"/>
+      <exclude name="ProtocolTask.java"/>
+      <exclude name="Reactor.java"/>
+      <exclude name="ReactorConnectionAcceptor.java"/>
+      <exclude name="ReactorConnectionHandler.java"/>
+      <exclude name="ReactorData.java"/>
+      <exclude name="ServerProtocolFactory.java"/>
+      <exclude name="TokenizerFactory.java"/>
+    </javac>
+  </target>
+
+  <target name="compile-reactor">
+    <mkdir dir="${classes.dir}"/>
+    <javac includeantruntime="false" srcdir="${irc.dir}" destdir="${classes.dir}">
+      <exclude name="ThreadPerClient.java"/>
+      <exclude name="TpcConnectionHandler.java"/>
+    </javac>
+  </target>
+
+
+  <target name="jar-thread" depends="compile-thread">
+    <mkdir dir="${jar.dir}"/>
+    <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+      <manifest>
+        <attribute name="Main-class" value="${ThreadPerClient}"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="jar-reactor" depends="compile-reactor">
+    <mkdir dir="${jar.dir}"/>
+    <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+      <manifest>
+        <attribute name="Main-class" value="${Reactor}"/>
+      </manifest>
+    </jar>
+  </target>
+
+
+  <target name="run-thread" depends="jar-thread">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+    <java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
+      <arg value="${arg0}" />
+    </java>
+  </target>
+
+  <target name="run-reactor" depends="jar-reactor">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+    <java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
+      <arg value="4" />
+    </java>
+  </target>
+
+
+  <target name="clean">
+    <delete>
+      <fileset dir="${classes.dir}" includes="**/*.class"/>
+      <fileset dir="${jar.dir}" includes="**/*.jar"/>
+    </delete>
+  </target>
+
+  <target depends="clean" name="cleanall"/>
+</project>

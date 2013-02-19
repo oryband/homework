@@ -1,0 +1,1 @@
+let g:syntastic_java_javac_classpath = "~/Documents/spl-assignments/hw4/server/src/irc\n~/Documents/spl-assignments/hw4/server/classes"

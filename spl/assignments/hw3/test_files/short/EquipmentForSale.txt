@@ -1,0 +1,5 @@
+Microscope	1	50
+Bottle	5	60
+Bottle	5	100
+Stirrer	4	10
+Buret	5	55
