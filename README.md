@@ -1,4 +1,3 @@
 # Homework
 
-Here you can find all my homework assignments, for various classes.
-
+Here you can find all my Uni's homework assignments, for various classes.
