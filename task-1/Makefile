@@ -1,27 +1,20 @@
 SHELL = /bin/sh
 
-
 .SUFFIXES:
 .SUFFIXES: .c .o
 
-
 SRCDIR = ./src/
-#INCLUDEDIR = ./include/
 BINDIR = ./bin/
 
-#INCLUDES = -I$(INCLUDEDIR)
-#BOOST = -lboost_system -lboost_thread
-#LIBS = -L/usr/local/lib -L/usr/local/include
-
-#CPPFLAGS = -Wall -Weffc++ -g $(INCLUDES)
-CFLAGS = -Wall -Weffc++ -g
-
-CC = g++
+CC = gcc
+AS = nasm
+CFLAGS = -Wall -m32 -ansi -g
+ASFLAGS = -f elf -w+all -g
 
 
-all: bin $(BINDIR)main.o $(BINDIR)numbers.o
+all: bin $(BINDIR)main.o $(BINDIR)numbers.o $(BINDIR)add.o
 	@echo -n 'Building target all: '
-	$(CC) $(CFLAGS) -o $(BINDIR)main $(BINDIR)main.o $(BINDIR)numbers.o
+	$(CC) $(CFLAGS) -o $(BINDIR)run $(BINDIR)main.o $(BINDIR)numbers.o $(BINDIR)add.o
 
 
 bin:
@@ -33,13 +26,16 @@ $(BINDIR)main.o: bin $(SRCDIR)main.c
 	@echo -n 'Building target main.o: '
 	$(CC) $(CFLAGS) -c -o $(BINDIR)main.o $(SRCDIR)main.c
 
-
 $(BINDIR)numbers.o: bin $(SRCDIR)numbers.c
 	@echo -n 'Building target numbers.o: '
 	$(CC) $(CFLAGS) -c -o $(BINDIR)numbers.o $(SRCDIR)numbers.c
+
+$(BINDIR)add.o: bin $(SRCDIR)add.s
+	@echo -n 'Building target add.o: '
+	$(AS) $(ASFLAGS) -o $(BINDIR)add.o $(SRCDIR)add.s
 
 
 .PHONY: clean
 clean:
 	@echo -n 'Cleaning $(BINDIR): '
-	rm -f $(BINDIR)*.o $(BINDIR)client
+	rm -f $(BINDIR)*.o $(BINDIR)run
