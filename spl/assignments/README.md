@@ -1,1 +1,0 @@
-# My SPL course assignments.
