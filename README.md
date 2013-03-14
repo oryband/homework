@@ -1,4 +1,1 @@
-splab
-=====
-
-SPL Lab course
+# SPL Lab course
