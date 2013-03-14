@@ -7,8 +7,9 @@ SRCDIR = ./src/
 BINDIR = ./bin/
 
 CC = gcc
+CFLAGS = -m32 -ansi -Wall -g
+
 AS = nasm
-CFLAGS = -Wall -m32 -ansi -g
 ASFLAGS = -f elf -w+all -g
 
 
