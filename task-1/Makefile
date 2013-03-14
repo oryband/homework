@@ -19,7 +19,7 @@ CFLAGS = -Wall -Weffc++ -g
 CC = g++
 
 
-all: bin main.o numbers.o
+all: bin $(BINDIR)main.o $(BINDIR)numbers.o
 	@echo -n 'Building target all: '
 	$(CC) $(CFLAGS) -o $(BINDIR)main $(BINDIR)main.o $(BINDIR)numbers.o
 
