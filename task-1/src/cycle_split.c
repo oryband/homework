@@ -7,7 +7,7 @@
 int main(int argc, char **argv) {
     FILE *out=stdout,
          *in=stdin;
-    char c;
+    char c=0;
     char *d = "W";
     int num, counter;
 
@@ -37,8 +37,8 @@ int main(int argc, char **argv) {
         num = atoi(d);
         counter = 0;
 
-        while ((c = fgetc(in)) != EOF) {
-            while (++counter % num != 0) { 
+        while (c != EOF) { 
+            while ((c = fgetc(in)) != EOF && ++counter < num) {
                 fputc(c, out);
             }
 
