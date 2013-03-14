@@ -9,12 +9,19 @@ int main(int argc, char **argv) {
          *in=stdin;
     char c=0;
     char *d = "W";
-    int num, counter;
+    int i, num, counter;
 
     puts("---");
 
-    if (argc == 3 && strcmp(argv[1], "-d") == 0) {
-        d = argv[2];
+    for (i=1; i < argc; i++) {
+        if (strcmp(argv[i],"-i") == 0) {
+            out = fopen(argv[++i], "w");
+        } else if (strcmp(argv[i],"-d") == 0) {
+            d = argv[++i];
+        } else {
+            printf("invalid parameter - %s\n", argv[i]);
+            return 1;
+        }
     }
 
     if (strcmp(d, "W") == 0) {
@@ -49,6 +56,10 @@ int main(int argc, char **argv) {
     }
 
     fputs("^D", out);
+
+    if (out != stdout) {
+        fclose(out);
+    }
 
     return 0;
 }
