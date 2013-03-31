@@ -11,7 +11,7 @@
   ; Signature: sum-digit-iter (n acc)
   ; Type: [Number^2 -> Number]
   ; Purpose: Sum of digits iterator, tail-recursive.
-  ; Pre-conditions: n,acc>=0, integer.
+  ; Pre-conditions: n>=0, integer.
   ; Tests: (test (sum-digit-iter 4526 0) => 17)
   (define (sum-digit-iter n acc)
     (if (= n 0)
@@ -60,7 +60,7 @@
     ; Signature: calc-1-e-iter (n acc)
     ; Type: [Number^2 -> Number]
     ; Purpose: calc-1-e iterator, tail recursive.
-    ; Pre-conditions: n,acc>=0, integer.
+    ; Pre-conditions: n>=0, integer.
     ; Tests: (test (calc-1-e-iter 4 0) => 24)
   (define (calc-1-e-iter n acc)
     (if (= n 0)
