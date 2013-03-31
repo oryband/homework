@@ -3,16 +3,29 @@
 ;--------------;
 ; Signature: deep-sum-digit (n)
 ; Type: [Number -> Number]
-; Purpose: calculates the sum of digits of the sum of digits up to a number smaller than 10.
+; Purpose: Calculates the sum of digits of the sum of digits.
 ; Pre-conditions: n>=0, integer.
 ; Tests: (test (deep-sum-digit 4526) => 8)
 (define (deep-sum-digit n)
-  (define (sum-digit n acc)
+
+  ; Signature: sum-digit-iter (n acc)
+  ; Type: [Number^2 -> Number]
+  ; Purpose: Sum of digits iterator, tail-recursive.
+  ; Pre-conditions: n,acc>=0, integer.
+  ; Tests: (test (sum-digit-iter 4526 0) => 17)
+  (define (sum-digit-iter n acc)
     (if (= n 0)
       acc
-      (sum-digit (quotient n 10) (+ acc (remainder n 10)))))
+      (sum-digit-iter (quotient n 10) (+ acc (remainder n 10)))))
 
-  (sum-digit (sum-digit n 0) 0))
+  ; Signature: sum-digit (n)
+  ; Type: [Number -> Number]
+  ; Purpose: Calculates the sum of digits.
+  ; Pre-conditions: n>=0, integer.
+  ; Tests: (test (sum-digit 4526) => 17)
+  (define (sum-digit n) (sum-digit-iter n 0))
+
+  (sum-digit (sum-digit n)))
 
 
 ;--------------;
@@ -24,7 +37,19 @@
 ; Pre-conditions: n>=0, integer
 ; Tests: (test (calc-1-e 7) => 103/280)
 (define (calc-1-e n)
+
+  ; Signature: factorial (n)
+  ; Type: [Number -> Number]
+  ; Purpose: Calculates factorial.
+  ; Pre-conditions: n>=0, integer.
+  ; Tests: (test (factorial 4) => 24)
   (define (factorial n)
+
+    ; Signature: factorial-iter (n acc)
+    ; Type: [Number^2 -> Number]
+    ; Purpose: Factorial iterator, tail recursive.
+    ; Pre-conditions: n>=0, integer.
+    ; Tests: (test (factorial-iter 4 0) => 24)
     (define (factorial-iter n acc)
       (if (= n 0)
         acc
@@ -32,6 +57,11 @@
 
     (factorial-iter n 1))
 
+    ; Signature: calc-1-e-iter (n acc)
+    ; Type: [Number^2 -> Number]
+    ; Purpose: calc-1-e iterator, tail recursive.
+    ; Pre-conditions: n,acc>=0, integer.
+    ; Tests: (test (calc-1-e-iter 4 0) => 24)
   (define (calc-1-e-iter n acc)
     (if (= n 0)
       acc
