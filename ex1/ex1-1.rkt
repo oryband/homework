@@ -27,7 +27,7 @@
 ; Type: [Number -> Number]
 ; Purpose: Approximates 1/e as the sum of n first elements from n_i=(-1)^i/i!
 ; Pre-conditions: n>=0, integer
-; Tests: (test (calc-1-e 6) => 103/280)
+; Tests: (test (calc-1-e 7) => 103/280)
 (define (calc-1-e n)
   (define (factorial n)
     (define (factorial-iter n acc)
