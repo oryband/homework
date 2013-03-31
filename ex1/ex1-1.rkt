@@ -1,8 +1,3 @@
-#! /usr/bin/env racket
-
-#lang racket
-
-
 ;--------------;
 ;  question 3  ;
 ;--------------;
