@@ -43,4 +43,4 @@
       (calc-1-e-iter (sub1 n)
                      ((if (even? n) + -) acc (/ 1 (factorial n))))))
 
-  (calc-1-e-iter (add1 n) 1))
+  (calc-1-e-iter n 1))
