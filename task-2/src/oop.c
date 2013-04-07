@@ -1,21 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 /* forward declarations: */
 void rec_map(int*, int, int (*f) (int));
 
 
 /* --- 2a --- */
-int inc(int i) {
-    return i+1;
-}
-int dec(int i) {
-    return i-1;
-}
-int iprt(int i) {
-    printf("%d\n", i);
-    return i;
-}
+int inc(int i) { return i+1; }
+int dec(int i) { return i-1; }
+int iprt(int i) { printf("%d\n", i); return i; }
 
 
 /* --- 2b --- */
