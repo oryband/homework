@@ -7,8 +7,10 @@
 /* return string "word" if the count is 1 or "words" otherwise */
 char *words(int count) {
     char *words = "words";
-    if(count == 1)
-        words[strlen(words)-1] = '\0';
+    if(count == 1) {
+        /*words[strlen(words)-1] = '\0';*/
+        words = "word";
+    }
     return words;
 }
 
