@@ -43,8 +43,6 @@ void int_array_map(struct int_array *iarray, int (*f) (int)) {
 
 
 void initialize_int_array(struct int_array *iarray, int *array, int sz) {
-    int i=0;
-
     iarray->array = array;
     iarray->sz = sz;
     iarray->map = int_array_map;
