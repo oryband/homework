@@ -30,4 +30,4 @@ $(BINDIR)addresses.o: bin $(SRCDIR)addresses.c
 .PHONY: clean
 clean:
 	@echo -n 'Cleaning $(BINDIR): '
-	rm -f $(BINDIR)*.o $(BINDIR)run
+	rm -f $(BINDIR)*.o $(BINDIR)count-words $(BINDIR)addresses $(BINDIR)run
