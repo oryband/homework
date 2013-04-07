@@ -3,27 +3,27 @@
 #include <stdlib.h>
 
 
-int addr5;  // BSS
-int addr6;  // "
+int addr5;  /* BSS */
+int addr6;  /* "*/
 
-int foo();  // Init segment: Read-only.
-void point_at(void *p);  // "
+int foo();  /* Text segment: Read-only.*/
+void point_at(void *p);  /* "*/
 
 
 int main (int argc, char** argv) {
-    static int addr1;  // BSS
+    static int addr1;  /* BSS*/
 
-    int addr2;  // Init segment: Read-Write.
+    int addr2;  /* Stack*/
     int addr3;
 
-    char* yos="ree";  // Init segment: Read-only.
+    char* yos="ree";  /* Text segment: Read-only.*/
 
-    int * addr4 = (int*)(malloc(50));  // Heap.
+    int * addr4 = (int*)(malloc(50));  /* Heap.*/
 
-    int iarray[3];  // Init segment: Read-Write.
-    char carray[3];  // "
+    int iarray[3];  /* Stack.*/
+    char carray[3];  /* "*/
 
-    int i;  // Stack
+    int i;  /* Stack*/
 
     printf("%p\n",&addr1);
     printf("%p\n",&addr2);
@@ -48,10 +48,10 @@ int main (int argc, char** argv) {
     }
 
     printf(" --- i/carray +0/+1---\n");
-    printf("%p\n", &iarray);
-    printf("%p\n", &iarray+1);
-    printf("%p\n", &carray);
-    printf("%p\n", &carray+1);
+    printf("%p\n", iarray);
+    printf("%p\n", iarray+1);
+    printf("%p\n", carray);
+    printf("%p\n", carray+1);
 
     return 0;
 }
