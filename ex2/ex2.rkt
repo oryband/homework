@@ -63,9 +63,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Your Code
 ;;;Signature: generate-type-vars (exp)
-;;;Purpose: returns the sequence of sub-expressions with their type variables 
-;;;Type: T -> List[List[Symbol] 
-;;;Examples: 
+;;;Purpose: returns the sequence of sub-expressions with their type variables
+;;;Type: T -> List[List[Symbol]
+;;;Examples:
 ;;;(generate-type-vars '(lambda(x) x))=> '(((lambda (x) x) var_0) (x var_1))
 ;;;(generate-type-vars 'x)=> '((x var_0))
 ;;;(generate-type-vars 1)=>'((1 var_0))
