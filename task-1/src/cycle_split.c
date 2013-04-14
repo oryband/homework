@@ -4,29 +4,33 @@
 #include <ctype.h>
 
 
-FILE *nextFile(FILE *outs[], int i) {
-    int len = sizeof(outs) / sizeof(outs[0]);
+FILE *nextFile(FILE *outs[], int *i) {
+    int len = 3;
 
-    if (i > len -1) {
-        i = 0;
+    if (*i > len -1) {
+        *i = 0;
     }
-    while (outs[i] == 0) {
-        i++;
-        if (i == len -1) {
-            i = 0;
+
+    while (outs[*i] == 0) {
+        (*i)++;
+        if (*i > len -1) {
+            *i = 0;
         }
     }
 
-    return outs[i];
+    return outs[*i];
 }
 
-void W(FILE *in, FILE *outs[], const char *d) {
-    char c, i=0;
+
+void W(FILE *in, FILE *outs[]) {
+    char c;
+    int i=0;
     FILE *out = outs[0];
     while ((c = fgetc(in)) != EOF) {
         if (isspace(c)) {
             fputc('\n', out);
-            out = nextFile(outs, ++i);
+            i++;
+            out = nextFile(outs, &i);
         } else {
             fputc(c, out);
         }
@@ -34,39 +38,47 @@ void W(FILE *in, FILE *outs[], const char *d) {
 }
 
 
-/*void C(FILE *in, FILE *outs, const char *d) {
+void C(FILE *in, FILE *outs[]) {
     char c;
+    int i=0;
+    FILE *out = outs[0];
     while ((c = fgetc(in)) != EOF) {
         if (c == ',') {
-            fputc('\n', outs);
+            fputc('\n', out);
+            i++;
+            out = nextFile(outs, &i);
         } else {
-            fputc(c, outs);
+            fputc(c, out);
         }
     }
-}*/
+}
 
 
-/*void D(FILE *in, FILE *outs, const char *d) {
+void D(FILE *in, FILE *outs[], const char *d) {
     char c;
-    int num = atoi(d),
+    int i=0,
+        num = atoi(d),
         counter = 0;
+    FILE *out = outs[0];
 
     while (c != EOF) { 
         while ((c = fgetc(in)) != EOF && ++counter < num) {
-            fputc(c, outs);
+            fputc(c, out);
+            i++;
+            out = nextFile(outs, &i);
         }
 
-        fputc('\n', outs);
+        fputc('\n', out);
 
         counter = 0;
     }
-}*/
+}
 
 
 int main(int argc, char **argv) {
-    FILE *outs[3]={ stdout, 0, 0 };
-    FILE *out;
-    FILE *in = stdin;
+    FILE *outs[3]={ stdout, 0, 0 },
+         *out,
+         *in = stdin;
 
     char *d = "W";
 
@@ -81,8 +93,8 @@ int main(int argc, char **argv) {
         } else if (strcmp(argv[i],"-d") == 0) {
             d = argv[++i];
         } else {
-            if (j > 3) {
-                printf("Output files should be <= 3");
+            if (j >= 3) {
+                printf("Error! Output files should be <= 3.\n");
                 return -1;
             }
 
@@ -95,19 +107,16 @@ int main(int argc, char **argv) {
     }
 
     if (strcmp(d, "W") == 0) {
-        W(in, outs, d);
+        W(in, outs);
     } else if (strcmp(d, "C") == 0) {
-        0;
-        /*C(in, outs, d);*/
+        C(in, outs);
     } else {
-        0;
-        /*D(in, outs, d);*/
+        D(in, outs, d);
     }
-
-    /*fputs("^D", outs);*/
 
     len = sizeof(outs) / sizeof(outs[0]);
     for (i=0; i < len; i++) {
+        out = outs[i];
         if (out != stdout && out != 0) {
             fclose(out);
         }
