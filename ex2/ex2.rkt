@@ -69,9 +69,3 @@
 ;;;(generate-type-vars '(lambda(x) x))=> '(((lambda (x) x) var_0) (x var_1))
 ;;;(generate-type-vars 'x)=> '((x var_0))
 ;;;(generate-type-vars 1)=>'((1 var_0))
-
-
-
-
-
-
