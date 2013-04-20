@@ -37,3 +37,20 @@
       (+ (dg (quotient number 10)) 1))))
 
 (dg ((lambda(dg) dg) 450))
+
+; 2.a.4
+(display "\n2.a.4:\n")
+;(+ (lambda (x) 5) x)  ; Throws error.
+
+; 2.c
+(define number-proc
+  (lambda(par)
+    (if (number? par)
+      (+ par 1)
+      (+ (par 1) 1))))
+
+(number-proc 10)
+
+; 3.1.a
+(lambda(f)
+  (f ((lambda(g y) (+ 1 (g y))) + 10)))
