@@ -12,6 +12,9 @@ void bubbleSort(int numbers[], int array_size) {
         *temp = numbers[j-1];
         numbers[j-1] = numbers[j];
         numbers[j] = *temp;
+        if (temp != NULL) {
+            free(temp);
+        }
       }
     }
   }
@@ -38,6 +41,10 @@ int main(int argc, char **argv) {
     printf(" %d", numbers[i]);
 
   printf("\n");
+
+  if (numbers != NULL) {
+      free(numbers);
+  }
 
   return 0;
 }
