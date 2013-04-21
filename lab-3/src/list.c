@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 
+/* Task 1 */
 typedef struct link link;
 
 struct link {
@@ -62,17 +63,49 @@ void list_free(link *list) {
     return;
 }
 
+/* Task 1.b */
+int reduce(link *l, int (*f)(int, int), int iv) {
+    if (l == NULL) {
+        return iv;
+    } else {
+        return reduce(l->next, f, f(iv, l->data));
+    }
+}
+
+
+/* Returns the sum of a and b */
+int sum(int a, int b) {
+    return a+b;
+}
+
+
+/* Returns the maximum of a and b */
+int max(int a, int b) {
+    return a>b ? a : b;
+}
+
 
 int main(int argc, char *argv[]) {
-    link *list = NULL;
-
+    /* Task 1.a */
+    /*link *list = NULL;
     list = list_append(list, 1);
     list = list_append(list, 2);
     list = list_append(list, 3);
-
     printf("The list size is: %d\n", list_size(list));
     printf("The list content is: [ ");
     list_print(list);
     printf("]\n");
-    list_free(list);
+    list_free(list);*/
+
+    /* Task 1.b */
+    /*link *list = NULL;
+    list = list_append(list, 1);
+    list = list_append(list, 2);
+    list = list_append(list, 3);
+    printf("The sum of all list values: %d\n", reduce(list,sum,0));
+    printf("The max value of list links: %d\n", reduce(list,max,0));
+    printf("The list content is: [ ");
+    list_print(list);
+    printf("]\n");
+    list_free(list);*/
 }
