@@ -10,7 +10,7 @@ CC = gcc
 CFLAGS = -m32 -ansi -Wall -g
 
 
-all: bin $(BINDIR)bubblesort.o list.o
+all: bin $(BINDIR)bubblesort.o $(BINDIR)list.o
 	@echo -n 'Building target all: '
 	$(CC) $(CFLAGS) -o $(BINDIR)bubblesort $(BINDIR)bubblesort.o
 	$(CC) $(CFLAGS) -o $(BINDIR)list $(BINDIR)list.o
@@ -30,4 +30,4 @@ $(BINDIR)list.o: bin $(SRCDIR)list.c
 .PHONY: clean
 clean:
 	@echo -n 'Cleaning $(BINDIR): '
-	rm -f $(BINDIR)*.o $(BINDIR)count-words $(BINDIR)addresses $(BINDIR)oop $(BINDIR)run
+	rm -f $(BINDIR)*.o $(BINDIR)bubblesort $(BINDIR)list
