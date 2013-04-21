@@ -54,3 +54,8 @@
 ; 3.1.a
 (lambda(f)
   (f ((lambda(g y) (+ 1 (g y))) + 10)))
+
+; 3.1.b
+(lambda(f)
+  (lambda(y)
+    (y (f f))))
