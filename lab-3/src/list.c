@@ -85,6 +85,33 @@ int max(int a, int b) {
 }
 
 
+/* Task 1.c */
+link *map(link *l, int (*f)(int)) {
+    if (l == NULL) {
+        return NULL;
+    } else {
+        link *n = (link*) malloc (sizeof(link*));
+        n->data = f(l->data);
+        n->next = map(l->next, f);
+        return n;
+    }
+}
+
+/* returns a if a is an odd number, 0 otherwise */
+int odd(int a) {
+    return a%2 == 1 ? a : 0;
+}
+
+/* returns a if a is greater than 5, 0 otherwise */
+int gt5(int a) {
+    return a>5 ? a : 0;
+}
+/* returns the square of a */
+int square(int a) {
+    return a*a;
+}
+
+
 int main(int argc, char *argv[]) {
     /* Task 1.a */
     /*link *list = NULL;
@@ -108,4 +135,24 @@ int main(int argc, char *argv[]) {
     list_print(list);
     printf("]\n");
     list_free(list);*/
+
+    /* Task 1.c */
+    /*link *list = NULL;
+    link *new_list = NULL;
+    int res = 0;
+
+    list = list_append(list, 1);
+    list = list_append(list, 3);
+    list = list_append(list, 8);
+
+    new_list = map(list,odd);
+    res = reduce(new_list, max, 0);
+
+    printf("The maximal odd number in the list is: %d\n", res);
+    printf("new_list content is: [ ");
+    list_print(new_list);
+    printf("]\n");
+
+    list_free(list);
+    list_free(new_list);*/
 }
