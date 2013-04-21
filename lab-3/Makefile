@@ -1,4 +1,4 @@
-SHELL = /../Makefile
+SHELL = /bin/sh
 
 .SUFFIXES:
 .SUFFIXES: .c .o
