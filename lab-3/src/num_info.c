@@ -106,6 +106,7 @@ int odd(int a) {
 int gt5(int a) {
     return a>5 ? a : 0;
 }
+
 /* returns the square of a */
 int square(int a) {
     return a*a;
@@ -155,4 +156,40 @@ int main(int argc, char *argv[]) {
 
     list_free(list);
     list_free(new_list);*/
+
+    FILE *in;
+    char line[100];
+    int a, b;
+    link *l = NULL,
+         *l2,
+         *l3,
+         *l4;
+
+    if (argc != 2) {
+        printf("Input file name needed.\n");
+        return 1;
+    } else if ((in = fopen(argv[1], "r")) == NULL) {
+        printf("Error when opening file.\n");
+        return 1;
+    }
+
+    while (fgets(line, 100, in) != NULL) {
+        sscanf(line, "%d %d", &a, &b);
+        l = list_append(l, abs(sum(a,b)));
+    }
+
+    l2 = map(l, gt5);
+    l3 = map(l2, odd);
+    l4 = map(l, square);
+
+    printf("Size: %d\n", list_size(l));
+    printf("Max.Odd.>5: %d\n", reduce(l3, max, 0));
+    printf("^2: %d\n", reduce(l4, sum, 0));
+
+    list_free(l);
+    list_free(l2);
+    list_free(l3);
+    list_free(l4);
+    fclose(in);
+    return 0;
 }
