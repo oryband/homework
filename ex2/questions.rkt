@@ -43,6 +43,7 @@
 ;(+ (lambda (x) 5) x)  ; Throws error.
 
 ; 2.c
+(display "\n2.c:\n")
 (define number-proc
   (lambda(par)
     (if (number? par)
@@ -52,10 +53,17 @@
 (number-proc 10)
 
 ; 3.1.a
+(display "\n3.1.a:\n")
 (lambda(f)
   (f ((lambda(g y) (+ 1 (g y))) + 10)))
 
 ; 3.1.b
+(display "\n3.1.b:\n")
 (lambda(f)
   (lambda(y)
     (y (f f))))
+
+; 3.1.c
+(display "\n3.1.c:\n")
+(lambda(x)
+  (+ x (x 1)))
