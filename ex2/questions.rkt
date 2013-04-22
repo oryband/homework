@@ -52,6 +52,7 @@
 
 (number-proc 10)
 
+
 ; 3.1.a
 (display "\n3.1.a:\n")
 (lambda(f)
@@ -67,3 +68,43 @@
 (display "\n3.1.c:\n")
 (lambda(x)
   (+ x (x 1)))
+
+
+; 4.a
+(display "\n4.a:\n")
+(case
+  ((lambda(x) (+ x 3)) 3)   ; key
+  ;(lambda(x y) (= x y))    ; pred - obsolete.
+  [ (1 2 5) 5 ]             ; clause 1
+  [ (4 5 6 7) 9 10 11 12 ]  ; clause 2
+  [ else 13 ])              ; else
+
+
+; 5.a
+(display "\n5.a:\n")
+#|(let ((gcd_ (lambda(a b)  ; need to use letrec (gcd is primitive, use gcd_).
+             (if (= b 0)
+               a
+               (gcd_ b (modulo a b))))))
+
+  (gcd_ (+ (+ 3 3) (+ 3 3)) 8))|#
+
+
+; 5.c
+(display "\n5.c:\n")
+(let ( [gcd_ (lambda(a b gcd_new) (if (= b 0)
+                                 a
+                                 (gcd_new b (modulo a b) gcd_new)))] )
+
+  (gcd_ (+ (+ 3 3) (+ 3 3)) 8 gcd_))
+
+; 5.e
+(display "\n5.e:\n")
+(let ( [choose (lambda (n k f)
+  (cond
+    ((= k 0) 1)
+    ((= k n) 1)
+    (else (+ (f (- n 1) k f)
+             (f (- n 1) (- k 1) f)))))] )
+
+(choose 6 4 choose))
