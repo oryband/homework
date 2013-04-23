@@ -110,8 +110,12 @@
 ;Type: T -> List[List[Symbol]
 ;Purpose:returns the sequence of sub-expressions with their type variables
 ;Tests:(generate-type-vars '(lambda(x) x))=> '(((lambda (x) x) var_0) (x var_1))
-(define (generate-type-vars e) 
+(define (generate-type-vars e)
 
+  ;Signature: _generate-type-vars
+  ;Type:      T*List*Boolean -> List[List[Symbol]
+  ;Purpose:   returns the sequence of sub-expressions with their type variables
+  ;Tests:     (_generate-type-vars '(lambda(x) x) (list) #t) => '(((lambda(x) x) ((x T_0))))
   (define (_generate-type-vars e l b)
     (cond
       ((null? e) l)
