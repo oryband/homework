@@ -1,4 +1,4 @@
-#lang racket
+;#lang racket
 (provide (all-defined-out))
 ;Signature: fresh-name()
 ;Type: [Empty->Symbol]
@@ -110,3 +110,27 @@
 ;Type: T -> List[List[Symbol]
 ;Purpose:returns the sequence of sub-expressions with their type variables
 ;Tests:(generate-type-vars '(lambda(x) x))=> '(((lambda (x) x) var_0) (x var_1))
+(define (generate-type-vars e) 
+
+  (define (_generate-type-vars e l b)
+    (cond
+      ((null? e) l)
+      ((and (atomic? e) b) l)
+      ((atomic? e) (cons (list e (fresh-name `T)) l))
+      ((quoted? e) (cons (list e (fresh-name `T)) l))
+      ((lambda? e) (_generate-type-vars (lambda-body e) l #f))
+      ((list? (car e)) (_generate-type-vars (car e)
+                                            (_generate-type-vars (cdr e)
+                                                                 (cons (list (car e)
+                                                                             (fresh-name 'T))
+                                                                       l)
+                                                                 #f)
+                                            #f))
+      (else (_generate-type-vars (car e)
+                                 (_generate-type-vars (cdr e) l #f)
+                                 #f))))
+
+
+  (reverse (_generate-type-vars e
+                                (list (list e (fresh-name 'T)))
+                                #t)))
