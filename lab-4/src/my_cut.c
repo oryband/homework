@@ -42,7 +42,7 @@ int fclose(FILE f) {
 int main (int argc, char* argv[], char* envp[]) {
     int i, filesLen, k;
     FILE in, ins[3]={ STDIN, 0, 0 };
-    char s[1], *option, *stream;
+    char s[1], *option;
 
     if (argc < 2 || argc > 5) {
         printlnf(STDOUT, "Missing arguments.");
@@ -50,12 +50,6 @@ int main (int argc, char* argv[], char* envp[]) {
     }
 
     option = argv[1];
-
-    if (argc == 2) {
-        stream = "stdout";
-    } else {
-        stream = argv[2];
-    }
 
     for (i=2; i < argc; i++) {
         if (filesLen >= 3) {
@@ -67,10 +61,6 @@ int main (int argc, char* argv[], char* envp[]) {
             ins[filesLen++] = fopen(argv[i]);
         }
     }
-
-    printlnf(STDOUT, itoa(ins[0]));
-    printlnf(STDOUT, itoa(ins[1]));
-    printlnf(STDOUT, itoa(ins[2]));
 
     for (k=0; k < filesLen; k++) {
         if (ins[k] != 0) {
