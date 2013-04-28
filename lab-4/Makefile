@@ -17,9 +17,10 @@ LD = ld
 LDFLAGS = -melf_i386
 
 
-all: bin $(BINDIR)main.o $(BINDIR)util.o $(BINDIR)start.o
+all: bin $(BINDIR)main.o $(BINDIR)hello-world.o $(BINDIR)util.o $(BINDIR)start.o
 	@echo -n 'Building target all: '
 	$(LD) $(LDFLAGS) $(BINDIR)main.o $(BINDIR)util.o $(BINDIR)start.o -o $(BINDIR)task0
+	$(LD) $(LDFLAGS) $(BINDIR)hello-world.o $(BINDIR)util.o $(BINDIR)start.o -o $(BINDIR)hello-world
 
 
 bin:
@@ -38,6 +39,10 @@ $(BINDIR)util.o: bin $(SRCDIR)util.c
 $(BINDIR)start.o: bin $(SRCDIR)start.s
 	@echo -n 'Building target start.o: '
 	$(AS) $(ASFLAGS) -o $(BINDIR)start.o $(SRCDIR)start.s
+
+$(BINDIR)hello-world.o: bin $(SRCDIR)hello-world.c
+	@echo -n 'Building target hello-world.o: '
+	$(CC) $(CFLAGS) -c -o $(BINDIR)hello-world.o $(SRCDIR)hello-world.c
 
 
 .PHONY: clean
