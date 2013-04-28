@@ -4,7 +4,7 @@
 #define STDOUT 1
 
 
-int main (int argc , char* argv[], char* envp[]) {
+int main (int argc, char* argv[], char* envp[]) {
     char * str = "hello world\n";
     system_call(SYS_WRITE, STDOUT, str, strlen(str));
     return 0;

@@ -4,7 +4,7 @@
 #define STDOUT 1
 
 
-int main (int argc , char* argv[], char* envp[]) {
+int main (int argc, char* argv[], char* envp[]) {
     int i;
     char * str;
 

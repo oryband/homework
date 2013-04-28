@@ -17,10 +17,11 @@ LD = ld
 LDFLAGS = -melf_i386
 
 
-all: bin $(BINDIR)main.o $(BINDIR)hello-world.o $(BINDIR)util.o $(BINDIR)start.o
+all: bin $(BINDIR)main.o $(BINDIR)hello-world.o $(BINDIR)my_cut.o $(BINDIR)util.o $(BINDIR)start.o
 	@echo -n 'Building target all: '
 	$(LD) $(LDFLAGS) $(BINDIR)main.o $(BINDIR)util.o $(BINDIR)start.o -o $(BINDIR)task0
 	$(LD) $(LDFLAGS) $(BINDIR)hello-world.o $(BINDIR)util.o $(BINDIR)start.o -o $(BINDIR)hello-world
+	$(LD) $(LDFLAGS) $(BINDIR)my_cut.o $(BINDIR)util.o $(BINDIR)start.o -o $(BINDIR)my_cut
 
 
 bin:
@@ -40,12 +41,17 @@ $(BINDIR)start.o: bin $(SRCDIR)start.s
 	@echo -n 'Building target start.o: '
 	$(AS) $(ASFLAGS) -o $(BINDIR)start.o $(SRCDIR)start.s
 
+
 $(BINDIR)hello-world.o: bin $(SRCDIR)hello-world.c
 	@echo -n 'Building target hello-world.o: '
 	$(CC) $(CFLAGS) -c -o $(BINDIR)hello-world.o $(SRCDIR)hello-world.c
+
+$(BINDIR)my_cut.o: bin $(SRCDIR)my_cut.c
+	@echo -n 'Building target my_cut.o: '
+	$(CC) $(CFLAGS) -c -o $(BINDIR)my_cut.o $(SRCDIR)my_cut.c
 
 
 .PHONY: clean
 clean:
 	@echo -n 'Cleaning $(BINDIR): '
-	rm -f $(BINDIR)*.o $(BINDIR)task0
+	rm -f $(BINDIR)*
