@@ -13,7 +13,7 @@ int main (int argc , char* argv[], char* envp[])
   for (i = 0 ; i < argc ; i++)
     {
       system_call(SYS_WRITE,STDOUT,"argv[", 5);
-	  str = itoa(i);
+      str = itoa(i);
       system_call(SYS_WRITE,STDOUT,str,strlen(str));
       system_call(SYS_WRITE,STDOUT,"] = ",4);
       system_call(SYS_WRITE,STDOUT,argv[i],strlen(argv[i]));
