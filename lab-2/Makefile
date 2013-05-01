@@ -10,11 +10,12 @@ CC = gcc
 CFLAGS = -m32 -ansi -Wall -g
 
 
-all: bin $(BINDIR)count-words.o $(BINDIR)addresses.o $(BINDIR)oop.o
+all: bin $(BINDIR)count-words.o $(BINDIR)addresses.o $(BINDIR)oop.o $(BINDIR)menu.o
 	@echo -n 'Building target all: '
 	$(CC) $(CFLAGS) -o $(BINDIR)count-words $(BINDIR)count-words.o
 	$(CC) $(CFLAGS) -o $(BINDIR)addresses $(BINDIR)addresses.o
 	$(CC) $(CFLAGS) -o $(BINDIR)oop $(BINDIR)oop.o
+	$(CC) $(CFLAGS) -o $(BINDIR)menu $(BINDIR)menu.o
 
 bin:
 	@echo -n 'Creating bin/: '
@@ -32,7 +33,14 @@ $(BINDIR)oop.o: bin $(SRCDIR)oop.c
 	@echo -n 'Building target oop.o: '
 	$(CC) $(CFLAGS) -c -o $(BINDIR)oop.o $(SRCDIR)oop.c
 
+#$(BINDIR)menu.o: bin $(SRCDIR)menu.c $(BINDIR)oop.o
+$(BINDIR)menu.o: bin $(SRCDIR)menu.c
+	@echo -n 'Building target menu.o: '
+	#$(CC) $(CFLAGS) -c -o $(BINDIR)menu.o $(BINDIR)oop.o $(SRCDIR)menu.c
+	$(CC) $(CFLAGS) -c -o $(BINDIR)menu.o $(SRCDIR)menu.c
+
+
 .PHONY: clean
 clean:
 	@echo -n 'Cleaning $(BINDIR): '
-	rm -f $(BINDIR)*.o $(BINDIR)count-words $(BINDIR)addresses $(BINDIR)oop $(BINDIR)run
+	rm -f $(BINDIR)*

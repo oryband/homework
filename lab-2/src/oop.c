@@ -24,11 +24,11 @@ void rec_map(int *array, int sz, int (*f) (int)) {
 
 
 /* -- 2c -- */
-struct int_array {
+typedef struct int_array {
   int *array;
   int sz;
   void (*map) (struct int_array *, int (*f) (int));
-};
+} int_array;
 
 
 void int_array_map(struct int_array *iarray, int (*f) (int)) {
@@ -43,7 +43,7 @@ void initialize_int_array(struct int_array *iarray, int *array, int sz) {
 }
 
 
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
     printf("-- 2a, 2b --\n");
     int a[] = {1,1,1};
     rec_map(a,3,iprt);
@@ -52,7 +52,7 @@ int main(int argc, char **argv){
 
     printf("-- 2c --\n");
     int array[3] = {1,1,1};
-    struct int_array iarray;
+    int_array iarray;
     initialize_int_array(&iarray, array, 3);
     iarray.map(&iarray, iprt);
     iarray.map(&iarray, inc);
