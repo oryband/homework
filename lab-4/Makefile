@@ -17,11 +17,12 @@ LD = ld
 LDFLAGS = -melf_i386
 
 
-all: bin $(BINDIR)main.o $(BINDIR)hello-world.o $(BINDIR)my_cut.o $(BINDIR)util.o $(BINDIR)start.o
+all: bin $(BINDIR)main.o $(BINDIR)hello-world.o $(BINDIR)my_cut.o $(BINDIR)flame2.o $(BINDIR)util.o $(BINDIR)start.o
 	@echo -n 'Building target all: '
 	$(LD) $(LDFLAGS) $(BINDIR)main.o $(BINDIR)util.o $(BINDIR)start.o -o $(BINDIR)task0
 	$(LD) $(LDFLAGS) $(BINDIR)hello-world.o $(BINDIR)util.o $(BINDIR)start.o -o $(BINDIR)hello-world
 	$(LD) $(LDFLAGS) $(BINDIR)my_cut.o $(BINDIR)util.o $(BINDIR)start.o -o $(BINDIR)my_cut
+	$(LD) $(LDFLAGS) $(BINDIR)flame2.o $(BINDIR)util.o $(BINDIR)start.o -o $(BINDIR)flame2
 
 
 bin:
@@ -49,6 +50,10 @@ $(BINDIR)hello-world.o: bin $(SRCDIR)hello-world.c
 $(BINDIR)my_cut.o: bin $(SRCDIR)my_cut.c
 	@echo -n 'Building target my_cut.o: '
 	$(CC) $(CFLAGS) -c -o $(BINDIR)my_cut.o $(SRCDIR)my_cut.c
+
+$(BINDIR)flame2.o: bin $(SRCDIR)flame2.c
+	@echo -n 'Building target flame2.o: '
+	$(CC) $(CFLAGS) -c -o $(BINDIR)flame2.o $(SRCDIR)flame2.c
 
 
 .PHONY: clean
