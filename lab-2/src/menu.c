@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*#include "oop.c"*/
 
 int inc(int i) { return i+1; }
 int dec(int i) { return i-1; }
