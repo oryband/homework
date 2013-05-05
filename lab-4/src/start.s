@@ -6,8 +6,6 @@ global system_call
 extern main
 
 _start:
-    call    flame2
-
     pop     dword ecx   ; ecx = argc
     mov     esi,esp     ; esi = argv
     ;lea eax, [esi+4*ecx+4] ; eax = envp = (4*ecx)+esi+4
