@@ -1,20 +1,16 @@
-/*
-   string-related utility functions for lab4
-http://www.cs.bgu.ac.il/~caspl132/Lab4/Tasks
-*/
+/* string-related utility functions for lab4
+ * http://www.cs.bgu.ac.il/~caspl132/Lab4/Tasks
+ */
 
-/*
-   Returns the length of str.
-   The length of a C string is determined by the terminating null-character:
-   A C string is as long as the amount of characters between the beginning
-   of the string and the terminating null character.
-example: strlen("abc") return 3
-*/
-unsigned int strlen (const char *str)
-{
+/* Returns the length of str.
+ * The length of a C string is determined by the terminating null-character:
+ * A C string is as long as the amount of characters between the beginning
+ * of the string and the terminating null character.
+ * example: strlen("abc") return 3
+ */
+unsigned int strlen (const char *str) {
     int i = 0;
-    while (str[i])
-    {
+    while (str[i]) {
         ++i;
     }
     return i;
@@ -33,13 +29,11 @@ unsigned int strlen (const char *str)
 char buffer[BUFFER_SIZE];
 
 /* returns the decimal representation of a _signed_ integer */
-char *itoa(int num)
-{
+char *itoa(int num) {
     char* p = buffer+BUFFER_SIZE-1;
     int neg = num<0;
 
-    if(neg)
-    {
+    if(neg) {
         num = -num;
     }
 
@@ -48,8 +42,7 @@ char *itoa(int num)
         *(--p) = '0' + num%10;
     } while(num/=10);
 
-    if(neg)
-    {
+    if(neg) {
         *(--p) = '-';
     }
 
@@ -57,14 +50,12 @@ char *itoa(int num)
 }
 
 
-/*
-   Compares the C string str1 to the C string str2.
-   This function starts comparing the first character of each string. If they are
-   equal to each other, it continues with the following pairs until the characters
-   differ or until a terminating null-character is reached.
-   */
-int strcmp(const char *str1, const char *str2)
-{
+/* Compares the C string str1 to the C string str2.
+ * This function starts comparing the first character of each string. If they are
+ * equal to each other, it continues with the following pairs until the characters
+ * differ or until a terminating null-character is reached.
+ */
+int strcmp(const char *str1, const char *str2) {
     while(*str1==*str2 && *str1) {
         str1++;
         str2++;
@@ -73,16 +64,12 @@ int strcmp(const char *str1, const char *str2)
 }
 
 
-/*
-   The strncmp() function is similar to strcmp,
-   except it only compares the first (at most) n characters of s1 and s2.
-   */
-int strncmp(const char* str1, const char* str2, unsigned int n)
-{
-    while(n--)
-    {
-        if(*str1++!=*str2++)
-        {
+/* The strncmp() function is similar to strcmp,
+ * except it only compares the first (at most) n characters of s1 and s2.
+ */
+int strncmp(const char* str1, const char* str2, unsigned int n) {
+    while(n--) {
+        if(*str1++!=*str2++) {
             return *(unsigned char*)(str1 - 1) - *(unsigned char*)(str2 - 1);
         }
     }
