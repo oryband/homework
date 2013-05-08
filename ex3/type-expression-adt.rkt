@@ -17,18 +17,18 @@
 ;Number, Boolean
 
 ;Signature: make-proc-te(tuple-te, te)
-;Type: [List*(List union Symbol) -> lIST] 
+;Type: [List*(List union Symbol) -> lIST]
 ;Purpose: making procedure type expression
-;Tests: (make-proc-te (make-tuple-te (list 'Number)) 'Number) ==> (-> (* Number) Number) 
+;Tests: (make-proc-te (make-tuple-te (list 'Number)) 'Number) ==> (-> (* Number) Number)
 (define make-proc-te
   (lambda (tuple-te te)
     (list '-> tuple-te te)))
 
 ;Signature: make-tuple-te(te-list)
-;Type: [LIST -> lIST] 
+;Type: [LIST -> lIST]
 ;Purpose: get tuple
-;Tests: (make-tuple-te (list 'Number (make-proc-te (make-tuple-te (list 'Number)) 'T1))) 
-;                                                           ==> (* Number (-> (* Number) T1)) 
+;Tests: (make-tuple-te (list 'Number (make-proc-te (make-tuple-te (list 'Number)) 'T1)))
+;                                                           ==> (* Number (-> (* Number) T1))
 (define make-tuple-te
   (lambda (te-list)
     (cons '* te-list)))
@@ -36,71 +36,71 @@
 ; Getters:
 
 ;Signature: get-constructor(te)
-;Type: [LIST union Symbol -> Symbol] 
+;Type: [LIST union Symbol -> Symbol]
 ;Purpose: get type costructor
 ;Tests: (get-constructor (make-tuple-te (list 'Number 'Number))) ==> *
 (define get-constructor
   (lambda (te)
     (if (composite? te)
-        (car te)
-        te)))
+      (car te)
+      te)))
 
 ;Signature: tuple-components(te)
-;Type: [LIST union Symbol -> LIST] 
+;Type: [LIST union Symbol -> LIST]
 ;Purpose: get tuple components
 ;Tests: (tuple-components (make-tuple-te (list 'Number 'Number))) ==> '(Number Number)
 (define tuple-components
   (lambda (te)
     (if (tuple? te)
-        (cdr te)
-        (list))))
+      (cdr te)
+      (list))))
 
 ;Signature: tuple-length(te)
-;Type: [LIST union Symbol -> Number] 
+;Type: [LIST union Symbol -> Number]
 ;Purpose: get tuple length
 ;Tests: (tuple-length (make-tuple-te (list 'Number 'Number))) ==> 2
 (define tuple-length
   (lambda (te)
     (if (tuple? te)
-        (length (tuple-components te))
-        (list))))
+      (length (tuple-components te))
+      (list))))
 
 ;Signature: proc-parameter-tuple-tes(te)
-;Type: [LIST union Symbol -> LIST] 
+;Type: [LIST union Symbol -> LIST]
 ;Purpose: procedure arameter tuples
 ;Tests: (proc-parameter-tuple-tes (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> '(* Number)
 ;Pre-condition: (procedure? te)
 (define proc-parameter-tuple-tes
   (lambda (te)
     (if (procedure? te)
-        (cadr te)
-        #f)))
+      (cadr te)
+      #f)))
 
 ;Signature: proc-parameter-tes(te)
-;Type: [LIST union Symbol -> LIST] 
+;Type: [LIST union Symbol -> LIST]
 ;Purpose: get procedure parameters
 ;Tests: (proc-parameter-tes (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> '(Number)
 ;Pre-condition: (procedure? te)
 (define proc-parameter-tes
   (lambda (te)
     (if (procedure? te)
-        (cdadr te)
-        #f)))
+      (cdadr te)
+      #f)))
 
 ;Signature: proc-return-te(te)
-;Type: [LIST union Symbol -> LIST union Symbol] 
+;Type: [LIST union Symbol -> LIST union Symbol]
 ;Purpose: get procedure return type expresison
 ;Tests: (proc-return-te (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> 'T1
 ;Pre-condition: (procedure? te)
 (define proc-return-te
   (lambda (te)
     (if (procedure? te)
-        (caddr te)
-        #f)))
+      (caddr te)
+      #f)))
 
 
 ;Signature: equal-atomic-te?(te1 te2)
-;Type: [LIST union Symbol * LIST union Symbol -> Boolean] 
+;Type: [LIST union Symbol * LIST union Symbol -> Boolean]
 ;Purpose: are to type exressions equal
 ;Tests: (equal-atomic-te? 'Number 'Number) ==> #t
 (define equal-atomic-te?
@@ -115,7 +115,7 @@
 ;Purpose: is type expresion
 ;Tests: (type-expr?(make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> #t
 (define type-expr?
-  (lambda (te) 
+  (lambda (te)
     (or (atomic? te)(variable? te) (composite? te))))
 
 ;Signature: atomic?(te)
@@ -123,11 +123,11 @@
 ;Purpose: is atomic
 ;Tests: (atomic? (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> #f
 (define atomic?
-  (lambda (te) 
+  (lambda (te)
     (or (eq? te 'Number)(eq? te 'Boolean))))
 
 ;Signature: composite?(te)
-;Type: [LIST union Symbol -> Boolean 
+;Type: [LIST union Symbol -> Boolean
 ;Purpose: is composite
 ;Tests: (composite? (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> #t
 (define composite?
@@ -138,24 +138,24 @@
 ;Purpose: is tuple
 ;Tests: (tuple? (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> #f
 (define tuple?
-  (lambda (te) 
+  (lambda (te)
     (and (list? te) (not (null? te)) (eq? (car te) '*)) ))
 
 ;Signature: procedure?(te)
-;Type: [LIST union Symbol -> Boolean 
+;Type: [LIST union Symbol -> Boolean
 ;Purpose: is procedure
 ;Tests: (composite? (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> #t
 (define procedure?
-  (lambda (te) 
+  (lambda (te)
     (and (list? te) (not (null? te)) (eq? (car te) '->)) ))
 
 ;Signature: variable?(te)
-;Type: [LIST union Symbol -> Boolean 
+;Type: [LIST union Symbol -> Boolean
 ;Purpose: is variable
 ;Tests: (variable? (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> #f
 (define variable?
-  (lambda (te) 
+  (lambda (te)
     (and (not (atomic? te))(symbol? te))
-   ))
+    ))
 
 
