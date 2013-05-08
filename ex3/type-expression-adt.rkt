@@ -157,5 +157,3 @@
   (lambda (te)
     (and (not (atomic? te))(symbol? te))
     ))
-
-
