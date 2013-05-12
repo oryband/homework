@@ -1,3 +1,6 @@
+#include <sys/types.h>
+#include <sys/wait.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +9,7 @@
 #include "LineParser.h"
 
 
-#define FGETS_SIZE 2048
+#define BUF_SIZE 2048
 
 
 int execute(cmdLine *pCmdLine) {
@@ -15,25 +18,38 @@ int execute(cmdLine *pCmdLine) {
 
 
 int main (int argc, char* argv[]) {
-    char wd[FGETS_SIZE],
-         in[FGETS_SIZE];
+    char wd[BUF_SIZE],
+         in[BUF_SIZE];
     cmdLine *cmd;
+    pid_t child;
+    int status;
 
     while (1) {
         getwd(wd);
         printf("%s $ ", wd);
-        fgets(&in, FGETS_SIZE, stdin);
+        fgets(&in, BUF_SIZE, stdin);
 
         if (strcmp(in, "quit\n") == 0) {
             break;
         }
 
         cmd = parseCmdLines(in);
-        if (execute(cmd) == -1) {
-            perror("Error");
+        child = fork();
+        if (child == 0) {
+            status = execute(cmd);
+            if (status != EXIT_SUCCESS) {
+                perror("Error");
+                _exit(status);
+            } else {
+                _exit(EXIT_SUCCESS);
+            }
+        } else {
+            if ((int) cmd->blocking) {
+                waitpid(child, &status, 0);
+            }
+            freeCmdLines(cmd);
+            printf("\n");
         }
-        freeCmdLines(cmd);
-        printf("\n");
     }
 
     return 0;
