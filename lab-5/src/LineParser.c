@@ -74,11 +74,11 @@ static int isEmpty(const char *str)
 {
   if (!str)
     return 1;
-  
+
   while (*str)
     if (!isspace(*(str++)))
       return 0;
-    
+
   return 1;
 }
 
@@ -86,18 +86,18 @@ static cmdLine *parseSingleCmdLine(const char *strLine)
 {
     char *delimiter = " ";
     char *line, *result;
-    
+
     if (isEmpty(strLine))
       return NULL;
-    
+
     cmdLine* pCmdLine = (cmdLine*)malloc( sizeof(cmdLine) ) ;
     memset(pCmdLine, 0, sizeof(cmdLine));
-    
+
     line = strClone(strLine);
-         
+
     extractRedirections(line, pCmdLine);
-    
-    result = strtok( line, delimiter);    
+
+    result = strtok( line, delimiter);
     while( result && pCmdLine->argCount < MAX_ARGUMENTS-1) {
         ((char**)pCmdLine->arguments)[pCmdLine->argCount++] = strClone(result);
         result = strtok ( NULL, delimiter);
@@ -109,56 +109,56 @@ static cmdLine *parseSingleCmdLine(const char *strLine)
 
 static cmdLine* _parseCmdLines(char *line)
 {
-	char *nextStrCmd;
-	cmdLine *pCmdLine;
-	char pipeDelimiter = '|';
-	
-	if (isEmpty(line))
-	  return NULL;
-	
-	nextStrCmd = strchr(line , pipeDelimiter);
-	if (nextStrCmd)
-	  *nextStrCmd = 0;
-	
-	pCmdLine = parseSingleCmdLine(line);
-	if (!pCmdLine)
-	  return NULL;
-	
-	if (nextStrCmd)
-	  pCmdLine->next = _parseCmdLines(nextStrCmd+1);
+    char *nextStrCmd;
+    cmdLine *pCmdLine;
+    char pipeDelimiter = '|';
 
-	return pCmdLine;
+    if (isEmpty(line))
+      return NULL;
+
+    nextStrCmd = strchr(line , pipeDelimiter);
+    if (nextStrCmd)
+      *nextStrCmd = 0;
+
+    pCmdLine = parseSingleCmdLine(line);
+    if (!pCmdLine)
+      return NULL;
+
+    if (nextStrCmd)
+      pCmdLine->next = _parseCmdLines(nextStrCmd+1);
+
+    return pCmdLine;
 }
 
 cmdLine *parseCmdLines(const char *strLine)
 {
-	char* line, *ampersand;
-	cmdLine *head, *last;
-	int idx = 0;
-	
-	if (isEmpty(strLine))
-	  return NULL;
-	
-	line = strClone(strLine);
-	if (line[strlen(line)-1] == '\n')
-	  line[strlen(line)-1] = 0;
-	
-	ampersand = strchr( line,  '&');
-	if (ampersand)
-	  *(ampersand) = 0;
-		
-	if ( (last = head = _parseCmdLines(line)) )
-	{	
-	  while (last->next)
-	    last = last->next;
-	  last->blocking = ampersand? 0:1;
-	}
-	
-	for (last = head; last; last = last->next)
-		last->idx = idx++;
-			
-	FREE(line);
-	return head;
+    char* line, *ampersand;
+    cmdLine *head, *last;
+    int idx = 0;
+
+    if (isEmpty(strLine))
+      return NULL;
+
+    line = strClone(strLine);
+    if (line[strlen(line)-1] == '\n')
+      line[strlen(line)-1] = 0;
+
+    ampersand = strchr( line,  '&');
+    if (ampersand)
+      *(ampersand) = 0;
+
+    if ( (last = head = _parseCmdLines(line)) )
+    {
+      while (last->next)
+        last = last->next;
+      last->blocking = ampersand? 0:1;
+    }
+
+    for (last = head; last; last = last->next)
+        last->idx = idx++;
+
+    FREE(line);
+    return head;
 }
 
 
@@ -174,7 +174,7 @@ void freeCmdLines(cmdLine *pCmdLine)
       FREE(pCmdLine->arguments[i]);
 
   if (pCmdLine->next)
-	  freeCmdLines(pCmdLine->next);
+      freeCmdLines(pCmdLine->next);
 
   FREE(pCmdLine);
 }
@@ -183,7 +183,7 @@ int replaceCmdArg(cmdLine *pCmdLine, int num, const char *newString)
 {
   if (num >= pCmdLine->argCount)
     return 0;
-  
+
   FREE(pCmdLine->arguments[num]);
   ((char**)pCmdLine->arguments)[num] = strClone(newString);
   return 1;
