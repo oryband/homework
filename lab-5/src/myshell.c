@@ -41,7 +41,7 @@ int main (int argc, char* argv[]) {
             if (in[1] == 0) {
                 printf("%s: No index.", ERROR);
             } else {
-                hIndex = atoi(&in[1]);
+                hIndex = (atoi(&in[1]) +h-1) %10;
                 if (hIndex >= 10 || strcmp(history[hIndex], "") == 0) {
                     printf("%s: Bad index.\n", ERROR);
                     continue;
