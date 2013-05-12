@@ -19,11 +19,14 @@ int execute(cmdLine *pCmdLine) {
 
 
 int main (int argc, char* argv[]) {
-    char wd[BUF_SIZE],
-         in[BUF_SIZE];
     cmdLine *cmd;
     pid_t child;
-    int i, status;
+    int i,j,
+        h=0,
+        status;
+    char wd[BUF_SIZE],
+         in[BUF_SIZE],
+         history[10][BUF_SIZE] = { "", "", "", "", "", "", "", "", "", ""};
 
     while (1) {
         getcwd(wd, BUF_SIZE);
@@ -34,7 +37,13 @@ int main (int argc, char* argv[]) {
             break;
         }
 
+
         cmd = parseCmdLines(in);
+
+        if (h == 10) {
+            h=0;
+        }
+        strcpy(history[h++], in);
 
         /* Specific cmds */
 
@@ -52,6 +61,20 @@ int main (int argc, char* argv[]) {
                 printf("%s ", cmd->arguments[i+1]);
             }
             printf("\n");
+        } else if (strcmp(cmd->arguments[0], "history") == 0) {
+            if (strcmp(history[h], "") == 0) {
+                j = 0;
+            } else {
+                j = h;
+            }
+
+            for (i=j; i < j+10; i++) {
+                if (strcmp(history[i%10], "") == 0) {
+                    break;
+                }
+
+                printf("%d:\t%s", i-j+1, history[i%10]);
+            }
 
         /* Other cmds */
 
