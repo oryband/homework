@@ -1,0 +1,14 @@
+ls -l
+mygecko hello world
+cd .
+!0
+!1
+history
+ls
+bla1
+bla2
+bla3
+bla4
+bla5
+!0
+history

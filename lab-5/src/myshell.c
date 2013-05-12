@@ -22,7 +22,7 @@ int main (int argc, char* argv[]) {
     cmdLine *cmd;
     pid_t child;
     int i,j,
-        h=0,
+        h=0, hIndex,
         status;
     char wd[BUF_SIZE],
          in[BUF_SIZE],
@@ -33,10 +33,23 @@ int main (int argc, char* argv[]) {
         printf("%s $ ", wd);
         fgets(in, BUF_SIZE, stdin);
 
+        /* Pre-checks. */
+
         if (strcmp(in, "quit\n") == 0) {
             break;
+        } else if (in[0] == '!') {
+            if (in[1] == 0) {
+                printf("%s: No index.", ERROR);
+            } else {
+                hIndex = atoi(&in[1]);
+                if (hIndex >= 10 || strcmp(history[hIndex], "") == 0) {
+                    printf("%s: Bad index.\n", ERROR);
+                    continue;
+                } else {
+                    strcpy(in, history[hIndex]);
+                }
+            }
         }
-
 
         cmd = parseCmdLines(in);
 
@@ -49,7 +62,7 @@ int main (int argc, char* argv[]) {
 
         if (strcmp(cmd->arguments[0], "cd") == 0) {
             if (cmd->argCount != 2) {
-                printf("Bad arguments.\n");
+                printf("%s: Bad arguments.\n", ERROR);
             } else {
                 status = chdir(cmd->arguments[1]);
                 if (status != 0) {
