@@ -13,6 +13,12 @@
 #define ERROR "Error"
 
 
+typedef struct {
+    char name[BUF_SIZE], value[BUF_SIZE];
+    struct envVars *next;
+} envVars;
+
+
 int execute(cmdLine *pCmdLine) {
     return execvp(pCmdLine->arguments[0], pCmdLine->arguments);
 }
@@ -21,6 +27,8 @@ int execute(cmdLine *pCmdLine) {
 int main (int argc, char* argv[]) {
     cmdLine *cmd;
     pid_t child;
+    envVars *envRoot = NULL,
+            *env = NULL;
     int i,j,
         h=0, hIndex,
         status;
@@ -88,7 +96,22 @@ int main (int argc, char* argv[]) {
 
                 printf("%d:\t%s", i-j+1, history[i%10]);
             }
-
+        } else if (strcmp(cmd->arguments[0], "set") == 0) {
+            if (cmd->argCount != 3) {
+                printf("%s: Bad arguments.", ERROR);
+            } else {
+                if (envRoot == NULL) {
+                    envRoot = (env *) malloc(sizeof(env));
+                    env->name  = strcpy(cmd->arguments[1]);
+                    env->value = strcpy(cmd->arguments[2]);
+                    env->next = NULL:
+                } else {
+                    env = envRoot->next;
+                    while (env->next != NULL) {
+                        env = env->next;
+                    }
+                    /* TODO: Continue here... */
+                }
         /* Other cmds */
 
         } else {
