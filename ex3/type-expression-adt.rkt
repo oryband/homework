@@ -1,6 +1,5 @@
 #lang racket
 
-
 (provide (all-defined-out))
 
 ;;;;;;;;;;;  Implementation of the Type-Expression ADT ;;;;;;;;;;;;;;;;;;

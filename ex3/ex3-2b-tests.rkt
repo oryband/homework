@@ -6,11 +6,11 @@
 (provide (all-defined-out))
 
 
-(define (polymorphic?-tests) 
+(define (polymorphic?-tests)
     (test (polymorphic? 'Number) => #f)
     (test (polymorphic? (make-proc-te (make-tuple-te (list 'Number)) 'Boolean)) => #f)
     (test (polymorphic? (make-proc-te (make-tuple-te (list 'Number)) 'S4)) => #t))
 
 
-(run-tests 
+(run-tests
      (polymorphic?-tests))
