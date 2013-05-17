@@ -67,7 +67,7 @@
 
 ;Signature: proc-parameter-tuple-tes(te)
 ;Type: [LIST union Symbol -> LIST]
-;Purpose: procedure arameter tuples
+;Purpose: procedure parameter tuples
 ;Tests: (proc-parameter-tuple-tes (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> '(* Number)
 ;Pre-condition: (procedure? te)
 (define proc-parameter-tuple-tes
@@ -101,7 +101,7 @@
 
 ;Signature: equal-atomic-te?(te1 te2)
 ;Type: [LIST union Symbol * LIST union Symbol -> Boolean]
-;Purpose: are to type exressions equal
+;Purpose: are the type exressions equal?
 ;Tests: (equal-atomic-te? 'Number 'Number) ==> #t
 (define equal-atomic-te?
   (lambda (te1 te2)
