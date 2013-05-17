@@ -17,7 +17,7 @@
 ;Number, Boolean
 
 ;Signature: make-proc-te(tuple-te, te)
-;Type: [List*(List union Symbol) -> lIST]
+;Type: [List*(List union Symbol) -> LIST]
 ;Purpose: making procedure type expression
 ;Tests: (make-proc-te (make-tuple-te (list 'Number)) 'Number) ==> (-> (* Number) Number)
 (define make-proc-te
@@ -25,7 +25,7 @@
     (list '-> tuple-te te)))
 
 ;Signature: make-tuple-te(te-list)
-;Type: [LIST -> lIST]
+;Type: [LIST -> LIST]
 ;Purpose: get tuple
 ;Tests: (make-tuple-te (list 'Number (make-proc-te (make-tuple-te (list 'Number)) 'T1)))
 ;                                                           ==> (* Number (-> (* Number) T1))
