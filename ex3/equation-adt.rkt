@@ -18,8 +18,7 @@
 ;                                   '((-> (* Number Number) Number) (-> (* Number Number) Boolean))
 (define make-equation-from-tes
   (lambda (type-expr-l type-expr-r)
-    (list type-expr-l type-expr-r))
-   )
+    (list type-expr-l type-expr-r)))
 
 
 ;;;Getters:
@@ -39,8 +38,7 @@
 ;Pre-condition: eq is a pair
 (define get-left
   (lambda (eq)
-    (if (non-empty-equation? eq) (car eq) 'Empty))
-   )
+    (if (non-empty-equation? eq) (car eq) 'Empty)))
 
 ;Signature: get-right(eq)
 ;Type: Client view: [Equation -> type-expression]
@@ -50,8 +48,7 @@
 ;Pre-condition: eq is a pair
 (define get-right
   (lambda (eq)
-    (if (non-empty-equation? eq) (cadr eq) 'Empty))
-   )
+    (if (non-empty-equation? eq) (cadr eq) 'Empty)))
 
 
 ;Signature: get-var-of-expr(expr-tvars-list expr)
@@ -61,11 +58,10 @@
 ;Tests: (get-var-of-expr '(((lambda (x) (+ x 1)) T_0) ((+ x 1) T_1) (1 T_4) (x T_3) (+ T_2)) '+)  ==> T_2
 (define get-var-of-expr
   (lambda (expr-tvars-list expr)
-    (let ((expr-pair (assoc expr expr-tvars-list)))
+    (let ([expr-pair (assoc expr expr-tvars-list)])
       (if (and expr-pair (not (null? expr-pair)))
-          (cadr expr-pair)
-          void))
-    ))
+        (cadr expr-pair)
+        void))))
 
 
 ;;; Identifiers:
@@ -109,8 +105,7 @@
   (lambda (expr expr-tvars-list)
     (filter (lambda(x) (not (null? x)))
             (map (lambda (expr) (make-equation expr expr-tvars-list))
-                 (map car expr-tvars-list)))
- ))
+                 (map car expr-tvars-list)))))
 
 
 ;Signature: make-equation(Scheme-expression,expression-type-vars-list)
@@ -211,5 +206,3 @@
     (list (list '+ binary-numeric-primitive-type)
           (list '- binary-numeric-primitive-type)
           (list '> binary-logical-primitive-type))))
-
-
