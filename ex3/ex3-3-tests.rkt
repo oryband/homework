@@ -1,9 +1,7 @@
 #lang racket
 
-
 (require "asp.rkt" "ex3-3.rkt" "utils.rkt")
 
-(provide (all-defined-out))
 
 
 (define (equation-tests) 
