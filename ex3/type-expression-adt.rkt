@@ -139,7 +139,7 @@
 ;Tests: (tuple? (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> #f
 (define tuple?
   (lambda (te)
-    (and (list? te) (not (null? te)) (eq? (car te) '*)) ))
+    (and (list? te) (not (null? te)) (eq? (car te) '*))))
 
 ;Signature: procedure?(te)
 ;Type: [LIST union Symbol -> Boolean
@@ -147,7 +147,7 @@
 ;Tests: (composite? (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> #t
 (define procedure?
   (lambda (te)
-    (and (list? te) (not (null? te)) (eq? (car te) '->)) ))
+    (and (list? te) (not (null? te)) (eq? (car te) '->))))
 
 ;Signature: variable?(te)
 ;Type: [LIST union Symbol -> Boolean
@@ -155,25 +155,21 @@
 ;Tests: (variable? (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> #f
 (define variable?
   (lambda (te)
-    (and (not (atomic? te))(symbol? te))
-    ))
+    (and (not (atomic? te))(symbol? te))))
 
 
 ;Signature: polymorphic?(te)
 ;Type:      [List -> Boolean]
 ;Purpose:   Identify polymorphic type expressions
 ;Examples:  (polymorphic? 'Number) -> #f
-;           (polymorphic?(make-proc-te (make-tuple-te (list 'Number 'Number)) 'Number)) #f
-;           (polymorphic?(make-proc-te (make-tuple-te (list 'Number 'T)) 'Number)) -> #t
+;           (polymorphic? (make-proc-te (make-tuple-te (list 'Number 'Number)) 'Number)) -> #f
+;           (polymorphic? (make-proc-te (make-tuple-te (list 'Number 'T)) 'Number)) -> #t
 (define (polymorphic? te)
-   (cond ((or (atomic? te) (eq? te '*) (eq? te '->)) #f)
-         ((variable? te) #t)
-         ((composite? te)
-            (let ((mapped-polymorphic)
-                  (map polymorphic? te)))
+   (cond [(or (atomic? te) (eq? te '*) (eq? te '->)) #f]
+         [(variable? te) #t]
+         [(composite? te)
+          (let
+            ([mapped-polymorphic (map polymorphic? te)])
+            (if (member #t mapped-polymorphic) #t #f))]
 
-            (if (member #t mapped-polymorphic)
-              (and (map polymorphic? (tuple-components te) ; TODO: WTF.
-              #f)))
-
-         (else (error 'polymorphic "Bad syntax in Type expression value: ~val" te )))
+         [else (error 'polymorphic "Bad syntax in Type expression value: ~val" te)]))
