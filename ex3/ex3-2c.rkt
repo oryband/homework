@@ -17,9 +17,15 @@
 ;Number, Boolean
 
 
+;Signature: make-proc-te(tuple-te, te)
+;Type: [List*(List union Symbol) -> LIST]
+;Purpose: making procedure type expression, lazy procedural style.
+;Tests: ((make-proc-te (make-tuple-te (list 'Number)) 'Number) list) ==> (-> (* Number) Number)
 (define make-proc-te
   (lambda (tuple-te te)
-    ....))
+    (attach-tag (lambda (make) (make tuple-te te))
+                `->)))
+
 
 ;Signature: make-tuple-te(te-list)
 ;Type: [LIST -> lIST]
@@ -32,10 +38,16 @@
 
 ; Getters:
 
-
+;Signature: get-constructor(te)
+;Type: [LIST union Symbol -> Symbol]
+;Purpose: get type costructor, lazy procedural style.
+;Tests: (get-constructor (make-tuple-te (list 'Number 'Number))) ==> *
 (define get-constructor
   (lambda (te)
-    ...))
+    (cond [(procedure? te) `->]
+          [(composite? te) (car te)]
+          [else te])))
+
 
 ;Signature: tuple-components(te)
 ;Type: [LIST union Symbol -> LIST]
@@ -58,19 +70,41 @@
         (list))))
 
 
+;Signature: proc-parameter-tuple-tes(te)
+;Type: [LIST union Symbol -> LIST]
+;Purpose: procedure parameter tuples, lazy proc. style.
+;Tests: (proc-parameter-tuple-tes (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> '(* Number)
+;Pre-condition: (procedure? te)
 (define proc-parameter-tuple-tes
   (lambda (te)
-    ...))
+    (if (procedure? te)
+      (get-content te)
+      #f)))
 
 
+;Signature: proc-parameter-tes(te)
+;Type: [LIST union Symbol -> LIST]
+;Purpose: get procedure parameters, lazy proc. style.
+;Tests: (proc-parameter-tes (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> '(Number)
+;Pre-condition: (procedure? te)
 (define proc-parameter-tes
   (lambda (te)
-    ...))
+    (if (procedure? te)
+      ((get-content te) (lambda (tuple-te te) (cdr tuple-te)))
+      #f)))
 
 
+;Signature: proc-return-te(te)
+;Type: [LIST union Symbol -> LIST union Symbol]
+;Purpose: get procedure return type expresison, lazy proc. style.
+;Tests: (proc-return-te (make-proc-te (make-tuple-te (list 'Number)) 'T1)) ==> 'T1
+;Pre-condition: (procedure? te)
 (define proc-return-te
   (lambda (te)
-    ...))
+    (if (procedure? te)
+      ((get-content te) (lambda(tuple-te te) te))
+      #f)))
+
 
 
 ;Signature: equal-atomic-te?(te1 te2)
@@ -118,7 +152,7 @@
 
 (define procedure?
   (lambda (te)
-    ... ))
+    (tagged-by? te `->)))
 
 ;Signature: variable?(te)
 ;Type: [LIST union Symbol -> Boolean
@@ -128,6 +162,3 @@
   (lambda (te)
     (and (not (atomic? te))(symbol? te))
    ))
-
-
-
