@@ -27,9 +27,10 @@
 (define make-sub
   (lambda (variables tes)
     (if (fold (lambda (b1 b2) (and b1 b2)) #t (map non-circular? variables tes))
-                                          ;if all variable substituting expressions are non-circular
-        (list variables tes)
-        (error 'make-sub "circular substitution: ~sub" (list variables tes)))))
+      ;if all variable substituting expressions are non-circular
+      (list variables tes)
+      (error 'make-sub "circular substitution: ~sub" (list variables tes)))))
+
 
 ;Signature: non-circular?(var, te)
 ;Type: [Symbol*(LIST union Symbol) -> Boolean]
@@ -44,8 +45,8 @@
            (fold (lambda (b1 b2) (and b1 b2))
                  #t
                  (flatten
-                  (map (lambda (te-element) (non-circular? var te-element))
-                       te))))
+                   (map (lambda (te-element) (non-circular? var te-element))
+                        te))))
           (else (error 'non-circular? "Bad syntax in Type expression type: ~s" te)))))
 
 ; Getters:
@@ -56,8 +57,7 @@
 ;Tests: (get-variables (make-sub '(x y z)
 ;                        (list 'Number 'Boolean (make-proc-te (make-tuple-te (list 'Number)) 'Number))) ) ==>
 ;                                                                                                     (x y z)
-(define get-variables
-  (lambda (sub) (car sub)))
+(define get-variables (lambda (sub) (car sub)))
 
 ;Signature: get-tes(sub)
 ;Type: [LIST -> LIST(LIST union Symbol)]
@@ -65,12 +65,11 @@
 ;Tests: (get-tes
 ;           (make-sub '(x y z) (list 'Number 'Boolean (make-proc-te (make-tuple-te (list 'Number)) 'Number))))
 ;                                             ==>  (Number Boolean (-> (* Number) Number))
-(define get-tes
-  (lambda (sub) (cadr sub)))
+(define get-tes (lambda (sub) (cadr sub)))
 
 ;Signature: get-expression-of-variable(sub,var)
 ;Type: [LIST*Symbol -> LIST union Symbol]
-;Purpose: getting expression of cirtain variable
+;Purpose: getting expression of certain variable
 ;Tests: (get-expression-of-variable
 ;           (make-sub '(x y z)
 ;                     (list 'Number 'Boolean
@@ -84,7 +83,7 @@
       (cond ((null? variables) 'Empty)
             ((eq? var (car variables)) (car tes))
             (else (get-expression-of-variable
-                   (make-sub (cdr variables) (cdr tes)) var))))))
+                    (make-sub (cdr variables) (cdr tes)) var))))))
 
 
 ;;;;;;;;;;;;;;;
@@ -135,8 +134,13 @@
 ;                                               (* (* T4 Number) (-> (* Number Number) Number))
 (define substitution-application
   (lambda (sub te)
-    ...
-    ))
+    (cond
+      [(or (not (type-expr? te)) (not (sub? sub))) #f]
+      [(empty-sub? sub) te]
+      [(atomic? te) te]
+      [(variable? te) (if (eq? 'Empty (get-expression-of-variable sub te)) te (get-expression-of-variable sub te))]
+      [(composite? te) (cons (car te) (map (lambda(te) (substitution-application sub te)) (cdr te)))]
+      [else te])))
 
 
 ;Signature: substitution-combination(sub1,sub2)
@@ -160,10 +164,27 @@
 ;(T31 (* T21 (-> (* Number T11) T11)) (* T21 (-> (* Number T11) T11)) (* T31 Number) Boolean));
 (define substitution-combination
   (lambda (sub1 sub2)
-    ...
-    ))
-
-
+    (let ([sub1-vars (get-variables sub1)]
+          [sub1-tes  (get-tes sub1)]
+          [sub2-vars (get-variables sub2)]
+          [sub2-tes  (get-tes sub2)])
+      (cond
+        [(empty-sub? sub2) sub1]
+        [(member (car sub2-vars) (get-variables sub1))
+         (substitution-combination sub1
+                                   (make-sub (cdr sub2-vars) (cdr sub2-tes)))]
+        [else
+          (substitution-combination
+            (make-sub (append
+                        (list (car sub2-vars))
+                        sub1-vars
+                        )
+                      (append
+                        (list (car sub2-tes))
+                        (map (lambda(te) (substitution-application sub2 te)) sub1-tes)
+                        )
+                      )
+            (make-sub (cdr sub2-vars) (cdr sub2-tes)))]))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -175,9 +196,7 @@
 ;Purpose: Flatten a heterogeneous list
 ;Tests: (flatten '((1) 2) => '(1 2)
 (define flatten
-    (lambda (tree)
-      (if (not (list? tree))
-          (list tree)
-          (fold append (list) (map flatten tree)))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (lambda (tree)
+    (if (not (list? tree))
+      (list tree)
+      (fold append (list) (map flatten tree)))))
