@@ -110,5 +110,20 @@
 ;Pre-condition: (and (composite? (get-left eq)) (composite? (get-right eq)) (unifyable-structure eq)) = #t
 (define split-equation
   (lambda(eq)
-    ...
-    ))
+    (let ([left (get-left eq)] [right (get-right eq)])
+      (cond
+        [(empty-equation? eq) (list)]
+        [(eq? left 'Number) (list)]
+        [(and (tuple? left) (tuple? right)
+               (if (and (null? (tuple-components left)) (null? (tuple-components right)))
+                 (list)
+                 (map (lambda(te1 te2) (make-equation-from-tes te1 te2))
+                      (tuple-components left) (tuple-components right))))]
+        [(and (procedure? left) (procedure? right))
+         (append (list (make-equation-from-tes (proc-return-te left) (proc-return-te right)))
+                 (split-equation
+                   (make-equation-from-tes (proc-parameter-tuple-tes left)
+                                           (proc-parameter-tuple-tes right))))]
+        [(and (type-expr? left) (type-expr? right))
+         (make-equation-from-tes left right)]
+        [else (error 'split-equation "Unknown equation format: ~eq" eq)]))))
