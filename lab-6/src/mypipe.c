@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <string.h>
 #include <unistd.h>
 
@@ -9,7 +10,8 @@
 
 
 int main (int argc, char* argv[]) {
-    int fildes[2];
+    int fildes[2],
+        bytesRead;
     char inMsg[] = "hello",
          outMsg[BUF_SIZE];
     pid_t child;
@@ -27,11 +29,11 @@ int main (int argc, char* argv[]) {
         }
     } else {
         waitpid(child, 0, 0);
-        if (read(fildes[0], outMsg, BUF_SIZE) == -1) {
+        if ((bytesRead = read(fildes[0], outMsg, BUF_SIZE)) == -1) {
             printf("Error: read.\n");
             return -1;
         }
-        if (write(STDOUT, outMsg, strlen(outMsg) -1) == -1) {
+        if (write(STDOUT, outMsg, bytesRead) == -1) {
             printf("Error: write.\n");
             return -1;
         }
