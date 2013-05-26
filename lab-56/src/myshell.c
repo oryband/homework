@@ -1,15 +1,20 @@
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "LineParser.h"
 
+#define STDIN  0
+#define STDOUT 1
 
 #define BUF_SIZE 2048
+
 #define ERROR "Error"
 
 
@@ -20,6 +25,26 @@ typedef struct {
 
 
 int execute(cmdLine *pCmdLine) {
+    int in, out;
+
+    if (pCmdLine->inputRedirect != NULL) {
+        close(STDIN);
+        in = open(pCmdLine->inputRedirect, O_RDONLY, S_IRUSR | S_IRGRP | S_IROTH);
+        if (in == -1) {
+            printf("Error: open(), inputRedirect.\n");
+            return EXIT_FAILURE;
+        }
+    }
+
+    if (pCmdLine->outputRedirect != NULL) {
+        close(STDOUT);
+        out = open(pCmdLine->outputRedirect, O_WRONLY, S_IWUSR | S_IWGRP | S_IWOTH);
+        if (out == -1) {
+            printf("Error: open(), outputRedirect.\n");
+            return EXIT_FAILURE;
+        }
+    }
+
     return execvp(pCmdLine->arguments[0], pCmdLine->arguments);
 }
 
@@ -27,8 +52,11 @@ int execute(cmdLine *pCmdLine) {
 int main (int argc, char* argv[]) {
     cmdLine *cmd;
     pid_t child;
-    envVars *envRoot = NULL,
-            *env = NULL;
+    /*
+     * TODO: Lab 5, task 2.
+     * envVars *envRoot = NULL,
+     *         *env = NULL;
+     */
     int i,j,
         h=0, hIndex,
         status;
@@ -96,22 +124,27 @@ int main (int argc, char* argv[]) {
 
                 printf("%d:\t%s", i-j+1, history[i%10]);
             }
-        } else if (strcmp(cmd->arguments[0], "set") == 0) {
-            if (cmd->argCount != 3) {
-                printf("%s: Bad arguments.", ERROR);
-            } else {
-                if (envRoot == NULL) {
-                    envRoot = (env *) malloc(sizeof(env));
-                    env->name  = strcpy(cmd->arguments[1]);
-                    env->value = strcpy(cmd->arguments[2]);
-                    env->next = NULL:
-                } else {
-                    env = envRoot->next;
-                    while (env->next != NULL) {
-                        env = env->next;
-                    }
-                    /* TODO: Continue here... */
-                }
+
+        /*
+         * TODO Lab 5, task 2.
+         * } else if (strcmp(cmd->arguments[0], "set") == 0) {
+         *     if (cmd->argCount != 3) {
+         *         printf("%s: Bad arguments.", ERROR);
+         *     } else {
+         *         if (envRoot == NULL) {
+         *             envRoot = (env *) malloc(sizeof(env));
+         *             env->name  = strcpy(cmd->arguments[1]);
+         *             env->value = strcpy(cmd->arguments[2]);
+         *             env->next = NULL:
+         *         } else {
+         *             env = envRoot->next;
+         *             while (env->next != NULL) {
+         *                 env = env->next;
+         *             }
+         *             TODO: Continue here...
+         *         }
+         */
+
         /* Other cmds */
 
         } else {
