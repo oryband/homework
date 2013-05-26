@@ -73,11 +73,8 @@ int main (int argc, char* argv[]) {
             exit(EXIT_FAILURE);
         }
 
-        printf("Waiting...\n");
         waitpid(child1, 0, 0);
-        printf("Child1 finished.");
         waitpid(child2, 0, 0);
-        printf("Child2 finished.\n");
     }
 
     return EXIT_SUCCESS;
