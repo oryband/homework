@@ -23,29 +23,121 @@ typedef struct {
     struct envVars *next;
 } envVars;
 
+int execute2(cmdLine *pCmdLine) {
+    int in, out,
+        fildes[2], fildesCopy[2];
+    pid_t child1, child2;
+
+    if (pipe(fildes) != 0) {
+        printf("Error: pipe().\n");
+        exit(EXIT_FAILURE);
+    }
+
+    child1 = fork();
+    if (child1 == 0) {
+        if (pCmdLine->inputRedirect != NULL) {
+            close(STDIN);
+            /* in = open(pCmdLine->inputRedirect, O_RDONLY, S_IRUSR | S_IRGRP | S_IROTH); */
+            in = fopen(pCmdLine->inputRedirect, "r");
+            if (in == -1) {
+                printf("Error: open(), inputRedirect.\n");
+                return EXIT_FAILURE;
+            }
+        }
+
+        if (close(STDOUT) == -1) {
+            printf("Error: close(STDOUT).\n");
+            exit(EXIT_FAILURE);
+        }
+        if ((fildesCopy[1] = dup(fildes[1])) == -1) {
+            printf("Error: dup(fildes[1]).\n");
+            exit(EXIT_FAILURE);
+        }
+        if (close(fildes[1]) == -1) {
+            printf("Error: close(fildes[1]).\n");
+            exit(EXIT_FAILURE);
+        }
+        if (execvp(pCmdLine->arguments[0], pCmdLine->arguments) == -1) {
+            printf("Error: child1 execvp().\n");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        if (close(fildes[1]) == -1) {
+            printf("Error: parent close(fildes[1]).\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    child2 = fork();
+    if (child2 == 0) {
+        if (pCmdLine->next->outputRedirect != NULL) {
+            close(STDOUT);
+            /* out = open(pCmdLine->next->outputRedirect, O_WRONLY, S_IWUSR | S_IWGRP | S_IWOTH); */
+            out = fopen(pCmdLine->next->outputRedirect, "w");
+            if (out == -1) {
+                printf("Error: open(), outputRedirect.\n");
+                return EXIT_FAILURE;
+            }
+        }
+
+        if (close(STDIN) == -1) {
+            printf("Error: close(STDIN).\n");
+            exit(EXIT_FAILURE);
+        }
+        if ((fildesCopy[0] = dup(fildes[0])) == -1) {
+            printf("Error: dup(fildes[0]).\n");
+            exit(EXIT_FAILURE);
+        }
+        if (close(fildes[0]) == -1) {
+            printf("Error: close(fildes[0]).\n");
+            exit(EXIT_FAILURE);
+        }
+        if (execvp(pCmdLine->next->arguments[0], pCmdLine->next->arguments) == -1) {
+            printf("Error: child2 execvp().\n");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        if (close(fildes[0]) == -1) {
+            printf("Error: parent close(fildes[0]).\n");
+            exit(EXIT_FAILURE);
+        }
+
+        waitpid(child1, 0, 0);
+        waitpid(child2, 0, 0);
+
+        fclose(in);
+        fclose(out);
+    }
+
+    return EXIT_SUCCESS;
+}
 
 int execute(cmdLine *pCmdLine) {
     int in, out;
 
-    if (pCmdLine->inputRedirect != NULL) {
-        close(STDIN);
-        in = open(pCmdLine->inputRedirect, O_RDONLY, S_IRUSR | S_IRGRP | S_IROTH);
-        if (in == -1) {
-            printf("Error: open(), inputRedirect.\n");
-            return EXIT_FAILURE;
+    if (pCmdLine->next != NULL) {
+        return execute2(pCmdLine);
+    } else {
+        if (pCmdLine->inputRedirect != NULL) {
+            close(STDIN);
+            in = open(pCmdLine->inputRedirect, O_RDONLY, S_IRUSR | S_IRGRP | S_IROTH);
+            if (in == -1) {
+                printf("Error: open(), inputRedirect.\n");
+                return EXIT_FAILURE;
+            }
         }
-    }
 
-    if (pCmdLine->outputRedirect != NULL) {
-        close(STDOUT);
-        out = open(pCmdLine->outputRedirect, O_WRONLY, S_IWUSR | S_IWGRP | S_IWOTH);
-        if (out == -1) {
-            printf("Error: open(), outputRedirect.\n");
-            return EXIT_FAILURE;
+        if (pCmdLine->outputRedirect != NULL) {
+            close(STDOUT);
+            out = open(pCmdLine->outputRedirect, O_WRONLY, S_IWUSR | S_IWGRP | S_IWOTH);
+            if (out == -1) {
+                printf("Error: open(), outputRedirect.\n");
+                return EXIT_FAILURE;
+            }
         }
-    }
 
-    return execvp(pCmdLine->arguments[0], pCmdLine->arguments);
+        return execvp(pCmdLine->arguments[0], pCmdLine->arguments);
+    }
 }
 
 
