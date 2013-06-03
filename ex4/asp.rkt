@@ -458,7 +458,9 @@
 
 ; My answers.
 
-(define (cond->if$ exp)
+; Signature: cond->if$(cond-exp, c)
+; Purpose: Derives cond-exp into an equivalent if expression using CPS
+(define (cond->if$ exp c)
   (letrec ([sequence->exp
              (lambda (seq)
                (cond [(sequence-empty? seq) seq]
@@ -466,17 +468,20 @@
                      [else (make-begin seq)]))]
 
            [expand-clauses
-             (lambda (clauses)
+             (lambda (clauses c)
                (if (cond-empty-clauses? clauses)
                  '#f  ; no else clause
                  (let ([first (cond-first-clause clauses)]
                        [rest  (cond-rest-clauses clauses)])
                    (if (cond-else-clause? first)
-                     (if (cond-empty-clauses? rest)
-                       (sequence->exp (cond-actions first))
-                       (error 'cond-if "ELSE clause isn't last: ~s"
-                              clauses))
-                     (make-if (cond-predicate first)
-                              (sequence->exp (cond-actions first))
-                              (expand-clauses rest))))))])
-    (expand-clauses (cond-clauses exp))))
+                     (if (cond-empty-clauses? rest)  ; if else clause:
+                       (c (sequence->exp (cond-actions first)))
+                       (error 'cond-if "ELSE clause isn't last: ~s" (c clauses)))
+                     (expand-clauses
+                       rest
+                       (lambda (rest-1)
+                         (c (make-if (cond-predicate first)
+                                     (sequence->exp (cond-actions first))
+                                     rest-1))))))))])
+
+    (expand-clauses (cond-clauses exp) c)))
