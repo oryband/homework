@@ -455,3 +455,28 @@
         (make-let (make-bindings vars) (make-body vars vals))))
     ))
 
+
+; My answers.
+
+(define (cond->if$ exp)
+  (letrec ([sequence->exp
+             (lambda (seq)
+               (cond [(sequence-empty? seq) seq]
+                     [(sequence-last-exp? seq) (sequence-first-exp seq)]
+                     [else (make-begin seq)]))]
+
+           [expand-clauses
+             (lambda (clauses)
+               (if (cond-empty-clauses? clauses)
+                 '#f  ; no else clause
+                 (let ([first (cond-first-clause clauses)]
+                       [rest  (cond-rest-clauses clauses)])
+                   (if (cond-else-clause? first)
+                     (if (cond-empty-clauses? rest)
+                       (sequence->exp (cond-actions first))
+                       (error 'cond-if "ELSE clause isn't last: ~s"
+                              clauses))
+                     (make-if (cond-predicate first)
+                              (sequence->exp (cond-actions first))
+                              (expand-clauses rest))))))])
+    (expand-clauses (cond-clauses exp))))
