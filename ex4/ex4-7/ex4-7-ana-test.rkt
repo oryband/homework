@@ -1,5 +1,5 @@
 #lang racket
-(require "analyzer-core.rkt")
+(require "analyzer-core.rkt" "asp.rkt")
 
 
 (run-tests

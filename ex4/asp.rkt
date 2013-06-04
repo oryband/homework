@@ -485,3 +485,11 @@
                                      rest-1))))))))])
 
     (expand-clauses (cond-clauses exp) c)))
+
+
+; variadic-lambda
+(define (variadic-lambda? exp) (tagged-by? exp 'variadic-lambda))
+(define (variadic-lambda-parameter exp) (car (get-content exp)))
+(define (variadic-lambda-body exp) (cdr (get-content exp)))
+(define (make-variadic-lambda parameter body)
+    (attach-tag (cons parameter body) 'variadic-lambda))

@@ -216,3 +216,32 @@
 (define the-global-environment (make-the-global-environment))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+; variadic-procedure
+(define (make-variadic-procedure parameter body env)
+  (attach-tag (list (list parameter) body env) 'variadic-procedure))
+
+; Type: [T -> Boolean]
+(define (compound-variadic-procedure? p)
+    (tagged-by? p 'variadic-procedure))
+
+; Type: [LIST -> LIST(Symbol)]
+(define (variadic-procedure-parameters p)
+  (car (get-content p)))
+
+; Type: [LIST -> LIST]
+(define (variadic-procedure-body p)
+  (cadr (get-content p)))
+
+; Type: [LIST -> Env]
+(define (variadic-procedure-environment p)
+  (caddr (get-content p)))
+
+;Purpose:  An identification predicate for procedures -- closures and primitive:
+; Type: [T -> Boolean]
+(define variadic-procedure?
+  (lambda (p)
+    (or (primitive-procedure? p)
+        (compound-procedure? p)
+        (compound-variadic-procedure? p))))

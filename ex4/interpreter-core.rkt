@@ -54,7 +54,7 @@
 
 (define special-form?
   (lambda (exp)
-    (or (quoted? exp) (lambda? exp) (definition? exp)
+    (or (quoted? exp) (lambda? exp) (variadic-lambda? exp) (definition? exp)
         (if? exp) (begin? exp))))
 
 (define eval-special-form
@@ -71,9 +71,13 @@
 
 (define eval-lambda
   (lambda (exp env)
-    (make-procedure (lambda-parameters exp)
-                    (lambda-body exp)
-                    env)))
+    (if (not (list? (lambda-parameters exp)))
+      (make-variadic-procedure (variadic-lambda-parameter exp)
+                               (variadic-lambda-body exp)
+                               env)
+      (make-procedure (lambda-parameters exp)
+                      (lambda-body exp)
+                      env))))
 
 (define eval-definition
   (lambda (exp)
@@ -114,17 +118,23 @@
 ; Type: [Evaluator-procedure*LIST -> Scheme-type]
 (define apply-procedure
   (lambda (procedure arguments)
-    (cond ((primitive-procedure? procedure)
-           (apply-primitive-procedure procedure arguments))
-          ((compound-procedure? procedure)
-           (let* ((parameters (procedure-parameters procedure))
-                  (body (procedure-body procedure))
-                  (env (procedure-environment procedure))
-                  (new-env (extend-env (make-frame parameters arguments) env)))
+    (cond [(primitive-procedure? procedure)
+           (apply-primitive-procedure procedure arguments)]
+          [(compound-procedure? procedure)
+           (let* ([parameters (procedure-parameters procedure)]
+                  [body (procedure-body procedure)]
+                  [env (procedure-environment procedure)]
+                  [new-env (extend-env (make-frame parameters arguments) env)])
              (if (make-frame-precondition parameters arguments)
-                 (eval-sequence body new-env)
-                 (error 'make-frame-precondition
-                        "violation: # of variables does not match # of values while attempting to create a frame"))))
+               (eval-sequence body new-env)
+               (error 'make-frame-precondition
+                      "violation: # of variables does not match # of values while attempting to create a frame")))]
+          [(compound-variadic-procedure? procedure)
+           (let* ([parameters (variadic-procedure-parameters procedure)]
+                  [body (variadic-procedure-body procedure)]
+                  [env (variadic-procedure-environment procedure)]
+                  [new-env (extend-env (make-frame parameters (list arguments)) env)])
+               (eval-sequence body new-env))]
           (else (error 'apply "unknown procedure type: ~s" procedure)))))
 
 
