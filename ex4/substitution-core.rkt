@@ -40,7 +40,7 @@
           ((application? exp)
            (let ((renamed-exp (rename exp)))
              (apply-procedure (applicative-eval (operator renamed-exp))
-                              (list-of-values (operands renamed-exp)))))
+                              (operands renamed-exp))))
           (else (error 'eval "unknown expression type: ~s" exp)))))
 
 ; Type: [LIST -> LIST]
