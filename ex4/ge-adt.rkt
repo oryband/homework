@@ -41,31 +41,28 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Closure:
-; Type: [LIST(Symbol)*LIST -> LIST]
+; Type: [LIST(Symbol)*LIST -> Tagged-data([Symbol->LIST])
 (define make-procedure
   (lambda (parameters body)
-    (attach-tag (cons parameters body) 'procedure)))
+    (attach-tag (lambda (tag) (cond [(eq? tag 'parameters) parameters]
+                                    [else body]))
+                'procedure)))
 
-; Type: [T -> Boolean]
-(define compound-procedure?
-  (lambda (p)
-    (tagged-by? p 'procedure)))
+; Type: [Tagged-data([Symbol->T]) -> Boolean]
+(define compound-procedure?  (lambda (p) (tagged-by? p 'procedure)))
 
-; Type: [LIST -> LIST(Symbol)]
-(define procedure-parameters
-  (lambda (p)
-    (car (get-content p))))
+; Type: [Tagged-data([Symbol->T]) -> [LIST->Symbol]
+(define procedure-parameters (lambda (p) ((get-content p) 'parameters)))
 
-; Type: [LIST -> LIST]
-(define procedure-body
-  (lambda (p)
-    (cdr (get-content p))))
+; Type: [Tagged-data([Symbol->T]) -> Tagged-data[LIST->Symbol]]
+(define procedure-body (lambda (p) ((get-content p) 'body)))
 
 ; An identification predicate for procedures -- closures and primitive:
 ; Type: [T -> Boolean]
 (define evaluator-procedure?
-  (lambda (p)
-    (or (primitive-procedure? p) (compound-procedure? p))))
+  (lambda (p) (or (primitive-procedure? p) (compound-procedure? p))))
+
+(define (parameter-less? p) (null? (procedure-parameters p)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
