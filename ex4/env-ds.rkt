@@ -75,14 +75,11 @@
 ; a procedure from a Symbol to its binding (a variable-value pair) or to the 'empty' value, 
 ; in case that the frame is not defined on the given variable.
 ; Type: [LIST(Symbol)*LIST -> [Symbol -> (PAIR(Symbol,T) union {empty})]]
-(define make-frame 
-  (lambda (variables values)
-     (lambda (var)
-            (cond ((empty? variables) empty)
-                  ((eq? var (car variables)) (make-binding (car variables) (car values)))
-                  (else ((make-frame (cdr variables) (cdr values))
-                          var))))
-    ))
+(define (make-frame variables values)
+    (if (or (empty? variables) (empty? values))
+      (list)
+      (append (list (make-binding (car variables) (car values)))
+              (make-frame (cdr variables) (cdr values)))))
 
 
 (define make-frame-precondition 
@@ -98,15 +95,17 @@
 ; Produces a new frame that extends the given frame with the new binding.
 ; Type: [PAIR(Symbol,T)*[Symbol -> PAIR(Symbol,T) union {empty}] -> 
 ;                                         [Symbol -> PAIR(Symbol,T) union {empty}]]
-(define add-binding-to-frame 
-  (lambda (binding frame)
-    (let ((bvar (binding-variable binding))
-          (bval (binding-value binding)))
-      (lambda (var)
-        (if (eq? var bvar) 
-            binding
-            (frame var))))
-    ))
+(define (add-binding-to-frame binding frame)
+  (make-binding binding frame))
+
+(define (get-all-vars unboxed-frame) (map car unboxed-frame))
+(define (get-all-vals unboxed-frame) (map cdr unboxed-frame))
+
+(define (select-var frame var)
+  (cond [(empty-frame? frame) frame]
+        [(eq? var (caar frame)) (car frame)]
+        [else (select-var (cdr frame) var)]))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Bindings
@@ -154,19 +153,18 @@
 ; Type: [Symbol*LIST(Box([Symbol -> PAIR(Symbol,T) union {empty}])) -> T]
 (define lookup-variable-value 
   (lambda (var env)
-    (letrec ((defined-in-env        ; ADT type is [Var*Env -> Binding union {empty}]
+    (letrec ([defined-in-env        ; ADT type is [Var*Env -> Binding union {empty}]
                (lambda (var env)
                  (if (empty-env? env)
-                     env
-                     (let ((b ((first-frame env) var)))
-                       (if (empty? b)
-                           (defined-in-env var (enclosing-env env))
-                           b))))))
+                   env
+                   (let ([b (select-var (first-frame env) var)])
+                     (if (empty? b)
+                       (defined-in-env var (enclosing-env env))
+                       b))))])
       (let ((b (defined-in-env var env)))
         (if (empty? b)
-            (error 'lookup "variable not found: ~s\n  env = ~s" var env)
-            (binding-value b))))
-    ))
+          (error 'lookup "variable not found: ~s\n  env = ~s" var env)
+          (binding-value b))))))
 
 ; Environment identification predicate
 ; Type: [T -> Boolean]
