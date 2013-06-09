@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
     printf("Program Entries: %u\n", (Elf32_Half) header->e_phnum);
     printf("Program Entry Size: %u\n", (Elf32_Half) header->e_phentsize);
 
+    /* Sections */
     for(i=0; i < header->e_shnum; i++) {
         printf("[%d]\t%s\t0x%x\t0x%x\t%u\n",
                 i,
