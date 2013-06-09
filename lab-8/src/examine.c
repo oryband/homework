@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 
     printf("\nSymbols:\n");
     for (i=0; i < header->e_shnum; i++){
-        if (sections[i].sh_type == 2 || sections[i].sh_type == 11) {
+        if (sections[i].sh_type == SHT_SYMTAB || sections[i].sh_type == SHT_DYNSYM) {
             symbol = (Elf32_Sym*) ((char*) map_start + sections[i].sh_offset);
             sections_count = sections[i].sh_size / sizeof(Elf32_Sym);
 
