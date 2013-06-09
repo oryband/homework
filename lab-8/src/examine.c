@@ -9,7 +9,9 @@
 
 int main(int argc, char *argv[]) {
     int fd;
-    unsigned int i, j;
+    unsigned int i, j,
+                 sections_count;
+    char *sname;
     struct stat fd_stat;
     void *map_start;
     Elf32_Ehdr *header;
@@ -54,7 +56,7 @@ int main(int argc, char *argv[]) {
     /* Sections */
     printf("\nSections:\n");
     for (i=0; i < header->e_shnum; i++) {
-        printf("[%d]\t%s\t0x%x\t0x%x\t%u\n",
+        printf("[%d]\t%-30s\t0x%08x\t0x%08x\t%u\n",
                 i,
                 (char*) map_start + sections[header->e_shstrndx].sh_offset + sections[i].sh_name,
                 sections[i].sh_type,
@@ -66,12 +68,20 @@ int main(int argc, char *argv[]) {
     for (i=0; i < header->e_shnum; i++){
         if (sections[i].sh_type == 2 || sections[i].sh_type == 11) {
             symbol = (Elf32_Sym*) ((char*) map_start + sections[i].sh_offset);
-            for(j=0; j < sections[i].sh_size / sizeof(Elf32_Sym); j++) {
-                printf("[%d]\t0x%x\t%u\t%s\t%s\n",
+            sections_count = sections[i].sh_size / sizeof(Elf32_Sym);
+
+            for(j=0; j < sections_count; j++) {
+                if ((unsigned int) symbol[j].st_shndx > sections_count) {
+                    sname = "";
+                } else {
+                    sname = (char*) map_start + sections[header->e_shstrndx].sh_offset + sections[(unsigned int) symbol[j].st_shndx].sh_name;
+                }
+
+                printf("[%d]\t0x%08x\t%u\t%-10s\t%-30s\n",
                         j,
                         symbol[j].st_value,
                         symbol[j].st_shndx,
-                        (char*) map_start + sections[header->e_shstrndx].sh_offset + sections[i].sh_name,
+                        sname,
                         (char*) map_start + sections[sections[i].sh_link].sh_offset + symbol[j].st_name);
             }
         }
