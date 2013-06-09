@@ -8,10 +8,11 @@
 
 
 int main(int argc, char *argv[]) {
-    int fd; /* , num_of_section_headers; */
-    void *map_start;   /* will point to the start of the memory mapped file */
-    struct stat fd_stat;  /* this is needed to the size of the file */
-    Elf32_Ehdr *header;  /* this will point to the header structure */
+    int fd, i;
+    struct stat fd_stat;
+    Elf32_Ehdr *header;
+    Elf32_Shdr *sections;
+    void *map_start;
 
     if( (fd = open(argv[1], O_RDWR)) < 0 ) {
         perror("error in open");
@@ -23,20 +24,21 @@ int main(int argc, char *argv[]) {
         exit(-1);
     }
 
-    if ( (map_start = mmap(0, fd_stat.st_size, PROT_READ | PROT_WRITE , MAP_SHARED, fd, 0)) <0 ) {
+    if ( (map_start = mmap(0, fd_stat.st_size, PROT_READ | PROT_WRITE , MAP_SHARED, fd, 0)) < 0 ) {
         perror("mmap failed");
         exit(-4);
     }
 
     header = (Elf32_Ehdr *) map_start;
+    sections = (Elf32_Shdr *) ((unsigned int) map_start + header->e_shoff);
 
+    /* ELF Header */
     if (header->e_ident[0] != 0x7F
             || header->e_ident[1] != 0x45
             || header->e_ident[2] != 0x4C) {
-        perror("Header isn't of ELF format.");
+        perror("File isn't of ELF format.");
         exit(EXIT_FAILURE);
     }
-
     printf("Magic #: %X %X %X\n", header->e_ident[0], header->e_ident[1], header->e_ident[2]);
     printf("Data Encoding: %X\n", header->e_ident[5]);
     printf("Entry Point: 0x%x\n", header->e_entry);
@@ -46,6 +48,15 @@ int main(int argc, char *argv[]) {
     printf("Program Offset: 0x%x\n", (Elf32_Off) header->e_phoff);
     printf("Program Entries: %u\n", (Elf32_Half) header->e_phnum);
     printf("Program Entry Size: %u\n", (Elf32_Half) header->e_phentsize);
+
+    for(i=0; i < header->e_shnum; i++) {
+        printf("[%d]\t%s\t0x%x\t0x%x\t%u\n",
+                i,
+                (char*) map_start + sections[header->e_shstrndx].sh_offset + sections[i].sh_name,
+                sections[i].sh_type,
+                sections[i].sh_offset,
+                sections[i].sh_size);
+    }
 
     munmap(map_start, fd_stat.st_size);
     close(fd);
