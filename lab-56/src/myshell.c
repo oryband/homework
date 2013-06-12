@@ -39,7 +39,6 @@ int execute2(cmdLine *pCmdLine) {
     if (child1 == 0) {
         if (pCmdLine->inputRedirect != NULL) {
             close(STDIN);
-            /* in = open(pCmdLine->inputRedirect, O_RDONLY, S_IRUSR | S_IRGRP | S_IROTH); */
             in = fopen(pCmdLine->inputRedirect, "r");
             if (in == -1) {
                 printf("Error: open(), inputRedirect.\n");
@@ -74,7 +73,6 @@ int execute2(cmdLine *pCmdLine) {
     if (child2 == 0) {
         if (pCmdLine->next->outputRedirect != NULL) {
             close(STDOUT);
-            /* out = open(pCmdLine->next->outputRedirect, O_WRONLY, S_IWUSR | S_IWGRP | S_IWOTH); */
             out = fopen(pCmdLine->next->outputRedirect, "w");
             if (out == -1) {
                 printf("Error: open(), outputRedirect.\n");
@@ -140,6 +138,48 @@ int execute(cmdLine *pCmdLine) {
 
         return execvp(pCmdLine->arguments[0], pCmdLine->arguments);
     }
+}
+
+int **createPipes(int nPipes) {
+    int **pipes = malloc(nPipes * sizeof(int*)),
+        *cPipe,
+        i;
+
+    for (i=0; i<nPipes; i++) {
+        cPipe = malloc(2 * sizeof(int));
+        pipe(cPipe);
+        pipes[i] = cPipe;
+    }
+
+    return pipes;
+}
+
+void releasePipes(int **pipes, int nPipes) {
+    int i;
+
+    for (i=0; i<nPipes; i++) {
+        close(pipes[i][0]);
+        close(pipes[i][1]);
+        free(pipes[i]);
+    }
+
+    free(pipes);
+}
+
+int *feedPipe(int **pipes, cmdLine *pCmdLine) {
+    if (pCmdLine->idx == 0) {
+        return NULL;
+    }
+
+    return pipes[pCmdLine->idx - 1];
+}
+
+int *sinkPipe(int **pipes, cmdLine *pCmdLine) {
+    if (pCmdLine->next == NULL) {
+        return NULL;
+    }
+
+    return pipes[pCmdLine->idx];
 }
 
 
