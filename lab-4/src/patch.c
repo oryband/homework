@@ -1,8 +1,5 @@
 #include "util.h"
-
-
-#define DT_REG 8
-#define O_DIRECTORY 00200000
+#include "task2.h"
 
 #define SYS_EXIT  1
 #define SYS_READ  3
@@ -10,28 +7,48 @@
 #define SYS_OPEN  5
 #define SYS_CLOSE 6
 #define SYS_LSEEK 19
-#define SYS_GETDENTS 141
 
-#define EXIT_CODE 0x55
-
-#define BUF_SIZE 1024
 #define STDOUT 1
-#define STDIN 0
 
+#define O_RDONLY 0
+#define O_WRONLY 1
+#define O_CREAT 64
+
+#define SEEK_SET 0
 
 int main (int argc , char* argv[], char* envp[]) {
-    int fd_greeting = 0,
-        fd_greeting_R = 0,
-        pos_greeting = 0,
-        i = 5,
-        size_newname = 0;
+    char *name,
+         read_buf;
+    int rfd, wfd;
 
-    if ((fd_greeting = system_call(SYS_OPEN, "greeting", 2)) < 0) {
-        system_call(SYS_EXIT, EXIT_CODE);
+    if (argc < 2) {
+        system_call(SYS_WRITE, STDOUT, "Error! Not enough arguments.\n", 28);
+        system_call(SYS_EXIT, 0x55, 0, 0);
     }
 
-    pos_greeting = system_call(SYS_LSEEK, fd_greeting, 1360, 1);
-    fd_greeting_R = system_call(SYS_WRITE, fd_greeting,argv[1], strlen(argv[1])+1);
+    name = argv[1];
+
+    rfd = system_call(SYS_OPEN, "bin/greeting", O_RDONLY, 0);
+    if (rfd < 0) {
+        system_call(SYS_WRITE, STDOUT, "Error! Open read.", 15);
+        system_call(SYS_EXIT, 0x55, 0, 0);
+    }
+
+    wfd = system_call(SYS_OPEN, "bin/greeting2", O_WRONLY | O_CREAT, 0777);
+    if (wfd < 0) {
+        system_call(SYS_WRITE, STDOUT, "Error! Open write.", 16);
+        system_call(SYS_EXIT, 0x55, 0, 0);
+    }
+
+    while (system_call(SYS_READ, rfd, &read_buf, 1)) {
+        system_call(SYS_WRITE, wfd, &read_buf, 1);
+    }
+
+    system_call(SYS_LSEEK, wfd, 0x550, SEEK_SET);
+    system_call(SYS_WRITE, wfd, name, strlen(name) +1);
+
+    system_call(SYS_CLOSE, wfd, 0, 0);
+    system_call(SYS_CLOSE, rfd, 0, 0);
 
     return 0;
 }

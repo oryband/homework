@@ -1,0 +1,1 @@
+let g:syntastic_c_compiler_options = '-nostdlib  -fno-stack-protector -ansi -Wall -Wextra'
