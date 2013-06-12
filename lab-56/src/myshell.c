@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdbool.h>
 
 #include "LineParser.h"
 
@@ -18,10 +19,11 @@
 #define ERROR "Error"
 
 
-typedef struct {
+typedef struct envVars envVars;
+struct envVars {
     char name[BUF_SIZE], value[BUF_SIZE];
-    struct envVars *next;
-} envVars;
+    envVars *next;
+};
 
 int execute2(cmdLine *pCmdLine) {
     int in, out,
@@ -144,11 +146,10 @@ int execute(cmdLine *pCmdLine) {
 int main (int argc, char* argv[]) {
     cmdLine *cmd;
     pid_t child;
-    /*
-     * TODO: Lab 5, task 2.
-     * envVars *envRoot = NULL,
-     *         *env = NULL;
-     */
+    envVars *envRoot = NULL,
+            *env = NULL,
+            *tmp;
+    bool set;
     int i,j,
         h=0, hIndex,
         status;
@@ -186,6 +187,24 @@ int main (int argc, char* argv[]) {
         }
         strcpy(history[h++], in);
 
+        for (i=1; i < cmd->argCount; i++) {
+            if (cmd->arguments[i][0] == '$') {
+                set = false;
+                env = envRoot;
+                while (env != NULL && ! set) {
+                    if (strcmp(env->name, cmd->arguments[i] +1) == 0) {
+                        replaceCmdArg(cmd, i, env->value);
+                        set = true;
+                    }
+                    env = env->next;
+                }
+
+                if ( ! set) {
+                    printf("Variable '%s' not set.\n", cmd->arguments[i]);
+                }
+            }
+        }
+
         /* Specific cmds */
 
         if (strcmp(cmd->arguments[0], "cd") == 0) {
@@ -216,26 +235,86 @@ int main (int argc, char* argv[]) {
 
                 printf("%d:\t%s", i-j+1, history[i%10]);
             }
+        } else if (strcmp(cmd->arguments[0], "set") == 0) {
+            set = false;
+            if (cmd->argCount != 3) {
+                printf("%s: Bad arguments.", ERROR);
+            } else {
+                if (envRoot == NULL) {
+                    if ((envRoot = (envVars *) malloc(sizeof(envVars))) == NULL) {
+                        printf("%s: envRoot = malloc(..)", ERROR);
+                    }
+                    strcpy(envRoot->name, cmd->arguments[1]);
+                    strcpy(envRoot->value, cmd->arguments[2]);
+                    envRoot->next = NULL;
+                } else {
+                    env = envRoot;
+                    while (env->next != NULL && ! set) {
+                        if (strcmp(env->name, cmd->arguments[1]) == 0) {
+                            strcpy(env->value, cmd->arguments[2]);
+                            set = true;
+                            break;
+                        }
+                        env = env->next;
+                    }
 
-        /*
-         * TODO Lab 5, task 2.
-         * } else if (strcmp(cmd->arguments[0], "set") == 0) {
-         *     if (cmd->argCount != 3) {
-         *         printf("%s: Bad arguments.", ERROR);
-         *     } else {
-         *         if (envRoot == NULL) {
-         *             envRoot = (env *) malloc(sizeof(env));
-         *             env->name  = strcpy(cmd->arguments[1]);
-         *             env->value = strcpy(cmd->arguments[2]);
-         *             env->next = NULL:
-         *         } else {
-         *             env = envRoot->next;
-         *             while (env->next != NULL) {
-         *                 env = env->next;
-         *             }
-         *             TODO: Continue here...
-         *         }
-         */
+                    if ( ! set) {
+                        if (strcmp(env->name, cmd->arguments[1]) == 0) {
+                            strcpy(env->value, cmd->arguments[2]);
+                        } else {
+                            if ((env->next = (envVars *) malloc(sizeof(envVars))) == NULL) {
+                                printf("%s: env = malloc(..)", ERROR);
+                            }
+                            strcpy(env->next->name, cmd->arguments[1]);
+                            strcpy(env->next->value, cmd->arguments[2]);
+                            env->next->next = NULL;
+                        }
+                    }
+                }
+            }
+        } else if (strcmp(cmd->arguments[0], "unset") == 0) {
+            set = false;
+            if (cmd->argCount != 2) {
+                printf("%s: Bad arguments.", ERROR);
+            } else {
+                if (envRoot == NULL) {
+                    printf("%s: Variable not set.", ERROR);
+                } else {
+                    if (strcmp(envRoot->name, cmd->arguments[1]) == 0) {
+                        env = envRoot->next;
+
+                        envRoot->next = NULL;
+                        free(envRoot);
+
+                        envRoot = env;
+                    } else {
+                        env = envRoot;
+                        while (env->next != NULL && ! set) {
+                            if (strcmp(env->next->name, cmd->arguments[1]) == 0) {
+                                tmp = env->next->next;
+
+                                env->next->next = NULL;
+                                free(env->next);
+
+                                env->next = tmp;
+                                set = true;
+                                break;
+                            }
+                            env = env->next;
+                        }
+
+                        if ( ! set) {
+                            printf("%s: Variable not set.", ERROR);
+                        }
+                    }
+                }
+            }
+        } else if (strcmp(cmd->arguments[0], "env") == 0) {
+            env = envRoot;
+            while (env != NULL) {
+                printf("$%s=%s\n", env->name, env->value);
+                env = env->next;
+            }
 
         /* Other cmds */
 
