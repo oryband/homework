@@ -1,4 +1,3 @@
-
 (******************* 1.1 *************************)
 (*
 * Signature: get_all_vars(prop)
@@ -8,7 +7,21 @@
 - get_all_vars(Disj(Conj (Atom ("x1"), Atom ("x2")), Disj (Atom ("x1"), Neg (Atom ("x3")))));
 val it = ["x2","x1","x3"]: string list
 *)
-(*	Write your code here... *)
+val rec get_all_vars = fn (p : prop) =>
+  let val rec remove_duplicates =
+    fn (l1, []) => l1
+    |  (l1, head::l2) => if (List.exists (fn x => x=head) l1)
+                         then remove_duplicates(l1, l2)
+                         else remove_duplicates(l1 @ [head], l2);
+  val rec helper =
+    fn (Atom(p), l) => remove_duplicates(l, [p])
+    |  (Neg(p), l) => remove_duplicates(l, get_all_vars(p))
+    |  (Conj(p1,p2), l) => remove_duplicates(get_all_vars(p1), get_all_vars(p2))
+    |  (Disj(p1,p2), l) => remove_duplicates(get_all_vars(p1), get_all_vars(p2));
+
+  in helper(p, [])
+  end;
+
 
 (******************* 1.2 *************************)
 (*
@@ -37,4 +50,8 @@ val it = ["x2","x1","x3"]: string list
              [Atom("x1"), Neg(Atom("x3"))]);
  val it = true : bool
 *)
-(*	Write your code here... *)
+val rec satisfies =
+  fn (Atom(f), a : prop list) => (List.exists (fn x => x=Atom(f)) a)
+  |  (Neg(f), a : prop list) => not(satisfies(f, a))
+  |  (Conj(f1,f2), a : prop list) => satisfies(f1, a) andalso satisfies(f2, a)
+  |  (Disj(f1,f2), a : prop list) => satisfies(f1, a) orelse satisfies(f2, a);
