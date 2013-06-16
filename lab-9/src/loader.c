@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <elf.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
+
+
+int startup(int argc, char **argv, void (*start) ());
 
 
 int foreach_phdr(void *map_start, void (*func) (Elf32_Phdr*, int), int arg) {
@@ -15,20 +17,19 @@ int foreach_phdr(void *map_start, void (*func) (Elf32_Phdr*, int), int arg) {
     int i;
 
     for (i=0; i<header->e_phnum; i++) {
-        func((Elf32_Phdr*) ( ((void*) p_header) + i*header->e_phentsize ), i);
+        func((Elf32_Phdr*) ( ((void*) p_header) + i*header->e_phentsize ), arg);
     }
 
     return EXIT_SUCCESS;
 }
 
-int translate_protection_flags(int b) {
+int convert(int b) {
     int r = 0;
     r |= (b & PF_R ? PROT_READ  : 0);
     r |= (b & PF_W ? PROT_WRITE : 0);
     r |= (b & PF_X ? PROT_EXEC  : 0);
     return r;
 }
-
 
 void message(Elf32_Phdr *p_header, int i) {
     switch(p_header->p_type) {
@@ -65,9 +66,27 @@ void message(Elf32_Phdr *p_header, int i) {
     printf("%s", p_header->p_flags & PF_R ? "R" : " ");
     printf("%s", p_header->p_flags & PF_W ? "W" : " ");
     printf("%s", p_header->p_flags & PF_X ? "E" : " ");
-    printf(" %d", translate_protection_flags(p_header->p_flags));
+    printf(" %d", convert(p_header->p_flags));
 
     printf(" %08x\n", p_header->p_align);
+}
+
+void load_phdr(Elf32_Phdr *phdr, int fd) {
+    void *map_start;
+
+    if (phdr->p_type == PT_LOAD) {
+        if ( (map_start = mmap(
+                        phdr->p_vaddr & 0xfffff000,
+                        phdr->p_memsz + phdr->p_vaddr & 0xfff,
+                        convert(phdr->p_flags),
+                        MAP_PRIVATE | MAP_FIXED,
+                        fd,
+                        phdr->p_offset & 0xfffff000)) < 0 ) {
+
+            perror("mmap failed");
+            exit(-4);
+        }
+    }
 }
 
 
@@ -84,14 +103,16 @@ int main(int argc, char *argv[]) {
         perror("stat failed.");
         exit(EXIT_FAILURE);
     }
-    if ( (map_start = mmap(0, fd_stat.st_size, PROT_READ, MAP_SHARED, fd, 0)) < 0 ) {
+    if ( (map_start = mmap(0, fd_stat.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) < 0 ) {
         perror("mmap failed");
         exit(-4);
     }
 
-    foreach_phdr(map_start, message, 0);
+    /* foreach_phdr(map_start, message, 0); */
+    foreach_phdr(map_start, load_phdr, fd);
+    startup(argc -1, &argv[1], (void*) ((Elf32_Ehdr*) map_start)->e_entry);
 
-    munmap(map_start, fd_stat.st_size);
-    close(fd);
+    /* munmap(map_start, fd_stat.st_size); */
+    /* close(fd); */
     return EXIT_SUCCESS;
 }
