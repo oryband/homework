@@ -12,14 +12,14 @@ datatype prop = Atom of string
 datatype 'a binary_tree = Empty | Node of 'a binary_tree * 'a * 'a binary_tree;
 
 (*
-* Purpose: datatype labeled n-ary tree. Values are at the leaves and internal nodes. 
+* Purpose: datatype labeled n-ary tree. Values are at the leaves and internal nodes.
 *          Internal nodes (brances) can have any number of children.
 *)
 datatype 'a labeled_n_tree = Leaf of 'a | Branch of 'a * 'a labeled_n_tree list;
 
 (*
 * Purpose: a datatype for lazy lists
-* Example: 
+* Example:
   - Cons(1, fn()=> (Cons (2, fn()=> Cons (3, fn()=> Nil))));
   val it = Cons(1, fn) : int seq
 *)
