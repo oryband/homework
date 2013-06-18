@@ -1,4 +1,4 @@
-(* use("./ex5-aux.sml"); *)
+use("./ex5-aux.sml");
 
 (******************* 2.1 *************************)
 (*
@@ -25,8 +25,8 @@
 *)
 val rec postorder_cps =
   fn (Empty, _, _, _) => []
-  |  (Node(Empty, data, Empty), condition, succ, fail) => if (condition(data)) then succ([data]) else fail([])
-  |  (Node(left, data, right), condition, succ, fail) =>
+   | (Node(Empty, data, Empty), condition, succ, fail) => if (condition(data)) then succ([data]) else fail([])
+   | (Node(left, data, right), condition, succ, fail) =>
       postorder_cps(
         left,
         condition,
@@ -54,6 +54,17 @@ val rec postorder_cps =
  - construct([0,2,4,3,1]);
  val it = Node (Node (Empty,0,Empty),1, Node (Node (Empty,2,Empty),3,Node (Empty,4,Empty))) : int binary_tree
 *)
+val rec construct =
+  fn [] => Empty
+   | [left : int] => Node(Empty, left, Empty)
+   | l : int list =>
+       let val center = List.hd(l);
+           val smaller = List.filter (fn x => x<center) l;
+           val bigger = List.filter (fn x => x>center) l;
+
+       in Node(construct(smaller), center, construct(bigger))
+       end;
+
 
 (******************* 2.3 *************************)
 (*
@@ -68,4 +79,9 @@ val rec postorder_cps =
  - labeled_n_tree_postorder(Branch(1,[Leaf 2,Branch(4,[Leaf 5,Leaf 3,Leaf 8])]));
  val it = [2,5,3,8,4,1] : int list
 *)
-(*  Write your code here... *)
+val rec labeled_n_tree_postorder =
+  fn (Leaf(data)) => [data]
+   | (Branch(data, tree_list)) =>
+       let val rec append = fn (tree, init) => labeled_n_tree_postorder(tree) @ init;
+       in (List.foldr append [] tree_list) @ [data]
+       end;
