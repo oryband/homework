@@ -11,10 +11,10 @@ val it = ["x2","x1","x3"]: string list
 *)
 val rec get_all_vars = fn (p : prop) =>
   let val rec remove_duplicates =
-    fn (l1, []) => l1
-     | (l1, head::l2) => if (List.exists (fn x => x=head) l1)
-                         then remove_duplicates(l1, l2)
-                         else remove_duplicates(l1 @ [head], l2);
+        fn (l1, []) => l1
+         | (l1, head::l2) => if (List.exists (fn x => x=head) l1)
+                             then remove_duplicates(l1, l2)
+                             else remove_duplicates(l1 @ [head], l2);
   val rec helper =
     fn (Atom(p), l) => remove_duplicates(l, [p])
      | (Neg(p), l) => remove_duplicates(l, helper(p, l))
