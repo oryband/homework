@@ -1,4 +1,4 @@
-use("./ex5-aux.sml");
+(* use("./ex5-aux.sml"); *)
 
 (******************* 3.1 *************************)
 datatype 'a generic_list = List of 'a list | Seq of 'a seq;
@@ -21,8 +21,8 @@ val rec generic_map =
    | (f, List(l)) => List(map f l)
    | (f, Seq(l)) =>
        let val rec seq_map =
-         fn (_, Nil) => Nil
-          | (f1, Cons(hd, tl)) => Cons (f1(hd), fn () => seq_map(f1, tl()));
+             fn (_, Nil) => Nil
+              | (f1, Cons(hd, tl)) => Cons (f1(hd), fn () => seq_map(f1, tl()));
        in Seq(seq_map (f, l))
        end;
 
@@ -50,3 +50,29 @@ val rec generic_map =
     val it = Seq (Cons (1,fn)) : int generic_list
     hint: You can apply the "take" procedure on these lazy lists to see their values.
 *)
+val rec interleave_lists =
+  fn (l1, []) => l1
+   | ([], l2) => l2
+   | (hd1::tl1, hd2::tl2) => [hd1,hd2] @ interleave_lists(tl1,tl2);
+
+val rec interleave_seqs =
+  fn (s1, Nil) => s1
+   | (Nil, s2) => s2
+   | (Cons(hd1,tl1), Cons(hd2,tl2)) => Cons(hd1, fn () => Cons(hd2, fn () => interleave_seqs(tl1(),tl2())));
+
+val rec interleave_list_seq =
+  fn ([], Nil) => Nil
+   | ([], Cons(hd,tl)) => Cons(hd, fn () => interleave_list_seq([], tl()))
+   | (hd::tl, Nil) => Cons(hd, fn () => interleave_list_seq(tl, Nil))
+   | (hd1::tl1, Cons(hd2,tl2)) => Cons(hd1, fn () => Cons(hd2, fn () => interleave_list_seq(tl1,tl2())));
+
+val interleave_seq_list =
+  fn (Nil, []) => Nil
+   | (Nil, l) => interleave_list_seq(l, Nil)
+   | (Cons(hd1,tl1), l) => Cons(hd1, fn () => interleave_list_seq(l,tl1()));
+
+val generic_interleave =
+  fn (List(l1), List(l2)) => List(interleave_lists(l1,l2))
+    | (Seq(s1), Seq(s2)) => Seq(interleave_seqs(s1,s2))
+    | (List(l), Seq(s)) => Seq(interleave_list_seq(l,s))
+    | (Seq(s), List(l)) => Seq(interleave_seq_list(s,l));
