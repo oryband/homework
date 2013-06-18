@@ -12,14 +12,14 @@ val it = ["x2","x1","x3"]: string list
 val rec get_all_vars = fn (p : prop) =>
   let val rec remove_duplicates =
     fn (l1, []) => l1
-    |  (l1, head::l2) => if (List.exists (fn x => x=head) l1)
+     | (l1, head::l2) => if (List.exists (fn x => x=head) l1)
                          then remove_duplicates(l1, l2)
                          else remove_duplicates(l1 @ [head], l2);
   val rec helper =
     fn (Atom(p), l) => remove_duplicates(l, [p])
-    |  (Neg(p), l) => remove_duplicates(l, helper(p, l))
-    |  (Conj(p1,p2), l) => remove_duplicates(helper(p1, l), helper(p2, l))
-    |  (Disj(p1,p2), l) => remove_duplicates(helper(p1, l), helper(p2, l));
+     | (Neg(p), l) => remove_duplicates(l, helper(p, l))
+     | (Conj(p1,p2), l) => remove_duplicates(helper(p1, l), helper(p2, l))
+     | (Disj(p1,p2), l) => remove_duplicates(helper(p1, l), helper(p2, l));
 
   in helper(p, [])
   end;
@@ -53,6 +53,6 @@ val rec get_all_vars = fn (p : prop) =>
 *)
 val rec satisfies =
   fn (Atom(f), a : prop list) => (List.exists (fn x => x=Atom(f)) a)
-  |  (Neg(f), a : prop list) => not(satisfies(f, a))
-  |  (Conj(f1,f2), a : prop list) => satisfies(f1, a) andalso satisfies(f2, a)
-  |  (Disj(f1,f2), a : prop list) => satisfies(f1, a) orelse satisfies(f2, a);
+   | (Neg(f), a : prop list) => not(satisfies(f, a))
+   | (Conj(f1,f2), a : prop list) => satisfies(f1, a) andalso satisfies(f2, a)
+   | (Disj(f1,f2), a : prop list) => satisfies(f1, a) orelse satisfies(f2, a);
