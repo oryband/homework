@@ -104,7 +104,14 @@ unrefrigerated_ordering_list(L) :- unrefrigerated_ordering_list_helper(L, []).
 %
 % ?- deep_reverse([a, b, c], [b, c, a]).
 % false
-%
+deep_reverse([], []) :- !.
+deep_reverse([Hd|Tl], X) :-
+    !,
+    deep_reverse(Hd, TlRev),
+    deep_reverse(Tl, HdRev),
+    append(HdRev, [TlRev], X).
+deep_reverse(X, X).
+
 
 % 2.2
 % Signature: sublist_perm(Full, PermSub)/2
@@ -144,7 +151,20 @@ unrefrigerated_ordering_list(L) :- unrefrigerated_ordering_list_helper(L, []).
 % X = [a, c, b] ;
 % X = [c, a, b] ;
 % X = [c, b, a]
-%
+
+% Signature: delete(Element, List, ListWithoutElement)/3
+% Purpose: Deletes 1st occurence of an element from a list.
+delete(_, [], []) :- !.  % deleting non-existant elem from list returns original list.
+delete(X, [X|Tl], Tl) :- !.  % Head = X
+delete(X, [Hd|Tl], [Hd|Result]) :- delete(X, Tl, Result).  % Head \= X
+
+sublist_perm(_, []).
+sublist_perm(Full, [X]) :- member(X, Full).
+sublist_perm(Full, [X|Xs]) :-
+    member(X, Full),
+    delete(X, Full, ListWithoutX),
+    sublist_perm(ListWithoutX, Xs).
+
 
 % 2.3
 % Signature: s(Z)/1
@@ -212,7 +232,8 @@ p([Z])   :- member(Z, [in, from, on]).
 %
 % ?- s([a, tall, cat, gladly, ate, the, mouse]).
 % false
-%
+adv([Z]) :- Z=[]; (member(Z, [hungrily, slowly, gladly])).
+vp(Z) :- append(B, W, Z), append(A, Y, B), append(V, X, A), v(V), np(X), pp(Y), adv(W).
 
 % 2.3.b
 % Signature: subCFG(Text, SubText)/2
@@ -220,22 +241,21 @@ p([Z])   :- member(Z, [in, from, on]).
 %          both fit the 's' grammar.
 % Precondition: The variables are fully instantiated.
 % Examples:
-% ?- subCFG([the, cat, saw, a, dog, in, a, funny, beautiful, house], 
-%           [the, cat, saw, a, house]).
+% ?- subCFG([the, cat, saw, a, dog, in, a, funny, beautiful, house], [the, cat, saw, a, house]).
 % true ;
 % true
 %
-% ?- subCFG([the, cat, saw, a, dog, in, a, funny, beautiful, house], 
-%	    [the, house, saw, a, beautiful, funny, dog]).
+% ?- subCFG([the, cat, saw, a, dog, in, a, funny, beautiful, house], [the, house, saw, a, beautiful, funny, dog]).
 % true ;
 % true
 %
-% ?- subCFG([the, big, funny, mouse, ate, a, tall, cat, on, a, dog], 
-%           [a, tall, cat, ate, a, big, mouse, on, the, funny, dog]).
+% ?- subCFG([the, big, funny, mouse, ate, a, tall, cat, on, a, dog], [a, tall, cat, ate, a, big, mouse, on, the, funny, dog]).
 % true ;
 % true
 %
-% ?- subCFG([the, big, funny, mouse, ate, a, tall, cat, on, a, dog], 
-%           [a, tall, cat, ate, a, big, mouse, on, a, funny, dog]).
+% ?- subCFG([the, big, funny, mouse, ate, a, tall, cat, on, a, dog], [a, tall, cat, ate, a, big, mouse, on, a, funny, dog]).
 % false
-%
+subCFG(Text, SubText) :-
+    s(Text),  % is Text legal?
+    s(SubText),  % is SubText legal?
+    sublist_perm(Text, SubText).  % is SubText < Text ?
