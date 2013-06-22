@@ -2,7 +2,10 @@
 % 1.1
 % Signature: check_barcodes_product(Barcode)/1
 % Purpose: report barcodes that appear in two different product records.
-% 
+check_barcodes_product(B) :-
+    product(B, P1, C1, R1, V1),
+    product(B, P2, C2, R2, V2),
+    (P1\=P2; C1\=C2; R1\=R2; V1\=V2).
 
 % 1.2
 % Signature: phone_product(ProductName, Phone)/2
@@ -25,6 +28,9 @@
 % ?- phone_product(N, 1234567).
 % false
 %
+phone_product(ProductName, Phone) :-
+    product(_, ProductName, _, _, Vendor),
+    vendor_info(Vendor, Phone, _).
 
 % 1.3
 % Signature: unrefrigerated_ordering(CategoryName, MonthlyContactDay)/2
@@ -51,7 +57,10 @@
 %
 % ?- unrefrigerated_ordering(C, 1).
 % false
-%
+unrefrigerated_ordering(CategoryName, MonthlyContactDay) :-
+    product(_, _, Id, false, Vendor),
+    product_category(Id, CategoryName),
+    vendor_info(Vendor, _, MonthlyContactDay).
 
 % 1.4
 % Signature: unrefrigerated_ordering_list(CategoryDayPairsList)/1
@@ -64,7 +73,19 @@
 % Example:
 % ?- unrefrigerated_ordering_list(CategoryDayPairsList).
 % CategoryDayPairsList = [(misc, 10), (snack, 28), (bread, 10), (bread, 28), (dairy, 5)]
-%
+
+% Signatue: unrefrigerated_ordering_list_helper(List, Accumulator)/2
+% Purpose: Main recursive function, so we could use an initialized empty list.
+unrefrigerated_ordering_list_helper(L, Acc) :-
+    unrefrigerated_ordering(C,M),  % CategoryName, MonthlyContactDay
+    not_member((C,M), Acc),
+    !,
+    unrefrigerated_ordering_list_helper(L, [(C,M) | Acc]).
+
+unrefrigerated_ordering_list_helper(L, L).
+
+unrefrigerated_ordering_list(L) :- unrefrigerated_ordering_list_helper(L, []).
+
 
 % Question 2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 2.1
