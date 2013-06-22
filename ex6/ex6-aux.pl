@@ -41,5 +41,4 @@ vendor_info(fire_ltd,       7855775, 10).
 % Purpose: the relation in which Element is not a member of a List.
 %
 not_member(_, []).
-not_member(X, [Y|Ys]) :- X \= Y,
-                         not_member(X, Ys).
+not_member(X, [Y|Ys]) :- X \= Y, not_member(X, Ys).
