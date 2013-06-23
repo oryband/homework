@@ -166,7 +166,7 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    /* Now in check for symbols in opposite direction. */
+    /* Now check for missing symbols in opposite direction. */
     for (i2=0; i2 < header2->e_shnum && ! missing_symbols; i2++){
         if (sections2[i2].sh_type == SHT_SYMTAB || sections2[i2].sh_type == SHT_DYNSYM) {
             symbol2 = (Elf32_Sym*) ((char*) map_start2 + sections2[i2].sh_offset);
