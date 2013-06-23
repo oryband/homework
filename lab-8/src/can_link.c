@@ -13,15 +13,19 @@
 
 int main(int argc, char *argv[]) {
     int fd1, fd2;
-    unsigned int i, j,
-                 sections_count;
-    char *symbol_name;
-    bool main_found = false;
+    unsigned int i,  j,
+                 i2, j2,
+                 sections_count,
+                 sections_count2;
+    char *symbol_name,
+         *symbol_name2;
+    bool main_found = false,
+         duplicate_symbols = false;
     struct stat fd_stat;
     void *map_start1, *map_start2;
     Elf32_Ehdr *header1, *header2;
     Elf32_Shdr *sections1, *sections2;
-    Elf32_Sym *symbol;
+    Elf32_Sym *symbol, *symbol2;
 
     if( (fd1 = open(argv[1], O_RDWR)) < 0 ) {
         perror("error in open");
@@ -98,11 +102,45 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if (! main_found) {
+    /* Search for duplicate symbols. */
+    for (i=0; i < header1->e_shnum && ! duplicate_symbols; i++){
+        if (sections1[i].sh_type == SHT_SYMTAB || sections1[i].sh_type == SHT_DYNSYM) {
+            symbol = (Elf32_Sym*) ((char*) map_start1 + sections1[i].sh_offset);
+            sections_count = sections1[i].sh_size / sizeof(Elf32_Sym);
+
+            for(j=0; j < sections_count && ! duplicate_symbols; j++) {
+                symbol_name = (char*) map_start1 + sections1[sections1[i].sh_link].sh_offset + symbol[j].st_name;
+
+                /* compare all symbols (from 2nd file) to this symbol (from 1st file). */
+                for (i2=0; i2 < header2->e_shnum && ! duplicate_symbols; i2++){
+                    if (sections2[i2].sh_type == SHT_SYMTAB || sections2[i2].sh_type == SHT_DYNSYM) {
+                        symbol2 = (Elf32_Sym*) ((char*) map_start2 + sections2[i2].sh_offset);
+                        sections_count2 = sections2[i2].sh_size / sizeof(Elf32_Sym);
+
+                        for(j2=0; j2 < sections_count2 && ! duplicate_symbols; j2++) {
+                            symbol_name2 = (char*) map_start2 + sections2[sections2[i2].sh_link].sh_offset + symbol2[j2].st_name;
+                            if (strcmp(symbol_name, symbol_name2) == 0) {
+                                duplicate_symbols = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if ( ! main_found) {
         perror("main check: FAILED\n");
         exit(EXIT_FAILURE);
     } else {
         printf("main check: PASSED\n");
+    }
+    if ( ! duplicate_symbols) {
+        perror("duplicate check: FAILED\n");
+        exit(EXIT_FAILURE);
+    } else {
+        printf("duplicate check: PASSED\n");
     }
 
     munmap(map_start1, fd_stat.st_size);
