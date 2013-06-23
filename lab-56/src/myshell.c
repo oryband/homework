@@ -95,7 +95,6 @@ int execute(cmdLine *pCmdLine) {
                     dup2(cPipe[0], STDIN);
                     close(cPipe[0]);
                 }
-
                 if (cmd->next != NULL) {  /* redirect output to next cmd if not last. */
                     cPipe = sinkPipe(pipes, cmd);
                     close(STDOUT);
