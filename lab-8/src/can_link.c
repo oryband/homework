@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 
             for(j=0; j < sections_count; j++) {
                 symbol_name = (char*) map_start1 + sections1[sections1[i].sh_link].sh_offset + symbol[j].st_name;
-                if (strcmp(symbol_name, ".main") == 0) {
+                if (strcmp(symbol_name, "main") == 0) {
                     main_found = true;
                     break;
                 }
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (! main_found) {
-        perror("main check: FAILED");
+        perror("main check: FAILED\n");
         exit(EXIT_FAILURE);
     } else {
         printf("main check: PASSED\n");
