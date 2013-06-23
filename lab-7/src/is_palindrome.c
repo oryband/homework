@@ -1,15 +1,24 @@
-#include <sys/stat.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
-#define BUF_SIZE 1024
-#define ERROR "Error"
+#define false 0
+#define true 0
 
+int is_pal(char *w) {
+    int i,
+        l = strlen(w);
+
+    for (i=0; i<l/2; i++) {
+        if (w[i] != w[l-1-i]) {
+            printf("%s is not a palindrome!\n", w);
+            return false;
+        }
+    }
+
+    printf("%s is a palindrome!\n", w);
+    return true;
+}
 
 int main(int argc, char *argv[]) {
-    int i;
-
-    /* TODO: Finish task 4. */
-    /* for (i=0; i  */
-    return EXIT_SUCCESS;
+    return is_pal(argv[1]);
 }
