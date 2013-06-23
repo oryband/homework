@@ -17,10 +17,13 @@ int main(int argc, char *argv[]) {
                  i2, j2,
                  sections_count,
                  sections_count2;
+    Elf32_Section symbol_section,
+                  symbol_section2;
     char *symbol_name,
          *symbol_name2;
     bool main_found = false,
-         duplicate_symbols = false;
+         duplicate_symbols = false,
+         missing_symbols = false;
     struct stat fd_stat;
     void *map_start1, *map_start2;
     Elf32_Ehdr *header1, *header2;
@@ -130,6 +133,74 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    /* Search for missing symbols. */
+    for (i=0; i < header1->e_shnum && ! missing_symbols; i++){
+        if (sections1[i].sh_type == SHT_SYMTAB || sections1[i].sh_type == SHT_DYNSYM) {
+            symbol = (Elf32_Sym*) ((char*) map_start1 + sections1[i].sh_offset);
+            sections_count = sections1[i].sh_size / sizeof(Elf32_Sym);
+
+            for(j=0; j < sections_count && ! missing_symbols; j++) {
+                symbol_name = (char*) map_start1 + sections1[sections1[i].sh_link].sh_offset + symbol[j].st_name;
+                symbol_section = symbol[j].st_shndx;
+                if (symbol_section == SHN_UNDEF) {
+                    missing_symbols = true;
+
+                    for (i2=0; i2 < header2->e_shnum && missing_symbols; i2++){
+                        if (sections2[i2].sh_type == SHT_SYMTAB || sections2[i2].sh_type == SHT_DYNSYM) {
+                            symbol2 = (Elf32_Sym*) ((char*) map_start2 + sections2[i2].sh_offset);
+                            sections_count2 = sections2[i2].sh_size / sizeof(Elf32_Sym);
+
+                            for(j2=0; j2 < sections_count2 && missing_symbols; j2++) {
+                                symbol_name2 = (char*) map_start2 + sections2[sections2[i2].sh_link].sh_offset + symbol2[j2].st_name;
+                                symbol_section2 = symbol[j2].st_shndx;
+                                if (symbol_section == symbol_section2
+                                        && strcmp(symbol_name, symbol_name2) == 0) {
+
+                                    missing_symbols = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    /* Now in check for symbols in opposite direction. */
+    for (i2=0; i2 < header2->e_shnum && ! missing_symbols; i2++){
+        if (sections2[i2].sh_type == SHT_SYMTAB || sections2[i2].sh_type == SHT_DYNSYM) {
+            symbol2 = (Elf32_Sym*) ((char*) map_start2 + sections2[i2].sh_offset);
+            sections_count2 = sections2[i2].sh_size / sizeof(Elf32_Sym);
+
+            for(j2=0; j2 < sections_count2 && ! missing_symbols; j2++) {
+                symbol_name2 = (char*) map_start2 + sections2[sections2[i2].sh_link].sh_offset + symbol2[j2].st_name;
+                symbol_section2 = symbol[j2].st_shndx;
+                if (symbol_section2 == SHN_UNDEF) {
+                    missing_symbols = true;
+
+                    for (i=0; i < header1->e_shnum && missing_symbols; i++){
+                        if (sections1[i].sh_type == SHT_SYMTAB || sections1[i].sh_type == SHT_DYNSYM) {
+                            symbol = (Elf32_Sym*) ((char*) map_start1 + sections1[i].sh_offset);
+                            sections_count = sections1[i].sh_size / sizeof(Elf32_Sym);
+
+                            for(j=0; j < sections_count && missing_symbols; j++) {
+                                symbol_name = (char*) map_start1 + sections1[sections1[i].sh_link].sh_offset + symbol[j].st_name;
+                                symbol_section = symbol[j].st_shndx;
+
+                                if (symbol_section == symbol_section2
+                                        && strcmp(symbol_name, symbol_name2) == 0) {
+
+                                    missing_symbols = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     if ( ! main_found) {
         perror("main check: FAILED\n");
         exit(EXIT_FAILURE);
@@ -141,6 +212,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     } else {
         printf("duplicate check: PASSED\n");
+    }
+    if (missing_symbols) {
+        perror("missing_symbols: FAILED\n");
+        exit(EXIT_FAILURE);
+    } else {
+        printf("missing_symbols: PASSED\n");
     }
 
     munmap(map_start1, fd_stat.st_size);
