@@ -32,7 +32,9 @@ int **createPipes(int nPipes) {
 
     for (i=0; i<nPipes; i++) {
         cPipe = malloc(2 * sizeof(int));
-        pipe(cPipe);
+        if (pipe(cPipe) == -1) {
+            perror("pipe(): failed executing command.");
+        }
         pipes[i] = cPipe;
     }
 
@@ -56,7 +58,7 @@ int *feedPipe(int **pipes, cmdLine *pCmdLine) {
         return NULL;
     }
 
-    return pipes[pCmdLine->idx - 1];
+    return pipes[pCmdLine->idx -1];
 }
 
 int *sinkPipe(int **pipes, cmdLine *pCmdLine) {
@@ -67,6 +69,80 @@ int *sinkPipe(int **pipes, cmdLine *pCmdLine) {
     return pipes[pCmdLine->idx];
 }
 
+int execute(cmdLine *pCmdLine) {
+    int i, c,
+        cpid,
+        status,
+        **pipes,
+        *cPipe;
+    cmdLine *it = pCmdLine,
+            *cmd = pCmdLine;
+
+    c=0;
+    while (it != NULL) {
+        it = it->next;
+        c++;
+    }
+    pipes = createPipes(c);
+
+    i=0;
+    while (i < c) {
+        if ((cpid = fork()) == 0) {  /* fork each pipe/process. */
+            if (c > 1) {  /* if pipes were found, do pipe. */
+                if (cmd->idx != 0) {  /* redirect input to prev cmd if not 1st. */
+                    cPipe = feedPipe(pipes, cmd);
+                    close(STDIN);
+                    dup2(cPipe[0], STDIN);
+                    close(cPipe[0]);
+                }
+
+                if (cmd->next != NULL) {  /* redirect output to next cmd if not last. */
+                    cPipe = sinkPipe(pipes, cmd);
+                    close(STDOUT);
+                    dup2(cPipe[1], STDOUT);
+                    close(cPipe[1]);
+                }
+            }
+
+            if (cmd->inputRedirect != NULL) {
+                close(STDIN);
+                fopen(cmd->inputRedirect, "r");
+            }
+            if (cmd->outputRedirect != NULL) {
+                close(STDOUT);
+                fopen(cmd->outputRedirect, "w");
+            }
+
+            if ((execvp(cmd->arguments[0], cmd->arguments)) != 0) {
+                perror("execute(): failed executing command.");
+            }
+
+            return EXIT_SUCCESS;
+        }
+
+        cPipe = feedPipe(pipes, cmd);
+        if (cPipe != NULL) {
+            close(cPipe[0]);
+        }
+
+        cPipe = sinkPipe(pipes, cmd);
+        if (cPipe != NULL) {
+            close(cPipe[1]);
+        }
+
+        if (cmd->blocking == 1) {
+            waitpid(cpid, &status, 0);
+        }
+        cmd = cmd->next;
+        i++;
+    }
+
+    releasePipes(pipes, c - 1);
+
+    return EXIT_SUCCESS;
+}
+
+/* Older tasks.
 int execute2(cmdLine *pCmdLine) {
     int in, out,
         fildes[2], fildesCopy[2];
@@ -181,111 +257,12 @@ int old_execute(cmdLine *pCmdLine) {
         return execvp(pCmdLine->arguments[0], pCmdLine->arguments);
     }
 }
-
-/* TODO Task 4 is ALMOST finished, but not shown to the instructor. */
-int execute(cmdLine *pCmdLine) {
-    int i, c,
-        cpid,
-        status,
-        **pipes,
-        *cPipe;
-    cmdLine *it,
-            *cmd = pCmdLine;
-
-    c=0;
-    while (it != NULL) {
-        it = it->next;
-        c++;
-    }
-    pipes = createPipes(c);
-
-    i=0;
-    while (i < c) {
-        if ((cpid = fork()) == 0) {
-            /* check if have any pipes in the command */
-            if (c > 1) {
-                if (cmd->idx != 0) {
-                    /* if the command is not the first command in the chain,
-                     * we should redirect its input to the feed pipe.
-                     */
-
-                    /* find the relevant command feed pipe */
-                    cPipe = feedPipe(pipes, cmd);
-
-                    /* close stdin */
-                    close(0);
-
-                    /* duplicate the relevant pipe's read fd */
-                    dup2(cPipe[0], 0);
-
-                    /* close the pipe's read fd */
-                    close(cPipe[0]);
-                } 
-
-                if (cmd->next != NULL) {
-                    /* if the command doesn't have a next command,
-                     * it's the last command in the chain and therefore
-                     * shouldn't redirect its output.
-                     * so for each command that is not the last, we should
-                     * redirect the output to the relevant pipe.
-                     */
-
-                    /* find the relevant command sink pipe */
-                    cPipe = sinkPipe(pipes, cmd);
-
-                    /* close stdout */
-                    close(1);
-
-                    /* duplicate the relevant pipe's write fd */
-                    dup2(cPipe[1], 1);
-
-                    /* close the pipe's write fd */
-                    close(cPipe[1]);
-                }
-            }
-
-            if (cmd->inputRedirect != NULL) {
-                close(0);
-                fopen(cmd->inputRedirect, "r");
-            }
-
-            if (cmd->outputRedirect != NULL) {
-                close(1);
-                fopen(cmd->outputRedirect, "w");
-            }
-
-            if ((execvp(cmd->arguments[0], cmd->arguments)) != 0) {
-                perror("execute(): failed executing command.");
-            }
-            /* exit(EXIT_SUCCESS); */
-
-            return EXIT_SUCCESS;
-        }
-
-        cPipe = feedPipe(pipes, cmd);
-        if (cPipe != NULL) {
-            close(cPipe[0]);
-        }
-
-        cPipe = sinkPipe(pipes, cmd);
-        if (cPipe != NULL) {
-            close(cPipe[1]);
-        }
-
-        if (cmd->blocking == 1) {
-            waitpid(cpid, &status, 0);
-        }
-        cmd = cmd->next;
-        i++;
-    }
-
-    releasePipes(pipes, c - 1);
-}
+*/
 
 
 int main (int argc, char* argv[]) {
     cmdLine *cmd;
-    pid_t child;
+    /* pid_t child; */
     envVars *envRoot = NULL,
             *env = NULL,
             *tmp;
@@ -459,22 +436,34 @@ int main (int argc, char* argv[]) {
         /* Other cmds */
 
         } else {
-            child = fork();
-            if (child == 0) {
-                status = execute(cmd);
-                if (status != EXIT_SUCCESS) {
-                    perror(ERROR);
-                    _exit(status);
-                }
-            } else {
-                if ((int) cmd->blocking) {
-                    waitpid(child, &status, 0);
-                }
-            }
+            status = execute(cmd);
+            /*
+             * child = fork();
+             * if (child == 0) {
+             *     status = old_execute(cmd);
+             *     if (status != EXIT_SUCCESS) {
+             *         perror(ERROR);
+             *         _exit(status);
+             *     }
+             * } else {
+             *     if ((int) cmd->blocking) {
+             *         waitpid(child, &status, 0);
+             *     }
+             * }
+             */
         }
 
         freeCmdLines(cmd);
         printf("\n");
+    }
+
+    if (envRoot != NULL) {  /* free env vars. */
+        env = envRoot;
+        while (env != NULL) {
+            tmp = env->next;
+            free(env);
+            env = tmp;
+        }
     }
 
     return EXIT_SUCCESS;
