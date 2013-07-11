@@ -55,7 +55,7 @@
 (define special-form?
   (lambda (exp)
     (or (quoted? exp) (lambda? exp) (definition? exp)
-        (if? exp) (begin? exp) (while? exp))))
+        (if? exp) (begin? exp) (while? exp)(repeat? exp))))
 
 (define eval-special-form
   (lambda (exp env)
@@ -68,6 +68,7 @@
           ((if? exp) (eval-if exp env))
           ((begin? exp) (eval-begin exp env))
           ((while? exp) (eval-while exp env))
+          ((repeat? exp) (eval-repeat exp env))
           )))
 
 (define eval-lambda
@@ -105,11 +106,14 @@
      (iter)))))
 
 
-(define eval-repeat 
-  (lambda (exp env)
-;....
-    ))
-  
+(define eval-repeat (lambda (exp env)
+   (letrec ((iter (lambda ()
+                    (if (env-eval (repeat-pred exp) env)
+                        (begin
+                          (env-eval (repeat-body exp) env)
+                          (iter))
+                        'ok))))
+     (begin (env-eval (repeat-body exp) env) (iter)))))
 
 ; Pre-condition: Sequence of expressions is not empty
 (define eval-sequence

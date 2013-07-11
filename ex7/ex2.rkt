@@ -17,7 +17,7 @@
     ))
 
 
-; Signature: add-entry(key, lst)
+; Signature: lookup(key, lst)
 ; Type: [T1*T2*List(Pair(T1*T2))->List(Pair(T1*T2))]
 ; Purpose: adding key val Pair to the list lst
 ; Tests:
@@ -48,14 +48,11 @@
    (lambda (f)				; returns a memoized version of f
       (let ((memo (box '())))
          (lambda (x)
-            (let ((match <ADD HERE>))    		; lookup args
+            (let ((match (lookup x (unbox memo))))    		; lookup args
                (if (not (null? match))
-                   <ADD HERE>                  	; return stored value
-                   (let ((value <ADD HERE>)) 	; calculate
-			      <ADD HERE> )))))))	; store new value
-
-
-
+                   match                  	; return stored value
+                   (let ((value ((unbox f) x))) 	; calculate
+			      (begin (set-box! memo (add-entry x value (unbox memo))) value))))))))	; store new value
 
 ; Signature: memoize-rec!(function)
 ; Type: [Box(T1 → T2) → (T1 → T2)]
@@ -74,7 +71,16 @@
 ;	> (time (memoize-rec 32))
 ;	 cpu time: 0 real time: 0 gc time: 0
 (define memoize-rec!
-  (lambda (f)                       ;; returns a memoized version of function f
-))
-
-    
+   (lambda (f)				; returns a memoized version of f
+     (let* ((memo (box '()))
+              (old (unbox f))
+              (new (lambda (x)
+                     (let ((match (lookup x (unbox memo))))    		; lookup args
+                       (if (not (null? match))
+                           match                  	; return stored value
+                           (let ((value (old x))) 	; calculate
+                             (begin
+                               (set-box! memo (add-entry x value (unbox memo)))
+                               value
+                          )))))))
+          (begin (set-box! f new) new))))

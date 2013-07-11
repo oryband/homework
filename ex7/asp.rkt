@@ -398,7 +398,7 @@
 
 (define derived?
   (lambda (exp)
-    (or (cond? exp) (function-definition? exp) (let? exp) (letrec? exp) (while? exp))))
+    (or (cond? exp) (function-definition? exp) (let? exp) (letrec? exp) (while? exp)(repeat? exp))))
 
 (define shallow-derive
   (lambda (exp)
@@ -406,6 +406,7 @@
           ((function-definition? exp) (function-define->define exp))
           ((let? exp) (let->combination exp))
           ((while? exp) (while->iteration-expression exp))
+          ((repeat? exp) (repeat->iteration-expression exp))
           ;          ((letrec? exp) (letrec->combination exp))
           ((letrec? exp) (letrec->let exp))    
           (else (error 'shallow-derive "unhandled derivation: ~s" exp)))))
@@ -498,15 +499,28 @@
 
 (define repeat->iteration-expression
   (lambda (exp)
-    ;.....
-    ))
-
+    (let ((pred  (make-lambda '()   (list (repeat-pred exp))))
+          (body (make-lambda  '()  (list (repeat-body exp)))))
+       (make-let  (list (list 'pred pred) (list 'body body))
+                  (list
+                       (make-application 'body (list))
+                       (make-letrec
+                         (list (list 'iter 
+                                     (make-lambda (list)
+                                                  (list 
+                                                   (make-if 
+                                                    (make-application 'pred (list))
+                                                    (make-begin
+                                                     (list (make-application 'body (list))
+                                                           (make-application 'iter (list)))
+                                                    )
+                                                    '(quote ok)
+                                                   )))))
+                         (list (make-application 'iter (list)))))))))
 
 (define repeat->while-expression
   (lambda (exp)
-    ;......
-    ))
-
+    (make-begin (list (repeat-body exp) (make-while (repeat-pred exp) (repeat-body exp))))))
 
 (define while->iteration-expression
   (lambda (exp)
@@ -525,8 +539,6 @@
                                                     '(quote ok))))))
                          (list (make-application 'iter (list)))))))))
 
-
-  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Signature: vars-substitute(exp vars vals)
 ; Purpose: Consistent replacement of all FREE occurrences of 'vars' in 'exp' by 'vals', respectively.

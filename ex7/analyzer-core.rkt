@@ -45,13 +45,14 @@
 (define special-form? 
   (lambda (exp)
     (or (quoted? exp) (lambda? exp)
-        (definition? exp) (if? exp) (begin? exp) (while? exp))))
+        (definition? exp) (if? exp) (begin? exp) (while? exp)(repeat? exp))))
 
 (define analyze-special-form 
   (lambda (exp)
     (cond ((quoted? exp) (analyze-quoted exp))
           ((lambda? exp) (analyze-lambda exp))
           ((definition? exp) (analyze-definition exp))
+          ((repeat? exp)(analyze-repeat exp))
           ((if? exp) (analyze-if exp))
           ((begin? exp) (analyze-begin exp))
           ((while? exp) (analyze-while exp)))
@@ -117,11 +118,17 @@
         (iter))))))
 
   
-(define analyze-repeat
+(define analyze-repeat 
  (lambda (exp)
-;....
-   ))
-
+  (let ((pred (analyze (repeat-pred exp)))
+        (body (analyze (repeat-body exp))))
+    (lambda (env)
+      (letrec ((iter (lambda()
+                       (if (pred env)
+                           (begin (body env)
+                                  (iter))
+                           'ok))))
+        (begin (analyze (repeat-body exp))(iter)))))))
   
 (define true? 
   (lambda (x)
