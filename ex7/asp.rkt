@@ -472,28 +472,41 @@
 ;with internal let
 (define letrec->let
   (lambda (exp)
-    (let* ((vars (letrec-variables exp))
-           (unboxed-vars (map (lambda (var)(list 'unbox var))
-                             vars))
-           (vals (vars-substitute (letrec-initial-values exp)
-                                  vars
-                                  unboxed-vars))
-           (body (letrec-body exp))
-           (internal-let 
-              (make-let (map (lambda (var) 
-                               (list var (list 'unbox var)))
-                             vars)
-                        body))
-           (new-bindings (map (lambda (var) (list var '(box 'unassigned)))
-                              vars))
-           )
-      (letrec ((make-body (lambda (vars vals)
+    (letrec ([vars (letrec-variables exp)]
+             [unboxed-vars (map (lambda (var) (list 'unbox var))
+                                vars)]
+             [vals (vars-substitute (letrec-initial-values exp)
+                                    vars
+                                    unboxed-vars)]
+             [body (letrec-body exp)]
+             ; Don't use inner-let expression - unbox everything right here.
+             [vars-unboxed (lambda(var) (if (member var vars) (list 'unbox var) var))]
+             [internal-vars-unboxed
+               (lambda(vars body)
+                 (cond [(null? body) body]
+                       [(atomic? body) (if (member body vars) (list 'unbox body) body)]
+
+                       [(list? body)
+                        (map (lambda(exp)
+                               (internal-vars-unboxed vars exp)) body)]
+
+                       [(lambda? body)
+                        (make-lambda
+                          (lambda-parameters body)
+                          (internal-vars-unboxed (filter
+                                                   (lambda(var)
+                                                     (member var (lambda-parameters body))) vars)
+                                                 (lambda-body body)))]
+                       [else body]))]
+             [new-bindings (map (lambda (var) (list var '(box 'unassigned))) vars)]
+             [new-body (internal-vars-unboxed vars body)])
+
+      (letrec ([make-body (lambda (vars vals)
                             (if (null? vars)
-                                (list internal-let)
-                                (make-sequence (list 'set-box! (car vars) (car vals))
-                                               (make-body (cdr vars) (cdr vals)))))))
-        (make-let new-bindings (make-body vars vals))))
-    ))
+                              new-body
+                              (make-sequence (list 'set-box! (car vars) (car vals))
+                                             (make-body (cdr vars) (cdr vals)))))])
+        (make-let new-bindings (make-body vars vals))))))
 
 
 
