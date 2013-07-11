@@ -17,7 +17,7 @@
     ))
 
 
-; Signature: lookup(key, lst)
+; Signature: add-entry(key, val, lst)
 ; Type: [T1*T2*List(Pair(T1*T2))->List(Pair(T1*T2))]
 ; Purpose: adding key val Pair to the list lst
 ; Tests:

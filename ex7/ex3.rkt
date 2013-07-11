@@ -28,7 +28,7 @@
 (define make-empty-mbtree
   (lambda() (make-mbtree 'null)))
 
-; Signature: get-left()
+; Signature: get-left(mbtree)
 ; Type: [Mbtree -> Mbtree]
 ; Purpose:returns the left child of a the non-empty node tree, for an empty tree, t, : get-left(t)='null 
 ; Tests: (get-left (make-mbtree 1)) ==> 'null
@@ -36,7 +36,7 @@
   (lambda(mbtree) 
     ((cdr mbtree) 'get-left)))
 
-; Signature: get-right()
+; Signature: get-right(mbtree)
 ; Type: [Mbtree -> Mbtree]
 ; Purpose:returns the right child of a the non-empty node tree, for an empty tree, t, : get-right(t)='null 
 ; Tests: (get-right (make-mbtree 1)) ==> 'null
@@ -44,7 +44,7 @@
  (lambda(mbtree) 
   ((cdr mbtree) 'get-right)))
 
-; Signature: get-value()
+; Signature: get-value(mbtree)
 ; Type: [Mbtree -> T]
 ; Purpose:returns the value of a the non-empty node tree, for an empty tree, t, : get-value(t)='null 
 ; Tests: (get-value (make-mbtree 1)) ==> 1
@@ -96,14 +96,20 @@
 
 ;Signature: set-leftmost-occurrence!(mbtree, old, new)
 ;Type: [Mbtree * T1 * T2 -> Void]
-;Purpose: Set the left most occurrence of “old” to “new”
-;returning void in any case.
+;Purpose: Set the left most occurrence of “old” to “new” returning void in any case usuing helper procedure.
 ;Tests: 
 ;Post-condition:  tree = tree@pre with left most occurrence 
 ;                 of “old” set to “new”.
 (define set-leftmost-occurrence!
   (lambda(tree old new) 
     (helper tree old new (box #f))))
+
+;Signature: helper(mbtree, old, new, found)
+;Type: [Mbtree * T1 * T2 * boolean -> Void]
+;Purpose: Set the left most occurrence of “old” to “new” returning void in any case usuing helper procedure.
+;Tests: 
+;Post-condition:  tree = tree@pre with left most occurrence 
+;                 of “old” set to “new”.
 (define helper (lambda (tree old new found)
       (begin (if (and (not(unbox found)) (not(eq? (get-left tree)'null))) 
                  (helper (get-left tree) old new found)
