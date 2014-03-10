@@ -1,2 +1,2 @@
 `git checkout` changes between branches.
-`git merge` merges between branches & repos.
+Git branches are simpler and less resource heavy than Subversion's.
