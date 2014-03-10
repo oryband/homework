@@ -1,0 +1,3 @@
+* Git is a tree based source control management tool.
+* It is highly discouraged to edit the commit history of commits that were pushed to the server.
+* you can use 'git log --graph' to get a cool visualization of the commit history.
