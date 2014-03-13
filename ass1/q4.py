@@ -21,7 +21,6 @@ START = 1  # Sample start range
 END = 1000  # " end range
 EXPERIMENTS = 50  # Number of experiments to retry.
 ORDER = 3  # 'Best fit line' polynomial order.
-Y_BOUND = .12  # Limit y-axis (hide very large errors).
 FONT_SIZE = 18  # Ruler font size
 
 
