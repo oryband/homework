@@ -1,6 +1,5 @@
 /venv/
 .DS_Store
-*.jpg
-*.jpeg
+*.png
 *.pyc
 *.pdf
