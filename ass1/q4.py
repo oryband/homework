@@ -21,8 +21,8 @@ START = 1  # Sample start range
 END = 1000  # " end range
 EXPERIMENTS = 50  # Number of experiments to retry.
 ORDER = 3  # 'Best fit line' polynomial order.
-FONT_SIZE = 18  # Ruler font size
 Y_BOUND = .12  # Limit y-axis (hide very large errors).
+FONT_SIZE = 18  # Ruler font size
 
 
 if __name__ == '__main__':
@@ -45,18 +45,20 @@ if __name__ == '__main__':
     y = [np.mean(d) for d in zip(*experiments)]
 
     # Draw plot
-    label_pos = np.max(y)
-    plt.plot(x, y, '_')
-    plt.title(r'$\mu\approx%1.5f,\ \sigma\approx%1.5f$' % (np.mean(y),
-                                                           np.var(y)))
-    plt.xlabel(r'$\#\ of\ Samples$', fontsize=FONT_SIZE)
-    plt.ylabel(r'$|\hat{p}_m - p|$', fontsize=FONT_SIZE)
-    plt.ylim((0, Y_BOUND))  # Limit y-axis
+    p1, = plt.plot(x, y, '_')
 
-    # Plot an approximation polynomial over the original plot.
+    # Approximation polynomial
     coeff = np.polyfit(x, y, ORDER)
     y2 = np.polyval(coeff, x)
+    p2, = plt.plot(x, y2, 'r-')
+
+    # Legend
+    plt.legend((p1, p2),
+               [r'$\hat{R}(h)\ avg.\ over\ %d\ experiments$' % EXPERIMENTS,
+                r'$Approx.\ poly.\ (order\ %d)$' % ORDER])
 
     print 'Close the plot window to exit the app.'
-    plt.plot(x, y2, 'r-')
+    plt.xlabel(r'$Samples\ (m)$', fontsize=FONT_SIZE)
+    plt.ylabel(r'$\hat{R}(h)\ avg.$', fontsize=FONT_SIZE)
+    plt.ylim((0, np.mean(y) + .07))  # Limit y-axis
     plt.show()
