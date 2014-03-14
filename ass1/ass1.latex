@@ -1,0 +1,68 @@
+\documentclass[a4paper]{article}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Ory Band \texttt{300479425}, Uri Menkes \texttt{111111111}}
+\rhead{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\usepackage{amsmath,amssymb,bbm}
+\newcommand{\lc}{\left\{}
+\newcommand{\rc}{\right\}}
+\renewcommand{\notin}{\not\in}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\I}{\mathbbm{1}}
+\newcommand{\Sum}{\sum\limits_{i=1}^N}
+\newcommand{\qed}{\tag*{$\square$}}
+\newcommand{\fn}{\frac{1}{N}}
+
+\usepackage{cancel}
+
+\title{Assignment 1}
+\author{Ory Band \texttt{300479425}\\
+\and Uri Menkes \texttt{111111111}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\section {Question 1}
+\subsection {(a)}
+
+First, we'll notice that we're discussing discrete distributions (and not absoloutly continuous ones, for example).
+Therefore, since $ \forall 1 \leq i \leq N : X_i \sim P $, we get that $ \Pr(x_i=i)=p_i $.
+
+According to the description, $ U_m $ is the sum of $ A = \lc [N] \setminus \lc X_1, X_2, .., X_m \rc \rc $.
+That is, the sum of points $ A = \lc w_1, w_2, .., w_t \rc \subseteq \lc p_1, p_2, .., p_N \rc , t \leq N $
+s.t. $ \forall 1 \leq j \leq t : w_j \notin \lc X_1, X_2, .., X_m \rc $.
+
+Therefore, using the \textit{linearity of expectation}, we can write:
+\begin{align*}
+    \E[U_m] = \E \Bigg[ \Sum p_i \cdot \I_{ \lc U_m=i \rc } \Bigg]
+    &= \Sum p_i \cdot \E \Big[ \I_{ \lc X_1 \neq i \wedge X_2 \neq i \wedge .. \wedge X_m\neq i \rc } \Big] \\
+    &= \Sum p_i \cdot \E \Big[ \Pr(X_1 \neq i \wedge X_2 \neq i \wedge .. \wedge X_m\neq i) \Big]
+\end{align*}
+And since $ X_1, X_2, .., X_m $ are independent, and $ (1-p_i)^m $ is constant, we get:
+\begin{align*}
+    &= \Sum p_i \cdot \E \Big[ \Pr(X_1 \neq i) \cdot \Pr(X_2 \neq i) \cdot .. \cdot \Pr(X_m \neq i) \Big] \\
+    &= \Sum p_i \cdot \E \Big[ (1-p_i)^m \Big] \\
+    &= \Sum p_i \cdot (1-p_i)^m \\
+    \qed
+\end{align*}
+
+\subsection {(b)}
+
+\subsubsection {First sub-question}
+
+Notice that $ \forall x \in \mathbb{R} : 1-x \leq e^{-x} $ . Therefore:
+\begin{align*}
+    \E [ U_m ] = \Sum \fn \cdot (1-\fn)^m = \cancel{N} \cdot \cancel{\fn} \cdot (1-\fn)^m \leq (e^\fn)^m = e^{\frac{m}{N}}
+\end{align*}
+
+\subsubsection {Second sub-question}
+Now,
+
+\end{document}
