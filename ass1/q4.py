@@ -31,10 +31,10 @@ if __name__ == '__main__':
     # Run experiment
     x = xrange(START, END)
     experiments = []
+    p = np.random.uniform()  # Generate random bernoulli parameter
     for r in xrange(EXPERIMENTS):
         diffs = []
         for m in xrange(START, END):
-            p = np.random.uniform()  # Generate random bernoulli parameter
             tosses = bernoulli.rvs(p, size=m)  # Simulate `m` coin tosses
             diffs.append(np.absolute(np.mean(tosses) - p))  # Calc error
 
