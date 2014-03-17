@@ -14,7 +14,8 @@
 \newcommand{\mn}{\frac{m}{N}}
 \newcommand{\de}{\delta^{-1}e^{-\mn}}
 \newcommand{\e}{e^{-1.0051 \mn}}
-\newcommand{\df}{1-\delta^{-1}(1-\e)}
+\newcommand{\df}{\delta^{-1}(1-\e)}
+\newcommand{\odf}{1-\delta^{-1}(1-\e)}
 
 \title{Assignment 1}
 \author{
@@ -42,20 +43,17 @@
 First, we'll notice that we're discussing discrete distributions (and not absoloutly continuous ones, for example).
 Therefore, since $ \forall 1 \leq i \leq N : X_i \sim P $, we get that $ \Pr(x_i=i)=p_i $.
 
-According to the description, $ U_m $ is the sum of $ A = \lc [N] \setminus \lc X_1, X_2, .., X_m \rc \rc $.
-That is, the sum of points $ A = \lc w_1, w_2, .., w_t \rc \subseteq \lc p_1, p_2, .., p_N \rc , t \leq N $
-s.t. $ \forall 1 \leq j \leq t : w_j \notin \lc X_1, X_2, .., X_m \rc $.
-
+According to the description,
+$ \forall 1 \leq i \leq N : \Pr(i \in A) = p_i \cdot \I_{ \lc X_1 \neq i \wedge X_2 \neq i \wedge .. \wedge X_m\neq i \rc }   $. \\
 Therefore, using the \textit{linearity of expectation}, we can write:
 \begin{align*}
-    \E[U_m] = \E \Bigg[ \Sum p_i \cdot \I_{ \lc U_m=i \rc } \Bigg]
-    &= \Sum p_i \cdot \E \Big[ \I_{ \lc X_1 \neq i \wedge X_2 \neq i \wedge .. \wedge X_m\neq i \rc } \Big] \\
-    &= \Sum p_i \cdot \E \Big[ \Pr(X_1 \neq i \wedge X_2 \neq i \wedge .. \wedge X_m\neq i) \Big]
+    \E[U_m] = \E \Bigg[ \Sum p_i \cdot \I_{ \lc X_1 \neq i \wedge X_2 \neq i \wedge .. \wedge X_m\neq i \rc } \Bigg]
+    &= \Sum p_i \cdot \E \Big[ \I_{\lc..\rc} \Big] \\
 \end{align*}
 And since $ X_1, X_2, .., X_m $ are \textit{independent}, and $ (1-p_i)^m $ is constant, we get:
 \begin{align*}
-    &= \Sum p_i \cdot \E \Big[ \Pr(X_1 \neq i) \cdot \Pr(X_2 \neq i) \cdot .. \cdot \Pr(X_m \neq i) \Big] \\
-    &= \Sum p_i \cdot \E \Big[ (1-p_i)^m \Big] \\
+    &= \Sum p_i \cdot \E \Big[ \I_{\lc X_1 \neq i \rc} \cdot \I_{\lc X_2 \neq i \rc}, .. , \I_{\lc X_m \neq i \rc} \Big] \\
+    &= \Sum p_i \cdot \E \Big[ \I_{\lc X_1 \neq i \rc} \Big] \cdot \E \Big[ \I_{\lc X_2 \neq i \rc} \Big] \cdot .. \cdot \Big[ \I_{\lc X_m \neq i \rc} \Big] \\
     &= \Sum p_i \cdot (1-p_i)^m \\
     \qedsquare
 \end{align*}
@@ -109,38 +107,30 @@ From \textit{Markov's inequality} and the previous sub-question we get:
 
 \subsubsection {Fourth sub-question}
 
-To prove this question, we'll use the following theorem: 
-\begin{restatable}[Reverse Markov Inequality]{thm}{markov}
-    \label{thm:markov}
-    Let $X$ be a random variable that satisfies $ \Pr(X \leq a) = 1 $ for some constant $a$.
-    Then, for $ d < E[X] $:
-    \begin{align*}
-        \Pr( X > d) \geq \frac{\E[X] - d}{a - d}
-    \end{align*}
-\end{restatable}
-
-Notice $P$ distributes uniformly. Thus, for $ A = [N] \setminus \lc X_1, X_2, .., X_m \rc \subseteq [N] $
-we get $ \Pr ( A \leq \fn = 1 ) $. Therefore $ \Pr ( U_m \leq 1 ) = 1 $.
-
-Let $ a := 1 $ and $ d := 1-\df $. Thus for $ N \geq 100 $:
 \begin{align*}
-    \Pr \Big( U_m \geq \df \Big) &\geq \frac{ \E[U_m] - \Big( \df \Big) }{ 1 - \Big( \df \Big) } \\
-    &\geq \frac{\e-1}{\delta^{-1}(1-\e)} + \frac{\cancel{\df}}{\cancel{\df}} \\
-    &= - \frac{1}{\delta^{-1}} + 1 \\
-    &= 1-\delta \\
+    \Pr( U_m \geq \odf)
+    &= \Pr( 1 - U_m \leq \df ) \\
+    &= 1 - \Pr( 1 - U_m > \df ) \\
+    &\geq 1 - \frac{\E[1-U_m]}{\df} && (Markov's\ inequality) \\
+    &\geq 1 - \frac{1-\e}{\df} && (N \geq 100) \\
+    &= 1 - \delta
     \qedsquare
 \end{align*}
 
 \subsubsection {Fifth sub-question}
 
-Now, from the previous quesion, for $ m \leq \frac{ N \ln \frac{25}{9} }{1.0051} \approx 1.017 N $ and for $ \delta=\frac{4}{5} $ we get: \\
+Now, from the previous quesion, for $ m = \frac{ N \ln \frac{25}{9} }{1.0051} \approx 1.017 N $ and for $ \delta=\frac{4}{5} $ we get: \\
 \begin{align*}
-    \Pr \Big( U_m \geq 1 - \frac{4}{5} ( 1 - e^{ - \cancel{1.0051}
+    \Pr \Big( U_m \geq 1 - \frac{5}{4} ( 1 - e^{ - \cancel{1.0051}
         \frac{ \cancel{N} \ln \frac{25}{9} }{\cancel{1.0051} \cancel{N}}} ) \Big)
-    &= \Pr \Big( U_m \geq 1 - \frac{4}{5} ( 1 - e^{ - \ln \frac{25}{9} } ) \Big) \\
-    &= \Pr \Big( U_m \geq 1 - \frac{4}{5} ( 1 - \frac{9}{25} ) \Big) \\
+    &= \Pr \Big( U_m \geq 1 - \frac{5}{4} ( 1 - e^{ - \ln \frac{25}{9} } ) \Big) \\
+    &= \Pr \Big( U_m \geq 1 - \frac{5}{4} ( 1 - \frac{9}{25} ) \Big) \\
+    &= \Pr \Big( U_m \geq \frac{1}{5} \Big) && (Previous\ sub-question) \\
     &\geq 1 - \frac{4}{5} \\
     &= \frac{1}{5}
+\end{align*}
+And for $m < \frac{ N \ln \frac{25}{9} }{1.0051} $ the inequality still holds (the right wing inside $\Pr$ gets smaller).
+\begin{align*}
     \qedsquare
 \end{align*}
 
@@ -150,14 +140,15 @@ Now, from the previous quesion, for $ m \leq \frac{ N \ln \frac{25}{9} }{1.0051}
 
 \subsubsection {First sub-question}
 
-We need to show that $ \forall \epsilon , \delta > 0 : \Pr ( |U_m| > \epsilon ) \xrightarrow{m \to \infty} 0 < \delta $
+We need to show that $ \forall \epsilon , \delta > 0 : \Pr ( |U_m| > \epsilon ) \xrightarrow{m \to \infty} 0 $
 
 Notice that $ U_m \geq 0 $ thus $ |U_m| = U_m $, and that for $ N=\N , P = { p_1, p_2, .. } $ \\
 we have $ \displaystyle \lim_{N \to \infty} \Sum p_i = 1 $ because $ P(\N) = 1 $. \\
 Furthermore, $ \forall i \in N : 0 \leq p_i \leq 1 $ thus $ (1-p_i)^m \xrightarrow{m \to \infty} 0 $. \\
 Therefore from \textit{Markov's inequality} and \textit{(a)} we get:
 \begin{align*}
-    \Pr ( |U_m| > \epsilon ) = \Pr ( U_m > \epsilon ) &\leq \frac{\E[U_m]}{\epsilon} \frac{ \Sum p_i ( 1 - p_i ) ^m }{\epsilon} \\
+    \Pr ( |U_m| > \epsilon ) = \Pr ( U_m > \epsilon ) &\leq \frac{\E[U_m]}{\epsilon} \\
+    &= \frac{ \Sum p_i ( 1 - p_i ) ^m }{\epsilon} \\
     &= \frac{ \Sum p_i ( 1 - p_i ) ^m }{\epsilon} \\
     &<_{m \to \infty} \frac{ \Sum p_i \cdot \epsilon \cdot \delta }{\epsilon} \\
     &= \frac{ \cancel{\epsilon} \cdot \delta }{\cancel{\epsilon}} \cdot \Sum p_i \xrightarrow{N \to \infty} \delta
@@ -173,7 +164,7 @@ First lets stand on the difference between PAC and CAP:
 \end{align*}
 
 Denote at the following problem: $ \mathcal{X}=\N, \mathcal{C}= \lc 0,1 \rc^{\N} $ \\
-We need to show that for any given $ c in \mathcal{C} $, the problem is CAP-learnable but not PAC-learnable.
+We need to show that for any given $ c \in \mathcal{C} $, the problem is CAP-learnable but not PAC-learnable.
 
 In the previous sub-question we showed that for every $ \epsilon, \delta > 0 $ and for every $P$ over $\N$,
 there is $ m_0(\epsilon,\delta) $ s.t. for every $ m > m_0 $ we have $ \Pr(U_m > \epsilon) < \delta $. \\
@@ -211,11 +202,18 @@ We think Simplicio is wrong:
 
 \subsection {(a)}
 
-The \textit{reverse Markov inequality} gives a lower bound (also used in question 1): \\
+The \textit{reverse Markov inequality} gives a lower bound: \\
 \url{http://planetmath.org/reversemarkovinequality}
-\markov*
+\begin{restatable}[Reverse Markov Inequality]{thm}{markov}
+    \label{thm:markov}
+    Let $X$ be a random variable that satisfies $ \Pr(X \leq a) = 1 $ for some constant $a$.
+    Then, for $ d < E[X] $:
+    \begin{align*}
+        \Pr(X>d) \geq \frac{\E[X] - d}{a - d}
+    \end{align*}
+\end{restatable}
 \begin{proof}
-    Let $Y:=a-X$apply the original Markov inequality:
+    Let $Y:=a-X$ and apply the original Markov inequality:
     \begin{align*}
         &\Pr(X\leq d) = \Pr(Y\geq a-d) 
         \leq \frac{\E[Y]}{a-d} 
@@ -286,12 +284,11 @@ Thus we get:
 We used a simple average over the samples for approximating the biased coin parameter $p$.
 According to the \textit{law of large numbers}, we have:
 \begin{align*}
-    \displaystyle \lim_{N \to \infty} \Pr \Bigg( | \Big( \frac{1}{N} \Sum X_i \Big) - p | > \epsilon \Bigg) = 0
+    \displaystyle \Pr \Bigg( \lim_{N \to \infty} | \Big( \frac{1}{N} \Sum X_i \Big) - p | > \epsilon \Bigg) = 0
 \end{align*}
 This explains the "downslope" curve of the error towards zero:
 
 \begin{figure}[h!]
-    % \centering
     \includegraphics[width=0.9\textwidth]{q4.png}
     \caption{Code is at \url{https://github.com/oryband/machine-learning/blob/master/ass1/q4.py}}
 \end{figure}
