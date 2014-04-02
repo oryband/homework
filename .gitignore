@@ -3,7 +3,6 @@
 *.class
 *~
 
+*.jar
 AwsCredentials.properties
-/aws-java-sdk*/
-lib/
-third-party/
+/libs/
