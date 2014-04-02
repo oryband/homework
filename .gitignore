@@ -1,6 +1,7 @@
 .DS_Store
 *.swp
 *.class
+*~
 
 AwsCredentials.properties
 /aws-java-sdk*/

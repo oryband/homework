@@ -1,7 +1,7 @@
 <project name="EC2 Launch" basedir=".">
   <path id="aws.java.sdk.classpath">
-    <fileset dir="lib" includes="**/*.jar"/>
-    <fileset dir="third-party" includes="**/*.jar"/>
+    <fileset dir="../aws-java-sdk-1.7.5/lib" includes="**/*.jar"/>
+    <fileset dir="../aws-java-sdk-1.7.5/third-party" includes="**/*.jar"/>
     <pathelement location="."/>
   </path>
 
