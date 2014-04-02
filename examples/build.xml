@@ -1,23 +1,23 @@
-<project name="EC2 Launch" basedir=".">
-  <path id="aws.java.sdk.classpath">
-    <fileset dir="../aws-java-sdk-1.7.5/lib" includes="**/*.jar"/>
-    <fileset dir="../aws-java-sdk-1.7.5/third-party" includes="**/*.jar"/>
+<project name="Examples" basedir="." default="build">
+  <path id="libs">
+    <fileset dir="../libs/aws-java-sdk-1.7.5/lib" includes="**/*.jar"/>
+    <fileset dir="../libs/aws-java-sdk-1.7.5/third-party" includes="**/*.jar"/>
     <pathelement location="."/>
   </path>
 
   <target name="build">
-    <javac includeantruntime="false" srcdir="." destdir="." classpathref="aws.java.sdk.classpath"/>
+    <javac includeantruntime="false" srcdir="." destdir="." classpathref="libs"/>
   </target>
 
   <target name="ec2" depends="build">
-    <java classname="EC2Launch" classpathref="aws.java.sdk.classpath" fork="true"/>
+    <java classname="EC2Launch" classpathref="libs" fork="true"/>
   </target>
 
   <target name="s3" depends="build">
-    <java classname="S3Sample" classpathref="aws.java.sdk.classpath" fork="true"/>
+    <java classname="S3Sample" classpathref="libs" fork="true"/>
   </target>
 
   <target name="sqs" depends="build">
-    <java classname="SimpleQueueServiceSample" classpathref="aws.java.sdk.classpath" fork="true"/>
+    <java classname="SimpleQueueServiceSample" classpathref="libs" fork="true"/>
   </target>
 </project>
