@@ -1,25 +1,76 @@
 <!DOCTYPE html>
-<html class="no-js">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Ory Band</title>
+  <meta name="description" content="My Profile Page">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="css/normalize.min.css">
-    <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <script>window.html5 || document.write('<script src="js/vendor/html5shiv.js"><\/script>')</script>
-      <![endif]-->
-    </head>
-    <body>
+<body>
+  <div id="header-container">
+    <div id="header" class="wrapper">
+      <form action="/login" method="post">
+        <ul>
+          <li>
+            <input type="text" id="user" placeholder="User" />
+          </li>
+          <li>
+            <input type="password" id="password" placeholder="Password" />
+          </li>
+          <li>
+            <button type="submit" id="login-button">Login</button>
+          </li>
+        </ul>
+      </form>
+    </div>
+  </div>
 
-      <p>Hello world! This is HTML5 Boilerplate.</p>
+  <div id="main-container">
+    <div id="main" class="wrapper">
+      <h1>Ory Band</h1>
+      <h2>300479425</h2>
 
-      <script src="js/plugins.js"></script>
-      <script src="js/main.js"></script>
-    </body>
-  </html>
+      <h3>Hi, I'm Ory. Welcome to my personal website!</h3>
+
+      <p>
+        I'm a Math &amp; CS BSc student at Ben-Gurion University, Israel.<br />
+        I play guitar, piano, and sometimes mess around with a harmonica and recorder as well.<br />
+        I also took a long trip to China and Mongolia, and documented it in an unfinished travel blog,
+        which you're welcome to read.
+      </p>
+
+      <table id="websites">
+        <tr>
+          <td><a href="http://oryband.com">oryband.com</a></td>
+          <td>My personal website.</td>
+        </tr>
+        <tr>
+          <td><a href="http://oryband.wordpress.com">oryband.wordpress.com</a></td>
+          <td>My travel blog.</td>
+        </tr>
+        <tr>
+          <td><a href="https://plus.google.com/photos/+OryBand/albums">plus.google.com/photos/+OryBand/albums</a></td>
+          <td>My photo albums.</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="footer-container">
+    <div id="footer" class="wrapper">
+      <blockquote cite="https://en.wikiquote.org/wiki/Jack_Handey">
+        <p>
+          "It takes a big man to cry, but it takes a bigger man to laugh at that man."
+          <!-- add jack handy cite -->
+        </p>
+      </blockquote>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
