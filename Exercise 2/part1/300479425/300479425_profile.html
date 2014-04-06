@@ -31,101 +31,23 @@
     text-shadow: none;
   }
 
-  hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
-  }
-
   img {
     vertical-align: middle;
   }
 
-  fieldset {
-    border: 0;
-    margin: 0;
-    padding: 0;
-  }
-
-  textarea {
-    resize: vertical;
-  }
-
-
-  /* html5bp Helper classes */
-
-  /* Image Replacement */
-  .ir {
-    background-color: transparent;
-    border: 0;
-    overflow: hidden;
-    *text-indent: -9999px;
-  }
-
-  .ir:before {
-    content: "";
-    display: block;
-    width: 0;
-    height: 150%;
-  }
-
-  .hidden {
-    display: none !important;
-    visibility: hidden;
-  }
-
-  .visuallyhidden {
-    border: 0;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-  }
-
-  .visuallyhidden.focusable:active,
-  .visuallyhidden.focusable:focus {
-    clip: auto;
-    height: auto;
-    margin: 0;
-    overflow: visible;
-    position: static;
-    width: auto;
-  }
-
-  .invisible {
-    visibility: hidden;
-  }
-
-  .clearfix:before,
-  .clearfix:after {
-    content: " ";
-    display: table;
-  }
-
-  .clearfix:after {
-    clear: both;
-  }
-
-  .clearfix {
-    *zoom: 1;
-  }
   body {
     font-family: 'Open Sans', sans-serif;
-    background-image: url("../images/bg.png");
+    background-image: url("images/bg.png");
     background-repeat: repeat;
   }
 
+  /* Align page to middle. */
   .wrapper {
     margin: 0 auto;
     width: 700px;
   }
 
+  /* Nice title & headers font. */
   h1, h2, h3, h4, h5, h6,
   #header input,
   #header button {
@@ -136,6 +58,7 @@
     border-bottom: 1px solid #ccc;
   }
 
+  /* Align login inputs to right. */
   #header ul {
     float: right;
   }
@@ -156,18 +79,35 @@
     font-size: 0.8em;
   }
 
-  #avatar {
-    float: right;
-    display: inline;
-    margin: 30px 30px 0 0;
-    z-index: -1;
-    width: 150px;
-    opacity: 0.7;
-    transform: rotate(20deg);
-  }
-
   #websites td {
     padding-right: 20px;
+  }
+
+  /* Polaroid image effect. */
+  .polaroid {
+    margin: 30px 0px 30px 50px;
+    width: 150px;
+    height: 200px;
+    background: white;
+    padding: 5px;
+    float: right;
+    margin-left: 5px;
+    transform: rotate(20deg);
+    border: 1px solid black;
+  }
+
+  .image-holder {
+    display: block;
+    overflow: hidden;
+  }
+
+  .polaroid img {
+    width: 150px
+  }
+
+  .caption {
+    margin-top: 5px;
+    display: block;
   }
 
   #footer {
@@ -177,6 +117,20 @@
 
   #quoter {
     float: right;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    content: " ";
+    display: table;
+  }
+
+  .clearfix:after {
+    clear: both;
+  }
+
+  .clearfix {
+    *zoom: 1;
   }
   </style>
 
@@ -204,7 +158,14 @@
 
   <div id="main-container">
     <div id="main" class="wrapper clearfix">
-      <img id="avatar" src="images/avatar.jpg" alt="Image of Ory Band" />
+
+      <div class="polaroid">
+        <div class="image-holder">  
+          <img src="images/avatar.jpg" alt="Image of Ory Band" />
+        </div>
+        <span class="caption">Getting a ride in Cozumel, Mexico</span>
+      </div>
+
 
       <h1>Ory Band</h1>
       <h2>300479425</h2>
