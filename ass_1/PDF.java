@@ -34,44 +34,49 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class PDF {
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
-        // private PDPage page;
-        // private PDFTextStripper textStripper;
-        // private PDFText2HTML text2HTML;
-        // private String action, url;
-
-        // @Override
-        // public void setup(Context context) throws IOException, InterruptedException {}
-
         @Override
         public void map(LongWritable index, Text line, Context context) throws IOException, InterruptedException {
             String fields[] = line.toString().split("\t"),
                    action = fields[0],
                    url = fields[1];
-
-
             PDPage page = new PDPage();
-            // this.textStripper = new PDFTextStripper();
-            // this.text2HTML = new PDFText2HTML("utf-8");
             try {
                 PDDocument doc = PDDocument.load(new URL(url));
                 page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
-
-                // doc.close();  // TODO when to close?
-            } catch (Exception e) {}  // TODO Handle specific exceptions.
-
+		String base = FilenameUtils.getBaseName(url),
+                       ext = FilenameUtils.getExtension(url),
+		       new_name = base+ext;            
+		} catch (Exception e) {} 
             if (action == "toImage") {
-                String base = FilenameUtils.getBaseName(url),
-                       ext = FilenameUtils.getExtension(url);
                 try {
                     BufferedImage image = page.convertToImage();
                     File outputfile = new File(base + ext);
                     ImageIO.write(image, "png", outputfile);
 
-                } catch (IOException e) {}  // TODO same
+                } catch (IOException e) {}
 
-                context.write(new Text(action), new Text(base + ext));
+                context.write(new Text(action), new Text(new_name));
             }
+	    if (action == "toText"){
+		String pageText = get_text(doc);
+		PrintWriter out = new PrintWriter(new_name+".txt");
+		out.println(pageText);
+		out.close()
+		context.write(new Text(action), new Text(new_name));
+	    }
+	    if (action == "toHTML") {
+		 String pageText = get_text(doc);
+
+
+	    }
+	    doc.close(); 
         }
+	private String get_text(PDDocument doc){
+		PDFTextStripper reader = new PDFTextStripper();
+		reader.setStartPage(1);
+		reader.setEndPage(1);
+		return reader.getText(doc);
+	}
     }
 
     public static class PartitionerClass extends Partitioner<Text, Text> {
