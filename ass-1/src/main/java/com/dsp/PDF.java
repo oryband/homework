@@ -8,6 +8,7 @@ import java.net.URL;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.File;
+import java.io.PrintWriter;
 
 import java.awt.image.BufferedImage;
 
@@ -36,50 +37,50 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class PDF {
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
-        // private PDPage page;
-        // private PDFTextStripper textStripper;
-        // private PDFText2HTML text2HTML;
-        // private String action, url;
 
-        // @Override
-        // public void setup(Context context) throws IOException, InterruptedException {}
+        private String getText(PDDocument doc) throws IOException {
+            PDFTextStripper reader = new PDFTextStripper();
+            reader.setStartPage(1);
+            reader.setEndPage(1);
+            return reader.getText(doc);
+        }
 
         @Override
         public void map(LongWritable index, Text line, Context context) throws IOException, InterruptedException {
             String fields[] = line.toString().split("\t"),
                    action = fields[0],
                    url = fields[1];
+            PDDocument doc = PDDocument.load(new URL(url));
+            PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
 
-
-            PDPage page = new PDPage();
-            // this.textStripper = new PDFTextStripper();
-            // this.text2HTML = new PDFText2HTML("utf-8");
-            try {
-                PDDocument doc = PDDocument.load(new URL(url));
-                page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
-            } catch (Exception e) {}  // TODO Handle specific exceptions.
-            // finally {
-            //     doc.close();
-            // }
+            String base = FilenameUtils.getBaseName(url),
+                   ext = FilenameUtils.getExtension(url),
+                   outputFileName = base + ext;
 
             if (action == "toImage") {
-                String base = FilenameUtils.getBaseName(url),
-                       ext = FilenameUtils.getExtension(url);
                 try {
                     BufferedImage image = page.convertToImage();
-                    File outputfile = new File(base + ext);
+                    File outputfile = new File(outputFileName);
                     ImageIO.write(image, "png", outputfile);
                 } catch (IOException e) {}  // TODO same
+                context.write(new Text(action), new Text(outputFileName));
 
-                context.write(new Text(action), new Text(base + ext));
+            } else if (action == "toText") {
+                String pageText = this.getText(doc);
+                PrintWriter out = new PrintWriter(outputFileName + ".txt");
+                out.println(pageText);
+                out.close();
+                context.write(new Text(action), new Text(outputFileName));
             }
+
+            doc.close();
         }
     }
 
     public static class PartitionerClass extends Partitioner<Text, Text> {
         @Override
         public int getPartition(Text action, Text outputFile, int numPartitions) {
-            return 0 % numPartitions;
+            return 0 % numPartitions;  // TODO fix
         }
     }
 
