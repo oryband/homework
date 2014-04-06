@@ -9,72 +9,175 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main.css">
 
   <style>
-    body {
-      font-family: 'Open Sans', sans-serif;
-      background-image: url("../img/bg.png");
-      background-repeat: repeat;
-    }
+  /* Default text color. */
+  html,
+  button,
+  input,
+  select,
+  textarea {
+    color: #222;
+  }
 
-    .wrapper {
-      margin: 0 auto;
-      width: 700px;
-    }
+  /* Default (base) font size. */
+  html {
+    font-size: 1em;
+    line-height: 1.4;
+  }
 
-    h1, h2, h3, h4, h5, h6,
-    #header input,
-    #header button {
-      font-family: 'Merriweather', serif;
-    }
+  ::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+  }
 
-    #header {
-      border-bottom: 1px solid #ccc;
-    }
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+  }
 
-    #header ul {
-      float: right;
-    }
+  img {
+    vertical-align: middle;
+  }
 
-    #header li {
-      float: left;
-      display: inline;
-      margin-left: 5px;
-      list-style-type: none;
-    }
+  fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
 
-    #header input {
-      width: 100px;
-    }
+  textarea {
+    resize: vertical;
+  }
 
-    #header input,
-    #header button {
-      font-size: 0.8em;
-    }
 
-    #avatar {
-      float: right;
-      display: inline;
-      margin: 30px 30px 0 0;
-      z-index: -1;
-      width: 150px;
-      opacity: 0.7;
-      transform: rotate(20deg);
-    }
+  /* html5bp Helper classes */
 
-    #websites td {
-      padding-right: 20px;
-    }
+  /* Image Replacement */
+  .ir {
+    background-color: transparent;
+    border: 0;
+    overflow: hidden;
+    *text-indent: -9999px;
+  }
 
-    #footer {
-      margin-top: 100px;
-      border-top: 1px solid #ccc;
-    }
+  .ir:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 150%;
+  }
 
-    #quoter {
-      float: right;
-    }
+  .hidden {
+    display: none !important;
+    visibility: hidden;
+  }
+
+  .visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  .visuallyhidden.focusable:active,
+  .visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+  }
+
+  .invisible {
+    visibility: hidden;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+    content: " ";
+    display: table;
+  }
+
+  .clearfix:after {
+    clear: both;
+  }
+
+  .clearfix {
+    *zoom: 1;
+  }
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background-image: url("../images/bg.png");
+    background-repeat: repeat;
+  }
+
+  .wrapper {
+    margin: 0 auto;
+    width: 700px;
+  }
+
+  h1, h2, h3, h4, h5, h6,
+  #header input,
+  #header button {
+    font-family: 'Merriweather', serif;
+  }
+
+  #header {
+    border-bottom: 1px solid #ccc;
+  }
+
+  #header ul {
+    float: right;
+  }
+
+  #header li {
+    float: left;
+    display: inline;
+    margin-left: 5px;
+    list-style-type: none;
+  }
+
+  #header input {
+    width: 100px;
+  }
+
+  #header input,
+  #header button {
+    font-size: 0.8em;
+  }
+
+  #avatar {
+    float: right;
+    display: inline;
+    margin: 30px 30px 0 0;
+    z-index: -1;
+    width: 150px;
+    opacity: 0.7;
+    transform: rotate(20deg);
+  }
+
+  #websites td {
+    padding-right: 20px;
+  }
+
+  #footer {
+    margin-top: 100px;
+    border-top: 1px solid #ccc;
+  }
+
+  #quoter {
+    float: right;
+  }
   </style>
 
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,700|Merriweather:400,700' rel='stylesheet' type='text/css'>
@@ -101,7 +204,7 @@
 
   <div id="main-container">
     <div id="main" class="wrapper clearfix">
-      <img id="avatar" src="img/avatar.jpg" alt="Image of Ory Band" />
+      <img id="avatar" src="images/avatar.jpg" alt="Image of Ory Band" />
 
       <h1>Ory Band</h1>
       <h2>300479425</h2>
