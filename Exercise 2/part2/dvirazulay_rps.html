@@ -3,11 +3,18 @@
   <head>
     <title>ThisIsAnAwesomeRPS.com</title>
     <style>
+      .player div {
+        width: 50px;
+        height: 50px;
+      }
       .paper {
+        background: url('200534014/images/paper.png');
       }
       .rock {
+        background: url('200534014/images/rock.png');
       }
       .scissors {
+        background: url('200534014/images/scissors.png');
       }
 
       .choices div {
@@ -48,8 +55,8 @@
       <section class="results">
         <div class="choices">
           <h3>Please make your choices now.</h3>
-          <div>Player1: <span id="player1"></span></div>
-          <div>Player2: <span id="player2"></span></div>
+          <div class="player">Player1: <div id="player1"></div></div>
+          <div class="player">Player2: <div id="player2"></div></div>
         </div>
         <div class="announcement">
           And the winner is... <span id="winner"></span>
