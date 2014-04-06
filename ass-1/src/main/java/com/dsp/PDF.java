@@ -1,3 +1,5 @@
+package com.dsp.ass1;
+
 import java.util.StringTokenizer;
 import java.util.AbstractMap.SimpleEntry;
 
@@ -55,9 +57,10 @@ public class PDF {
             try {
                 PDDocument doc = PDDocument.load(new URL(url));
                 page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
-
-                // doc.close();  // TODO when to close?
             } catch (Exception e) {}  // TODO Handle specific exceptions.
+            // finally {
+            //     doc.close();
+            // }
 
             if (action == "toImage") {
                 String base = FilenameUtils.getBaseName(url),
@@ -66,7 +69,6 @@ public class PDF {
                     BufferedImage image = page.convertToImage();
                     File outputfile = new File(base + ext);
                     ImageIO.write(image, "png", outputfile);
-
                 } catch (IOException e) {}  // TODO same
 
                 context.write(new Text(action), new Text(base + ext));
@@ -77,7 +79,7 @@ public class PDF {
     public static class PartitionerClass extends Partitioner<Text, Text> {
         @Override
         public int getPartition(Text action, Text outputFile, int numPartitions) {
-            return 1;
+            return 0 % numPartitions;
         }
     }
 

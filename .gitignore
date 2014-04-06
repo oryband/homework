@@ -6,3 +6,5 @@
 *.class
 AwsCredentials.properties
 target/
+
+ass-1/out/
