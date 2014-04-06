@@ -45,23 +45,6 @@ textarea {
 }
 
 
-/* My stuff. */
-
-.wrapper {
-  margin: 0 auto;
-  width: 700px;
-}
-
-#header li {
-  display: inline;
-  list-style-type: none;
-}
-
-#footer {
-  border-top: 1px solid #ccc;
-}
-
-
 /* html5bp Helper classes */
 
 /* Image Replacement */
