@@ -23,30 +23,22 @@
   }
 
   .header {
+    padding-top: 10px;
     border-bottom: 1px solid #ccc;
   }
 
-  .header li {
-    float: left;
-    margin-left: 5px;
-    list-style-type: none;
-  }
-
-  #websites td {
-    padding-right: 20px;
+  .container {
+    max-width: 700px;
   }
 
   /* Polaroid image effect. */
   .polaroid {
-    margin: 30px 0px 30px 50px;
+    margin: 10px 0 30px 30px;
     width: 150px;
     height: 200px;
     background: white;
     padding: 5px;
-    float: right;
-    margin-left: 5px;
     transform: rotate(20deg);
-    border: 1px solid black;
   }
 
   .image-holder {
@@ -67,10 +59,6 @@
     margin-top: 100px;
     border-top: 1px solid #ccc;
   }
-
-  #quoter {
-    float: right;
-  }
   </style>
 
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,700|Merriweather:400,700' rel='stylesheet' type='text/css'>
@@ -78,37 +66,38 @@
 
 <body>
   <div class="container">
-    <div class="header">
-      <form class="form-inline pull-right" action="/login" method="post">
-        <ul>
-          <li>
-            <input id="user" class="form-control" type="text" placeholder="User" />
-          </li>
-          <li>
-            <input id="user" class="form-control" type="password" placeholder="Password" />
-          </li>
-          <li>
-            <button id="login-button" class="btn btn-primary" type="submit">Login</button>
-          </li>
-        </ul>
-      </form>
-    </div>
+    <header class="header clearfix">
+      <div class="pull-right">
+        <form class="form-inline" action="/login" method="post">
+          <ul class="list-inline list-unstyled">
+            <li>
+              <input id="user" class="form-control" type="text" placeholder="User" />
+            </li>
+            <li>
+              <input id="user" class="form-control" type="password" placeholder="Password" />
+            </li>
+            <li>
+              <button id="login-button" class="btn btn-primary" type="submit">Login</button>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </header>
 
-    <div id="main-container">
-      <div id="main" class="wrapper clearfix">
-
-        <div class="polaroid">
-          <div class="image-holder">  
-            <img src="images/avatar.jpg" alt="Image of Ory Band" />
+    <main class="clearfix">
+      <article>
+        <aside>
+          <div class="polaroid pull-right img-thumbnail">
+            <div class="image-holder">  
+              <img src="images/avatar.jpg" alt="Image of Ory Band" />
+            </div>
+            <span class="caption">Getting a ride in Cozumel, Mexico</span>
           </div>
-          <span class="caption">Getting a ride in Cozumel, Mexico</span>
-        </div>
-
+        </aside>
 
         <h1>Ory Band</h1>
         <h2>300479425</h2>
-
-        <h3>Hi, I'm Ory. Welcome to my personal website!</h3>
+        <h3>Hi, I'm Ory. <small>Welcome to my personal website!</small></h3>
 
         <p>
           I'm a Math &amp; CS BSc student at Ben-Gurion University, Israel.<br />
@@ -117,35 +106,35 @@
           which you're welcome to read.
         </p>
 
-        <table id="websites">
+        <table class="table table-condensed table-hover">
           <tr>
             <td><a href="http://oryband.com">oryband.com</a></td>
-            <td>- My personal website.</td>
+            <td>My personal website.</td>
           </tr>
           <tr>
             <td><a href="http://oryband.wordpress.com">oryband.wordpress.com</a></td>
-            <td>- My travel blog.</td>
+            <td>My travel blog.</td>
           </tr>
           <tr>
             <td><a href="http://plus.google.com/photos/+OryBand/albums">plus.google.com/photos/+OryBand/albums</a></td>
-            <td>- My photo albums.</td>
+            <td>My photo albums.</td>
           </tr>
         </table>
-      </div>
-    </div>
+      </article>
+    </main>
 
-    <div id="footer-container">
+    <footer id="footer-container">
       <div id="footer" class="wrapper clearfix">
         <blockquote cite="https://en.wikiquote.org/wiki/Jack_Handey">
           <p>
-            "It takes a big man to cry, but it takes a bigger man to laugh at that man."
-            <div id="quoter">- Jack Handy</div>
+            It takes a big man to cry, but it takes a bigger man to laugh at that man.
           </p>
+          <footer>
+            <cite title="Jack Handy">Jack Handy</cite>
+          </footer>
         </blockquote>
       </div>
-    </div>
+    </footer>
   </div>
-
-  <script src="js/main.js"></script>
 </body>
 </html>
