@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ThisIsAnAwesomeRPS.com</title>
+    <style>
+      .paper {
+      }
+      .rock {
+      }
+      .scissors {
+      }
+
+      .choices div {
+        font-weight: bold;
+      }
+
+      .choices div span {
+        font-weight: normal;
+      }
+
+      section.results {
+        margin-top: 40px;
+      }
+
+      section.results .announcement {
+        margin-top: 20px;
+      }
+    </style>
+    <script type="text/javascript" src="dvirazulay_rps.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>The best RPS you have ever played</h1>
+      <p>The management does not take responsibility for anyone whose feeling 
+         are hurt while playing this game.</p>
+    </header>
+    <main>
+      <section class="instructions">
+        <p>
+           In order to play Rock Paper Scissors, launch your Console (CTRL+SHIFT+J on Chrome) 
+           and execute the JavaScript function 'void rps([String item1, String2])'.
+        </p>
+        <p>
+           Any missing argument will be randomized with a rocket science formula developed in Bell Labs.
+        </p>
+        <h3>May the odds be ever in your favor!</h3>
+      </section>
+      <section class="results">
+        <div class="choices">
+          <h3>Please make your choices now.</h3>
+          <div>Player1: <span id="player1"></span></div>
+          <div>Player2: <span id="player2"></span></div>
+        </div>
+        <div class="announcement">
+          And the winner is... <span id="winner"></span>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

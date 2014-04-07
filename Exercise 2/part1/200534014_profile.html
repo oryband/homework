@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dvir's awesome profile</title>
+    <style>
+      @font-face {
+        font-family: 'GraphicPixel';
+        src: url('200534014/fonts/graphicpixel-webfont.eot');
+        src: url('200534014/fonts/graphicpixel-webfont.eot?#iefix') format('embedded-opentype'),
+        url('200534014/fonts/graphicpixel-webfont.woff') format('woff'),
+        url('200534014/fonts/graphicpixel-webfont.ttf') format('truetype'),
+        url('200534014/fonts/graphicpixel-webfont.svg#GraphicPixelRegular') format('svg');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      body {
+        background-color: black;
+        margin: 0;
+        color: #eee;
+        font-family: 'GraphicPixel', sans-serif;
+        font-size: 16px;
+        background: -webkit-gradient(radial, center center, 240, center center, 800, from(rgba(0,0,0,0)), to(rgba(0,0,0,1))), url('200534014/images/wood.png') repeat, #000; 
+        background: -moz-radial-gradient(rgba(0,0,0,0) 40%,rgba(0,0,0,1) 125%), url('200534014/images/wood.png') repeat, #000; 
+        background-size: auto, 256px;
+      }
+
+      h1 span.first {
+        font-weight: normal;
+      }
+
+      a {
+        color: #c6c0a3;
+        font-weight: bold;
+      }
+
+      header {
+        border-bottom: 2px solid grey;
+        text-align: right;
+        padding: 10px;
+      }
+      
+      header input.login {
+        background-color: white;
+        border-radius: 5px;
+        border: 3px solid #c6c0a3;
+      }
+
+      main section {
+        display: inline-block;
+        padding: 8px;
+        width: 800px;
+      }
+      main aside {
+        float: right;
+        margin-right: 60px;
+        margin-top: 60px;
+      }
+      main aside div.polaroid {
+        transform: rotate(25deg);
+        -webkit-transform: rotate(25deg);
+        -moz-transform: rotate(25deg);
+      }
+
+      .favorite_websites table td {
+        padding-bottom: 10px;
+      }
+
+      .favorite_websites table td.link {
+        width: 150px;
+      }
+
+      footer {
+        position: fixed;
+        bottom: 0;
+        border-top: 2px solid grey;
+      }
+
+      /* polaroid effect */
+      .polaroid {
+        width:300px;
+        height:300px;
+        background:#FFF;
+        padding:5px;
+        float:left;
+        margin-left:5px;
+        border: 1px dotted #2C84C1;
+      }
+      .polaroid:first-child {
+        margin-left:0px;
+      }
+      .image-holder {
+        width:300px;
+        height:250px;
+        display:block;
+        overflow:hidden;
+      }
+      .image-holder img {
+        height: 300px;
+        width: 300px;
+      }
+      .caption {
+        color: black;
+        display:block;
+        margin-top:5px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <form method="POST" action="/login.php">
+        <label>Username: <input type="text" name="user" placeholder="user@example.com" /></label>
+        <label>Password: <input type="text" name="password" /></label>
+        <input type="submit" name="login" value="Send" class="login" />
+      </form>
+    </header>
+    <main>
+      <section>
+        <article>
+          <h1><span class="first">Dvir</span>, Azulay (200534014)</h1>
+          <p>Welcome to my personal page!</p>
+          <p>
+            I'm a Computer Science student in Ben Gurion University, graduating in 2014. 
+            I like watching movies and TV shows, computers (mainly programming and games) 
+            and sports - football and american football.
+          </p>
+          <p>
+            My favorite bands are Dream Theater, Paramore, Linkin Park and Disturbed 
+            in no particular order. I really like music, especially while driving.
+          </p>
+        </article>
+        <article class="favorite_websites">
+          <h3>Favorite Websites</h3>
+          <table>
+            <tr>
+              <td class="link">Link</td>
+              <td class="recommendation">Why I think it's cool</td>
+            </tr>
+            <tr>
+              <td><a href="http://www.stackoverflow.com">Stack Overflow</a></td>
+              <td>Stack Overflow is the best resource for programmers. It's a Q&amp;A site led and managed by the community entirely.</td>
+            </tr>
+            <tr>
+              <td><a href="http://www.quora.com">Quora</a></td>
+              <td>Quora is (yet another) Q&amp;A website, but covers topics from all walks of life. 
+                  You can ask a specific person to answer a question and follow them. 
+                  For example, <a href="http://www.quora.com/Ashton-Kutcher-1/How-did-Ashton-Kutcher-prepare-for-his-role-as-Steve-Jobs-in-the-new-movie-Jobs">Ashton Kutcher</a>. 
+                  <a href="http://www.quora.com/Brogramming/How-does-a-programmer-become-a-brogrammer">Here is an example of a great quora question/answer.</a>
+              </td>
+            </tr>
+            <tr>
+              <td><a href="http://www.techcrunch.com">TechCrunch</a></td>
+              <td>TechCrunch is a news blog about (obviously) tech. 
+                  They provide a lot of insider insights into startups 
+                  and big tech companies and are wildly known in the tech community.
+              </td>
+            </tr>
+          </table>
+        </article>
+      </section>
+      <aside>
+        <div class="polaroid">
+          <div class="image-holder">
+            <a target="_blank" href="200534014/images/favorite_octocat.png">
+              <img src="200534014/images/me.jpg" alt="This is me!" />
+            </a>
+          </div>
+          <span class="caption">Me after a few Mojitos</span>
+        </div>
+      </aside>
+    </main>
+    <footer>
+      <figure class="quote">
+        <blockquote>
+          "Fight and you may die. Run and you will live at least awhile. And dying in your bed many years from now, would you be willing to trade all the days from this day to that for one chance, just one chance, to come back here as young men and tell our enemies that they may take our lives but they will never take our freedom!"
+        </blockquote>
+        <figcaption>
+          - William Wallace (Braveheart)
+        </figcaption>
+      </figure>
+    </footer>
+  </body>
+</html>
