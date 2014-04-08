@@ -2,14 +2,16 @@ package com.dsp.ass1;
 
 import java.util.StringTokenizer;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.logging.Logger;
 
 import java.net.URL;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.io.FileNotFoundException;
+
 import java.io.File;
 import java.io.PrintWriter;
-
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -24,6 +26,21 @@ import org.apache.commons.io.FilenameUtils;
 
 
 public class Worker {
+    private static final Logger logger = Logger.getLogger(Worker.class.getName());
+
+    public static PDDocument getDocument(String url) {
+        PDDocument doc;
+
+        try {
+            doc = PDDocument.load(new URL(url));
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        return doc;
+    }
+
 
     private static String getText(PDDocument doc) throws IOException {
         PDFTextStripper reader = new PDFTextStripper();
@@ -32,33 +49,69 @@ public class Worker {
         return reader.getText(doc);
     }
 
+
+    public static void toImage(PDPage page, String base) {
+        try {
+            BufferedImage image = page.convertToImage();
+            File outputFile = new File(base + ".png");
+            ImageIO.write(image, "png", outputFile);
+        } catch (IOException e) {}  // TODO same
+    }
+
+
+    public static void toText(PDDocument doc, String base) {
+        String pageText;
+        PrintWriter out;
+
+        try {
+            pageText = getText(doc);
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return;
+        }
+
+        try {
+            out = new PrintWriter(base + ".txt");
+        } catch (FileNotFoundException e) {
+            logger.severe(e.getMessage());
+            return;
+        }
+
+        out.println(pageText);
+        out.close();
+    }
+
+
+    public static void handlePage(String action, String url) {
+        logger.info(action + " " + url);
+
+        String base = FilenameUtils.getBaseName(url);  // url file base name.
+        PDDocument doc = getDocument(url);
+
+        if (doc == null) {
+            return;
+        } else {
+            if (action.equals("ToImage")) {
+                PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
+                toImage(page, base);
+            }
+            else if (action.equals("ToText")) {
+                toText(doc, base);
+            }
+
+            try {
+                doc.close();
+            } catch (IOException e) {
+                logger.severe(e.getMessage());
+            }
+        }
+    }
+
+
     public static void main(String[] args) throws IOException, InterruptedException {
         String action = args[0],
                url = args[1];
 
-        PDDocument doc = PDDocument.load(new URL(url));
-        PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
-
-        String outputFileName = FilenameUtils.getBaseName(url) + FilenameUtils.getExtension(url);
-
-        if (action == "toImage") {
-            try {
-                BufferedImage image = page.convertToImage();
-                File outputfile = new File(outputFileName);
-                ImageIO.write(image, "png", outputfile);
-            } catch (IOException e) {}  // TODO same
-
-            System.out.println("image saved: " + action + " " + outputFileName);
-
-        } else if (action == "toText") {
-            String pageText = getText(doc);
-            PrintWriter out = new PrintWriter(outputFileName + ".txt");
-            out.println(pageText);
-            out.close();
-
-            System.out.println("text saved: " + action + " " + outputFileName);
-        }
-
-        doc.close();
+        handlePage(action, url);
     }
 }
