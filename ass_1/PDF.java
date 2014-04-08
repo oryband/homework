@@ -65,9 +65,14 @@ public class PDF {
 		context.write(new Text(action), new Text(new_name));
 	    }
 	    if (action == "toHTML") {
-		 String pageText = get_text(doc);
-
-
+		 Properties prop = new Properties();
+		 PrintWriter out = new PrintWriter(new_name+".html");
+   		 prop.load(out);
+                 PDFText2HTML htmlstripper = new PDFText2HTML(prop);
+		 htmlstripper.writeHeader();
+		 htmlstripper.writeString(get_text(doc));
+		 htmlstripper.endDocument(doc);	
+		 out.close();	
 	    }
 	    doc.close(); 
         }
