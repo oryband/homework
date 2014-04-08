@@ -27,10 +27,8 @@ function rps(item1, item2) {
 
   // set the players class to the item name, 
   // which will set the right picture for their decision
-  document.getElementById('player1').class = item1;
-  document.getElementById('player1').innerHTML = item1;
-  document.getElementById('player2').class = item2;
-  document.getElementById('player2').innerHTML = item2;
+  document.getElementById('player1').className = item1;
+  document.getElementById('player2').className = item2;
 
   // if both players chose the same item, we have a tie
   if (item1 === item2) {
