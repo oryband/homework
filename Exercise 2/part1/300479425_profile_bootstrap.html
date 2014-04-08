@@ -31,6 +31,12 @@
     max-width: 700px;
   }
 
+  /* Bold table headers. */
+  #url,
+  #desc {
+    font-weight: bold;
+  }
+
   /* Polaroid image effect. */
   .polaroid {
     margin: 10px 0 30px 30px;
@@ -108,18 +114,26 @@
         </p>
 
         <table class="table table-condensed table-hover">
-          <tr>
-            <td><a href="http://oryband.com">oryband.com</a></td>
-            <td>My personal website.</td>
-          </tr>
-          <tr>
-            <td><a href="http://oryband.wordpress.com">oryband.wordpress.com</a></td>
-            <td>My travel blog.</td>
-          </tr>
-          <tr>
-            <td><a href="http://plus.google.com/photos/+OryBand/albums">plus.google.com/photos/+OryBand/albums</a></td>
-            <td>My photo albums.</td>
-          </tr>
+          <thead>
+            <tr>
+              <td id="url">Websites</td>
+              <td id="desc">Description</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="http://oryband.com">oryband.com</a></td>
+              <td>My personal website.</td>
+            </tr>
+            <tr>
+              <td><a href="http://oryband.wordpress.com">oryband.wordpress.com</a></td>
+              <td>My travel blog.</td>
+            </tr>
+            <tr>
+              <td><a href="http://plus.google.com/photos/+OryBand/albums">plus.google.com/photos/+OryBand/albums</a></td>
+              <td>My photo albums.</td>
+            </tr>
+          </tbody>
         </table>
       </article>
     </main>

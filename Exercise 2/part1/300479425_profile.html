@@ -35,6 +35,10 @@
     vertical-align: middle;
   }
 
+  a {
+    text-decoration: none;
+  }
+
   body {
     font-family: 'Open Sans', sans-serif;
     background-image: url("300479425/images/bg.png");
@@ -77,6 +81,12 @@
   #header input,
   #header button {
     font-size: 0.8em;
+  }
+
+  /* Bold table headers. */
+  #url,
+  #desc {
+    font-weight: bold;
   }
 
   #websites td {
@@ -180,18 +190,26 @@
         </p>
 
         <table id="websites">
-          <tr>
-            <td><a href="http://oryband.com">oryband.com</a></td>
-            <td>- My personal website.</td>
-          </tr>
-          <tr>
-            <td><a href="http://oryband.wordpress.com">oryband.wordpress.com</a></td>
-            <td>- My travel blog.</td>
-          </tr>
-          <tr>
-            <td><a href="http://plus.google.com/photos/+OryBand/albums">plus.google.com/photos/+OryBand/albums</a></td>
-            <td>- My photo albums.</td>
-          </tr>
+          <thead>
+            <tr>
+              <td id="url">Websites</td>
+              <td id="desc">Description</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="http://oryband.com">oryband.com</a></td>
+              <td>My personal website.</td>
+            </tr>
+            <tr>
+              <td><a href="http://oryband.wordpress.com">oryband.wordpress.com</a></td>
+              <td>My travel blog.</td>
+            </tr>
+            <tr>
+              <td><a href="http://plus.google.com/photos/+OryBand/albums">plus.google.com/photos/+OryBand/albums</a></td>
+              <td>My photo albums.</td>
+            </tr>
+          </tbody>
         </table>
       </article>
     </main>
