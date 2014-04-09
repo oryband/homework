@@ -2,6 +2,9 @@
 *.swp
 *.class
 *~
+/.classpath
+/.project
+/.settings/
 
 *.jar
 AwsCredentials.properties
