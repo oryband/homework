@@ -157,29 +157,39 @@ public class Worker {
 
     public static void main(String[] args) throws Exception {
 
-        String myQueueUrl =  "https://sqs.us-west-2.amazonaws.com/340657073537/ass1";
-        AmazonSQS sqs = new AmazonSQSClient(new PropertiesCredentials(Worker.class.getResourceAsStream("AwsCredentials.properties")));
+        String MissionsUrl =  "https://sqs.us-west-2.amazonaws.com/340657073537/Missions";
+        AmazonSQS sqsMissions = new AmazonSQSClient(new PropertiesCredentials(Worker.class.getResourceAsStream("AwsCredentials.properties")));
+        String FinishedUrl =  "https://sqs.us-west-2.amazonaws.com/340657073537/Finished";
+        AmazonSQS sqsFinished = new AmazonSQSClient(new PropertiesCredentials(Worker.class.getResourceAsStream("AwsCredentials.properties")));
 
         try {
-            // Receive message
-            System.out.println("Receiving messages from MyQueue.\n");
-            ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(myQueueUrl);
-            List<Message> messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
-            if (!messages.isEmpty()){
-                String[] messageSpliter= messages.get(0).getBody().split("\t");
-                System.out.println(messages.get(0).getBody());
+            ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(MissionsUrl);
+            logger.info("Receiving new message from sqsMissions.\n");
+            List<Message> messages = sqsMissions.receiveMessage(receiveMessageRequest).getMessages();
+          //System.out.println("Got "+messages.size());
+            while (messages.size()>0){
+                Message message=messages.get(0);
+                logger.info("Got message from sqsMissions : "+message.getBody()+ " .\n");
+                String[] messageSpliter= message.getBody().split("\t");
                 String action = messageSpliter[0];
                 String Url = messageSpliter[1];
                 handlePage(action,Url);
-                System.out.println("finish "+action+" "+Url);
-    
+                logger.info("Finished "+action+" "+Url);
+                
+                // Deleting message
+                logger.info("Deleting : "+ message.getBody() + "from sqsMissions.\n");
+                String messageRecieptHandle = message.getReceiptHandle();
+                sqsMissions.deleteMessage(new DeleteMessageRequest(MissionsUrl, messageRecieptHandle));
+                
                 // Send a message
-                System.out.println("Sending a message to MyQueue.\n");
-                sqs.sendMessage(new SendMessageRequest(myQueueUrl, "Finish: "+action+" "+Url));
+                logger.info("Sending : Finished "+message.getBody()+" to sqsFinished.\n");
+                sqsFinished.sendMessage(new SendMessageRequest(FinishedUrl, "Finish: "+action+" "+Url));
+                
+                // getting new message
+                logger.info("Receiving new message from sqsMissions.\n");
+                messages = sqsMissions.receiveMessage(receiveMessageRequest).getMessages();
             }
-            else {
-                System.out.println("No massages");
-            }
+            System.out.println("Done!.\n");
         } catch (AmazonServiceException ase) {
             logger.severe(ase.getMessage());
         } catch (AmazonClientException ace) {
