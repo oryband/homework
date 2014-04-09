@@ -99,16 +99,16 @@ public class Worker {
 			else if (action.equals("ToText")) {
 				toText(doc, base);
 			}
-			else if (action.equals("ToHTML")) {
-				Properties prop = new Properties();
-				PrintWriter out = new PrintWriter(new_name+".html");
-				prop.load(out);
-				PDFText2HTML htmlstripper = new PDFText2HTML(prop);
-				htmlstripper.writeHeader();
-				htmlstripper.writeString(get_text(doc));
-				htmlstripper.endDocument(doc);	
-				out.close();	
-			}
+//			else if (action.equals("ToHTML")) {
+//				Properties prop = new Properties();
+//				PrintWriter out = new PrintWriter(new_name+".html");
+//				prop.load(out);
+//				PDFText2HTML htmlstripper = new PDFText2HTML(prop);
+//				htmlstripper.writeHeader();
+//				htmlstripper.writeString(get_text(doc));
+//				htmlstripper.endDocument(doc);	
+//				out.close();	
+//			}
 		}
 
 		try {
