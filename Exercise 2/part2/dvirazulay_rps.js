@@ -13,7 +13,7 @@ function rps(item1, item2) {
     item1 = random_rps();
   } else if (!is_valid_rps(item1)) {
     // invalid rps item given.
-    // blah blah innerHTML error
+    document.getElementById('winner').innerHTML = 'ERROR: Wrong input given for player1 ("' + item1 + '")';
     return;
   }
 
@@ -21,7 +21,7 @@ function rps(item1, item2) {
     item2 = random_rps();
   } else if (!is_valid_rps(item2)) {
     // invalid rps item given.
-    // blah blah innerHTML error
+    document.getElementById('winner').innerHTML = 'ERROR: Wrong input given for player2 ("' + item2 + '")';
     return;
   }
 
