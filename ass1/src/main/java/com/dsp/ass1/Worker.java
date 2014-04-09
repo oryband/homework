@@ -1,14 +1,10 @@
 package com.dsp.ass1;
 
-import java.util.Properties;
-import java.util.StringTokenizer;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Logger;
 
 import java.net.URL;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.FileNotFoundException;
 
 import java.io.File;
@@ -19,7 +15,6 @@ import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.util.PDFImageWriter;
 import org.apache.pdfbox.util.PDFTextStripper;
 import org.apache.pdfbox.util.PDFText2HTML;
 
@@ -58,8 +53,39 @@ public class Worker {
 			ImageIO.write(image, "png", outputFile);
 		} catch (IOException e) {}  // TODO same
 	}
+	
+	
+	public static void toHTML(PDDocument doc, String base) {
+		String result;
+		PrintWriter out;
+		PDFTextStripper htmlstripper = null;
+		
+		try {
+			htmlstripper = new PDFText2HTML("utf-8");
+		} catch (IOException e) {
+			logger.severe(e.getMessage());
+			return;
+		}
+		
+		try {
+			result = htmlstripper.getText(doc).trim();
+		} catch (IOException e) {
+			logger.severe(e.getMessage());
+			return;
+		}
+		
+		try {
+			out = new PrintWriter(base + ".html");
+		} catch (FileNotFoundException e) {
+			logger.severe(e.getMessage());
+			return;
+		}
+		
+		out.println(result);
+		out.close();
+	}
 
-
+	
 	public static void toText(PDDocument doc, String base) {
 		String pageText;
 		PrintWriter out;
@@ -77,7 +103,7 @@ public class Worker {
 			logger.severe(e.getMessage());
 			return;
 		}
-
+		
 		out.println(pageText);
 		out.close();
 	}
@@ -99,16 +125,9 @@ public class Worker {
 			else if (action.equals("ToText")) {
 				toText(doc, base);
 			}
-//			else if (action.equals("ToHTML")) {
-//				Properties prop = new Properties();
-//				PrintWriter out = new PrintWriter(new_name+".html");
-//				prop.load(out);
-//				PDFText2HTML htmlstripper = new PDFText2HTML(prop);
-//				htmlstripper.writeHeader();
-//				htmlstripper.writeString(get_text(doc));
-//				htmlstripper.endDocument(doc);	
-//				out.close();	
-//			}
+			else if (action.equals("ToHTML")) {
+				toHTML(doc,base);
+			}
 		}
 
 		try {
