@@ -27,7 +27,10 @@ import java.util.Map.Entry;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.CreateQueueRequest;
@@ -153,43 +156,55 @@ public class Worker {
             logger.severe(e.getMessage());
         }
     }
-
+    
+    public static void deleteMessage(Message message, String sqsUrl,AmazonSQS sqs) {
+        String messageRecieptHandle = message.getReceiptHandle();
+        sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, messageRecieptHandle));
+        logger.info("Deleted : "+ message.getBody() + "from sqsMissions.\n");
+    }
+    
+    public static void sendMessage(Message message, String sqsUrl,AmazonSQS sqs) {
+        String[] messageSpliter= message.getBody().split("\t");
+        String action = messageSpliter[0];
+        String Url = messageSpliter[1];
+        sqs.sendMessage(new SendMessageRequest(sqsUrl, "Finish: "+action+" "+Url));
+        logger.info("Sent : Finished "+message.getBody()+" to sqsFinished.\n");
+    }
+    
+    public static void handleMessage(Message message) {
+        logger.info("Got message from sqsMissions : "+message.getBody()+ " .\n");
+        String[] messageSpliter= message.getBody().split("\t");
+        String action = messageSpliter[0];
+        String Url = messageSpliter[1];
+        handlePage(action,Url);
+        logger.info("Finished "+action+" "+Url);
+    }
+    
+    public static  List<Message> getMessages(ReceiveMessageRequest receiveMessageRequest,AmazonSQS sqs) {
+        List<Message> messages = sqs.receiveMessage(receiveMessageRequest).getMessages();
+        logger.info("Received new message from sqsMissions.\n");
+        return messages;
+    }
 
     public static void main(String[] args) throws Exception {
-
         String MissionsUrl =  "https://sqs.us-west-2.amazonaws.com/340657073537/Missions";
-        AmazonSQS sqsMissions = new AmazonSQSClient(new PropertiesCredentials(Worker.class.getResourceAsStream("AwsCredentials.properties")));
         String FinishedUrl =  "https://sqs.us-west-2.amazonaws.com/340657073537/Finished";
-        AmazonSQS sqsFinished = new AmazonSQSClient(new PropertiesCredentials(Worker.class.getResourceAsStream("AwsCredentials.properties")));
-
+        String bucketName = "dsp-ass1";
+        AWSCredentials credentials = new PropertiesCredentials(Worker.class.getResourceAsStream("AwsCredentials.properties"));
+        AmazonSQS sqsMissions = new AmazonSQSClient(credentials);
+        AmazonSQS sqsFinished = new AmazonSQSClient(credentials);
+        AmazonS3 s3 = new AmazonS3Client(credentials);
         try {
             ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest(MissionsUrl);
-            logger.info("Receiving new message from sqsMissions.\n");
-            List<Message> messages = sqsMissions.receiveMessage(receiveMessageRequest).getMessages();
-          //System.out.println("Got "+messages.size());
+            List<Message> messages = getMessages(receiveMessageRequest,sqsMissions);
             while (messages.size()>0){
                 Message message=messages.get(0);
-                logger.info("Got message from sqsMissions : "+message.getBody()+ " .\n");
-                String[] messageSpliter= message.getBody().split("\t");
-                String action = messageSpliter[0];
-                String Url = messageSpliter[1];
-                handlePage(action,Url);
-                logger.info("Finished "+action+" "+Url);
-                
-                // Deleting message
-                logger.info("Deleting : "+ message.getBody() + "from sqsMissions.\n");
-                String messageRecieptHandle = message.getReceiptHandle();
-                sqsMissions.deleteMessage(new DeleteMessageRequest(MissionsUrl, messageRecieptHandle));
-                
-                // Send a message
-                logger.info("Sending : Finished "+message.getBody()+" to sqsFinished.\n");
-                sqsFinished.sendMessage(new SendMessageRequest(FinishedUrl, "Finish: "+action+" "+Url));
-                
-                // getting new message
-                logger.info("Receiving new message from sqsMissions.\n");
-                messages = sqsMissions.receiveMessage(receiveMessageRequest).getMessages();
+                handleMessage(message);                                    // Handling message
+                deleteMessage(message,MissionsUrl,sqsMissions);            // Deleting message
+                sendMessage(message, FinishedUrl,sqsFinished);             // Sending message
+                messages = getMessages(receiveMessageRequest,sqsMissions); // getting new message
             }
-            System.out.println("Done!.\n");
+            logger.info("Done!.\n");
         } catch (AmazonServiceException ase) {
             logger.severe(ase.getMessage());
         } catch (AmazonClientException ace) {
