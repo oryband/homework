@@ -1,11 +1,13 @@
 .DS_Store
 *.swp
-*.class
 *~
 /.classpath
 /.project
 /.settings/
 
 *.jar
+*.class
 AwsCredentials.properties
-/libs/
+target/
+
+ass-1/out/
