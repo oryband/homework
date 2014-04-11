@@ -5,14 +5,15 @@ import java.util.logging.Logger;
 
 import java.net.URL;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.awt.image.BufferedImage;
 
-import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -21,9 +22,9 @@ import org.apache.pdfbox.util.PDFText2HTML;
 
 import org.apache.commons.io.FilenameUtils;
 
+import javax.imageio.ImageIO;
+
 import java.util.List;
-import java.util.UUID;
-import java.util.Map.Entry;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -31,11 +32,11 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
-import com.amazonaws.services.sqs.model.CreateQueueRequest;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
-import com.amazonaws.services.sqs.model.DeleteQueueRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
@@ -58,61 +59,62 @@ public class Worker {
     }
 
 
-    public static void toImage(PDPage page, String base) {
-        String fileName = base + ".png";
+    public static String toImage(PDPage page, String base, AmazonS3 s3,String bucketName,String path) {
+        String fileName = base + ".png",
+               answer = null;
         logger.info("image: " + fileName);
 
         try {
             BufferedImage img = page.convertToImage();
-            File outputFile = new File(fileName);
-            ImageIO.write(img, "png", outputFile);
+            answer = uploadFileToS3(s3,bucketName,path,fileName,img.toString());
         } catch (IOException e) {
             logger.severe(e.getMessage());
+            return null;
         }
+        return answer;
     }
 
 
-    public static void toHTML(PDDocument doc, String base) {
+    public static String toHTML(PDDocument doc, String base,AmazonS3 s3,String bucketName,String path) throws IOException {
         String fileName = base + ".html";
         logger.info("html: " + fileName);
 
-        String result;
-        PrintWriter out;
+        String pageText,
+               answer=null;
         PDFTextStripper stripper;
 
         try {
             stripper = new PDFText2HTML("utf-8");
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return;
+            return null;
         }
 
         try {
-            result = stripper.getText(doc).trim();
+            pageText = stripper.getText(doc);
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return;
+            return null;
         }
 
         try {
-            out = new PrintWriter(fileName);
+            answer = uploadFileToS3(s3,bucketName,path,fileName, pageText);
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
-            return;
+            return null;
         }
 
-        out.println(result);
-        out.close();
+        return answer;
     }
 
 
-    public static void toText(PDDocument doc, String base) {
+    public static String toText(PDDocument doc, String base,AmazonS3 s3,String bucketName,String path) throws IOException {
         String fileName = base + ".txt";
         logger.info("text: " + fileName);
 
         PDFTextStripper stripper;
         String pageText;
-        PrintWriter out;
+        String answer=null;
 
         try {
             stripper = new PDFTextStripper();
@@ -121,39 +123,39 @@ public class Worker {
             pageText = stripper.getText(doc);
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return;
+            return null;
         }
 
         try {
-            out = new PrintWriter(fileName);
+            answer = uploadFileToS3(s3,bucketName,path,fileName, pageText);
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
-            return;
+            return null;
         }
+        return answer;
 
-        out.println(pageText);
-        out.close();
     }
 
 
-    public static void handleDocument(String action, String url) {
+    public static String handleDocument(String action, String url,AmazonS3 s3,String bucketName,String path) throws IOException {
         logger.info("handling: " + action + "\t" + url);
 
-        String base = FilenameUtils.getBaseName(url);  // url file base name.
+        String base = FilenameUtils.getBaseName(url),
+               answer=null;
         PDDocument doc = getDocument(url);
 
         if (doc == null) {
-            return;
+            return null;
         } else {
             if (action.equals("ToImage")) {
                 PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
-                toImage(page, base);
+                answer =  toImage(page, base,s3,bucketName,path);
             }
             else if (action.equals("ToText")) {
-                toText(doc, base);
+                answer = toText(doc, base,s3,bucketName,path);
             }
             else if (action.equals("ToHTML")) {
-                toHTML(doc,base);
+                answer =  toHTML(doc,base,s3,bucketName,path);
             }
         }
 
@@ -161,9 +163,11 @@ public class Worker {
             doc.close();
         } catch (IOException e) {
             logger.severe(e.getMessage());
+            return null;
         }
 
         logger.info("finished handling: " + action + "\t" + url);
+        return answer;
     }
 
 
@@ -174,18 +178,28 @@ public class Worker {
     }
 
 
-    public static void sendFinishedMessage(Message msg, String sqsUrl, AmazonSQS sqs) {
+    public static void sendFinishedMessage(Message msg,String pos, String sqsUrl, AmazonSQS sqs) {
         String[] splitter= msg.getBody().split("\t");
-        String action = splitter[0],
-               url = splitter[1],
-               reply = "done PDF task " + action + " " + url;  // TODO need to add s3 location of result, according to instructions.
+        String action = splitter[1],
+               url = splitter[2],
+               reply = "done PDF task " + action + " " + url+"\nnew Url: "+pos;  // TODO need to add s3 location of result, according to instructions.
 
         sqs.sendMessage(new SendMessageRequest(sqsUrl, reply));
         logger.info(reply);
     }
-
-
-    public static boolean handleMessage(Message msg) {
+    
+    
+    public static String uploadFileToS3(AmazonS3 s3,String bucketName, String path,String fileName, String info) throws IOException {
+        String s3Adress= s3.getBucketLocation(bucketName),
+               fileAdress = "https://s3-"+s3Adress+".amazonaws.com/"+bucketName+"/"+path+fileName;
+        PutObjectRequest up = new PutObjectRequest(bucketName, path+fileName, createSampleFile(info));
+        s3.putObject(up.withCannedAcl(CannedAccessControlList.PublicRead));
+        logger.info("filed saved: " +fileAdress);
+        return fileAdress;
+    }
+    
+    
+    public static String handleMessage(Message msg,AmazonS3 s3,String bucketName,String path) throws IOException {
         String body = msg.getBody();
         logger.info("received: " + body);
 
@@ -198,40 +212,46 @@ public class Worker {
             url = parts[2];
         } else {
             logger.info("ignoring: " + body);
-            return false;
+            return null;
         }
 
         if (type.equals("new PDF task")) {
-            handleDocument(action, url);
-            return true;
+            return handleDocument(action, url,s3,bucketName,path); 
         } else {
             logger.info("ignoring: " + body);
-            return false;
+            return null;
         }
     }
 
 
     public static List<Message> getMessages(ReceiveMessageRequest req, AmazonSQS sqs) {
         List<Message> msgs = sqs.receiveMessage(req).getMessages();
-        logger.info("sqs messages received.");
         return msgs;
     }
-
+    
+    
+    private static File createSampleFile(String info) throws IOException {
+        File file = File.createTempFile("aws-java-sdk-", ".txt");
+        file.deleteOnExit();
+        Writer writer = new OutputStreamWriter(new FileOutputStream(file));
+        writer.write(info);
+        writer.close();
+        return file;
+    }
 
     public static void main(String[] args) throws Exception {
-        // Use Ireland region.
-        String missionsUrl = "https://sqs.eu-west-1.amazonaws.com/340657073537/tasks",
-               finishedUrl = "https://sqs.eu-west-1.amazonaws.com/340657073537/finished",
-               bucketName = "dsp-ass1";
+        logger.info("Starting...");
+        String missionsUrl = "https://sqs.us-west-2.amazonaws.com/340657073537/tasks",
+               finishedUrl = "https://sqs.us-west-2.amazonaws.com/340657073537/finished",
+               bucketName = "dsp-ass1",
+               path = "here/";
 
         AWSCredentials creds = new PropertiesCredentials(
                 Worker.class.getResourceAsStream("/AWSCredentials.properties"));
-
         AmazonSQS sqsMissions = new AmazonSQSClient(creds),
                   sqsFinished = new AmazonSQSClient(creds);
 
         AmazonS3 s3 = new AmazonS3Client(creds);
-
         ReceiveMessageRequest req;
 
         List<Message> msgs;
@@ -245,13 +265,14 @@ public class Worker {
             logger.severe(ace.getMessage());
             return;
         }
-
+        
         msgs = getMessages(req, sqsMissions);
         while (msgs.size() > 0) {
             Message msg = msgs.get(0);
-            if (handleMessage(msg)) {
+            String pos = handleMessage(msg,s3,bucketName,path);
+            if (pos != null) {
                 deleteTaskMessage(msg, missionsUrl, sqsMissions);
-                sendFinishedMessage(msg, finishedUrl, sqsFinished);
+                sendFinishedMessage(msg,pos, finishedUrl, sqsFinished);
             }
 
             msgs = getMessages(req, sqsMissions);
