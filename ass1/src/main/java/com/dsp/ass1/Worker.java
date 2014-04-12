@@ -5,9 +5,12 @@ import java.util.logging.Logger;
 
 import java.net.URL;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
@@ -33,6 +36,7 @@ import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
@@ -66,15 +70,15 @@ public class Worker {
 
         try {
             BufferedImage img = page.convertToImage();
-            answer = uploadFileToS3(s3,bucketName,path,fileName,img.toString());
+            answer = uploadImageToS3(s3,bucketName,path,fileName,img);
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return null;
         }
         return answer;
     }
-
-
+        
+    
     public static String toHTML(PDDocument doc, String base,AmazonS3 s3,String bucketName,String path) throws IOException {
         String fileName = base + ".html";
         logger.info("html: " + fileName);
@@ -159,22 +163,27 @@ public class Worker {
             }
         }
 
+        logger.info("finished handling: " + action + "\t" + url);
+        
         try {
             doc.close();
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return null;
+            return answer;
         }
-
-        logger.info("finished handling: " + action + "\t" + url);
+        
         return answer;
     }
 
 
     public static void deleteTaskMessage(Message msg, String sqsUrl, AmazonSQS sqs) {
         String handle = msg.getReceiptHandle();
-        sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, handle));
-        logger.info("deleted: " + msg.getBody());
+        try{
+            sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, handle));
+            logger.info("deleted: " + msg.getBody());
+        } catch (AmazonClientException e){
+            logger.severe(e.getMessage());
+        }
     }
 
 
@@ -183,18 +192,66 @@ public class Worker {
         String action = splitter[1],
                url = splitter[2],
                reply = "done PDF task " + action + " " + url+"\nnew Url: "+pos;  // TODO need to add s3 location of result, according to instructions.
-
-        sqs.sendMessage(new SendMessageRequest(sqsUrl, reply));
-        logger.info(reply);
+        try{
+            sqs.sendMessage(new SendMessageRequest(sqsUrl, reply));
+            logger.info(reply);
+        } catch (AmazonClientException e){
+            logger.severe(e.getMessage());
+        }
     }
     
+    public static String getFileAdress(AmazonS3 s3,String bucketName, String path,String fileName){
+        String s3Adress;
+        try {
+            s3Adress = s3.getBucketLocation(bucketName);
+        } catch (AmazonClientException e){
+            logger.severe(e.getMessage());
+            return null;
+        }
+        
+        return "https://s3-"+s3Adress+".amazonaws.com/"+bucketName+"/"+path+fileName;
+    }
     
-    public static String uploadFileToS3(AmazonS3 s3,String bucketName, String path,String fileName, String info) throws IOException {
-        String s3Adress= s3.getBucketLocation(bucketName),
-               fileAdress = "https://s3-"+s3Adress+".amazonaws.com/"+bucketName+"/"+path+fileName;
-        PutObjectRequest up = new PutObjectRequest(bucketName, path+fileName, createSampleFile(info));
-        s3.putObject(up.withCannedAcl(CannedAccessControlList.PublicRead));
-        logger.info("filed saved: " +fileAdress);
+    public static String uploadFileToS3(AmazonS3 s3,String bucketName, String path,String fileName, String info) throws IOException {      
+        String fileAdress = getFileAdress(s3,bucketName,path,fileName); 
+        File file = createSampleFile(info);
+        if ((file != null) || (fileAdress == null)){
+            PutObjectRequest up = new PutObjectRequest(bucketName, path+fileName, file);
+            try{
+                s3.putObject(up.withCannedAcl(CannedAccessControlList.PublicRead));
+                logger.info("filed saved: " +fileAdress);
+            } catch (AmazonClientException e){
+                logger.severe(e.getMessage());
+                return null;
+            }
+            return fileAdress;
+        }
+        return null;
+    }
+
+    public static String uploadImageToS3(AmazonS3 s3,String bucketName,String path,String fileName,BufferedImage img) throws IOException {       
+        String fileAdress = getFileAdress(s3,bucketName,path,fileName);
+        if (fileAdress != null){
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            try{
+                ImageIO.write(img, "png", os);
+            } catch (IOException e) {
+                logger.severe(e.getMessage());
+                return null;
+            }
+            
+            byte[] buffer = os.toByteArray();
+            InputStream is = new ByteArrayInputStream(buffer);
+            ObjectMetadata meta = new ObjectMetadata();
+            meta.setContentLength(buffer.length);
+            PutObjectRequest up = new PutObjectRequest(bucketName, path+fileName, is, meta);
+            try{
+                s3.putObject(up.withCannedAcl(CannedAccessControlList.PublicRead));
+            } catch (AmazonClientException e){
+                logger.severe(e.getMessage());
+                return null;
+            }
+        }
         return fileAdress;
     }
     
@@ -225,17 +282,36 @@ public class Worker {
 
 
     public static List<Message> getMessages(ReceiveMessageRequest req, AmazonSQS sqs) {
-        List<Message> msgs = sqs.receiveMessage(req).getMessages();
+        List<Message> msgs;
+        try {
+            msgs = sqs.receiveMessage(req).getMessages();
+        } catch (AmazonClientException e){
+            logger.severe(e.getMessage());
+            return null;
+        }
+        
         return msgs;
     }
     
-    
     private static File createSampleFile(String info) throws IOException {
-        File file = File.createTempFile("aws-java-sdk-", ".txt");
+        File file;
+        try{
+            file = File.createTempFile("aws-java-sdk-", ".txt");
+        }catch (IOException e) {
+                logger.severe(e.getMessage());
+                return null;
+        }
+        
         file.deleteOnExit();
         Writer writer = new OutputStreamWriter(new FileOutputStream(file));
         writer.write(info);
-        writer.close();
+        
+        try {
+            writer.close();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+        }
+        
         return file;
     }
 
@@ -252,27 +328,18 @@ public class Worker {
                   sqsFinished = new AmazonSQSClient(creds);
 
         AmazonS3 s3 = new AmazonS3Client(creds);
-        ReceiveMessageRequest req;
 
+        ReceiveMessageRequest req = new ReceiveMessageRequest(missionsUrl);
+        
         List<Message> msgs;
-
-        try {
-            req = new ReceiveMessageRequest(missionsUrl);
-        } catch (AmazonServiceException ase) {
-            logger.severe(ase.getMessage());
-            return;
-        } catch (AmazonClientException ace) {
-            logger.severe(ace.getMessage());
-            return;
-        }
         
         msgs = getMessages(req, sqsMissions);
-        while (msgs.size() > 0) {
+        while ((msgs ==null) || (msgs.size() > 0)) {
             Message msg = msgs.get(0);
-            String pos = handleMessage(msg,s3,bucketName,path);
-            if (pos != null) {
-                deleteTaskMessage(msg, missionsUrl, sqsMissions);
-                sendFinishedMessage(msg,pos, finishedUrl, sqsFinished);
+            String answer = handleMessage(msg,s3,bucketName,path);
+            deleteTaskMessage(msg, missionsUrl, sqsMissions);
+            if (answer != null) {
+                sendFinishedMessage(msg,answer, finishedUrl, sqsFinished);
             }
 
             msgs = getMessages(req, sqsMissions);
