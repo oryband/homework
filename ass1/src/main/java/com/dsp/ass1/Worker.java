@@ -2,6 +2,8 @@ package com.dsp.ass1;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.logging.ConsoleHandler;
+import java.util.concurrent.TimeUnit;
 
 import java.net.URL;
 
@@ -49,6 +51,8 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 public class Worker {
     private static final Logger logger = Logger.getLogger(Worker.class.getName());
 
+
+    // Returns a PDDocument from a string URL.
     public static PDDocument getDocument(String url) {
         PDDocument doc;
 
@@ -63,28 +67,29 @@ public class Worker {
     }
 
 
-    public static String toImage(PDPage page, String base, AmazonS3 s3,String bucketName,String path) {
-        String fileName = base + ".png",
-               answer = null;
+    public static String toImage(PDPage page, String base, AmazonS3 s3, String bucket, String path) {
+        String fileName = base + ".png";
+        BufferedImage img;
+
         logger.info("image: " + fileName);
 
         try {
-            BufferedImage img = page.convertToImage();
-            answer = uploadImageToS3(s3,bucketName,path,fileName,img);
+            img = page.convertToImage();  // PDF to PNG image.
+            return uploadImageToS3(s3, bucket, path, fileName, img);
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return null;
         }
-        return answer;
     }
-        
-    
-    public static String toHTML(PDDocument doc, String base,AmazonS3 s3,String bucketName,String path) throws IOException {
+
+
+    public static String toHTML(PDDocument doc, String base, AmazonS3 s3, String bucket, String path)
+        throws IOException {
+
         String fileName = base + ".html";
         logger.info("html: " + fileName);
 
-        String pageText,
-               answer=null;
+        String pageText;
         PDFTextStripper stripper;
 
         try {
@@ -102,23 +107,22 @@ public class Worker {
         }
 
         try {
-            answer = uploadFileToS3(s3,bucketName,path,fileName, pageText);
+            return uploadFileToS3(s3, bucket, path, fileName, pageText);
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
             return null;
         }
-
-        return answer;
     }
 
 
-    public static String toText(PDDocument doc, String base,AmazonS3 s3,String bucketName,String path) throws IOException {
+    public static String toText(PDDocument doc, String base, AmazonS3 s3, String bucket, String path)
+        throws IOException {
+
         String fileName = base + ".txt";
         logger.info("text: " + fileName);
 
         PDFTextStripper stripper;
         String pageText;
-        String answer=null;
 
         try {
             stripper = new PDFTextStripper();
@@ -131,21 +135,21 @@ public class Worker {
         }
 
         try {
-            answer = uploadFileToS3(s3,bucketName,path,fileName, pageText);
+            return uploadFileToS3(s3, bucket, path, fileName, pageText);
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
             return null;
         }
-        return answer;
-
     }
 
 
-    public static String handleDocument(String action, String url,AmazonS3 s3,String bucketName,String path) throws IOException {
+    public static String handleDocument(String action, String url, AmazonS3 s3, String bucket, String path)
+        throws IOException {
+
         logger.info("handling: " + action + "\t" + url);
 
         String base = FilenameUtils.getBaseName(url),
-               answer=null;
+               result = null;
         PDDocument doc = getDocument(url);
 
         if (doc == null) {
@@ -153,32 +157,32 @@ public class Worker {
         } else {
             if (action.equals("ToImage")) {
                 PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
-                answer =  toImage(page, base,s3,bucketName,path);
+                result = toImage(page, base, s3, bucket, path);
             }
             else if (action.equals("ToText")) {
-                answer = toText(doc, base,s3,bucketName,path);
+                result = toText(doc, base, s3, bucket, path);
             }
             else if (action.equals("ToHTML")) {
-                answer =  toHTML(doc,base,s3,bucketName,path);
+                result = toHTML(doc, base, s3, bucket, path);
             }
         }
 
         logger.info("finished handling: " + action + "\t" + url);
-        
+
         try {
             doc.close();
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return answer;
         }
-        
-        return answer;
+
+        return result;
     }
 
 
     public static void deleteTaskMessage(Message msg, String sqsUrl, AmazonSQS sqs) {
         String handle = msg.getReceiptHandle();
-        try{
+
+        try {
             sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, handle));
             logger.info("deleted: " + msg.getBody());
         } catch (AmazonClientException e){
@@ -187,93 +191,108 @@ public class Worker {
     }
 
 
-    public static void sendFinishedMessage(Message msg,String pos, String sqsUrl, AmazonSQS sqs) {
+    public static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
         String[] splitter= msg.getBody().split("\t");
         String action = splitter[1],
                url = splitter[2],
-               reply = "done PDF task " + action + " " + url+"\nnew Url: "+pos;  // TODO need to add s3 location of result, according to instructions.
-        try{
+               // TODO need to add s3 location of result, according to instructions.
+               reply = "done PDF task\t" + action + "\t" + url + "\t" + pos;
+        try {
             sqs.sendMessage(new SendMessageRequest(sqsUrl, reply));
             logger.info(reply);
-        } catch (AmazonClientException e){
+        } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
         }
     }
-    
-    public static String getFileAdress(AmazonS3 s3,String bucketName, String path,String fileName){
-        String s3Adress;
+
+
+    public static String getS3FileAddress(AmazonS3 s3, String bucket, String path, String fileName) {
+        String address;
+
         try {
-            s3Adress = s3.getBucketLocation(bucketName);
-        } catch (AmazonClientException e){
+            address = s3.getBucketLocation(bucket);
+        } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
             return null;
         }
-        
-        return "https://s3-"+s3Adress+".amazonaws.com/"+bucketName+"/"+path+fileName;
+
+        return "https://s3-" + address + ".amazonaws.com/" + bucket + "/" + path + fileName;
     }
-    
-    public static String uploadFileToS3(AmazonS3 s3,String bucketName, String path,String fileName, String info) throws IOException {      
-        String fileAdress = getFileAdress(s3,bucketName,path,fileName); 
+
+
+    public static String uploadFileToS3(AmazonS3 s3, String bucket, String path, String fileName, String info)
+        throws IOException {
+        String fileAddress = getS3FileAddress(s3, bucket, path, fileName);
         File file = createSampleFile(info);
-        if ((file != null) || (fileAdress == null)){
-            PutObjectRequest up = new PutObjectRequest(bucketName, path+fileName, file);
-            try{
-                s3.putObject(up.withCannedAcl(CannedAccessControlList.PublicRead));
-                logger.info("filed saved: " +fileAdress);
-            } catch (AmazonClientException e){
+
+        if (file != null || fileAddress == null) {
+            PutObjectRequest request = new PutObjectRequest(bucket, path + fileName, file);
+
+            try {
+                s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
+                logger.info("file saved: " + fileAddress);
+            } catch (AmazonClientException e) {
                 logger.severe(e.getMessage());
                 return null;
             }
-            return fileAdress;
+            return fileAddress;
         }
         return null;
     }
 
-    public static String uploadImageToS3(AmazonS3 s3,String bucketName,String path,String fileName,BufferedImage img) throws IOException {       
-        String fileAdress = getFileAdress(s3,bucketName,path,fileName);
-        if (fileAdress != null){
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            try{
-                ImageIO.write(img, "png", os);
+
+    public static String uploadImageToS3(AmazonS3 s3, String bucket, String path, String fileName, BufferedImage img)
+        throws IOException {
+
+        // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
+        String address = getS3FileAddress(s3, bucket, path, fileName);
+
+        if (address != null) {
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+
+            // Write image to file.
+            try {
+                ImageIO.write(img, "png", outStream);
             } catch (IOException e) {
                 logger.severe(e.getMessage());
                 return null;
             }
-            
-            byte[] buffer = os.toByteArray();
-            InputStream is = new ByteArrayInputStream(buffer);
+
+            // Upload saved image to S3.
+            byte[] buffer = outStream.toByteArray();
             ObjectMetadata meta = new ObjectMetadata();
             meta.setContentLength(buffer.length);
-            PutObjectRequest up = new PutObjectRequest(bucketName, path+fileName, is, meta);
-            try{
-                s3.putObject(up.withCannedAcl(CannedAccessControlList.PublicRead));
-            } catch (AmazonClientException e){
+            InputStream inStream = new ByteArrayInputStream(buffer);
+            PutObjectRequest request = new PutObjectRequest(bucket, path + fileName, inStream, meta);
+
+            try {
+                s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
+            } catch (AmazonClientException e) {
                 logger.severe(e.getMessage());
                 return null;
             }
         }
-        return fileAdress;
+
+        return address;
     }
-    
-    
-    public static String handleMessage(Message msg,AmazonS3 s3,String bucketName,String path) throws IOException {
+
+
+    public static String handleMessage(Message msg, AmazonS3 s3, String bucket, String path)
+        throws IOException {
+
         String body = msg.getBody();
         logger.info("received: " + body);
 
         String[] parts = msg.getBody().split("\t");
-        String type, action, url;
 
-        if (parts.length == 3) {
-            type = parts[0];
-            action = parts[1];
-            url = parts[2];
-        } else {
-            logger.info("ignoring: " + body);
-            return null;
-        }
-
-        if (type.equals("new PDF task")) {
-            return handleDocument(action, url,s3,bucketName,path); 
+        if (parts[0].equals("new PDF task") && parts.length >= 3) {
+            return handleDocument(parts[1], parts[2], s3, bucket, path);
+        // TODO Shutdown message should include a worker name (or tag name?)
+        // so each worker will know the message if the message is intended
+        // to him or noted to him or not. Something like this:
+        // } else if (parts[0].equals("shutdown") && parts.length >= 2 && parts[1].equals(ami-identifier) {
+        } else if (parts[0].equals("shutdown")) {
+            return "shutdown";
         } else {
             logger.info("ignoring: " + body);
             return null;
@@ -283,68 +302,102 @@ public class Worker {
 
     public static List<Message> getMessages(ReceiveMessageRequest req, AmazonSQS sqs) {
         List<Message> msgs;
+
         try {
             msgs = sqs.receiveMessage(req).getMessages();
-        } catch (AmazonClientException e){
+        } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
             return null;
         }
-        
+
         return msgs;
     }
-    
+
+
+    // TODO Liran wtf is this function? Please document.
     private static File createSampleFile(String info) throws IOException {
         File file;
-        try{
+
+        try {
             file = File.createTempFile("aws-java-sdk-", ".txt");
-        }catch (IOException e) {
-                logger.severe(e.getMessage());
-                return null;
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
         }
-        
+
         file.deleteOnExit();
         Writer writer = new OutputStreamWriter(new FileOutputStream(file));
         writer.write(info);
-        
+
         try {
             writer.close();
         } catch (IOException e) {
             logger.severe(e.getMessage());
         }
-        
+
         return file;
     }
 
-    public static void main(String[] args) throws Exception {
-        logger.info("Starting...");
+
+    public static void main(String[] args) throws InterruptedException, IOException {
+        // Use custom string format for logger.
+        ShortFormatter formatter = new ShortFormatter();
+        ConsoleHandler handler = new ConsoleHandler();
+
+        logger.setUseParentHandlers(false);
+        handler.setFormatter(formatter);
+        logger.addHandler(handler);
+
+        logger.info("starting.");
+
         String missionsUrl = "https://sqs.us-west-2.amazonaws.com/340657073537/tasks",
                finishedUrl = "https://sqs.us-west-2.amazonaws.com/340657073537/finished",
-               bucketName = "dsp-ass1",
-               path = "here/";
+               bucket = "dsp-ass1",
+               path = "here/",
+               result = "";
 
-        AWSCredentials creds = new PropertiesCredentials(
-                Worker.class.getResourceAsStream("/AWSCredentials.properties"));
+        AWSCredentials creds = new PropertiesCredentials(Worker.class.getResourceAsStream("/AWSCredentials.properties"));
+
         AmazonSQS sqsMissions = new AmazonSQSClient(creds),
                   sqsFinished = new AmazonSQSClient(creds);
 
         AmazonS3 s3 = new AmazonS3Client(creds);
 
         ReceiveMessageRequest req = new ReceiveMessageRequest(missionsUrl);
-        
+
         List<Message> msgs;
-        
+        Message msg;
+
+        // Process messages.
         msgs = getMessages(req, sqsMissions);
-        while ((msgs ==null) || (msgs.size() > 0)) {
-            Message msg = msgs.get(0);
-            String answer = handleMessage(msg,s3,bucketName,path);
-            deleteTaskMessage(msg, missionsUrl, sqsMissions);
-            if (answer != null) {
-                sendFinishedMessage(msg,answer, finishedUrl, sqsFinished);
+        do {
+            // Sleep if no messages arrived, and retry re-fetch new ones afterwards.
+            if (msgs == null || msgs.size() == 0) {
+                logger.info("no messages, sleeping.");
+
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch(InterruptedException e) {
+                    logger.severe(e.getMessage());
+                    result = "shutdown";
+                }
+
+            } else {
+                msg = msgs.get(0);
+                result = handleMessage(msg, s3, bucket, path);
+                if (result != null) {
+                    // Only handled messages should be deleted.
+                    deleteTaskMessage(msg, missionsUrl, sqsMissions);
+                    sendFinishedMessage(msg, result, finishedUrl, sqsFinished);
+                }
             }
 
-            msgs = getMessages(req, sqsMissions);
-        }
+            if (result != null && ! result.equals("shutdown")) {
+                msgs = getMessages(req, sqsMissions);
+            }
 
-        logger.info("finished messages.");
+        } while ( result == null || ! result.equals("shutdown"));
+
+        logger.info("shutting down.");
     }
 }
