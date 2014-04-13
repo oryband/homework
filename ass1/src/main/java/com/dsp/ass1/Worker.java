@@ -192,16 +192,28 @@ public class Worker {
 
 
     public static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
-        String[] splitter= msg.getBody().split("\t");
-        String action = splitter[1],
-               url = splitter[2],
-               // TODO need to add s3 location of result, according to instructions.
-               reply = "done PDF task\t" + action + "\t" + url + "\t" + pos;
-        try {
-            sqs.sendMessage(new SendMessageRequest(sqsUrl, reply));
-            logger.info(reply);
-        } catch (AmazonClientException e) {
-            logger.severe(e.getMessage());
+        
+        if (pos.equals("shutdown")){
+            try {
+                sqs.sendMessage(new SendMessageRequest(sqsUrl, "shutting down"));
+                logger.info("shutting down");
+            } catch (AmazonClientException e) {
+                logger.severe(e.getMessage());
+            }   
+        }
+        
+        else {
+            String[] splitter= msg.getBody().split("\t");
+            String action = splitter[1],
+                   url = splitter[2],
+                   // TODO need to add s3 location of result, according to instructions.
+                   reply = "done PDF task\t" + action + "\t" + url + "\t" + pos;
+            try {
+                sqs.sendMessage(new SendMessageRequest(sqsUrl, reply));
+                logger.info(reply);
+            } catch (AmazonClientException e) {
+                logger.severe(e.getMessage());
+            }
         }
     }
 
@@ -370,7 +382,7 @@ public class Worker {
 
         // Process messages.
         msgs = getMessages(req, sqsMissions);
-        do {
+        while ( (result == null) || (! result.equals("shutdown"))){
             // Sleep if no messages arrived, and retry re-fetch new ones afterwards.
             if (msgs == null || msgs.size() == 0) {
                 logger.info("no messages, sleeping.");
@@ -385,19 +397,18 @@ public class Worker {
             } else {
                 msg = msgs.get(0);
                 result = handleMessage(msg, s3, bucket, path);
+                deleteTaskMessage(msg, missionsUrl, sqsMissions);
                 if (result != null) {
-                    // Only handled messages should be deleted.
-                    deleteTaskMessage(msg, missionsUrl, sqsMissions);
+                    // TODO decide when use deleteTaskMessage.
                     sendFinishedMessage(msg, result, finishedUrl, sqsFinished);
                 }
             }
-
-            if (result != null && ! result.equals("shutdown")) {
-                msgs = getMessages(req, sqsMissions);
+            
+            if (result != null && result.equals("shutdown")) {
+                return;
             }
-
-        } while ( result == null || ! result.equals("shutdown"));
-
-        logger.info("shutting down.");
+            
+            msgs = getMessages(req, sqsMissions);
+        }
     }
 }
