@@ -382,7 +382,7 @@ public class Worker {
 
         // Process messages.
         msgs = getMessages(req, sqsMissions);
-        while ( (result == null) || (! result.equals("shutdown"))){
+        while (true){
             // Sleep if no messages arrived, and retry re-fetch new ones afterwards.
             if (msgs == null || msgs.size() == 0) {
                 logger.info("no messages, sleeping.");
@@ -397,9 +397,9 @@ public class Worker {
             } else {
                 msg = msgs.get(0);
                 result = handleMessage(msg, s3, bucket, path);
-                deleteTaskMessage(msg, missionsUrl, sqsMissions);
                 if (result != null) {
                     // TODO decide when use deleteTaskMessage.
+                    deleteTaskMessage(msg, missionsUrl, sqsMissions);
                     sendFinishedMessage(msg, result, finishedUrl, sqsFinished);
                 }
             }
