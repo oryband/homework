@@ -107,7 +107,7 @@ public class Worker {
         }
 
         try {
-            return uploadFileToS3(s3, bucket, path, fileName, pageText);
+            return Utils.uploadFileToS3(s3, bucket, path, fileName, pageText);
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
             return null;
@@ -135,7 +135,7 @@ public class Worker {
         }
 
         try {
-            return uploadFileToS3(s3, bucket, path, fileName, pageText);
+            return Utils.uploadFileToS3(s3, bucket, path, fileName, pageText);
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
             return null;
@@ -194,12 +194,7 @@ public class Worker {
     public static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
         
         if (pos.equals("shutdown")){
-            try {
-                sqs.sendMessage(new SendMessageRequest(sqsUrl, "shutting down"));
-                logger.info("shutting down");
-            } catch (AmazonClientException e) {
-                logger.severe(e.getMessage());
-            }   
+            Utils.SendMessageToQueue(sqs,sqsUrl,"shutting down...");  
         }
         
         else {
@@ -208,48 +203,9 @@ public class Worker {
                    url = splitter[2],
                    // TODO need to add s3 location of result, according to instructions.
                    reply = "done PDF task\t" + action + "\t" + url + "\t" + pos;
-            try {
-                sqs.sendMessage(new SendMessageRequest(sqsUrl, reply));
-                logger.info(reply);
-            } catch (AmazonClientException e) {
-                logger.severe(e.getMessage());
-            }
+            
+            Utils.SendMessageToQueue(sqs,sqsUrl,reply);  
         }
-    }
-
-
-    public static String getS3FileAddress(AmazonS3 s3, String bucket, String path, String fileName) {
-        String address;
-
-        try {
-            address = s3.getBucketLocation(bucket);
-        } catch (AmazonClientException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        return "https://s3-" + address + ".amazonaws.com/" + bucket + "/" + path + fileName;
-    }
-
-
-    public static String uploadFileToS3(AmazonS3 s3, String bucket, String path, String fileName, String info)
-        throws IOException {
-        String fileAddress = getS3FileAddress(s3, bucket, path, fileName);
-        File file = createSampleFile(info);
-
-        if (file != null || fileAddress == null) {
-            PutObjectRequest request = new PutObjectRequest(bucket, path + fileName, file);
-
-            try {
-                s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
-                logger.info("file saved: " + fileAddress);
-            } catch (AmazonClientException e) {
-                logger.severe(e.getMessage());
-                return null;
-            }
-            return fileAddress;
-        }
-        return null;
     }
 
 
@@ -257,7 +213,7 @@ public class Worker {
         throws IOException {
 
         // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
-        String address = getS3FileAddress(s3, bucket, path, fileName);
+        String address = Utils.getS3FileAddress(s3, bucket, path, fileName);
 
         if (address != null) {
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
@@ -312,45 +268,6 @@ public class Worker {
     }
 
 
-    public static List<Message> getMessages(ReceiveMessageRequest req, AmazonSQS sqs) {
-        List<Message> msgs;
-
-        try {
-            msgs = sqs.receiveMessage(req).getMessages();
-        } catch (AmazonClientException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        return msgs;
-    }
-
-
-    // TODO Liran wtf is this function? Please document.
-    private static File createSampleFile(String info) throws IOException {
-        File file;
-
-        try {
-            file = File.createTempFile("aws-java-sdk-", ".txt");
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        file.deleteOnExit();
-        Writer writer = new OutputStreamWriter(new FileOutputStream(file));
-        writer.write(info);
-
-        try {
-            writer.close();
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-        }
-
-        return file;
-    }
-
-
     public static void main(String[] args) throws InterruptedException, IOException {
         // Use custom string format for logger.
         ShortFormatter formatter = new ShortFormatter();
@@ -368,8 +285,12 @@ public class Worker {
                path = "here/",
                result = "";
 
-        AWSCredentials creds = new PropertiesCredentials(Worker.class.getResourceAsStream("/AWSCredentials.properties"));
-
+        AWSCredentials creds = Utils.loadCredentials();
+        if(creds == null) {
+            logger.severe("Can't find  the credentials file : closing...");
+            return;
+        }
+        
         AmazonSQS sqsMissions = new AmazonSQSClient(creds),
                   sqsFinished = new AmazonSQSClient(creds);
 
@@ -381,7 +302,7 @@ public class Worker {
         Message msg;
 
         // Process messages.
-        msgs = getMessages(req, sqsMissions);
+        msgs = Utils.getMessages(req, sqsMissions);
         while (true){
             // Sleep if no messages arrived, and retry re-fetch new ones afterwards.
             if (msgs == null || msgs.size() == 0) {
@@ -408,7 +329,7 @@ public class Worker {
                 return;
             }
             
-            msgs = getMessages(req, sqsMissions);
+            msgs = Utils.getMessages(req, sqsMissions);
         }
     }
 }

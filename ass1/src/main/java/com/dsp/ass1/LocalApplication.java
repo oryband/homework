@@ -1,10 +1,19 @@
 package com.dsp.ass1;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
+import org.apache.pdfbox.util.PDFText2HTML;
+import org.apache.pdfbox.util.PDFTextStripper;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
@@ -14,16 +23,88 @@ import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClient;
+import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
 public class LocalApplication {
     
     private static final Logger logger = Logger.getLogger(LocalApplication.class.getName());
     
+    private static String LinkToString(String link) throws IOException{
+        URL url;
+        String line;
+        StringBuilder content = new StringBuilder();
+        InputStream is;
+        
+        try {
+            url = new URL(link);
+        } catch (MalformedURLException e){ 
+            logger.severe(e.getMessage());
+            return null;
+        }
+        
+        try{
+            is = url.openStream();
+        } catch (IOException e){ 
+            logger.severe(e.getMessage());
+            return null;
+        }
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+       
+        while ( (line = br.readLine()) != null){
+            content.append(line);
+            content.append("\n");
+        }
+        
+        try{
+            br.close();
+        } catch (IOException e){ 
+            logger.severe(e.getMessage());
+        }
+        
+        try{
+            is.close();
+        } catch (IOException e){ 
+            logger.severe(e.getMessage());
+        }
+        
+        return content.toString();
+    }
     
-    public static RunInstancesRequest initRunInstancesRequest(){
-        RunInstancesRequest request = new RunInstancesRequest("ami-08728661", 1, 1);
-        request.setInstanceType(InstanceType.T1Micro.toString());
-        return request;
+    
+    private static String readFileAsString(String filePath) throws IOException {
+        StringBuffer fileData = new StringBuffer();
+        BufferedReader reader;
+        char[] buf = new char[1024];
+        int numRead=0;
+        
+        try {
+            reader = new BufferedReader(new FileReader(filePath));
+        }
+        catch (FileNotFoundException e){
+            logger.severe(e.getMessage());
+            return null;
+        }
+        
+        while((numRead=reader.read(buf)) != -1){
+            String readData = String.valueOf(buf, 0, numRead);
+            fileData.append(readData);
+        }
+        
+        try {
+            reader.close();
+        }catch (IOException e){
+            logger.severe(e.getMessage());
+        }
+        
+        return fileData.toString();
     }
     
     
@@ -36,30 +117,74 @@ public class LocalApplication {
             return;
         }
         
-        FileReader file;
+        String info = readFileAsString(args[0]);
+        if(info == null) {
+            logger.severe("Can't read the input file : closing...");
+            return;
+        }
+         
+        AWSCredentials creds = Utils.loadCredentials();
         
-        try {
-            file = new FileReader (args[0]);
-        } catch (FileNotFoundException e){
-            logger.severe(e.getMessage());
+        if(creds == null) {
+            logger.severe("Can't find  the credentials file : closing...");
             return;
         }
         
-        AWSCredentials credentials;
+        String localUrl = "https://sqs.us-west-2.amazonaws.com/340657073537/local",
+                bucket = "dsp-ass1",
+                path = "input/",
+                uploadLink = "",
+                resultContent,
+                finishLink = "";
         
-        try {
-            credentials = new PropertiesCredentials(LocalApplication.class.getResourceAsStream("/AWSCredentials.properties"));
-        } catch (IOException e){
-            logger.severe(e.getMessage());
-            return;
+        AmazonS3 s3 = new AmazonS3Client(creds);
+        AmazonSQS sqsLocal = new AmazonSQSClient(creds);
+        
+        uploadLink = Utils.uploadFileToS3(s3, bucket, path, "input.txt", info);
+        Utils.SendMessageToQueue(sqsLocal,localUrl,"new tasks   "+uploadLink);  
+        ReceiveMessageRequest req = new ReceiveMessageRequest(localUrl);
+
+        List<Message> msgs;
+        Message msg;
+
+        // Process messages.
+        msgs = Utils.getMessages(req, sqsLocal);
+        while (true){
+            // Sleep if no messages arrived, and retry re-fetch new ones afterwards.
+            if (msgs == null || msgs.size() == 0) {
+                logger.info("no messages, sleeping.");
+
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch(InterruptedException e) {
+                    logger.severe(e.getMessage());
+                    return;
+                }
+
+            } else {
+                msg = msgs.get(0);
+                String body = msg.getBody();
+                logger.info("received: " + body);
+
+                String[] parts = msg.getBody().split("\t");
+                if ((parts.length > 0) && parts[0].equals("finish")){
+                    finishLink = parts[1];
+                    break;
+                }
+                else {
+                    logger.info("ignoring : " + body);
+                }
+            }
+            msgs = Utils.getMessages(req, sqsLocal);
         }
-        
-        AmazonEC2 ec2 = new AmazonEC2Client(credentials);
-        
-        RunInstancesRequest request = initRunInstancesRequest();
-        List<Instance> instances = ec2.runInstances(request).getReservation().getInstances();
-        System.out.println("Launch instances: " + instances);
-        
+      
+        resultContent = LinkToString(finishLink);
+        if(resultContent == null) {
+            logger.severe("Can't find  the open finish tasks file : closing...");
+            return;
+        } 
+        // TODO convert resultContent to HTML
+        // TODO create a file with the content
     }
             
 }
