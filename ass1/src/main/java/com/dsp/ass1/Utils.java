@@ -93,7 +93,7 @@ public class Utils {
         
         try {
             sqs.sendMessage(new SendMessageRequest(sqsUrl, info));
-            logger.info(info);
+            logger.info("message sent to queqe : "+info);
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
         }
