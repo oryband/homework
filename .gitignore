@@ -7,10 +7,12 @@
 
 *.jar
 *.class
-AwsCredentials.properties
+ass1/src/main/resources/AWSCredentials.properties
 target/
-
+ass1/liran-ec2.pem
+rootkey.csv
 ass-1/out/
 .html
 .pdf
 .txt
+ass1/src/main/java/com/dsp/ass1/in
