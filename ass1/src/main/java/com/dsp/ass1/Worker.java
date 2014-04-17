@@ -182,19 +182,19 @@ public class Worker {
 
 
     public static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
-        
+
         if (pos.equals("shutdown")){
-            Utils.SendMessageToQueue(sqs,sqsUrl,"shutting down...");  
+            Utils.SendMessageToQueue(sqs,sqsUrl,"shutting down...");
         }
-        
+
         else {
             String[] splitter= msg.getBody().split("\t");
             String action = splitter[1],
                    url = splitter[2],
                    // TODO need to add s3 location of result, according to instructions.
                    reply = "done PDF task\t" + action + "\t" + url + "\t" + pos;
-            
-            Utils.SendMessageToQueue(sqs,sqsUrl,reply);  
+
+            Utils.SendMessageToQueue(sqs,sqsUrl,reply);
         }
     }
 
@@ -280,7 +280,7 @@ public class Worker {
             logger.severe("Can't find  the credentials file : closing...");
             return;
         }
-        
+
         AmazonSQS sqsMissions = new AmazonSQSClient(creds),
                   sqsFinished = new AmazonSQSClient(creds);
 
@@ -293,7 +293,7 @@ public class Worker {
 
         // Process messages.
         msgs = Utils.getMessages(req, sqsMissions);
-        while (true){
+        while (true) {
             // Sleep if no messages arrived, and retry re-fetch new ones afterwards.
             if (msgs == null || msgs.size() == 0) {
                 logger.info("no messages, sleeping.");
@@ -309,16 +309,16 @@ public class Worker {
                 msg = msgs.get(0);
                 result = handleMessage(msg, s3, bucket, path);
                 if (result != null) {
-                    // TODO decide when use deleteTaskMessage.
+                    // Only handled messages are deleted.
                     deleteTaskMessage(msg, missionsUrl, sqsMissions);
                     sendFinishedMessage(msg, result, finishedUrl, sqsFinished);
                 }
             }
-            
+
             if (result != null && result.equals("shutdown")) {
                 return;
             }
-            
+
             msgs = Utils.getMessages(req, sqsMissions);
         }
     }
