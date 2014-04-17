@@ -1,9 +1,5 @@
 package com.dsp.ass1;
 
-import java.util.List;
-import java.util.logging.Logger;
-import java.util.concurrent.TimeUnit;
-
 import java.net.URL;
 
 import java.io.ByteArrayInputStream;
@@ -11,6 +7,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.concurrent.TimeUnit;
 
 import java.awt.image.BufferedImage;
 
@@ -24,12 +24,15 @@ import org.apache.commons.io.FilenameUtils;
 import javax.imageio.ImageIO;
 
 import com.amazonaws.AmazonClientException;
+
 import com.amazonaws.auth.AWSCredentials;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
