@@ -14,36 +14,42 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 
-
 public class Utils {
+    public static final String  tasksUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/tasks",
+                                finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
+                                localUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/local",
+                                bucket = "dsp-ass1",
+                                path = "here/";
 
-    private static final Logger logger = Logger.getLogger(Utils.class.getName());
+    private static final Logger logger = Logger
+            .getLogger(Utils.class.getName());
 
+    public static String uploadFileToS3(AmazonS3 s3, String bucket,
+            String path, String fileName, String info) throws IOException {
+        String fileAddress = getS3FileAddress(s3, bucket, path, fileName);
+        File file = createSampleFile(info);
 
-    public static String uploadFileToS3(AmazonS3 s3, String bucket, String path, String fileName, String info)
-            throws IOException {
-            String fileAddress = getS3FileAddress(s3, bucket, path, fileName);
-            File file = createSampleFile(info);
+        if (file != null || fileAddress == null) {
+            PutObjectRequest request = new PutObjectRequest(bucket, path
+                    + fileName, file);
 
-            if (file != null || fileAddress == null) {
-                PutObjectRequest request = new PutObjectRequest(bucket, path + fileName, file);
-
-                try {
-                    s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
-                    logger.info("file saved: " + fileAddress);
-                } catch (AmazonClientException e) {
-                    logger.severe(e.getMessage());
-                    return null;
-                }
-                return fileAddress;
+            try {
+                s3.putObject(request
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+                logger.info("file saved: " + fileAddress);
+            } catch (AmazonClientException e) {
+                logger.severe(e.getMessage());
+                return null;
             }
-            return null;
+            return fileAddress;
         }
-
+        return null;
+    }
 
     // TODO Write to stream and then save it to file,
     // INSTEAD of creating a file and writing to it. >:(
@@ -70,9 +76,9 @@ public class Utils {
         return file;
     }
 
-
     // Fetches S3-file url.
-    public static String getS3FileAddress(AmazonS3 s3, String bucket, String path, String fileName) {
+    public static String getS3FileAddress(AmazonS3 s3, String bucket,
+            String path, String fileName) {
         String address;
 
         try {
@@ -82,31 +88,44 @@ public class Utils {
             return null;
         }
 
-        return "https://s3-" + address + ".amazonaws.com/" + bucket + "/" + path + fileName;
+        return "https://s3-" + address + ".amazonaws.com/" + bucket + "/"
+                + path + fileName;
     }
-
 
     public static PropertiesCredentials loadCredentials() {
         try {
-            return new PropertiesCredentials(Utils.class.getResourceAsStream("/AWSCredentials.properties"));
-        } catch (IOException e){
+            return new PropertiesCredentials(
+                    Utils.class
+                            .getResourceAsStream("/AWSCredentials.properties"));
+        } catch (IOException e) {
             logger.severe(e.getMessage());
             return null;
         }
     }
 
-
     public static void sendMessage(AmazonSQS sqs, String sqsUrl, String info) {
         try {
             sqs.sendMessage(new SendMessageRequest(sqsUrl, info));
-            logger.info("message sent to queqe : "+info);
+            logger.info("message sent to queqe : " + info);
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
         }
     }
 
+    public static void deleteTaskMessage(Message msg, String sqsUrl,
+            AmazonSQS sqs) {
+        String handle = msg.getReceiptHandle();
 
-    public static List<Message> getMessages(ReceiveMessageRequest req, AmazonSQS sqs) {
+        try {
+            sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, handle));
+            logger.info("deleted: " + msg.getBody());
+        } catch (AmazonClientException e) {
+            logger.severe(e.getMessage());
+        }
+    }
+
+    public static List<Message> getMessages(ReceiveMessageRequest req,
+            AmazonSQS sqs) {
         List<Message> msgs;
 
         try {
