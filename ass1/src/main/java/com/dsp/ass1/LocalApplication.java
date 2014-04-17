@@ -159,7 +159,7 @@ public class LocalApplication {
         AmazonSQS sqsLocal = new AmazonSQSClient(creds);
 
         uploadLink = Utils.uploadFileToS3(s3, bucket, path, "input.txt", info);
-        Utils.SendMessageToQueue(sqsLocal, localUrl, "new task\t" + uploadLink);
+        Utils.sendMessage(sqsLocal, localUrl, "new task\t" + uploadLink);
         ReceiveMessageRequest req = new ReceiveMessageRequest(localUrl);
 
         List<Message> msgs;

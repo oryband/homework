@@ -184,7 +184,7 @@ public class Worker {
     public static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
 
         if (pos.equals("shutdown")){
-            Utils.SendMessageToQueue(sqs,sqsUrl,"shutting down...");
+            Utils.sendMessage(sqs,sqsUrl,"shutting down...");
         }
 
         else {
@@ -194,7 +194,7 @@ public class Worker {
                    // TODO need to add s3 location of result, according to instructions.
                    reply = "done PDF task\t" + action + "\t" + url + "\t" + pos;
 
-            Utils.SendMessageToQueue(sqs,sqsUrl,reply);
+            Utils.sendMessage(sqs,sqsUrl,reply);
         }
     }
 

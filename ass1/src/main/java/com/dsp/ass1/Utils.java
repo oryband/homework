@@ -18,10 +18,12 @@ import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 
+
 public class Utils {
-    
+
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
-    
+
+
     public static String uploadFileToS3(AmazonS3 s3, String bucket, String path, String fileName, String info)
             throws IOException {
             String fileAddress = getS3FileAddress(s3, bucket, path, fileName);
@@ -41,8 +43,10 @@ public class Utils {
             }
             return null;
         }
-    
-    // TODO Liran wtf is this function? Please document.
+
+
+    // TODO Write to stream and then save it to file,
+    // INSTEAD of creating a file and writing to it. >:(
     private static File createSampleFile(String info) throws IOException {
         File file;
 
@@ -65,7 +69,9 @@ public class Utils {
 
         return file;
     }
-    
+
+
+    // Fetches S3-file url.
     public static String getS3FileAddress(AmazonS3 s3, String bucket, String path, String fileName) {
         String address;
 
@@ -78,8 +84,9 @@ public class Utils {
 
         return "https://s3-" + address + ".amazonaws.com/" + bucket + "/" + path + fileName;
     }
-    
-    public static PropertiesCredentials loadCredentials(){
+
+
+    public static PropertiesCredentials loadCredentials() {
         try {
             return new PropertiesCredentials(Utils.class.getResourceAsStream("/AWSCredentials.properties"));
         } catch (IOException e){
@@ -87,9 +94,9 @@ public class Utils {
             return null;
         }
     }
-    
-    public static void SendMessageToQueue(AmazonSQS sqs, String sqsUrl, String info){
-        
+
+
+    public static void sendMessage(AmazonSQS sqs, String sqsUrl, String info) {
         try {
             sqs.sendMessage(new SendMessageRequest(sqsUrl, info));
             logger.info("message sent to queqe : "+info);
@@ -97,7 +104,8 @@ public class Utils {
             logger.severe(e.getMessage());
         }
     }
-    
+
+
     public static List<Message> getMessages(ReceiveMessageRequest req, AmazonSQS sqs) {
         List<Message> msgs;
 
@@ -110,5 +118,4 @@ public class Utils {
 
         return msgs;
     }
-    
 }
