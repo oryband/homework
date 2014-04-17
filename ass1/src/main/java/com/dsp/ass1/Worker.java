@@ -56,7 +56,7 @@ public class Worker {
     }
 
 
-    public static String toImage(PDPage page, String base, AmazonS3 s3, String bucket, String path) {
+    public static String toImage(PDPage page, String base, AmazonS3 s3) {
         String fileName = base + ".png";
         BufferedImage img;
 
@@ -64,7 +64,7 @@ public class Worker {
 
         try {
             img = page.convertToImage();  // PDF to PNG image.
-            return uploadImageToS3(s3, bucket, path, fileName, img);
+            return uploadImageToS3(s3, fileName, img);
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return null;
@@ -72,7 +72,7 @@ public class Worker {
     }
 
 
-    public static String toHTML(PDDocument doc, String base, AmazonS3 s3, String bucket, String path)
+    public static String toHTML(PDDocument doc, String base, AmazonS3 s3)
         throws IOException {
 
         String fileName = base + ".html";
@@ -96,7 +96,7 @@ public class Worker {
         }
 
         try {
-            return Utils.uploadFileToS3(s3, bucket, path, fileName, pageText);
+            return Utils.uploadFileToS3(s3, fileName, pageText);
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
             return null;
@@ -104,7 +104,7 @@ public class Worker {
     }
 
 
-    public static String toText(PDDocument doc, String base, AmazonS3 s3, String bucket, String path)
+    public static String toText(PDDocument doc, String base, AmazonS3 s3)
         throws IOException {
 
         String fileName = base + ".txt";
@@ -124,7 +124,7 @@ public class Worker {
         }
 
         try {
-            return Utils.uploadFileToS3(s3, bucket, path, fileName, pageText);
+            return Utils.uploadFileToS3(s3, fileName, pageText);
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
             return null;
@@ -132,7 +132,7 @@ public class Worker {
     }
 
 
-    public static String handleDocument(String action, String url, AmazonS3 s3, String bucket, String path)
+    public static String handleDocument(String action, String url, AmazonS3 s3)
         throws IOException {
 
         logger.info("handling: " + action + "\t" + url);
@@ -146,13 +146,13 @@ public class Worker {
         } else {
             if (action.equals("ToImage")) {
                 PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
-                result = toImage(page, base, s3, bucket, path);
+                result = toImage(page, base, s3);
             }
             else if (action.equals("ToText")) {
-                result = toText(doc, base, s3, bucket, path);
+                result = toText(doc, base, s3);
             }
             else if (action.equals("ToHTML")) {
-                result = toHTML(doc, base, s3, bucket, path);
+                result = toHTML(doc, base, s3);
             }
         }
 
@@ -198,11 +198,11 @@ public class Worker {
     }
 
 
-    public static String uploadImageToS3(AmazonS3 s3, String bucket, String path, String fileName, BufferedImage img)
+    public static String uploadImageToS3(AmazonS3 s3, String fileName, BufferedImage img)
         throws IOException {
 
         // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
-        String address = Utils.getS3FileAddress(s3, bucket, path, fileName);
+        String address = Utils.getS3FileAddress(s3, fileName);
 
         if (address != null) {
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
@@ -220,7 +220,7 @@ public class Worker {
             ObjectMetadata meta = new ObjectMetadata();
             meta.setContentLength(buffer.length);
             InputStream inStream = new ByteArrayInputStream(buffer);
-            PutObjectRequest request = new PutObjectRequest(bucket, path + fileName, inStream, meta);
+            PutObjectRequest request = new PutObjectRequest(Utils.bucket, Utils.path + fileName, inStream, meta);
 
             try {
                 s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
@@ -234,7 +234,7 @@ public class Worker {
     }
 
 
-    public static String handleMessage(Message msg, AmazonS3 s3, String bucket, String path)
+    public static String handleMessage(Message msg, AmazonS3 s3)
         throws IOException {
 
         String body = msg.getBody();
@@ -243,7 +243,7 @@ public class Worker {
         String[] parts = msg.getBody().split("\t");
 
         if (parts[0].equals("new PDF task") && parts.length >= 3) {
-            return handleDocument(parts[1], parts[2], s3, bucket, path);
+            return handleDocument(parts[1], parts[2], s3);
         // TODO Shutdown message should include a worker name (or tag name?)
         // so each worker will know the message if the message is intended
         // to him or noted to him or not. Something like this:
@@ -262,11 +262,7 @@ public class Worker {
 
         logger.info("starting.");
 
-        String missionsUrl = "https://sqs.us-west-2.amazonaws.com/340657073537/tasks",
-               finishedUrl = "https://sqs.us-west-2.amazonaws.com/340657073537/finished",
-               bucket = "dsp-ass1",
-               path = "here/",
-               result = "";
+        String result = "";
 
         AWSCredentials creds = Utils.loadCredentials();
         if(creds == null) {
@@ -279,7 +275,7 @@ public class Worker {
 
         AmazonS3 s3 = new AmazonS3Client(creds);
 
-        ReceiveMessageRequest req = new ReceiveMessageRequest(missionsUrl);
+        ReceiveMessageRequest req = new ReceiveMessageRequest(Utils.tasksUrl);
 
         List<Message> msgs;
         Message msg;
@@ -300,11 +296,11 @@ public class Worker {
 
             } else {
                 msg = msgs.get(0);
-                result = handleMessage(msg, s3, bucket, path);
+                result = handleMessage(msg, s3);
                 if (result != null) {
                     // Only handled messages are deleted.
-                    deleteTaskMessage(msg, missionsUrl, sqsMissions);
-                    sendFinishedMessage(msg, result, finishedUrl, sqsFinished);
+                    deleteTaskMessage(msg, Utils.tasksUrl, sqsMissions);
+                    sendFinishedMessage(msg, result, Utils.finishedUrl, sqsFinished);
                 }
             }
 

@@ -128,6 +128,8 @@ public class LocalApplication {
 
 
     public static void main (String[] args) throws IOException {
+
+        Utils.setLogger(logger);
         logger.info("starting.");
 
         // Exit if no arguments were given.
@@ -148,19 +150,16 @@ public class LocalApplication {
             return;
         }
 
-        String localUrl = "https://sqs.us-west-2.amazonaws.com/340657073537/local",
-               bucket = "dsp-ass1",
-               path = "input/",
-               uploadLink,
+        String uploadLink,
                resultContent,
                finishLink;
 
         AmazonS3 s3 = new AmazonS3Client(creds);
         AmazonSQS sqsLocal = new AmazonSQSClient(creds);
 
-        uploadLink = Utils.uploadFileToS3(s3, bucket, path, "input.txt", info);
-        Utils.sendMessage(sqsLocal, localUrl, "new task\t" + uploadLink);
-        ReceiveMessageRequest req = new ReceiveMessageRequest(localUrl);
+        uploadLink = Utils.uploadFileToS3(s3, "input.txt", info);
+        Utils.sendMessage(sqsLocal, Utils.localUrl, "new task\t" + uploadLink);
+        ReceiveMessageRequest req = new ReceiveMessageRequest(Utils.localUrl);
 
         List<Message> msgs;
         Message msg;

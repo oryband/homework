@@ -30,13 +30,7 @@ public class Manager {
 
     public static void main(String[] args) throws InterruptedException,
             IOException {
-        // Use custom string format for logger.
-        ShortFormatter formatter = new ShortFormatter();
-        ConsoleHandler handler = new ConsoleHandler();
-
-        logger.setUseParentHandlers(false);
-        handler.setFormatter(formatter);
-        logger.addHandler(handler);
+        Utils.setLogger(logger);
 
         logger.info("starting.");
 

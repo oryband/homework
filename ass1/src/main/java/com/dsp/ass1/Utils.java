@@ -43,9 +43,9 @@ public class Utils {
     }
 
 
-    public static String uploadFileToS3(AmazonS3 s3, String bucket, String path, String fileName, String info)
+    public static String uploadFileToS3(AmazonS3 s3, String fileName, String info)
             throws IOException {
-        String fileAddress = getS3FileAddress(s3, bucket, path, fileName);
+        String fileAddress = getS3FileAddress(s3, fileName);
         File file = createSampleFile(info);
 
         if (file != null || fileAddress == null) {
@@ -89,8 +89,7 @@ public class Utils {
     }
 
     // Fetches S3-file url.
-    public static String getS3FileAddress(AmazonS3 s3, String bucket,
-            String path, String fileName) {
+    public static String getS3FileAddress(AmazonS3 s3, String fileName) {
         String address;
 
         try {
