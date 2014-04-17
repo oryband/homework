@@ -3,11 +3,16 @@ package com.dsp.ass1;
 import java.util.logging.Logger;
 import java.util.logging.ConsoleHandler;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import com.amazonaws.AmazonClientException;
@@ -148,4 +153,48 @@ public class Utils {
 
         return msgs;
     }
+
+    public static String LinkToString(String link) throws IOException {
+        URL url;
+        String line;
+        StringBuilder content = new StringBuilder();
+        InputStream is;
+        BufferedReader br;
+
+        try {
+            url = new URL(link);
+        } catch (MalformedURLException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        try {
+            is = url.openStream();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        br = new BufferedReader(new InputStreamReader(is));
+
+        while ( (line = br.readLine()) != null) {
+            content.append(line);
+            content.append("\n");
+        }
+
+        try {
+            br.close();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+        }
+
+        try {
+            is.close();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+        }
+
+        return content.toString();
+    }
+
 }

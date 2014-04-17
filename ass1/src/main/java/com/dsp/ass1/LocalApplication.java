@@ -4,11 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -42,30 +38,9 @@ public class LocalApplication {
     }
 
 
-    // Downloads a URL and returns it's content wrapped in an <html> String.
-    private static String LinkToHTMLString(String link) throws IOException {
-        URL url;
-        String line;
+    private static String StringToHTMLString(String info) {
+
         StringBuilder content = new StringBuilder();
-        InputStream is;
-        BufferedReader br;
-
-        try {
-            url = new URL(link);
-        } catch (MalformedURLException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        try {
-            is = url.openStream();
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        br = new BufferedReader(new InputStreamReader(is));
-
         content.append("<!DOCTYPE html>\n");
         content.append("<html>\n");
         content.append("<head>\n");
@@ -73,26 +48,14 @@ public class LocalApplication {
         content.append("</head>\n");
         content.append("<body>\n");
 
-        while ( (line = br.readLine()) != null) {
-            content.append(line);
-            content.append("<br \\>\n");
+        String[] split = info.split("\n");
+        for (int i=0 ; i<split.length; i++) {
+            content.append(split[i]);
+            content.append("\n<br>\n");
         }
 
         content.append("</body>\n");
         content.append("</html>\n");
-
-        try {
-            br.close();
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-        }
-
-        try {
-            is.close();
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-        }
-
         return content.toString();
     }
 
@@ -200,12 +163,12 @@ public class LocalApplication {
         }
 
         // Create <html> summary file.
-        resultContent = LinkToHTMLString(finishLink);
+        resultContent = Utils.LinkToString(finishLink);
         if (resultContent == null) {
             return;
         }
 
-        WriteToFile("results.html", resultContent);
+        WriteToFile("results.html", StringToHTMLString(resultContent));
         logger.info("finishing.");
     }
 }
