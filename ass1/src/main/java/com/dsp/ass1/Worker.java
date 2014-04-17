@@ -2,7 +2,6 @@ package com.dsp.ass1;
 
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.logging.ConsoleHandler;
 import java.util.concurrent.TimeUnit;
 
 import java.net.URL;
@@ -259,13 +258,7 @@ public class Worker {
 
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        // Use custom string format for logger.
-        ShortFormatter formatter = new ShortFormatter();
-        ConsoleHandler handler = new ConsoleHandler();
-
-        logger.setUseParentHandlers(false);
-        handler.setFormatter(formatter);
-        logger.addHandler(handler);
+        Utils.setLogger(logger);
 
         logger.info("starting.");
 
