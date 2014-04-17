@@ -31,7 +31,9 @@ public class Utils {
     public static final String tasksUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/tasks",
             finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
             localUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/local",
+            shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
             bucket = "dsp-ass1",
+            resultpath = "result/",
             path = "here/";
 
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
