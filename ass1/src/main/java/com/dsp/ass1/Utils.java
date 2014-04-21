@@ -184,7 +184,7 @@ public class Utils {
     public static RunInstancesResult createAmiFromSnapshot(AmazonEC2 ec2, int amount) {
         try {
             RunInstancesRequest request = new RunInstancesRequest();
-            request.withImageId("ami-13a6bf7a")
+            request.withImageId("ami-3bc8d352")
                 .withInstanceType("t1.micro")
                 .withMinCount(amount)
                 .withMaxCount(amount);
