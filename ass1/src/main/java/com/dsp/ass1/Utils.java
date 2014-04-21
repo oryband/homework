@@ -49,6 +49,7 @@ public class Utils {
     public static final String tasksUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/tasks",
             instanceType = "t1.micro",
             imageId = "ami-33c1da5a",
+            keyName = "ec2",
             finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
             localUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/local",
             shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
@@ -221,6 +222,7 @@ public class Utils {
             request.withImageId(imageId)  // Utils.imageId
                 .withInstanceType(instanceType)  // same
                 .withUserData(userData)
+                .withKeyName(keyName)
                 .withMinCount(amount)
                 .withMaxCount(amount);
 
