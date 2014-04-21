@@ -26,24 +26,29 @@ public class Manager {
     private static int missionCounter  = 0;
 
 
+    // closing "number" of workers by sending shutdown messages to shutdown queue.
     private static void shutdownWorkers(AmazonSQS sqs, int number) { //TODO handle to time before the worker is terminate
         for (int i = 0 ; i < number ; i++ ) {
-            Utils.sendMessage(sqs, Utils.tasksUrl, "shutdown");
+            Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");
         }
         workerCount -= number;
     }
 
 
+    // create "number" new workers
     private static void creatNewWorkers(int number) {
         //TODO open the workers
         workerCount += number;
     }
 
 
+    // create the line for each pdf in the results file.
     private static String stringAppend(String s,String[] split) {
         return s + "\n<" + split[1] + "> :\t" + split[2] + "\t" + split[3];
     }
 
+
+    // get the approximate number of the messages from the queue with the "url".
     private static int getNumberOfMessages(AmazonSQS sqs, String url) {
         List <String> attributeNames = new ArrayList<String>();
         attributeNames.add("ApproximateNumberOfMessages");
@@ -52,6 +57,7 @@ public class Manager {
     }
 
 
+    // checks the amount of the workers and the amount of the tasks. close or open new workers.
     private static void checkWorkerCount(AmazonSQS sqs) {
         int numberOfTasks = getNumberOfMessages(sqs, Utils.tasksUrl);
 
@@ -68,6 +74,7 @@ public class Manager {
     }
 
 
+    // closing all the remain workers and the manager itself.
     private static void closeAll(AmazonSQS sqs) {
         logger.info("starting to close all");
         shutdownWorkers(sqs,workerCount);
@@ -75,11 +82,7 @@ public class Manager {
     }
 
 
-    private static boolean isEmpty(List<Message> messages) {
-        return ((messages == null) || (messages.size() == 0));
-    }
-
-
+    // handling new message in finish queue - msg != null.
     private static void handleFinishTask(Message msg, AmazonSQS sqs, AmazonS3 s3) throws IOException {
         // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
         logger.info("got message in finish queue: " + msg.getBody());
@@ -117,6 +120,7 @@ public class Manager {
     }
 
 
+    // handling new task in local queue.
     private static void handleNewTask(String link,AmazonSQS sqs) throws IOException {
         logger.info("handling new task: " + link);
 
@@ -141,6 +145,7 @@ public class Manager {
     }
 
 
+    // handling new message in the local queue.
     private static String handleLocalTask(Message msg, AmazonSQS sqs) throws IOException {
         String body = msg.getBody();
         String[] splitMessage = body.split("\t");
@@ -165,6 +170,7 @@ public class Manager {
         return "succ";
     }
 
+
     public static void main(String[] args) throws InterruptedException,
     IOException {
         Utils.setLogger(logger);
@@ -172,21 +178,28 @@ public class Manager {
         logger.info("starting.");
 
         AWSCredentials creds = Utils.loadCredentials();
+        if(creds == null) {
+            logger.severe("Can't find  the credentials file : closing...");
+            // TODO close myself
+            return;
+        }
 
-        AmazonSQS sqs = new AmazonSQSClient(creds);;
+        AmazonSQS sqs = new AmazonSQSClient(creds);
 
         AmazonS3 s3 = new AmazonS3Client(creds);
 
         List<Message> localMsgs, finishedMsgs;
         Message msgLocal, msgFinished;
+        ReceiveMessageRequest receiveLocal = new ReceiveMessageRequest(Utils.localUrl),
+                              receiveFinished = new ReceiveMessageRequest(Utils.finishedUrl);
 
-        localMsgs = Utils.getMessages(new ReceiveMessageRequest(Utils.localUrl), sqs);
-        finishedMsgs = Utils.getMessages(new ReceiveMessageRequest(Utils.finishedUrl), sqs);
+        localMsgs = Utils.getMessages(receiveLocal, sqs);
+        finishedMsgs = Utils.getMessages(receiveFinished, sqs);
 
+        // before shutdown received
+        while (true) {
 
-        while (true) { // before shutdown received
-
-            if (isEmpty(localMsgs) && isEmpty(finishedMsgs)) {
+            if (Utils.isEmpty(localMsgs) && Utils.isEmpty(finishedMsgs)) {
                 logger.info("no messages, sleeping.");
 
                 try {
@@ -198,7 +211,7 @@ public class Manager {
                 }
 
             } else {
-                if (!isEmpty(localMsgs)) {
+                if (!Utils.isEmpty(localMsgs)) {
                     msgLocal = localMsgs.get(0);
 
                     if (handleLocalTask(msgLocal, sqs).equals("shutdown")){
@@ -206,18 +219,19 @@ public class Manager {
                     }
                 }
 
-                if (!isEmpty(finishedMsgs)){
+                if (!Utils.isEmpty(finishedMsgs)){
                     msgFinished = finishedMsgs.get(0);
                     handleFinishTask(msgFinished, sqs, s3);
                 }
             }
 
             checkWorkerCount(sqs);
-            localMsgs = Utils.getMessages(new ReceiveMessageRequest(Utils.localUrl), sqs);
-            finishedMsgs = Utils.getMessages(new ReceiveMessageRequest(Utils.finishedUrl), sqs);
+            localMsgs = Utils.getMessages(receiveLocal, sqs);
+            finishedMsgs = Utils.getMessages(receiveFinished, sqs);
         }
 
-        logger.info("starting shutdown"); // after shutdown received but tasks queue has messages
+        // after shutdown received but tasks queue has messages
+        logger.info("starting shutdown");
 
         while (getNumberOfMessages(sqs,Utils.tasksUrl) > 0) {
             logger.info("tasksQueue still has messages, sleeping.");
@@ -231,24 +245,25 @@ public class Manager {
             }
 
             checkWorkerCount(sqs);
-            finishedMsgs = Utils.getMessages(new ReceiveMessageRequest(Utils.finishedUrl), sqs);
+            finishedMsgs = Utils.getMessages(receiveFinished, sqs);
 
-            if (!isEmpty(finishedMsgs)){
+            if (!Utils.isEmpty(finishedMsgs)){
                 msgFinished = finishedMsgs.get(0);
                 handleFinishTask(msgFinished, sqs, s3);
             }
         }
 
+        // after tasks queue has no messages but finished queue has.
         logger.info("no messages in tasks queue");
+        finishedMsgs = Utils.getMessages(receiveFinished, sqs);
 
-        finishedMsgs = Utils.getMessages(new ReceiveMessageRequest(Utils.finishedUrl), sqs);
-
-        while (!isEmpty(finishedMsgs)) { // after tasks queue has no messages but finished queue has.
-            // TODO check if checkWorkerCount(sqs) shuld be here;
+        while (!Utils.isEmpty(finishedMsgs)) {
+            // TODO check if checkWorkerCount(sqs) should be here;
             msgFinished = finishedMsgs.get(0);
             handleFinishTask(msgFinished, sqs, s3);
         }
 
+        // starting to close all.
         logger.info("no messages in finished queue");
         closeAll(sqs);
     }
