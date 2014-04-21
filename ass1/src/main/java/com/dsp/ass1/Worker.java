@@ -41,11 +41,12 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
 
 public class Worker {
+    // TODO skip INFO messages on production.
     private static final Logger logger = Logger.getLogger(Worker.class.getName());
 
 
-    // Returns a PDDocument from a string URL.
-    public static PDDocument getDocument(String url) {
+    // Returns a PDDocument from a string URL or null on error.
+    private static PDDocument getDocument(String url) {
         PDDocument doc;
 
         try {
@@ -59,11 +60,12 @@ public class Worker {
     }
 
 
-    public static String toImage(PDPage page, String base, AmazonS3 s3) {
+    // Converts PDF file to PNG image and uploads it to S3.
+    private static String toImage(PDPage page, String base, AmazonS3 s3) {
         String fileName = base + ".png";
         BufferedImage img;
 
-        logger.info("image: " + fileName);
+        logger.info("Image: " + fileName);
 
         try {
             img = page.convertToImage();  // PDF to PNG image.
@@ -75,17 +77,16 @@ public class Worker {
     }
 
 
-    public static String toHTML(PDDocument doc, String base, AmazonS3 s3)
-        throws IOException {
-
+    // Converts PDF to HTML and uploads it to S3.
+    private static String toHTML(PDDocument doc, String base, AmazonS3 s3) {
         String fileName = base + ".html";
-        logger.info("html: " + fileName);
+        logger.info("HTML: " + fileName);
 
         String pageText;
         PDFTextStripper stripper;
 
         try {
-            stripper = new PDFText2HTML("utf-8");
+            stripper = new PDFText2HTML("utf-8");  // encoding: utf-8
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return null;
@@ -98,20 +99,14 @@ public class Worker {
             return null;
         }
 
-        try {
-            return Utils.uploadFileToS3(s3, fileName, pageText);
-        } catch (FileNotFoundException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
+        return Utils.uploadFileToS3(s3, fileName, pageText);
     }
 
 
-    public static String toText(PDDocument doc, String base, AmazonS3 s3)
-        throws IOException {
-
+    // Converts PDF to clear text file and uploads it to S3.
+    private static String toText(PDDocument doc, String base, AmazonS3 s3) {
         String fileName = base + ".txt";
-        logger.info("text: " + fileName);
+        logger.info("Text: " + fileName);
 
         PDFTextStripper stripper;
         String pageText;
@@ -126,19 +121,14 @@ public class Worker {
             return null;
         }
 
-        try {
-            return Utils.uploadFileToS3(s3, fileName, pageText);
-        } catch (FileNotFoundException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
+        return Utils.uploadFileToS3(s3, fileName, pageText);
     }
 
 
-    public static String handleDocument(String action, String url, AmazonS3 s3)
-        throws IOException {
-
-        logger.info("handling: " + action + "\t" + url);
+    // Receives an action, PDF file url, and S3 connection and process action
+    // on PDF url. Afterwards uploads result to S3.
+    private static String handleDocument(String action, String url, AmazonS3 s3) {
+        logger.info("Handling: " + action + "\t" + url);
 
         String base = FilenameUtils.getBaseName(url),
                result = null;
@@ -159,7 +149,7 @@ public class Worker {
             }
         }
 
-        logger.info("finished handling: " + action + "\t" + url);
+        logger.info("Finished handling: " + action + "\t" + url);
 
         try {
             doc.close();
@@ -171,40 +161,40 @@ public class Worker {
     }
 
 
-    public static void deleteTaskMessage(Message msg, String sqsUrl, AmazonSQS sqs) {
+    // Deletes a 'new PDF task ..' message.
+    private static void deleteTaskMessage(Message msg, String sqsUrl, AmazonSQS sqs) {
         String handle = msg.getReceiptHandle();
 
         try {
             sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, handle));
-            logger.info("deleted: " + msg.getBody());
+            logger.info("Deleted: " + msg.getBody());
         } catch (AmazonClientException e){
             logger.severe(e.getMessage());
         }
     }
 
 
-    public static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
-
-        if (pos.equals("shutdown")){
-            Utils.sendMessage(sqs,sqsUrl,"shutting down...");
+    // Sends a 'done PDF task ..' message to the queue.
+    private static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
+        // TODO make this message more verbose i.e. send instance id etc.
+        if (pos.equals("shutdown")) {
+            Utils.sendMessage(sqs, sqsUrl, "Shutting down.");
         }
 
         else {
-            String[] splitter= msg.getBody().split("\t");
-            String action = splitter[1],
-                   url = splitter[2],
-                   // TODO need to add s3 location of result, according to instructions.
-                   reply = "done PDF task\t" + action + "\t" + url + "\t" + pos;
+            String[] splitter = msg.getBody().split("\t");
+            // TODO need to add s3 location of result, according to instructions.
+            // TODO msg might not spliter to 3 parts, thus splitter[1] or [2] will throw an exception.
+            String reply = "done PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + pos;
 
             Utils.sendMessage(sqs,sqsUrl,reply);
         }
     }
 
 
-    public static String uploadImageToS3(AmazonS3 s3, String fileName, BufferedImage img)
-        throws IOException {
-
+    private static String uploadImageToS3(AmazonS3 s3, String fileName, BufferedImage img) {
         // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
+        // TODO we don't need to use getS3FileAddress() ! it creates a file which we don't need!
         String address = Utils.getS3FileAddress(s3, fileName);
 
         if (address != null) {
@@ -237,11 +227,10 @@ public class Worker {
     }
 
 
-    public static String handleMessage(Message msg, AmazonS3 s3)
-        throws IOException {
-
+    // Processes (or ignores) messages.
+    private static String handleMessage(Message msg, AmazonS3 s3) {
         String body = msg.getBody();
-        logger.info("received: " + body);
+        logger.info("Received: " + body);
 
         String[] parts = msg.getBody().split("\t");
 
@@ -254,16 +243,17 @@ public class Worker {
         } else if (parts[0].equals("shutdown")) {
             return "shutdown";
         } else {
-            logger.info("ignoring: " + body);
+            logger.info("Ignoring: " + body);
             return null;
         }
     }
 
 
-    public static void main(String[] args) throws InterruptedException, IOException {
-        Utils.setLogger(logger);
+    public static void main(String[] args) {
+        // TODO split main() to multiple functions.
 
-        logger.info("starting.");
+        Utils.setLogger(logger);
+        logger.info("Starting.");
 
         String result = "";
 
@@ -288,7 +278,7 @@ public class Worker {
         while (true) {
             // Sleep if no messages arrived, and retry re-fetch new ones afterwards.
             if (msgs == null || msgs.size() == 0) {
-                logger.info("no messages, sleeping.");
+                logger.info("No messages, sleeping.");
 
                 try {
                     TimeUnit.SECONDS.sleep(5);
