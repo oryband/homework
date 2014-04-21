@@ -7,15 +7,32 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import com.amazonaws.auth.AWSCredentials;
+
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Filter;
+import com.amazonaws.services.ec2.model.Reservation;
+import com.amazonaws.services.ec2.model.Tag;
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.CreateTagsRequest;
+import com.amazonaws.services.ec2.model.RunInstancesResult;
+
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.Message;
@@ -26,7 +43,7 @@ public class LocalApplication {
 
     private static final Logger logger = Logger.getLogger(LocalApplication.class.getName());
 
-    private static void WriteToFile(String fileName, String info) throws FileNotFoundException {
+    private static void WriteToFile(String fileName, String info) {
         PrintWriter out;
 
         try {
@@ -43,7 +60,7 @@ public class LocalApplication {
 
 
     // Downloads a URL and returns it's content wrapped in an <html> String.
-    private static String LinkToHTMLString(String link) throws IOException {
+    private static String LinkToHTMLString(String link) {
         URL url;
         String line;
         StringBuilder content = new StringBuilder();
@@ -73,9 +90,14 @@ public class LocalApplication {
         content.append("</head>\n");
         content.append("<body>\n");
 
-        while ( (line = br.readLine()) != null) {
-            content.append(line);
-            content.append("<br \\>\n");
+        try {
+            while ( (line = br.readLine()) != null) {
+                content.append(line);
+                content.append("<br \\>\n");
+            }
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
         }
 
         content.append("</body>\n");
@@ -98,7 +120,7 @@ public class LocalApplication {
 
 
     // Reads a file and returns its content as a string.
-    private static String readFileAsString(String filePath) throws IOException {
+    private static String readFileAsString(String filePath) {
         StringBuffer fileData = new StringBuffer();
         BufferedReader reader;
         char[] buf = new char[1024];
@@ -112,9 +134,14 @@ public class LocalApplication {
             return null;
         }
 
-        while((numRead = reader.read(buf)) != -1) {
-            String readData = String.valueOf(buf, 0, numRead);
-            fileData.append(readData);
+        try {
+            while((numRead = reader.read(buf)) != -1) {
+                String readData = String.valueOf(buf, 0, numRead);
+                fileData.append(readData);
+            }
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
         }
 
         try {
@@ -127,7 +154,69 @@ public class LocalApplication {
     }
 
 
-    public static void main (String[] args) throws IOException {
+    public static String handleMessage(Message msg, AmazonS3 s3) {
+        String body = msg.getBody();
+
+        logger.info("received: " + body);
+
+        String[] parts = msg.getBody().split("\t");
+
+        if (parts[0].equals("done task") && parts.length >= 1) {
+            return parts[1];
+        } else {
+            logger.info("ignoring: " + body);
+            return null;
+        }
+    }
+
+
+    public static Instance getOrCreateManager(AWSCredentials creds) {
+        // Get manager if it exists, or create a new one if not.
+        AmazonEC2 ec2 = new AmazonEC2Client(creds);
+        DescribeInstancesRequest instanceReq = new DescribeInstancesRequest();
+        Filter managerFilter = new Filter("tag:Name").withValues("manager"),
+               activeFilter = new Filter("instance-state-code").withValues("0", "16");  // 0||16 == pending||running
+        DescribeInstancesResult result = ec2.describeInstances(instanceReq.withFilters(managerFilter, activeFilter));
+        List<Reservation> reservations = result.getReservations();
+        List<Instance> instances;
+
+        if (reservations.size() > 0) {
+            for (Reservation reservation : reservations) {
+                instances = reservation.getInstances();
+                logger.info(instances.get(0).getTags().get(0).getValue());
+                if (instances.size() > 0) {
+                    logger.info("Existing manager found.");
+                    return instances.get(0);
+                }
+            }
+        }
+
+        logger.info("No manager exists, creating new one.");
+        RunInstancesResult instanceResults = Utils.createAmiFromSnapshot(1, "manager", creds);
+        if (instanceResults == null) {
+            logger.severe("Couldn't create manager.");
+            return null;
+        }
+
+        Instance manager = instanceResults.getReservation().getInstances().get(0);
+
+        // Tag manager with name "manager".
+        CreateTagsRequest tagReq = new CreateTagsRequest();
+        tagReq.withResources(manager.getInstanceId())
+            .withTags(new Tag("Name", "manager"));
+
+        ec2.createTags(tagReq);
+
+        // TODO execute manager code (run java app)
+
+        return manager;
+    }
+
+
+    // TODO turn off manager if given as args[1] or something.
+    public static void main (String[] args) {
+        Utils.setLogger(logger);
+
         logger.info("starting.");
 
         // Exit if no arguments were given.
@@ -136,7 +225,7 @@ public class LocalApplication {
             return;
         }
 
-        // Read input file.
+        // Read input.
         String info = readFileAsString(args[0]);
         if (info == null) {
             return;
@@ -148,25 +237,25 @@ public class LocalApplication {
             return;
         }
 
-        String localUrl = "https://sqs.us-west-2.amazonaws.com/340657073537/local",
-               bucket = "dsp-ass1",
-               path = "input/",
-               uploadLink,
-               resultContent,
-               finishLink;
+        // Start manager.
+        Instance manager = getOrCreateManager(creds);
+        if (manager == null) {
+            return;
+        }
 
+        // Upload new mission and inform manager.
         AmazonS3 s3 = new AmazonS3Client(creds);
-        AmazonSQS sqsLocal = new AmazonSQSClient(creds);
+        AmazonSQS sqs = new AmazonSQSClient(creds);
 
-        uploadLink = Utils.uploadFileToS3(s3, bucket, path, "input.txt", info);
-        Utils.sendMessage(sqsLocal, localUrl, "new task\t" + uploadLink);
-        ReceiveMessageRequest req = new ReceiveMessageRequest(localUrl);
+        String uploadLink = Utils.uploadFileToS3(s3, "input.txt", info),
+               finishedLink;
 
-        List<Message> msgs;
-        Message msg;
+        Utils.sendMessage(sqs, Utils.localUrl, "new task\t" + uploadLink);
 
         // Process messages indefinitely until manager is finished working for us.
-        msgs = Utils.getMessages(req, sqsLocal);
+        ReceiveMessageRequest req = new ReceiveMessageRequest(Utils.localUrl);
+        List<Message> msgs = Utils.getMessages(req, sqs);;
+        Message msg;
         while (true) {
             // Sleep if no messages arrived, and retry to re-fetch new ones afterwards.
             if (msgs == null || msgs.size() == 0) {
@@ -183,25 +272,19 @@ public class LocalApplication {
             } else {
                 msg = msgs.get(0);
                 String body = msg.getBody();
-                logger.info("received: " + body);
-
-                // TODO put this in ProcessMessage() function or something,
-                // shouldn't be in main.
-                String[] parts = msg.getBody().split("\t");
-                if (parts.length > 0 && parts[0].equals("done task")){
-                    finishLink = parts[1];
+                finishedLink = handleMessage(msg, s3);
+                if (finishedLink != null) {
+                    // Only handled messages are deleted.
+                    Utils.deleteTaskMessage(msg, Utils.localUrl, sqs);
                     break;
-                }
-                else {
-                    logger.info("ignoring: " + body);
                 }
             }
 
-            msgs = Utils.getMessages(req, sqsLocal);
+            msgs = Utils.getMessages(req, sqs);
         }
 
         // Create <html> summary file.
-        resultContent = LinkToHTMLString(finishLink);
+        String resultContent = LinkToHTMLString(finishedLink);
         if (resultContent == null) {
             return;
         }
