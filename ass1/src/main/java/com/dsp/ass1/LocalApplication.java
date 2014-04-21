@@ -148,7 +148,6 @@ public class LocalApplication {
         if (reservations.size() > 0) {
             for (Reservation reservation : reservations) {
                 instances = reservation.getInstances();
-                logger.info(instances.get(0).getTags().get(0).getValue());
                 if (instances.size() > 0) {
                     logger.info("Existing manager found.");
                     return instances.get(0);
@@ -260,7 +259,6 @@ public class LocalApplication {
     }
 
 
-    // TODO turn off manager if given as args[1] or something.
     public static void main (String[] args) {
         Utils.setLogger(logger);
 
