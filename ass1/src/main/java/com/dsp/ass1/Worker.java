@@ -61,7 +61,7 @@ public class Worker {
 
     // Converts PDF file to PNG image and uploads it to S3.
     private static String toImage(PDPage page, String base, String missionNumber, AmazonS3 s3) {
-        String fileName = missionNumber + "_" + System.currentTimeMillis() + base + ".png";
+        String fileName = missionNumber + "_" + System.currentTimeMillis() + "_"+ base + ".png";
         BufferedImage img;
 
         logger.info("Image: " + fileName);
@@ -78,7 +78,7 @@ public class Worker {
 
     // Converts PDF to HTML and uploads it to S3.
     private static String toHTML(PDDocument doc, String base, String missionNumber, AmazonS3 s3) {
-        String fileName = missionNumber + "_" + System.currentTimeMillis() + base + ".html";
+        String fileName = missionNumber + "_" + System.currentTimeMillis() + "_" + base + ".html";
         logger.info("HTML: " + fileName);
 
         String pageText;
@@ -104,7 +104,7 @@ public class Worker {
 
     // Converts PDF to clear text file and uploads it to S3.
     private static String toText(PDDocument doc, String base, String missionNumber, AmazonS3 s3) {
-        String fileName = missionNumber + "_" + System.currentTimeMillis() + base + ".txt"; // TODO choose name for the file
+        String fileName = missionNumber + "_" + System.currentTimeMillis() + "_" + base + ".txt"; // TODO choose name for the file
         logger.info("Text: " + fileName);
 
         PDFTextStripper stripper;
@@ -176,18 +176,12 @@ public class Worker {
     // Sends a 'done PDF task ..' message to the queue.
     private static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
         // TODO make this message more verbose i.e. send instance id etc.
-        if (pos.equals("shutdown")) {
-            Utils.sendMessage(sqs, sqsUrl, "Shutting down.");
-        }
-
-        else {  // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
-            String[] splitter = msg.getBody().split("\t");
-            // TODO need to add s3 location of result, according to instructions.
-            // TODO msg might not spliter to 3 parts, thus splitter[1] or [2] will throw an exception.
-            String reply = "done PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + pos + "\t" + splitter[4];
-
-            Utils.sendMessage(sqs,sqsUrl,reply);
-        }
+        // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
+        String[] splitter = msg.getBody().split("\t");
+        // TODO need to add s3 location of result, according to instructions.
+        // TODO msg might not spliter to 3 parts, thus splitter[1] or [2] will throw an exception.
+        String reply = "done PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + pos + "\t" + splitter[4];
+        Utils.sendMessage(sqs,sqsUrl,reply);
     }
 
 
