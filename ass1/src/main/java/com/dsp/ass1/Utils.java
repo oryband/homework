@@ -47,8 +47,8 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 public class Utils {
 
     public static final String tasksUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/tasks",
-            instanceType = "ami-33c1da5a",
-            imageId = "t1.micro",
+            instanceType = "t1.micro",
+            imageId = "ami-33c1da5a",
             finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
             localUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/local",
             shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
