@@ -55,6 +55,7 @@ public class Utils {
     }
 
 
+    // Returns uploaded file address or null on error.
     public static String uploadFileToS3(AmazonS3 s3, String fileName, String info) {
         String fileAddress = getS3FileAddress(s3, fileName);
         File file = createSampleFile(info);
@@ -66,11 +67,12 @@ public class Utils {
 
             try {
                 s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
-                logger.info("file saved: " + fileAddress);
+                logger.info("File saved: " + fileAddress);
             } catch (AmazonClientException e) {
                 logger.severe(e.getMessage());
                 return null;
             }
+
             return fileAddress;
         }
     }
@@ -137,7 +139,7 @@ public class Utils {
     public static void sendMessage(AmazonSQS sqs, String sqsUrl, String info) {
         try {
             sqs.sendMessage(new SendMessageRequest(sqsUrl, info));
-            logger.info("message sent to queqe : " + info);
+            logger.info("Message sent to queqe : " + info);
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
         }
@@ -149,7 +151,7 @@ public class Utils {
 
         try {
             sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, handle));
-            logger.info("deleted: " + msg.getBody());
+            logger.info("Deleted: " + msg.getBody());
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
         }
@@ -170,12 +172,8 @@ public class Utils {
     }
 
 
-    public static RunInstancesResult createAmiFromSnapshot(int amount, String name, AWSCredentials creds) {
-
-        AmazonEC2 ec2;
-
-        ec2 = new AmazonEC2Client(creds);
-
+    // Creates a new AMI instance from pre-defined snapshot..
+    public static RunInstancesResult createAmiFromSnapshot(AmazonEC2 ec2, int amount) {
         try {
             RunInstancesRequest request = new RunInstancesRequest();
             request.withImageId("ami-13a6bf7a")

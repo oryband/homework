@@ -43,7 +43,8 @@ public class LocalApplication {
 
     private static final Logger logger = Logger.getLogger(LocalApplication.class.getName());
 
-    private static void WriteToFile(String fileName, String info) {
+    // Writes data to file.
+    private static void WriteToFile(String fileName, String data) {
         PrintWriter out;
 
         try {
@@ -53,9 +54,9 @@ public class LocalApplication {
             return;
         }
 
-        out.println(info);
+        out.println(data);
         out.close();
-        logger.info("results: " + fileName);
+        logger.info("Results: " + fileName);
     }
 
 
@@ -154,27 +155,29 @@ public class LocalApplication {
     }
 
 
-    public static String handleMessage(Message msg, AmazonS3 s3) {
+    // Process (or ignores) all messages.
+    private static String handleMessage(Message msg, AmazonS3 s3) {
         String body = msg.getBody();
 
-        logger.info("received: " + body);
+        logger.info("Received: " + body);
 
         String[] parts = msg.getBody().split("\t");
 
         if (parts[0].equals("done task") && parts.length >= 1) {
             return parts[1];
         } else {
-            logger.info("ignoring: " + body);
+            logger.info("Ignoring: " + body);
             return null;
         }
     }
 
 
-    public static Instance getOrCreateManager(AWSCredentials creds) {
-        // Get manager if it exists, or create a new one if not.
-        AmazonEC2 ec2 = new AmazonEC2Client(creds);
+    // Returns existing manager instance or null if no manager exists.
+    private static Instance getManager(AmazonEC2 ec2) {
+        logger.info("Requesting manager instance.");
+
         DescribeInstancesRequest instanceReq = new DescribeInstancesRequest();
-        Filter managerFilter = new Filter("tag:Name").withValues("manager"),
+        Filter managerFilter = new Filter("tag:Name").withValues("manager"),  // Filter instances by tag "Name=manager"
                activeFilter = new Filter("instance-state-code").withValues("0", "16");  // 0||16 == pending||running
         DescribeInstancesResult result = ec2.describeInstances(instanceReq.withFilters(managerFilter, activeFilter));
         List<Reservation> reservations = result.getReservations();
@@ -191,21 +194,55 @@ public class LocalApplication {
             }
         }
 
-        logger.info("No manager exists, creating new one.");
-        RunInstancesResult instanceResults = Utils.createAmiFromSnapshot(1, "manager", creds);
+        logger.info("No manager instance exists.");
+        return null;
+    }
+
+
+    // Creates a manager instance.
+    private static Instance createManager(AmazonEC2 ec2) {
+        logger.info("Creating new manager instance.");
+
+        RunInstancesResult instanceResults = Utils.createAmiFromSnapshot(ec2, 1);
         if (instanceResults == null) {
             logger.severe("Couldn't create manager.");
             return null;
         }
 
-        Instance manager = instanceResults.getReservation().getInstances().get(0);
+        return instanceResults.getReservation().getInstances().get(0);
+    }
 
-        // Tag manager with name "manager".
+
+    // Tags a manger instance with "Name=manager".
+    private static void tagManager(AmazonEC2 ec2, Instance manager) {
+        logger.info("Tagging manager instance.");
+
         CreateTagsRequest tagReq = new CreateTagsRequest();
         tagReq.withResources(manager.getInstanceId())
             .withTags(new Tag("Name", "manager"));
 
         ec2.createTags(tagReq);
+    }
+
+
+    // Get manager if it exists, or create a new one if not.
+    private static Instance getOrCreateManager(AWSCredentials creds) {
+        AmazonEC2 ec2 = new AmazonEC2Client(creds);
+
+        // Search for existing manager.
+        Instance manager = getManager(ec2);
+        if (manager != null) {
+            return manager;
+        }
+
+        // Else create a new one.
+        manager = createManager(ec2);
+        if (manager == null) {
+            return null;
+        }
+
+        // Tag manager with "Name=manager".
+        tagManager(ec2, manager);
 
         // TODO execute manager code (run java app)
 
@@ -217,7 +254,7 @@ public class LocalApplication {
     public static void main (String[] args) {
         Utils.setLogger(logger);
 
-        logger.info("starting.");
+        logger.info("Starting.");
 
         // Exit if no arguments were given.
         if (args.length == 0) {
@@ -259,7 +296,7 @@ public class LocalApplication {
         while (true) {
             // Sleep if no messages arrived, and retry to re-fetch new ones afterwards.
             if (msgs == null || msgs.size() == 0) {
-                logger.info("no messages, sleeping.");
+                logger.info("No messages, sleeping.");
 
                 try {
                     TimeUnit.SECONDS.sleep(5);
@@ -290,6 +327,6 @@ public class LocalApplication {
         }
 
         WriteToFile("results.html", resultContent);
-        logger.info("finishing.");
+        logger.info("Closing.");
     }
 }
