@@ -14,7 +14,12 @@ import java.net.URL;
 
 import java.util.logging.Logger;
 import java.util.logging.ConsoleHandler;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.codec.binary.Base64;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -180,12 +185,40 @@ public class Utils {
     }
 
 
+    // Join string collection with delimeter.
+    private static String join(Collection<String> s, String delimiter) {
+        StringBuilder builder = new StringBuilder();
+        Iterator<String> iter = s.iterator();
+
+        while (iter.hasNext()) {
+            builder.append(iter.next());
+            if (!iter.hasNext()) {
+                break;
+            }
+
+            builder.append(delimiter);
+        }
+
+        return builder.toString();
+    }
+
+
+    // Execute worker/manager user-data, to be sent using an instance request.
+    public static String elementUserData(String element) {
+        ArrayList<String> lines = new ArrayList<String>();
+        lines.add("#!/bin/sh");
+        lines.add("cd /home/ec2-user/dsp/ass1 && git pull origin master && mvn package && ./run-" + element);
+        return new String(Base64.encodeBase64(join(lines, "\n").getBytes()));
+    }
+
+
     // Creates a new AMI instance from pre-defined snapshot..
-    public static RunInstancesResult createAmiFromSnapshot(AmazonEC2 ec2, int amount) {
+    public static RunInstancesResult createAmiFromSnapshot(AmazonEC2 ec2, int amount, String userData) {
         try {
             RunInstancesRequest request = new RunInstancesRequest();
             request.withImageId("ami-3bc8d352")
                 .withInstanceType("t1.micro")
+                .withUserData(userData)
                 .withMinCount(amount)
                 .withMaxCount(amount);
 

@@ -165,7 +165,8 @@ public class LocalApplication {
     private static Instance createManager(AmazonEC2 ec2) {
         logger.info("Creating new manager instance.");
 
-        RunInstancesResult instanceResults = Utils.createAmiFromSnapshot(ec2, 1);
+        String userData = Utils.elementUserData("manager");
+        RunInstancesResult instanceResults = Utils.createAmiFromSnapshot(ec2, 1, userData);
         if (instanceResults == null) {
             logger.severe("Couldn't create manager.");
             return null;
