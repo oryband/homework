@@ -20,10 +20,8 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 
 import com.amazonaws.auth.PropertiesCredentials;
-import com.amazonaws.auth.AWSCredentials;
 
 import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2Client;
 
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
@@ -244,5 +242,11 @@ public class Utils {
         }
 
         return content.toString();
+    }
+
+
+    // checking if a list has is empty.
+    public static boolean isEmpty(List<Message> messages) {
+        return ((messages == null) || (messages.size() == 0));
     }
 }

@@ -5,7 +5,6 @@ import java.net.URL;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import java.util.List;
@@ -61,8 +60,8 @@ public class Worker {
 
 
     // Converts PDF file to PNG image and uploads it to S3.
-    private static String toImage(PDPage page, String base, AmazonS3 s3) {
-        String fileName = base + ".png";
+    private static String toImage(PDPage page, String base, String missionNumber, AmazonS3 s3) {
+        String fileName = missionNumber + "_" + System.currentTimeMillis() + base + ".png";
         BufferedImage img;
 
         logger.info("Image: " + fileName);
@@ -78,8 +77,8 @@ public class Worker {
 
 
     // Converts PDF to HTML and uploads it to S3.
-    private static String toHTML(PDDocument doc, String base, AmazonS3 s3) {
-        String fileName = base + ".html";
+    private static String toHTML(PDDocument doc, String base, String missionNumber, AmazonS3 s3) {
+        String fileName = missionNumber + "_" + System.currentTimeMillis() + base + ".html";
         logger.info("HTML: " + fileName);
 
         String pageText;
@@ -104,8 +103,8 @@ public class Worker {
 
 
     // Converts PDF to clear text file and uploads it to S3.
-    private static String toText(PDDocument doc, String base, AmazonS3 s3) {
-        String fileName = base + ".txt";
+    private static String toText(PDDocument doc, String base, String missionNumber, AmazonS3 s3) {
+        String fileName = missionNumber + "_" + System.currentTimeMillis() + base + ".txt"; // TODO choose name for the file
         logger.info("Text: " + fileName);
 
         PDFTextStripper stripper;
@@ -127,11 +126,11 @@ public class Worker {
 
     // Receives an action, PDF file url, and S3 connection and process action
     // on PDF url. Afterwards uploads result to S3.
-    private static String handleDocument(String action, String url, AmazonS3 s3) {
-        logger.info("Handling: " + action + "\t" + url);
+    private static String handleDocument(String action, String url, String missionNumber ,AmazonS3 s3) {
+        logger.info("Handling: " + action + "\t" + url + "\t" + missionNumber);
 
         String base = FilenameUtils.getBaseName(url),
-               result = null;
+                result = null;
         PDDocument doc = getDocument(url);
 
         if (doc == null) {
@@ -139,17 +138,17 @@ public class Worker {
         } else {
             if (action.equals("ToImage")) {
                 PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
-                result = toImage(page, base, s3);
+                result = toImage(page, base, missionNumber, s3);
             }
             else if (action.equals("ToText")) {
-                result = toText(doc, base, s3);
+                result = toText(doc, base, missionNumber,s3);
             }
             else if (action.equals("ToHTML")) {
-                result = toHTML(doc, base, s3);
+                result = toHTML(doc, base, missionNumber, s3);
             }
         }
 
-        logger.info("Finished handling: " + action + "\t" + url);
+        logger.info("Finished handling: " + action + "\t" + url + "\t" + missionNumber);
 
         try {
             doc.close();
@@ -181,11 +180,11 @@ public class Worker {
             Utils.sendMessage(sqs, sqsUrl, "Shutting down.");
         }
 
-        else {
+        else {  // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
             String[] splitter = msg.getBody().split("\t");
             // TODO need to add s3 location of result, according to instructions.
             // TODO msg might not spliter to 3 parts, thus splitter[1] or [2] will throw an exception.
-            String reply = "done PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + pos;
+            String reply = "done PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + pos + "\t" + splitter[4];
 
             Utils.sendMessage(sqs,sqsUrl,reply);
         }
@@ -228,21 +227,34 @@ public class Worker {
 
 
     // Processes (or ignores) messages.
-    private static String handleMessage(Message msg, AmazonS3 s3) {
+    private static String handleTaskMessage(Message msg, AmazonS3 s3) {
         String body = msg.getBody();
-        logger.info("Received: " + body);
+        logger.info("Task queue received: " + body);
 
         String[] parts = msg.getBody().split("\t");
 
         if (parts[0].equals("new PDF task") && parts.length >= 3) {
-            return handleDocument(parts[1], parts[2], s3);
-        // TODO Shutdown message should include a worker name (or tag name?)
-        // so each worker will know the message if the message is intended
-        // to him or noted to him or not. Something like this:
-        // } else if (parts[0].equals("shutdown") && parts.length >= 2 && parts[1].equals(ami-identifier) {
-        } else if (parts[0].equals("shutdown")) {
+            return handleDocument(parts[1], parts[2], parts[3], s3); // parts[1] = action , parts [2] = link , parts[3] = mission counter
+            // TODO Shutdown message should include a worker name (or tag name?)
+            // so each worker will know the message if the message is intended
+            // to him or noted to him or not. Something like this:
+            // } else if (parts[0].equals("shutdown") && parts.length >= 2 && parts[1].equals(ami-identifier) {
+        } else  {
+            logger.info("Ignoring: " + body);
+            return null;
+        }
+    }
+
+
+    private static String handleShutdownMessage(Message msg, AmazonS3 s3) {
+        String body = msg.getBody();
+        logger.info("shutdown queue received : " + body);
+
+        String[] parts = msg.getBody().split("\t");
+
+        if (parts[0].equals("shutdown")) {
             return "shutdown";
-        } else {
+        } else  {
             logger.info("Ignoring: " + body);
             return null;
         }
@@ -255,29 +267,31 @@ public class Worker {
         Utils.setLogger(logger);
         logger.info("Starting.");
 
-        String result = "";
+        String result;
 
         AWSCredentials creds = Utils.loadCredentials();
         if(creds == null) {
             logger.severe("Can't find  the credentials file : closing...");
+            // TODO close myself
             return;
         }
 
-        AmazonSQS sqsMissions = new AmazonSQSClient(creds),
-                  sqsFinished = new AmazonSQSClient(creds);
+        AmazonSQS sqs = new AmazonSQSClient(creds);
 
         AmazonS3 s3 = new AmazonS3Client(creds);
 
-        ReceiveMessageRequest req = new ReceiveMessageRequest(Utils.tasksUrl);
+        ReceiveMessageRequest taskReq = new ReceiveMessageRequest(Utils.tasksUrl),
+                shutdownReq = new ReceiveMessageRequest(Utils.shutdownUrl);
 
-        List<Message> msgs;
+        List<Message> taskMsgs , shutdownMsgs;
         Message msg;
 
         // Process messages.
-        msgs = Utils.getMessages(req, sqsMissions);
+        taskMsgs = Utils.getMessages(taskReq, sqs);
+        shutdownMsgs = Utils.getMessages(shutdownReq, sqs);
         while (true) {
             // Sleep if no messages arrived, and retry re-fetch new ones afterwards.
-            if (msgs == null || msgs.size() == 0) {
+            if (Utils.isEmpty(taskMsgs) && Utils.isEmpty(shutdownMsgs)) {
                 logger.info("No messages, sleeping.");
 
                 try {
@@ -287,21 +301,28 @@ public class Worker {
                     result = "shutdown";
                 }
 
-            } else {
-                msg = msgs.get(0);
-                result = handleMessage(msg, s3);
-                if (result != null) {
-                    // Only handled messages are deleted.
-                    deleteTaskMessage(msg, Utils.tasksUrl, sqsMissions);
-                    sendFinishedMessage(msg, result, Utils.finishedUrl, sqsFinished);
+            }
+            else {
+                if (!Utils.isEmpty(taskMsgs)){
+                    msg = taskMsgs.get(0);
+                    result = handleTaskMessage(msg, s3);
+                    if (result != null) {
+                        // Only handled messages are deleted.
+                        deleteTaskMessage(msg, Utils.tasksUrl, sqs);
+                        sendFinishedMessage(msg, result, Utils.finishedUrl, sqs);
+                    }
+                }
+                if (!Utils.isEmpty(shutdownMsgs)) {
+                    msg = shutdownMsgs.get(0);
+                    result = handleShutdownMessage(msg, s3);
+                    if (result != null && result.equals("shutdown")) {
+                        break;
+                    }
                 }
             }
-
-            if (result != null && result.equals("shutdown")) {
-                return;
-            }
-
-            msgs = Utils.getMessages(req, sqsMissions);
+            taskMsgs = Utils.getMessages(taskReq, sqs);
+            shutdownMsgs = Utils.getMessages(shutdownReq, sqs);
         }
+        //TODO close myself
     }
 }
