@@ -32,6 +32,8 @@ import com.amazonaws.services.ec2.AmazonEC2Client;
 
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
+import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
+import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -232,6 +234,18 @@ public class Utils {
             logger.severe(e.getMessage());
             return null;
         }
+    }
+
+
+    // Terminates an instance and returns a result.
+    public static TerminateInstancesResult terminateInstances(AmazonEC2 ec2, Collection<String> ids) {
+        for (String id : ids) {
+            logger.info("Terminating instance id: " + id);
+        }
+
+        TerminateInstancesRequest request = new TerminateInstancesRequest();
+        request.setInstanceIds(ids);
+        return ec2.terminateInstances(request);
     }
 
 

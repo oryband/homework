@@ -189,9 +189,7 @@ public class LocalApplication {
 
 
     // Get manager if it exists, or create a new one if not.
-    private static Instance getOrCreateManager(AWSCredentials creds) {
-        AmazonEC2 ec2 = new AmazonEC2Client(creds);
-
+    private static Instance getOrCreateManager(AmazonEC2 ec2) {
         // Search for existing manager.
         Instance manager = getManager(ec2);
         if (manager != null) {
@@ -213,48 +211,16 @@ public class LocalApplication {
     }
 
 
-    // TODO turn off manager if given as args[1] or something.
-    public static void main (String[] args) {
-        Utils.setLogger(logger);
-
-        logger.info("Starting.");
-
-        // Exit if no arguments were given.
-        if (args.length == 0) {
-            logger.severe("no input: closing.");
-            return;
-        }
-
-        // Read input.
-        String info = readFileAsString(args[0]);
-        if (info == null) {
-            return;
-        }
-
-        // Load credentials (needed for connecting to AWS).
-        AWSCredentials creds = Utils.loadCredentials();
-        if (creds == null) {
-            return;
-        }
-
-        // Start manager.
-        Instance manager = getOrCreateManager(creds);
-        if (manager == null) {
-            return;
-        }
-
+    private static void execute(AmazonS3 s3, AmazonSQS sqs, Instance manager, String missions) {
         // Upload new mission and inform manager.
-        AmazonS3 s3 = new AmazonS3Client(creds);
-        AmazonSQS sqs = new AmazonSQSClient(creds);
-
-        String uploadLink = Utils.uploadFileToS3(s3, "input.txt", info),
+        String uploadLink = Utils.uploadFileToS3(s3, "input.txt", missions),
                finishedLink;
 
         Utils.sendMessage(sqs, Utils.localUrl, "new task\t" + uploadLink);
 
         // Process messages indefinitely until manager is finished working for us.
         ReceiveMessageRequest req = new ReceiveMessageRequest(Utils.localUrl);
-        List<Message> msgs = Utils.getMessages(req, sqs);;
+        List<Message> msgs = Utils.getMessages(req, sqs);
         Message msg;
         while (true) {
             // Sleep if no messages arrived, and retry to re-fetch new ones afterwards.
@@ -280,6 +246,7 @@ public class LocalApplication {
                 }
             }
 
+            // Read next messages in queue and repeat.
             msgs = Utils.getMessages(req, sqs);
         }
 
@@ -290,6 +257,54 @@ public class LocalApplication {
         }
 
         WriteToFile("results.html", StringToHTMLString(resultContent));
-        logger.info("Closing.");
+    }
+
+
+    // TODO turn off manager if given as args[1] or something.
+    public static void main (String[] args) {
+        Utils.setLogger(logger);
+
+        logger.info("Starting.");
+
+        // Exit if no arguments were given.
+        if (args.length == 0) {
+            logger.severe("no input: closing.");
+            return;
+        }
+
+        // Read input.
+        String mission = readFileAsString(args[0]);
+        if (mission == null) {
+            return;
+        }
+
+        // Load credentials (needed for connecting to AWS).
+        AWSCredentials creds = Utils.loadCredentials();
+        if (creds == null) {
+            return;
+        }
+
+        // Start manager.
+        AmazonEC2 ec2 = new AmazonEC2Client(creds);
+        Instance manager = getOrCreateManager(ec2);
+        if (manager == null) {
+            return;
+        }
+
+        AmazonS3 s3 = new AmazonS3Client(creds);
+        AmazonSQS sqs = new AmazonSQSClient(creds);
+
+        execute(s3, sqs, manager, mission);
+
+        // See if manager needs to be terminated when finished.
+        if (args.length >= 2 && args[1].equals("shutdown")) {
+            logger.info("Terminating manager.");
+
+            ArrayList<String> ids = new ArrayList<String>();
+            ids.add(manager.getInstanceId());
+            Utils.terminateInstances(ec2, ids);
+        }
+
+        logger.info("Shutting down.");
     }
 }
