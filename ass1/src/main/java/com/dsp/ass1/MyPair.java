@@ -4,12 +4,12 @@ public class MyPair  {
         private int first; //first member of pair
         private String second; //second member of pair
 
-        public MyPair(Integer first, String second) {
+        public MyPair(int first, String second) {
             this.first = first;
             this.second = second;
         }
 
-        public void setFirst(Integer first) {
+        public void setFirst(int first) {
             this.first = first;
         }
 
@@ -17,7 +17,7 @@ public class MyPair  {
             this.second = second;
         }
 
-        public Integer getFirst() {
+        public int getFirst() {
             return first;
         }
 
