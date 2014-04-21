@@ -1,10 +1,16 @@
 package com.dsp.ass1;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import java.util.logging.Logger;
 import java.util.logging.ConsoleHandler;
@@ -38,7 +44,9 @@ public class Utils {
     public static final String tasksUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/tasks",
             finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
             localUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/local",
+            shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
             bucket = "dsp-ass1",
+            resultpath = "result/",
             path = "here/";
 
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
@@ -187,5 +195,54 @@ public class Utils {
             logger.severe(e.getMessage());
             return null;
         }
+    }
+
+
+    public static String LinkToString(String link) {
+        URL url;
+        String line;
+        StringBuilder content = new StringBuilder();
+        InputStream is;
+        BufferedReader br;
+
+        try {
+            url = new URL(link);
+        } catch (MalformedURLException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        try {
+            is = url.openStream();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        br = new BufferedReader(new InputStreamReader(is));
+
+        try {
+            while ( (line = br.readLine()) != null) {
+                content.append(line);
+                content.append("\n");
+            }
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        try {
+            br.close();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+        }
+
+        try {
+            is.close();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+        }
+
+        return content.toString();
     }
 }

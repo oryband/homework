@@ -60,29 +60,8 @@ public class LocalApplication {
     }
 
 
-    // Downloads a URL and returns it's content wrapped in an <html> String.
-    private static String LinkToHTMLString(String link) {
-        URL url;
-        String line;
+    private static String StringToHTMLString(String info) {
         StringBuilder content = new StringBuilder();
-        InputStream is;
-        BufferedReader br;
-
-        try {
-            url = new URL(link);
-        } catch (MalformedURLException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        try {
-            is = url.openStream();
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        br = new BufferedReader(new InputStreamReader(is));
 
         content.append("<!DOCTYPE html>\n");
         content.append("<html>\n");
@@ -91,31 +70,14 @@ public class LocalApplication {
         content.append("</head>\n");
         content.append("<body>\n");
 
-        try {
-            while ( (line = br.readLine()) != null) {
-                content.append(line);
-                content.append("<br \\>\n");
-            }
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
+        String[] split = info.split("\n");
+        for (int i=0 ; i<split.length; i++) {
+            content.append(split[i]);
+            content.append("\n<br>\n");
         }
 
         content.append("</body>\n");
         content.append("</html>\n");
-
-        try {
-            br.close();
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-        }
-
-        try {
-            is.close();
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-        }
-
         return content.toString();
     }
 
@@ -321,12 +283,12 @@ public class LocalApplication {
         }
 
         // Create <html> summary file.
-        String resultContent = LinkToHTMLString(finishedLink);
+        String resultContent = Utils.LinkToString(finishedLink);
         if (resultContent == null) {
             return;
         }
 
-        WriteToFile("results.html", resultContent);
+        WriteToFile("results.html", StringToHTMLString(resultContent));
         logger.info("Closing.");
     }
 }
