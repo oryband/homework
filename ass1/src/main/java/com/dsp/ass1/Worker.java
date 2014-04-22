@@ -104,7 +104,7 @@ public class Worker {
 
     // Converts PDF to clear text file and uploads it to S3.
     private static String toText(PDDocument doc, String base, String missionNumber, AmazonS3 s3) {
-        String fileName = missionNumber + "_" + System.currentTimeMillis() + "_" + base + ".txt"; // TODO choose name for the file
+        String fileName = missionNumber + "_" + System.currentTimeMillis() + "_" + base + ".txt";
         logger.info("Text: " + fileName);
 
         PDFTextStripper stripper;
@@ -175,11 +175,8 @@ public class Worker {
 
     // Sends a 'done PDF task ..' message to the queue.
     private static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
-        // TODO make this message more verbose i.e. send instance id etc.
         // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
         String[] splitter = msg.getBody().split("\t");
-        // TODO need to add s3 location of result, according to instructions.
-        // TODO msg might not spliter to 3 parts, thus splitter[1] or [2] will throw an exception.
         String reply = "done PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + pos + "\t" + splitter[3];
         Utils.sendMessage(sqs, sqsUrl, reply);
     }
@@ -194,9 +191,8 @@ public class Worker {
     }
 
 
+    // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
     private static String uploadImageToS3(AmazonS3 s3, String fileName, BufferedImage img) {
-        // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
-        // TODO we don't need to use getS3FileAddress() ! it creates a file which we don't need!
         String address = Utils.getS3FileAddress(s3, fileName);
 
         if (address != null) {
@@ -235,13 +231,9 @@ public class Worker {
         logger.info("Task queue received: " + body);
 
         String[] parts = msg.getBody().split("\t");
-
+        // parts[1] = action , parts [2] = link , parts[3] = mission counter
         if (parts[0].equals("new PDF task") && parts.length >= 4) {
-            return handleDocument(parts[1], parts[2], parts[3], s3); // parts[1] = action , parts [2] = link , parts[3] = mission counter
-            // TODO Shutdown message should include a worker name (or tag name?)
-            // so each worker will know the message if the message is intended
-            // to him or noted to him or not. Something like this:
-            // } else if (parts[0].equals("shutdown") && parts.length >= 2 && parts[1].equals(ami-identifier) {
+            return handleDocument(parts[1], parts[2], parts[3], s3);
         } else  {
             logger.info("Ignoring: " + body);
             return null;
@@ -307,7 +299,7 @@ public class Worker {
 
             }
             else {
-                if (!Utils.isEmpty(taskMsgs)){
+                if ( ! Utils.isEmpty(taskMsgs)){
                     msg = taskMsgs.get(0);
                     result = handleTaskMessage(msg, s3);
                     if (result != null) {
@@ -316,16 +308,20 @@ public class Worker {
                     else {
                         sendFailedMessage(msg, Utils.finishedUrl, sqs);
                     }
+
                     deleteTaskMessage(msg, Utils.tasksUrl, sqs);
                 }
-                if (!Utils.isEmpty(shutdownMsgs)) {
+
+                if ( ! Utils.isEmpty(shutdownMsgs)) {
                     msg = shutdownMsgs.get(0);
                     result = handleShutdownMessage(msg, s3);
                     if (result != null && result.equals("shutdown")) {
+                        deleteTaskMessage(msg, Utils.shutdownUrl, sqs);
                         break;
                     }
                 }
             }
+
             taskMsgs = Utils.getMessages(taskReq, sqs);
             shutdownMsgs = Utils.getMessages(shutdownReq, sqs);
         }
