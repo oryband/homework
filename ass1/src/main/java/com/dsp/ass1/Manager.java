@@ -1,6 +1,5 @@
 package com.dsp.ass1;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,17 +42,6 @@ public class Manager {
     }
 
 
-    // create the line for each pdf in the success results file.
-    private static String stringAppendSucc(String s,String[] split) {
-        return s + "\n<" + split[1] + "> :  " + split[2] + "  " + split[3];
-    }
-
-    // create the line for each pdf in the success results file.
-    private static String stringAppendFailed(String s,String[] split) { //TODO write as menahem wants
-        return s + "\n<" + split[1] + "> :  " + split[2];
-    }
-
-
     // get the approximate number of the messages from the queue with the "url".
     private static int getNumberOfMessages(AmazonSQS sqs, String url) {
         List <String> attributeNames = new ArrayList<String>();
@@ -88,6 +76,22 @@ public class Manager {
         //TODO close myself
     }
 
+    private static void finishMission(AmazonSQS sqs, AmazonS3 s3, int missionNumber, MissionData data){
+        logger.info("finishing mission number : " + missionNumber);
+        String link = Utils.uploadFileToS3(s3, missionNumber + "_results.txt", Utils.resultPath, data.getInfo());
+
+        if (link == null) {
+            Utils.sendMessage(sqs, Utils.localUrl, "Cant upload finish file for mission" + missionNumber);
+        }
+        else {
+            Utils.sendMessage(sqs, Utils.localUrl, "done task\t" + link);
+            logger.info("finished mission number : " + missionNumber);
+        }
+
+        missions.remove(missionNumber);
+        missionCounter -= 1;
+    }
+
 
     // handling new message in finish queue - msg != null.
     private static void handleFinishTask(Message msg, AmazonSQS sqs, AmazonS3 s3) {
@@ -98,32 +102,19 @@ public class Manager {
         String[] split = msg.getBody().split("\t");
         int missionNumber = Integer.parseInt(split[4]);
         MissionData data = missions.get(missionNumber);
-        //TODO save info in failed file.
-        if (split[0].equals("done PDF task")) { // the other case is an error message
-            String info = stringAppendSucc(data.getInfo(),split);
-            data.setInfo(info);
+
+        if (split[0].equals("done PDF task")) {
+            data.stringAppendSucc(split);
         }
-        if (split[0].equals("Failed PDF task")) { // the other case is an error message
-            String info = stringAppendFailed(data.getInfo(),split);
-            data.setInfo(info);
+
+        if (split[0].equals("Failed PDF task")) {
+            data.stringAppendFailed(split);
         }
 
         data.decrease();
 
         if (data.getNumber() == 0){ // finishing mission
-            logger.info("finishing mission number : " + missionNumber);
-            String link = Utils.uploadFileToS3(s3, missionNumber + "_results.txt", data.getInfo());
-
-            if (link == null) {
-                Utils.sendMessage(sqs, Utils.localUrl, "Cant upload finish file for mission" + missionNumber);
-            }
-            else {
-                Utils.sendMessage(sqs, Utils.localUrl, "done task\t" + link);
-                logger.info("finished mission number : " + missionNumber);
-            }
-
-            missions.remove(missionNumber);
-            missionCounter -= 1;
+            finishMission(sqs, s3, missionNumber , data);
         }
         else {
             missions.put(missionNumber,data);
@@ -139,7 +130,7 @@ public class Manager {
                 msg;
 
         if (info == null) {
-            Utils.sendMessage(sqs, Utils.localUrl, "Manger cant open file: " + link);
+            Utils.sendMessage(sqs, Utils.localUrl, "Manager cant open file: " + link);
             return;
         }
 
@@ -160,6 +151,7 @@ public class Manager {
     private static String handleLocalTask(Message msg, AmazonSQS sqs) {
         String body = msg.getBody();
         logger.info("received: " + body);
+        Utils.deleteTaskMessage(msg, Utils.localUrl, sqs);
 
         if ((body != null) && body.equals("shutdown")){
             return "shutdown";
@@ -170,7 +162,6 @@ public class Manager {
         String link = splitMessage[1];
 
         if (action.equals("new task")) {
-            Utils.deleteTaskMessage(msg, Utils.localUrl, sqs);
             handleNewTask(link, sqs);
         }
         else {
@@ -181,8 +172,57 @@ public class Manager {
     }
 
 
-    public static void main(String[] args) throws InterruptedException,
-    IOException {
+    private static void execute(AmazonSQS sqs, AmazonS3 s3) {
+        List<Message> localMsgs, finishedMsgs;
+        Message msgLocal, msgFinished;
+        ReceiveMessageRequest receiveLocal = new ReceiveMessageRequest(Utils.localUrl),
+                receiveFinished = new ReceiveMessageRequest(Utils.finishedUrl);
+
+        localMsgs = Utils.getMessages(receiveLocal, sqs);
+        finishedMsgs = Utils.getMessages(receiveFinished, sqs);
+
+        boolean gotShutdown = false;
+
+        while ( ! gotShutdown || missions.size() > 0) {
+
+            if (Utils.isEmpty(finishedMsgs) && (gotShutdown || Utils.isEmpty(localMsgs))) {
+                logger.info("no messages, sleeping.");
+
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                } catch(InterruptedException e) {
+                    logger.severe(e.getMessage());
+                    return;
+                }
+
+            } else {
+                if ( ! gotShutdown  &&  ! Utils.isEmpty(localMsgs)) {
+                    msgLocal = localMsgs.get(0);
+
+                    if (handleLocalTask(msgLocal, sqs).equals("shutdown")){
+                        logger.info("starting shutdown, waiting for all missions to be done");
+                        gotShutdown = true;
+                    }
+                }
+
+                if (!Utils.isEmpty(finishedMsgs)){
+                    msgFinished = finishedMsgs.get(0);
+                    handleFinishTask(msgFinished, sqs, s3);
+                }
+            }
+
+            //checkWorkerCount(sqs);
+
+            if ( ! gotShutdown) {
+                localMsgs = Utils.getMessages(receiveLocal, sqs);
+            }
+            finishedMsgs = Utils.getMessages(receiveFinished, sqs);
+        }
+        logger.info("no missions remain");
+    }
+
+
+    public static void main(String[] args) {
         Utils.setLogger(logger);
 
         logger.info("starting.");
@@ -200,86 +240,8 @@ public class Manager {
 
         AmazonS3 s3 = new AmazonS3Client(creds);
 
-        List<Message> localMsgs, finishedMsgs;
-        Message msgLocal, msgFinished;
-        ReceiveMessageRequest receiveLocal = new ReceiveMessageRequest(Utils.localUrl),
-                receiveFinished = new ReceiveMessageRequest(Utils.finishedUrl);
+        execute(sqs, s3);
 
-        localMsgs = Utils.getMessages(receiveLocal, sqs);
-        finishedMsgs = Utils.getMessages(receiveFinished, sqs);
-
-        // before shutdown received
-        while (true) {
-
-            if (Utils.isEmpty(localMsgs) && Utils.isEmpty(finishedMsgs)) {
-                logger.info("no messages, sleeping.");
-
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                } catch(InterruptedException e) {
-                    logger.severe(e.getMessage());
-                    closeAll(sqs);
-                    return;
-                }
-
-            } else {
-                if (!Utils.isEmpty(localMsgs)) {
-                    msgLocal = localMsgs.get(0);
-
-                    if (handleLocalTask(msgLocal, sqs).equals("shutdown")){
-                        break;
-                    }
-                }
-
-                if (!Utils.isEmpty(finishedMsgs)){
-                    msgFinished = finishedMsgs.get(0);
-                    handleFinishTask(msgFinished, sqs, s3);
-                }
-            }
-
-            checkWorkerCount(sqs);
-            localMsgs = Utils.getMessages(receiveLocal, sqs);
-            finishedMsgs = Utils.getMessages(receiveFinished, sqs);
-        }
-
-        // after shutdown received but tasks queue has messages
-        logger.info("starting shutdown");
-
-        while (getNumberOfMessages(sqs,Utils.tasksUrl) > 0) {
-            logger.info("tasksQueue still has messages, sleeping.");
-
-            try {
-                TimeUnit.SECONDS.sleep(5);
-            } catch(InterruptedException e) {
-                logger.severe(e.getMessage());
-                closeAll(sqs);
-                return;
-            }
-
-            checkWorkerCount(sqs);
-            finishedMsgs = Utils.getMessages(receiveFinished, sqs);
-
-            if (!Utils.isEmpty(finishedMsgs)){
-                msgFinished = finishedMsgs.get(0);
-                handleFinishTask(msgFinished, sqs, s3);
-            }
-        }
-
-        // after tasks queue has no messages but finished queue has.
-        logger.info("no messages in tasks queue");
-        finishedMsgs = Utils.getMessages(receiveFinished, sqs);
-
-        while (missions.size()>0) {
-            // TODO check if checkWorkerCount(sqs) should be here;
-            if (!Utils.isEmpty(finishedMsgs)) {
-                msgFinished = finishedMsgs.get(0);
-                handleFinishTask(msgFinished, sqs, s3);
-            }
-            finishedMsgs = Utils.getMessages(receiveFinished, sqs);
-        }
-
-        // starting to close all.
-        logger.info("no messages in finished queue");
         closeAll(sqs);
     }
 }
