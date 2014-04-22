@@ -136,7 +136,7 @@ public class Worker {
         if (doc == null) {
             return null;
         } else {
-            if (action.equals("ToImage")) {
+            if (action.equals("ToImage") && (doc.getDocumentCatalog().getAllPages()).size()>0) {
                 PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
                 result = toImage(page, base, missionNumber, s3);
             }
@@ -180,8 +180,17 @@ public class Worker {
         String[] splitter = msg.getBody().split("\t");
         // TODO need to add s3 location of result, according to instructions.
         // TODO msg might not spliter to 3 parts, thus splitter[1] or [2] will throw an exception.
-        String reply = "done PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + pos + "\t" + splitter[4];
-        Utils.sendMessage(sqs,sqsUrl,reply);
+        String reply = "done PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + pos + "\t" + splitter[3];
+        Utils.sendMessage(sqs, sqsUrl, reply);
+    }
+
+
+    // Sends a 'Failed PDF task ..' message to the queue.
+    private static void sendFailedMessage(Message msg, String sqsUrl, AmazonSQS sqs) {
+        // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
+        String[] splitter = msg.getBody().split("\t");
+        String reply = "Failed PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + "null" + "\t" + splitter[3];
+        Utils.sendMessage(sqs, sqsUrl, reply);
     }
 
 
@@ -227,7 +236,7 @@ public class Worker {
 
         String[] parts = msg.getBody().split("\t");
 
-        if (parts[0].equals("new PDF task") && parts.length >= 3) {
+        if (parts[0].equals("new PDF task") && parts.length >= 4) {
             return handleDocument(parts[1], parts[2], parts[3], s3); // parts[1] = action , parts [2] = link , parts[3] = mission counter
             // TODO Shutdown message should include a worker name (or tag name?)
             // so each worker will know the message if the message is intended
@@ -247,6 +256,7 @@ public class Worker {
         String[] parts = msg.getBody().split("\t");
 
         if (parts[0].equals("shutdown")) {
+            logger.info("got shutting down message - starting to shut down.");
             return "shutdown";
         } else  {
             logger.info("Ignoring: " + body);
@@ -301,10 +311,12 @@ public class Worker {
                     msg = taskMsgs.get(0);
                     result = handleTaskMessage(msg, s3);
                     if (result != null) {
-                        // Only handled messages are deleted.
-                        deleteTaskMessage(msg, Utils.tasksUrl, sqs);
                         sendFinishedMessage(msg, result, Utils.finishedUrl, sqs);
                     }
+                    else {
+                        sendFailedMessage(msg, Utils.finishedUrl, sqs);
+                    }
+                    deleteTaskMessage(msg, Utils.tasksUrl, sqs);
                 }
                 if (!Utils.isEmpty(shutdownMsgs)) {
                     msg = shutdownMsgs.get(0);
@@ -317,6 +329,6 @@ public class Worker {
             taskMsgs = Utils.getMessages(taskReq, sqs);
             shutdownMsgs = Utils.getMessages(shutdownReq, sqs);
         }
-        //TODO close myself
+        // TODO close myself
     }
 }
