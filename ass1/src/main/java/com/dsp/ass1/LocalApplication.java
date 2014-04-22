@@ -210,9 +210,9 @@ public class LocalApplication {
     }
 
 
-    private static void execute(AmazonS3 s3, AmazonSQS sqs, Instance manager, String missions) {
+    private static void execute(AmazonS3 s3, AmazonSQS sqs, Instance manager, String mission) {
         // Upload new mission and inform manager.
-        String uploadLink = Utils.uploadFileToS3(s3, "input.txt", missions),
+        String uploadLink = Utils.uploadFileToS3(s3, System.currentTimeMillis() + "_input.txt", Utils.inputsPath, mission),
                finishedLink;
 
         Utils.sendMessage(sqs, Utils.localUrl, "new task\t" + uploadLink);
