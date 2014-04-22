@@ -54,8 +54,9 @@ public class Utils {
             localUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/local",
             shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
             bucket = "dsp-ass1",
-            resultpath = "result/",
-            path = "files/";
+            resultPath = "result/",
+            inputsPath = "inputs/",
+            filesPath = "files/";
 
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
@@ -72,8 +73,8 @@ public class Utils {
 
 
     // Returns uploaded file address or null on error.
-    public static String uploadFileToS3(AmazonS3 s3, String fileName, String info) {
-        String fileAddress = getS3FileAddress(s3, fileName);
+    public static String uploadFileToS3(AmazonS3 s3, String fileName, String path ,String info) {
+        String fileAddress = getS3FileAddress(s3, fileName , path);
         File file = createSampleFile(info);
 
         if (file == null || fileAddress == null) {
@@ -127,7 +128,7 @@ public class Utils {
 
 
     // Fetches S3-file url.
-    public static String getS3FileAddress(AmazonS3 s3, String fileName) {
+    public static String getS3FileAddress(AmazonS3 s3, String fileName, String path) {
         String address;
 
         try {
