@@ -71,7 +71,7 @@ public class Worker {
             return uploadImageToS3(s3, fileName, img);
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return null;
+            return e.getMessage();
         }
     }
 
@@ -88,17 +88,17 @@ public class Worker {
             stripper = new PDFText2HTML("utf-8");  // encoding: utf-8
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return null;
+            return e.getMessage();
         }
 
         try {
             pageText = stripper.getText(doc);
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return null;
+            return e.getMessage();
         }
 
-        return Utils.uploadFileToS3(s3, fileName, pageText);
+        return Utils.uploadFileToS3(s3, fileName, Utils.filesPath, pageText);
     }
 
 
@@ -117,10 +117,10 @@ public class Worker {
             pageText = stripper.getText(doc);
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return null;
+            return e.getMessage();
         }
 
-        return Utils.uploadFileToS3(s3, fileName, pageText);
+        return Utils.uploadFileToS3(s3, fileName, Utils.filesPath, pageText);
     }
 
 
@@ -130,13 +130,16 @@ public class Worker {
         logger.info("Handling: " + action + "\t" + url + "\t" + missionNumber);
 
         String base = FilenameUtils.getBaseName(url),
-                result = null;
+                result = "Unknown action";
         PDDocument doc = getDocument(url);
 
         if (doc == null) {
-            return null;
+            return "Cant open the PDF document";
         } else {
-            if (action.equals("ToImage") && (doc.getDocumentCatalog().getAllPages()).size()>0) {
+            if (action.equals("ToImage")) {
+                if (doc.getDocumentCatalog().getAllPages().size() == 0){
+                    return "Failed to get page number 0";
+                }
                 PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
                 result = toImage(page, base, missionNumber, s3);
             }
@@ -183,17 +186,17 @@ public class Worker {
 
 
     // Sends a 'Failed PDF task ..' message to the queue.
-    private static void sendFailedMessage(Message msg, String sqsUrl, AmazonSQS sqs) {
+    private static void sendFailedMessage(Message msg, String result, String sqsUrl, AmazonSQS sqs) {
         // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
         String[] splitter = msg.getBody().split("\t");
-        String reply = "Failed PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + "null" + "\t" + splitter[3];
+        String reply = "Failed PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + result + "\t" + splitter[3];
         Utils.sendMessage(sqs, sqsUrl, reply);
     }
 
 
     // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
     private static String uploadImageToS3(AmazonS3 s3, String fileName, BufferedImage img) {
-        String address = Utils.getS3FileAddress(s3, fileName);
+        String address = Utils.getS3FileAddress(s3, fileName , Utils.filesPath);
 
         if (address != null) {
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
@@ -203,7 +206,7 @@ public class Worker {
                 ImageIO.write(img, "png", outStream);
             } catch (IOException e) {
                 logger.severe(e.getMessage());
-                return null;
+                return e.getMessage();
             }
 
             // Upload saved image to S3.
@@ -211,13 +214,13 @@ public class Worker {
             ObjectMetadata meta = new ObjectMetadata();
             meta.setContentLength(buffer.length);
             InputStream inStream = new ByteArrayInputStream(buffer);
-            PutObjectRequest request = new PutObjectRequest(Utils.bucket, Utils.path + fileName, inStream, meta);
+            PutObjectRequest request = new PutObjectRequest(Utils.bucket, Utils.filesPath + fileName, inStream, meta);
 
             try {
                 s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
             } catch (AmazonClientException e) {
                 logger.severe(e.getMessage());
-                return null;
+                return e.getMessage();
             }
         }
 
@@ -236,7 +239,7 @@ public class Worker {
             return handleDocument(parts[1], parts[2], parts[3], s3);
         } else  {
             logger.info("Ignoring: " + body);
-            return null;
+            return "Message with wrong input";
         }
     }
 
@@ -252,29 +255,19 @@ public class Worker {
             return "shutdown";
         } else  {
             logger.info("Ignoring: " + body);
-            return null;
+            return "ignoring";
         }
     }
 
 
-    public static void main(String[] args) {
-        // TODO split main() to multiple functions.
+    private static boolean checkResult(String result) {
+        return (result != null && result.startsWith("http"));
+    }
 
-        Utils.setLogger(logger);
-        logger.info("Starting.");
+
+    private static void execute(AmazonSQS sqs, AmazonS3 s3){
 
         String result;
-
-        AWSCredentials creds = Utils.loadCredentials();
-        if(creds == null) {
-            logger.severe("Can't find  the credentials file : closing...");
-            // TODO close myself
-            return;
-        }
-
-        AmazonSQS sqs = new AmazonSQSClient(creds);
-
-        AmazonS3 s3 = new AmazonS3Client(creds);
 
         ReceiveMessageRequest taskReq = new ReceiveMessageRequest(Utils.tasksUrl),
                 shutdownReq = new ReceiveMessageRequest(Utils.shutdownUrl);
@@ -302,11 +295,11 @@ public class Worker {
                 if ( ! Utils.isEmpty(taskMsgs)){
                     msg = taskMsgs.get(0);
                     result = handleTaskMessage(msg, s3);
-                    if (result != null) {
+                    if (checkResult(result)) {
                         sendFinishedMessage(msg, result, Utils.finishedUrl, sqs);
                     }
                     else {
-                        sendFailedMessage(msg, Utils.finishedUrl, sqs);
+                        sendFailedMessage(msg, result, Utils.finishedUrl, sqs);
                     }
 
                     deleteTaskMessage(msg, Utils.tasksUrl, sqs);
@@ -315,7 +308,7 @@ public class Worker {
                 if ( ! Utils.isEmpty(shutdownMsgs)) {
                     msg = shutdownMsgs.get(0);
                     result = handleShutdownMessage(msg, s3);
-                    if (result != null && result.equals("shutdown")) {
+                    if (result.equals("shutdown")) {
                         deleteTaskMessage(msg, Utils.shutdownUrl, sqs);
                         break;
                     }
@@ -325,6 +318,28 @@ public class Worker {
             taskMsgs = Utils.getMessages(taskReq, sqs);
             shutdownMsgs = Utils.getMessages(shutdownReq, sqs);
         }
+    }
+
+
+    public static void main(String[] args) {
+        // TODO split main() to multiple functions.
+
+        Utils.setLogger(logger);
+        logger.info("Starting.");
+
+        AWSCredentials creds = Utils.loadCredentials();
+        if(creds == null) {
+            logger.severe("Can't find  the credentials file : closing...");
+            // TODO close myself
+            return;
+        }
+
+        AmazonSQS sqs = new AmazonSQSClient(creds);
+
+        AmazonS3 s3 = new AmazonS3Client(creds);
+
+        execute(sqs, s3);
+
         // TODO close myself
     }
 }
