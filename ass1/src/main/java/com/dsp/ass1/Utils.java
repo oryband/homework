@@ -55,7 +55,7 @@ public class Utils {
             shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
             bucket = "dsp-ass1",
             resultpath = "result/",
-            path = "here/";
+            path = "files/";
 
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
