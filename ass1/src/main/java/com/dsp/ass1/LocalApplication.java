@@ -264,7 +264,7 @@ public class LocalApplication {
             return;
         }
 
-        WriteToFile(missionNumber + "results.html", StringToHTMLString(resultContent));
+        WriteToFile(missionNumber + "_results.html", StringToHTMLString(resultContent));
     }
 
 
