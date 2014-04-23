@@ -212,7 +212,7 @@ public class LocalApplication {
     }
 
 
-    private static void execute(AmazonS3 s3, AmazonSQS sqs, Instance manager, String mission) {
+    private static void execute(AmazonS3 s3, AmazonSQS sqs, String mission) {
         // Upload new mission and inform manager.
         String missionNumber = Long.toString(System.currentTimeMillis());
 
@@ -266,7 +266,7 @@ public class LocalApplication {
             return;
         }
 
-        WriteToFile(missionNumber + "results.html", StringToHTMLString(resultContent));
+        WriteToFile(missionNumber + "_results.html", StringToHTMLString(resultContent));
     }
 
 
@@ -304,7 +304,7 @@ public class LocalApplication {
         AmazonS3 s3 = new AmazonS3Client(creds);
         AmazonSQS sqs = new AmazonSQSClient(creds);
 
-        execute(s3, sqs, manager, mission);
+        execute(s3, sqs, mission);
 
         // See if manager needs to be terminated when finished.
         if (args.length >= 2 && args[1].equals("shutdown")) {

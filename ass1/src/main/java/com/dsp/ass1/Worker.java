@@ -61,14 +61,14 @@ public class Worker {
 
     // Converts PDF file to PNG image and uploads it to S3.
     private static String toImage(PDPage page, String base, String missionNumber, AmazonS3 s3) {
-        String fileName = missionNumber + "_" + System.currentTimeMillis() + "_"+ base + ".png";
+        String fileName = System.currentTimeMillis() + "_"+ base + ".png";
         BufferedImage img;
 
         logger.info("Image: " + fileName);
 
         try {
             img = page.convertToImage();  // PDF to PNG image.
-            return uploadImageToS3(s3, fileName, img);
+            return uploadImageToS3(s3, fileName, missionNumber, img);
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return e.getMessage();
@@ -78,7 +78,7 @@ public class Worker {
 
     // Converts PDF to HTML and uploads it to S3.
     private static String toHTML(PDDocument doc, String base, String missionNumber, AmazonS3 s3) {
-        String fileName = missionNumber + "_" + System.currentTimeMillis() + "_" + base + ".html";
+        String fileName = System.currentTimeMillis() + "_" + base + ".html";
         logger.info("HTML: " + fileName);
 
         String pageText;
@@ -98,13 +98,13 @@ public class Worker {
             return e.getMessage();
         }
 
-        return Utils.uploadFileToS3(s3, fileName, Utils.filesPath, pageText);
+        return Utils.uploadFileToS3(s3, fileName, Utils.filesPath + missionNumber + "/", pageText);
     }
 
 
     // Converts PDF to clear text file and uploads it to S3.
     private static String toText(PDDocument doc, String base, String missionNumber, AmazonS3 s3) {
-        String fileName = missionNumber + "_" + System.currentTimeMillis() + "_" + base + ".txt";
+        String fileName = System.currentTimeMillis() + "_" + base + ".txt";
         logger.info("Text: " + fileName);
 
         PDFTextStripper stripper;
@@ -120,7 +120,7 @@ public class Worker {
             return e.getMessage();
         }
 
-        return Utils.uploadFileToS3(s3, fileName, Utils.filesPath, pageText);
+        return Utils.uploadFileToS3(s3, fileName, Utils.filesPath + missionNumber + "/", pageText);
     }
 
 
@@ -195,33 +195,35 @@ public class Worker {
 
 
     // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
-    private static String uploadImageToS3(AmazonS3 s3, String fileName, BufferedImage img) {
+    private static String uploadImageToS3(AmazonS3 s3, String fileName, String missionNumber ,BufferedImage img) {
         String address = Utils.getS3FileAddress(s3, fileName , Utils.filesPath);
 
-        if (address != null) {
-            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        if (address == null) {
+            return " getS3FileAddress failed";
+        }
 
-            // Write image to file.
-            try {
-                ImageIO.write(img, "png", outStream);
-            } catch (IOException e) {
-                logger.severe(e.getMessage());
-                return e.getMessage();
-            }
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
-            // Upload saved image to S3.
-            byte[] buffer = outStream.toByteArray();
-            ObjectMetadata meta = new ObjectMetadata();
-            meta.setContentLength(buffer.length);
-            InputStream inStream = new ByteArrayInputStream(buffer);
-            PutObjectRequest request = new PutObjectRequest(Utils.bucket, Utils.filesPath + fileName, inStream, meta);
+        // Write image to file.
+        try {
+            ImageIO.write(img, "png", outStream);
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return e.getMessage();
+        }
 
-            try {
-                s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
-            } catch (AmazonClientException e) {
-                logger.severe(e.getMessage());
-                return e.getMessage();
-            }
+        // Upload saved image to S3.
+        byte[] buffer = outStream.toByteArray();
+        ObjectMetadata meta = new ObjectMetadata();
+        meta.setContentLength(buffer.length);
+        InputStream inStream = new ByteArrayInputStream(buffer);
+        PutObjectRequest request = new PutObjectRequest(Utils.bucket, Utils.filesPath + missionNumber + "/" + fileName, inStream, meta);
+
+        try {
+            s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (AmazonClientException e) {
+            logger.severe(e.getMessage());
+            return e.getMessage();
         }
 
         return address;
