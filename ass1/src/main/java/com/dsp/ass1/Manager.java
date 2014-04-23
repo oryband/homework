@@ -284,6 +284,8 @@ public class Manager {
         AmazonS3 s3 = new AmazonS3Client(creds);
 
         execute(ec2, sqs, s3);
-        closeAll(sqs);
+
+        // Balance workers one final time, in order to terminate all remaining workers.
+        balanceWorkers(ec2, sqs);
     }
 }
