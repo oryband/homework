@@ -275,19 +275,20 @@ public class LocalApplication {
             return;
         }
 
-        // Load credentials (needed for connecting to AWS).
+        // Load credentials.
         AWSCredentials creds = Utils.loadCredentials();
         if (creds == null) {
             return;
         }
 
-        // Start manager.
+        // Start ec2 connection and manager.
         AmazonEC2 ec2 = new AmazonEC2Client(creds);
         Instance manager = getOrCreateManager(ec2);
         if (manager == null) {
             return;
         }
 
+        // Start S3 and SQS connections.
         AmazonS3 s3 = new AmazonS3Client(creds);
         AmazonSQS sqs = new AmazonSQSClient(creds);
 
