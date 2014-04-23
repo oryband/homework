@@ -41,6 +41,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 public class LocalApplication {
 
     private static final Logger logger = Logger.getLogger(LocalApplication.class.getName());
+    private static int tasksPerWorker = 10;
 
     // Writes data to file.
     private static void WriteToFile(String fileName, String data) {
@@ -163,10 +164,10 @@ public class LocalApplication {
 
 
     // Creates a manager instance and returns its ID.
-    private static String createManager(AmazonEC2 ec2) {
+    private static String createManager(AmazonEC2 ec2, int tasksPerWorker) {
         logger.info("Creating new manager instance.");
 
-        String userData = Utils.elementUserData("manager");
+        String userData = Utils.elementUserData("manager " + tasksPerWorker);
         List<String> ids = Utils.createAmiFromSnapshot(ec2, 1, userData);
         if (ids.size() != 1) {
             logger.severe("Couldn't create manager.");
@@ -190,7 +191,7 @@ public class LocalApplication {
 
     // Get manager if it exists, or create a new one if not,
     // and return its instance id, or null if an error occured.
-    private static String getOrCreateManager(AmazonEC2 ec2) {
+    private static String getOrCreateManager(AmazonEC2 ec2, int tasksPerWorker) {
         // Search for existing manager.
         String id = getManager(ec2);
         if (id != null) {
@@ -198,7 +199,7 @@ public class LocalApplication {
         }
 
         // Else create a new one.
-        id = createManager(ec2);
+        id = createManager(ec2, tasksPerWorker);
         if (id == null) {
             return null;
         }
@@ -292,9 +293,14 @@ public class LocalApplication {
             return;
         }
 
+        // Read tasksPerWorker value if given.
+        if (args.length > 1) {
+            tasksPerWorker = Integer.parseInt(args[0]);
+        }
+
         // Start ec2 connection and manager.
         AmazonEC2 ec2 = new AmazonEC2Client(creds);
-        String managerId = getOrCreateManager(ec2);
+        String managerId = getOrCreateManager(ec2, tasksPerWorker);
         if (managerId == null) {
             return;
         }

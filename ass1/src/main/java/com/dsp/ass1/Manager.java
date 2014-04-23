@@ -29,7 +29,7 @@ public class Manager {
     private static final Logger logger = Logger.getLogger(Manager.class.getName());
     private static Map <String, MissionData> missions = new HashMap <String, MissionData>();
     private static int workerCount = 0;
-    private static final int tasksPerWorker = 15;  // TODO set by first (launching manager) local app.
+    private static int tasksPerWorker = 10;  // Default value, can be overriden by argument.
     private static ArrayList<String> workerIds;
 
 
@@ -296,6 +296,12 @@ public class Manager {
         Utils.setLogger(logger);
 
         logger.info("Starting.");
+
+        // Read tasks per worker if given.
+        if (args.length >= 1) {
+            tasksPerWorker = Integer.parseInt(args[0]);
+            logger.info("Set tasks/worker value: " + tasksPerWorker);
+        }
 
         AWSCredentials creds = Utils.loadCredentials();
         if (creds == null) {
