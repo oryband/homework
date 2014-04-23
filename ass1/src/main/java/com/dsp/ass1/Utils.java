@@ -34,6 +34,7 @@ import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.amazonaws.services.ec2.model.InstanceStateChange;
+import com.amazonaws.services.ec2.model.Instance;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -225,31 +226,35 @@ public class Utils {
 
 
     // Creates a new AMI instance from pre-defined snapshot..
-    public static RunInstancesResult createAmiFromSnapshot(AmazonEC2 ec2, int amount, String userData) {
+    public static List<String> createAmiFromSnapshot(AmazonEC2 ec2, int amount, String userData) {
+        logger.info("Lanching " + amount + " instances.");
+
         ArrayList<String> securityGroups = new ArrayList<String>();
         securityGroups.add(securityGroup);
 
-        try {
-            RunInstancesRequest request = new RunInstancesRequest();
-            request.withImageId(imageId)  // Utils.imageId
-                .withInstanceType(instanceType)  // same
-                .withUserData(userData)
-                .withKeyName(keyName)
-                .withSecurityGroups(securityGroups)
-                .withMinCount(amount)
-                .withMaxCount(amount);
+        RunInstancesRequest request = new RunInstancesRequest();
 
-            return ec2.runInstances(request);
+        // Send launch request.
+        request.withImageId(imageId)  // Utils.imageId
+            .withInstanceType(instanceType)
+            .withUserData(userData)
+            .withKeyName(keyName)
+            .withSecurityGroups(securityGroups)
+            .withMinCount(amount)
+            .withMaxCount(amount);
 
-        } catch (AmazonServiceException e) {
-            logger.severe(e.getMessage());
-            return null;
+        // Build instance id list.
+        ArrayList<String> ids = new ArrayList<String>();
+        for (Instance instance : ec2.runInstances(request).getReservation().getInstances()) {
+            ids.add(instance.getInstanceId());
         }
+
+        return ids;
     }
 
 
-    // Terminates an instance and returns a result.
-    public static List<InstanceStateChange> terminateInstances(AmazonEC2 ec2, Collection<String> ids) {
+    // Terminates an instances and returns a list of terminated instance ids.
+    public static List<String> terminateInstances(AmazonEC2 ec2, Collection<String> ids) {
         for (String id : ids) {
             logger.info("Terminating instance id: " + id);
         }
@@ -257,7 +262,12 @@ public class Utils {
         TerminateInstancesRequest request = new TerminateInstancesRequest();
         request.setInstanceIds(ids);
 
-        return ec2.terminateInstances(request).getTerminatingInstances();
+        ArrayList<String> terminated = new ArrayList<String>();
+        for (InstanceStateChange state : ec2.terminateInstances(request).getTerminatingInstances()) {
+            terminated.add(state.getInstanceId());
+        }
+
+        return terminated;
     }
 
 
