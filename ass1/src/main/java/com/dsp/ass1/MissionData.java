@@ -1,44 +1,27 @@
 package com.dsp.ass1;
 
+
 public class MissionData  {
-        private int number;
-        private StringBuilder info;
+    public int remaining;  // Remaining tasks.
+    public StringBuilder info;  // PDF data
+
+    public MissionData(int remaining) {
+        this.remaining = remaining;
+        this.info = new StringBuilder();
+    }
 
 
-        public MissionData(int number) {
-            this.number = number;
-            this.info = new StringBuilder();
+    public String getInfo() {
+        return info.toString();
+    }
+
+
+    // Add task to result string.
+    public void appendTask(String[] task) {
+        if (task.length < 3) {
+            return;
+        } else {
+            info.append("\n" + task[1] + ": " + task[2] + "  " + task[3]);
         }
-
-
-        public void setNumber(int number) {
-            this.number = number;
-        }
-
-
-        public int getNumber() {
-            return number;
-        }
-
-
-        public void decrease() {
-            this.number--;
-        }
-
-
-        public String getInfo() {
-            return info.toString();
-        }
-
-
-        // create the line for each pdf in the success results file.
-        public void appendSucc(String[] split) {
-            info.append("\n<" + split[1] + "> :  " + split[2] + "  " + split[3]);
-        }
-
-
-        // create the line for each pdf in the success results file.
-        public void appendFailed(String[] split) {
-            info.append("\n<" + split[1] + "> :  " + split[2] + "  < " + split[3] + " >");
-        }
+    }
 }
