@@ -244,18 +244,17 @@ public class Worker {
     }
 
 
-    private static String handleShutdownMessage(Message msg, AmazonS3 s3) {
+    private static boolean handleShutdownMessage(Message msg, AmazonS3 s3) {
+        // TODO handle body == null
         String body = msg.getBody();
-        logger.info("shutdown queue received : " + body);
+        logger.info("Shutdown message received: " + body);
 
-        String[] parts = msg.getBody().split("\t");
-
-        if (parts[0].equals("shutdown")) {
-            logger.info("got shutting down message - starting to shut down.");
-            return "shutdown";
+        if (msg.equals("shutdown")) {
+            logger.info("Shutting down.");
+            return true;
         } else  {
             logger.info("Ignoring: " + body);
-            return "ignoring";
+            return false;
         }
     }
 
@@ -302,8 +301,7 @@ public class Worker {
 
                 if ( ! Utils.isEmpty(shutdownMsgs)) {
                     msg = shutdownMsgs.get(0);
-                    result = handleShutdownMessage(msg, s3);
-                    if (result.equals("shutdown")) {
+                    if (handleShutdownMessage(msg, s3)) {
                         deleteTaskMessage(msg, Utils.shutdownUrl, sqs);
                         break;
                     }
