@@ -20,19 +20,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FilenameUtils;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
 
 import com.amazonaws.auth.PropertiesCredentials;
 
 import com.amazonaws.services.ec2.AmazonEC2;
 
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
-import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
-import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.amazonaws.services.ec2.model.Instance;
 
