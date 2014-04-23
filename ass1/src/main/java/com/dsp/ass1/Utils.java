@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FilenameUtils;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -51,7 +52,8 @@ public class Utils {
             imageId = "ami-cfc0dba6",
             keyName = "ec2",
             finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
-            localUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/local",
+            localUpUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localup",
+            localDownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localdown",
             shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
             bucket = "dsp-ass1",
             resultPath = "result/",
@@ -69,6 +71,11 @@ public class Utils {
         logger.setUseParentHandlers(false);
         handler.setFormatter(formatter);
         logger.addHandler(handler);
+    }
+
+
+    public static boolean checkResult(String result) {
+        return (result != null && result.startsWith("http"));
     }
 
 
@@ -301,4 +308,5 @@ public class Utils {
     public static boolean isEmpty(List<Message> messages) {
         return ((messages == null) || (messages.size() == 0));
     }
+
 }

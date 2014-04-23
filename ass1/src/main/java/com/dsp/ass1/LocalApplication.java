@@ -118,20 +118,23 @@ public class LocalApplication {
 
 
     // Process (or ignores) all messages.
-    private static String handleMessage(Message msg, AmazonS3 s3) {
+    private static String handleMessage(Message msg, AmazonS3 s3, String missionNumber) {
         String body = msg.getBody();
 
         logger.info("Received: " + body);
 
         String[] parts = msg.getBody().split("\t");
 
-        if (parts[0].equals("done task") && parts.length >= 1) {
-            return parts[1];
-        } else {
+        if (parts.length < 3 || ! parts[2].equals(missionNumber) ||
+                (! parts[0].equals("done task") && ! parts[0].equals("failed task"))){
             logger.info("Ignoring: " + body);
             return null;
         }
+
+        return parts[1];
     }
+
+
 
 
     // Returns existing manager instance or null if no manager exists.
@@ -140,7 +143,7 @@ public class LocalApplication {
 
         DescribeInstancesRequest instanceReq = new DescribeInstancesRequest();
         Filter managerFilter = new Filter("tag:Name").withValues("manager"),  // Filter instances by tag "Name=manager"
-               activeFilter = new Filter("instance-state-code").withValues("0", "16");  // 0||16 == pending||running
+                activeFilter = new Filter("instance-state-code").withValues("0", "16");  // 0||16 == pending||running
         DescribeInstancesResult result = ec2.describeInstances(instanceReq.withFilters(managerFilter, activeFilter));
         List<Reservation> reservations = result.getReservations();
         List<Instance> instances;
@@ -181,7 +184,7 @@ public class LocalApplication {
 
         CreateTagsRequest tagReq = new CreateTagsRequest();
         tagReq.withResources(manager.getInstanceId())
-            .withTags(new Tag("Name", "manager"));
+        .withTags(new Tag("Name", "manager"));
 
         ec2.createTags(tagReq);
     }
@@ -212,15 +215,19 @@ public class LocalApplication {
 
     private static void execute(AmazonS3 s3, AmazonSQS sqs, Instance manager, String mission) {
         // Upload new mission and inform manager.
-        String uploadLink = Utils.uploadFileToS3(s3, System.currentTimeMillis() + "_input.txt", Utils.inputsPath, mission),
-               finishedLink;
+        String missionNumber = Long.toString(System.currentTimeMillis());
 
-        Utils.sendMessage(sqs, Utils.localUrl, "new task\t" + uploadLink);
+        String uploadLink = Utils.uploadFileToS3(s3, missionNumber + "_input.txt", Utils.inputsPath, mission),
+                finishedLink;
+
+        Utils.sendMessage(sqs, Utils.localUpUrl, "new task\t" + uploadLink);
 
         // Process messages indefinitely until manager is finished working for us.
-        ReceiveMessageRequest req = new ReceiveMessageRequest(Utils.localUrl);
+
+        ReceiveMessageRequest req = new ReceiveMessageRequest(Utils.localDownUrl);
         List<Message> msgs = Utils.getMessages(req, sqs);
         Message msg;
+
         while (true) {
             // Sleep if no messages arrived, and retry to re-fetch new ones afterwards.
             if (msgs == null || msgs.size() == 0) {
@@ -233,20 +240,25 @@ public class LocalApplication {
                     return;
                 }
 
-            // Process top message in queue if there are any messages.
+                // Process top message in queue if there are any messages.
             } else {
                 msg = msgs.get(0);
                 String body = msg.getBody();
-                finishedLink = handleMessage(msg, s3);
+                finishedLink = handleMessage(msg, s3 , missionNumber);
                 if (finishedLink != null) {
                     // Only handled messages are deleted.
-                    Utils.deleteTaskMessage(msg, Utils.localUrl, sqs);
+                    Utils.deleteTaskMessage(msg, Utils.localDownUrl, sqs);
                     break;
                 }
             }
 
             // Read next messages in queue and repeat.
             msgs = Utils.getMessages(req, sqs);
+        }
+        // if the task failed
+        if ( ! Utils.checkResult(finishedLink)){
+            logger.severe("Mission failed - < " + finishedLink + " >");
+            return;
         }
 
         // Create <html> summary file.
@@ -255,7 +267,7 @@ public class LocalApplication {
             return;
         }
 
-        WriteToFile("results.html", StringToHTMLString(resultContent));
+        WriteToFile(missionNumber + "results.html", StringToHTMLString(resultContent));
     }
 
 

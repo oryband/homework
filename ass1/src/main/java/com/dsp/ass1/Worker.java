@@ -260,11 +260,6 @@ public class Worker {
     }
 
 
-    private static boolean checkResult(String result) {
-        return (result != null && result.startsWith("http"));
-    }
-
-
     private static void execute(AmazonSQS sqs, AmazonS3 s3){
 
         String result;
@@ -295,7 +290,7 @@ public class Worker {
                 if ( ! Utils.isEmpty(taskMsgs)){
                     msg = taskMsgs.get(0);
                     result = handleTaskMessage(msg, s3);
-                    if (checkResult(result)) {
+                    if (Utils.checkResult(result)) {
                         sendFinishedMessage(msg, result, Utils.finishedUrl, sqs);
                     }
                     else {

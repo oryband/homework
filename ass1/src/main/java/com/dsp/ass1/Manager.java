@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -20,10 +22,9 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 public class Manager {
 
     private static final Logger logger = Logger.getLogger(Manager.class.getName());
-    private static Map < Integer , MissionData> missions; // key is the number of the mission, value is how many task is in the queue
+    private static Map < String , MissionData> missions; // key is the number of the mission, value is how many task is in the queue
     private static int workerCount = 0 ;
     private static final int tasksForWorker  = 15;
-    private static int missionCounter  = 0;
 
 
     // closing "number" of workers by sending shutdown messages to shutdown queue.
@@ -76,20 +77,19 @@ public class Manager {
         //TODO close myself
     }
 
-    private static void finishMission(AmazonSQS sqs, AmazonS3 s3, int missionNumber, MissionData data){
+    private static void finishMission(AmazonSQS sqs, AmazonS3 s3, String missionNumber, MissionData data){
         logger.info("finishing mission number : " + missionNumber);
         String link = Utils.uploadFileToS3(s3, missionNumber + "_results.txt", Utils.resultPath, data.getInfo());
 
         if (link == null) {
-            Utils.sendMessage(sqs, Utils.localUrl, "Cant upload finish file for mission" + missionNumber);
+            Utils.sendMessage(sqs, Utils.localDownUrl, "failed task\tCant upload finish file\t" + missionNumber);
         }
         else {
-            Utils.sendMessage(sqs, Utils.localUrl, "done task\t" + link);
+            Utils.sendMessage(sqs, Utils.localDownUrl, "done task\t" + link + "\t" + missionNumber);
             logger.info("finished mission number : " + missionNumber);
         }
 
         missions.remove(missionNumber);
-        missionCounter -= 1;
     }
 
 
@@ -100,15 +100,15 @@ public class Manager {
 
         Utils.deleteTaskMessage(msg, Utils.finishedUrl, sqs);
         String[] split = msg.getBody().split("\t");
-        int missionNumber = Integer.parseInt(split[4]);
+        String missionNumber = split[4];
         MissionData data = missions.get(missionNumber);
 
         if (split[0].equals("done PDF task")) {
-            data.stringAppendSucc(split);
+            data.appendSucc(split);
         }
 
         if (split[0].equals("Failed PDF task")) {
-            data.stringAppendFailed(split);
+            data.appendFailed(split);
         }
 
         data.decrease();
@@ -121,29 +121,34 @@ public class Manager {
         }
     }
 
+    private static String getMissionNumber(String link){
+        String base = FilenameUtils.getBaseName(link);
+        return base.split("_")[0];
+    }
+
 
     // handling new task in local queue.
     private static void handleNewTask(String link,AmazonSQS sqs) {
         logger.info("handling new task: " + link);
 
         String info = Utils.LinkToString(link),
+                missionNumber = getMissionNumber(link),
                 msg;
 
         if (info == null) {
-            Utils.sendMessage(sqs, Utils.localUrl, "Manager cant open file: " + link);
+            Utils.sendMessage(sqs, Utils.localDownUrl, "failed task\tCant open the link\t" + missionNumber);
             return;
         }
 
-        missionCounter += 1;
         String[] split = info.split("\n");
 
         for (int i = 0 ; i < split.length ; i++ ) {
-            msg = "new PDF task\t" + split[i] + "\t" + missionCounter ;
+            msg = "new PDF task\t" + split[i] + "\t" + missionNumber ;
             Utils.sendMessage(sqs, Utils.tasksUrl, msg);
         }
 
         MissionData data = new MissionData(split.length);
-        missions.put(missionCounter, data);
+        missions.put(missionNumber, data);
     }
 
 
@@ -151,7 +156,7 @@ public class Manager {
     private static String handleLocalTask(Message msg, AmazonSQS sqs) {
         String body = msg.getBody();
         logger.info("received: " + body);
-        Utils.deleteTaskMessage(msg, Utils.localUrl, sqs);
+        Utils.deleteTaskMessage(msg, Utils.localUpUrl, sqs);
 
         if ((body != null) && body.equals("shutdown")){
             return "shutdown";
@@ -175,7 +180,7 @@ public class Manager {
     private static void execute(AmazonSQS sqs, AmazonS3 s3) {
         List<Message> localMsgs, finishedMsgs;
         Message msgLocal, msgFinished;
-        ReceiveMessageRequest receiveLocal = new ReceiveMessageRequest(Utils.localUrl),
+        ReceiveMessageRequest receiveLocal = new ReceiveMessageRequest(Utils.localUpUrl),
                 receiveFinished = new ReceiveMessageRequest(Utils.finishedUrl);
 
         localMsgs = Utils.getMessages(receiveLocal, sqs);
@@ -234,7 +239,7 @@ public class Manager {
             return;
         }
         //TODO choose mission name
-        missions = new HashMap <Integer, MissionData>();
+        missions = new HashMap <String, MissionData>();
 
         AmazonSQS sqs = new AmazonSQSClient(creds);
 

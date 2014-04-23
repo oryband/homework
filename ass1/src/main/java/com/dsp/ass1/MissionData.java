@@ -32,13 +32,13 @@ public class MissionData  {
 
 
         // create the line for each pdf in the success results file.
-        public void stringAppendSucc(String[] split) {
+        public void appendSucc(String[] split) {
             info.append("\n<" + split[1] + "> :  " + split[2] + "  " + split[3]);
         }
 
 
         // create the line for each pdf in the success results file.
-        public void stringAppendFailed(String[] split) {
+        public void appendFailed(String[] split) {
             info.append("\n<" + split[1] + "> :  " + split[2] + "  < " + split[3] + " >");
         }
 }
