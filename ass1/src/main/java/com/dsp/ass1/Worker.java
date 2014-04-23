@@ -189,7 +189,7 @@ public class Worker {
     private static void sendFailedMessage(Message msg, String result, String sqsUrl, AmazonSQS sqs) {
         // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
         String[] splitter = msg.getBody().split("\t");
-        String reply = "Failed PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + result + "\t" + splitter[3];
+        String reply = "failed PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + result + "\t" + splitter[3];
         Utils.sendMessage(sqs, sqsUrl, reply);
     }
 
