@@ -225,7 +225,8 @@ public class Utils {
     }
 
 
-    // Creates a new AMI instance from pre-defined snapshot..
+    // Creates new AMI instances from pre-defined snapshot,
+    // and returns launched instance IDs.
     public static List<String> createAmiFromSnapshot(AmazonEC2 ec2, int amount, String userData) {
         logger.info("Lanching " + amount + " instances.");
 

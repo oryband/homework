@@ -33,22 +33,6 @@ public class Manager {
     private static ArrayList<String> workerIds;
 
 
-    // closing "number" of workers by sending shutdown messages to shutdown queue.
-    private static void shutdownWorkers(AmazonSQS sqs, int number) { //TODO handle to time before the worker is terminate
-        /*    for (int i = 0 ; i < number ; i++ ) {
-            Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");
-        }
-        workerCount -= number; */
-    }
-
-
-    // create "number" new workers
-    private static void creatNewWorkers(int number) {
-        //TODO open the workers
-        /*   workerCount += number;*/
-    }
-
-
     // get the approximate number of the messages from the queue with the "url".
     private static int getNumberOfMessages(AmazonSQS sqs, String url) {
         List <String> attributeNames = new ArrayList<String>();
@@ -68,7 +52,9 @@ public class Manager {
 
         // If we need more workers, launch worker instances and remember their IDs.
         if (delta > 0) {
-            workerIds.addAll(Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker")));
+            List<String> launched = Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker"));
+            workerIds.addAll(launched);
+            workerCount += launched.size();
         // If we have too many workers, terminate redundant workers and remove their IDs (forget them).
         } else if (delta < 0) {
             ArrayList<String> ids = new ArrayList<String>();
@@ -77,6 +63,7 @@ public class Manager {
             }
 
             workerIds.removeAll(Utils.terminateInstances(ec2, ids));
+            workerCount -= ids.size();
         }
     }
 
@@ -84,9 +71,6 @@ public class Manager {
     // closing all the remain workers and the manager itself.
     // TODO send messages to all local apps, so all locals won't wait for DONE msg.
     private static void closeAll(AmazonSQS sqs) {
-        logger.info("starting to close all");
-        shutdownWorkers(sqs,workerCount);
-        //TODO close myself
     }
 
 
@@ -300,6 +284,8 @@ public class Manager {
         AmazonS3 s3 = new AmazonS3Client(creds);
 
         execute(ec2, sqs, s3);
-        closeAll(sqs);
+
+        // Balance workers one final time, in order to terminate all remaining workers.
+        balanceWorkers(ec2, sqs);
     }
 }

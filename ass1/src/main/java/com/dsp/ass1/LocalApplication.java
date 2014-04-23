@@ -136,8 +136,8 @@ public class LocalApplication {
 
 
 
-    // Returns existing manager instance or null if no manager exists.
-    private static Instance getManager(AmazonEC2 ec2) {
+    // Returns existing manager instance ID or null if no manager exists.
+    private static String getManager(AmazonEC2 ec2) {
         logger.info("Requesting manager instance.");
 
         DescribeInstancesRequest instanceReq = new DescribeInstancesRequest();
@@ -152,7 +152,7 @@ public class LocalApplication {
                 instances = reservation.getInstances();
                 if (instances.size() > 0) {
                     logger.info("Existing manager found.");
-                    return instances.get(0);
+                    return instances.get(0).getInstanceId();
                 }
             }
         }
@@ -162,53 +162,51 @@ public class LocalApplication {
     }
 
 
-    // Creates a manager instance.
-    private static Instance createManager(AmazonEC2 ec2) {
+    // Creates a manager instance and returns its ID.
+    private static String createManager(AmazonEC2 ec2) {
         logger.info("Creating new manager instance.");
 
         String userData = Utils.elementUserData("manager");
-        RunInstancesResult instanceResults = Utils.createAmiFromSnapshot(ec2, 1, userData);
-        if (instanceResults == null) {
+        List<String> ids = Utils.createAmiFromSnapshot(ec2, 1, userData);
+        if (ids.size() != 1) {
             logger.severe("Couldn't create manager.");
             return null;
+        } else {
+            return ids.get(0);
         }
-
-        return instanceResults.getReservation().getInstances().get(0);
     }
 
 
     // Tags a manger instance with "Name=manager".
-    private static void tagManager(AmazonEC2 ec2, Instance manager) {
+    private static void tagManager(AmazonEC2 ec2, String id) {
         logger.info("Tagging manager instance.");
 
         CreateTagsRequest tagReq = new CreateTagsRequest();
-        tagReq.withResources(manager.getInstanceId())
-        .withTags(new Tag("Name", "manager"));
+        tagReq.withResources(id).withTags(new Tag("Name", "manager"));
 
         ec2.createTags(tagReq);
     }
 
 
-    // Get manager if it exists, or create a new one if not.
-    private static Instance getOrCreateManager(AmazonEC2 ec2) {
+    // Get manager if it exists, or create a new one if not,
+    // and return its instance id, or null if an error occured.
+    private static String getOrCreateManager(AmazonEC2 ec2) {
         // Search for existing manager.
-        Instance manager = getManager(ec2);
-        if (manager != null) {
-            return manager;
+        String id = getManager(ec2);
+        if (id != null) {
+            return id;
         }
 
         // Else create a new one.
-        manager = createManager(ec2);
-        if (manager == null) {
+        id = createManager(ec2);
+        if (id == null) {
             return null;
         }
 
         // Tag manager with "Name=manager".
-        tagManager(ec2, manager);
+        tagManager(ec2, id);
 
-        // TODO execute manager code (run java app)
-
-        return manager;
+        return id;
     }
 
 
@@ -296,8 +294,8 @@ public class LocalApplication {
 
         // Start ec2 connection and manager.
         AmazonEC2 ec2 = new AmazonEC2Client(creds);
-        Instance manager = getOrCreateManager(ec2);
-        if (manager == null) {
+        String managerId = getOrCreateManager(ec2);
+        if (managerId == null) {
             return;
         }
 
@@ -312,7 +310,7 @@ public class LocalApplication {
             logger.info("Terminating manager.");
 
             ArrayList<String> ids = new ArrayList<String>();
-            ids.add(manager.getInstanceId());
+            ids.add(managerId);
             Utils.terminateInstances(ec2, ids);
         }
 
