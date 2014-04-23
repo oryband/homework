@@ -40,8 +40,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
 
 public class Worker {
-    // TODO skip INFO messages on production.
-    private static final Logger logger = Logger.getLogger(Worker.class.getName());
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(Worker.class.getName()));
 
 
     // Returns a PDDocument from a string URL or null on error.
@@ -251,7 +250,7 @@ public class Worker {
         String body = msg.getBody();
         logger.info("Shutdown message received: " + body);
 
-        if (msg.equals("shutdown")) {
+        if (body.equals("shutdown")) {
             logger.info("Shutting down.");
             return true;
         } else  {
@@ -317,8 +316,6 @@ public class Worker {
 
 
     public static void main(String[] args) {
-
-        Utils.setLogger(logger);
         logger.info("Starting.");
 
         AWSCredentials creds = Utils.loadCredentials();

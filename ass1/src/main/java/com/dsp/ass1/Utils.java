@@ -31,6 +31,8 @@ import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Tag;
+import com.amazonaws.services.ec2.model.CreateTagsRequest;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -59,17 +61,19 @@ public class Utils {
             inputsPath = "inputs/",
             filesPath = "files/";
 
-    private static final Logger logger = Logger.getLogger(Utils.class.getName());
+    private static final Logger logger = setLogger(Logger.getLogger(Utils.class.getName()));
 
 
     // Use custom string format for logger.
-    public static void setLogger(Logger logger) {
+    public static Logger setLogger(Logger logger) {
         ShortFormatter formatter = new ShortFormatter();
         ConsoleHandler handler = new ConsoleHandler();
 
         logger.setUseParentHandlers(false);
         handler.setFormatter(formatter);
         logger.addHandler(handler);
+
+        return logger;
     }
 
 
@@ -248,6 +252,17 @@ public class Utils {
         }
 
         return ids;
+    }
+
+
+    // Tags an instance with "Name='name'".
+    public static void nameInstance(AmazonEC2 ec2, String id, String name) {
+        logger.info("Tagging instance " + id + ": 'Name=" + name + "'");
+
+        CreateTagsRequest tagReq = new CreateTagsRequest();
+        tagReq.withResources(id).withTags(new Tag("Name", name));
+
+        ec2.createTags(tagReq);
     }
 
 

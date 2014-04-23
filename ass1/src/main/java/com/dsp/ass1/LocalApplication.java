@@ -23,10 +23,8 @@ import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.Filter;
 import com.amazonaws.services.ec2.model.Reservation;
-import com.amazonaws.services.ec2.model.Tag;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
-import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -40,7 +38,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
 public class LocalApplication {
 
-    private static final Logger logger = Logger.getLogger(LocalApplication.class.getName());
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(LocalApplication.class.getName()));
     private static int tasksPerWorker = 10;
 
     // Writes data to file.
@@ -178,17 +176,6 @@ public class LocalApplication {
     }
 
 
-    // Tags a manger instance with "Name=manager".
-    private static void tagManager(AmazonEC2 ec2, String id) {
-        logger.info("Tagging manager instance.");
-
-        CreateTagsRequest tagReq = new CreateTagsRequest();
-        tagReq.withResources(id).withTags(new Tag("Name", "manager"));
-
-        ec2.createTags(tagReq);
-    }
-
-
     // Get manager if it exists, or create a new one if not,
     // and return its instance id, or null if an error occured.
     private static String getOrCreateManager(AmazonEC2 ec2, int tasksPerWorker) {
@@ -205,7 +192,7 @@ public class LocalApplication {
         }
 
         // Tag manager with "Name=manager".
-        tagManager(ec2, id);
+        Utils.nameInstance(ec2, id, "manager");
 
         return id;
     }
@@ -270,8 +257,6 @@ public class LocalApplication {
 
 
     public static void main (String[] args) {
-        Utils.setLogger(logger);
-
         logger.info("Starting.");
 
         // Exit if no arguments were given.

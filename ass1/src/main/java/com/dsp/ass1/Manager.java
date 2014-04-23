@@ -26,11 +26,11 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
 
 public class Manager {
-    private static final Logger logger = Logger.getLogger(Manager.class.getName());
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(Manager.class.getName()));
     private static Map <String, MissionData> missions = new HashMap <String, MissionData>();
     private static int workerCount = 0;
     private static int tasksPerWorker = 10;  // Default value, can be overriden by argument.
-    private static ArrayList<String> workerIds;
+    private static ArrayList<String> workerIds = new ArrayList<String>();
 
 
     // get the approximate number of the messages from the queue with the "url".
@@ -46,15 +46,22 @@ public class Manager {
     private static void balanceWorkers(AmazonEC2 ec2, AmazonSQS sqs) {
         int tasksNum = getNumberOfMessages(sqs, Utils.tasksUrl),
             workersNum = workerCount + getNumberOfMessages(sqs, Utils.finishedUrl),
-            delta = ((int) Math.ceil(tasksNum / tasksPerWorker)) - workersNum;
+            delta = ((int) Math.ceil((float)tasksNum / (float)tasksPerWorker)) - workersNum;
 
         logger.info("workers/tasks/delta: " + workersNum + "/" + tasksNum + "/" + delta);
 
         // If we need more workers, launch worker instances and remember their IDs.
         if (delta > 0) {
             List<String> launched = Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker"));
+
+            // Tag worker instances with 'worker' tag.
+            for (String id : launched) {
+                Utils.nameInstance(ec2, id, "worker");
+            }
+
             workerIds.addAll(launched);
             workerCount += launched.size();
+
         // If we have too many workers, shut down redundant workers.
         } else if (delta < 0) {
             Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");
@@ -293,8 +300,6 @@ public class Manager {
 
     // TODO set tasks/worker ratio according to the local who launched the manager instance.
     public static void main(String[] args) {
-        Utils.setLogger(logger);
-
         logger.info("Starting.");
 
         // Read tasks per worker if given.
