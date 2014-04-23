@@ -30,7 +30,7 @@ public class Manager {
     private static Map <String, MissionData> missions;  // <Mission #, Data>
     private static int workerCount = 0;
     private static final int tasksPerWorker = 15;  // TODO set by first (launching manager) local app.
-    private static List<Instance> workers;
+    private static ArrayList<String> workerIds;
 
 
     // closing "number" of workers by sending shutdown messages to shutdown queue.
@@ -58,7 +58,7 @@ public class Manager {
     }
 
 
-    // Launch/terminate workers according to tasks queue.
+    // Launch/terminate workers according to workload (task queue size).
     private static void balanceWorkers(AmazonEC2 ec2, AmazonSQS sqs) {
         int tasksNum = getNumberOfMessages(sqs, Utils.tasksUrl),
             workersNum = workerCount + getNumberOfMessages(sqs, Utils.finishedUrl),
@@ -66,17 +66,17 @@ public class Manager {
 
         logger.info("workers/tasks/delta: " + workersNum + "/" + tasksNum + "/" + delta);
 
+        // If we need more workers, launch worker instances and remember their IDs.
         if (delta > 0) {
-            Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker"));
+            workerIds.addAll(Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker")));
+        // If we have too many workers, terminate redundant workers and remove their IDs (forget them).
         } else if (delta < 0) {
             ArrayList<String> ids = new ArrayList<String>();
-            for (Instance instance : workers.subList(0, - delta)) {
-                ids.add(instance.getInstanceId());
+            for (String id: workerIds.subList(0, - delta)) {
+                ids.add(id);
             }
 
-            // for (InstantStatChange stat : Utils.terminateInstances(ec2, ids)) {
-            //     workers.stat.getInstanceId()
-
+            workerIds.removeAll(Utils.terminateInstances(ec2, ids));
         }
     }
 
@@ -263,7 +263,8 @@ public class Manager {
                 }
             }
 
-            // balanceWorkers(ec2, sqs);
+            // Launch/terminate workers by workload.
+            balanceWorkers(ec2, sqs);
 
             // Fetch more local missions if shutdown flag is OFF.
             if ( ! shutdown) {
