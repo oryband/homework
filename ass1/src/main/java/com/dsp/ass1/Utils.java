@@ -55,6 +55,7 @@ public class Utils {
             localDownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localdown",
             shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
             bucket = "dsp-ass1",
+            instanceidGet = "http://169.254.169.254/latest/meta-data/instance-id",
             resultPath = "results/",
             inputsPath = "inputs/",
             filesPath = "files/";

@@ -1,11 +1,14 @@
 package com.dsp.ass1;
 
+import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -315,6 +318,29 @@ public class Worker {
         }
     }
 
+    public static String getHTML(String urlToRead) {
+        URL url;
+        HttpURLConnection conn;
+        BufferedReader rd;
+        String line;
+        String result = "";
+        try {
+           url = new URL(urlToRead);
+           conn = (HttpURLConnection) url.openConnection();
+           conn.setRequestMethod("GET");
+           rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+           while ((line = rd.readLine()) != null) {
+              result += line;
+           }
+           rd.close();
+        } catch (IOException e) {
+           e.printStackTrace();
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+        return result;
+     }
+
 
     public static void main(String[] args) {
 
@@ -334,6 +360,6 @@ public class Worker {
 
         execute(sqs, s3);
 
-        Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed");
+        Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed\t" + getHTML(Utils.instanceidGet));
     }
 }
