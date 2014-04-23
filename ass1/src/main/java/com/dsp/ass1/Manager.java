@@ -27,7 +27,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
 public class Manager {
     private static final Logger logger = Logger.getLogger(Manager.class.getName());
-    private static Map <String, MissionData> missions;  // <Mission #, Data>
+    private static Map <String, MissionData> missions = new HashMap <String, MissionData>();
     private static int workerCount = 0;
     private static final int tasksPerWorker = 15;  // TODO set by first (launching manager) local app.
     private static ArrayList<String> workerIds;
@@ -65,9 +65,21 @@ public class Manager {
 
     // Terminates a worker instance by given instance ID,
     // and removes their ID (forgets them).
-    private static void terminateWorker(AmazonEC2 ec2, String id) {
+    private static void terminateWorker(AmazonEC2 ec2, Message msg) {
+        String body = msg.getBody();
+        if (body == null) {
+            logger.severe("Error in message received, body is null.");
+            return;
+        }
+
+        String[] closed = body.split("\t");
+        if (closed.length < 2 || ! closed[0].equals("closed")) {
+            logger.severe("Unknown message received.");
+            return;
+        }
+
         ArrayList<String> ids = new ArrayList<String>();
-        ids.add(id);
+        ids.add(closed[1]);
         workerIds.removeAll(Utils.terminateInstances(ec2, ids));
     }
 
@@ -210,22 +222,27 @@ public class Manager {
 
     private static void execute(AmazonEC2 ec2, AmazonSQS sqs, AmazonS3 s3) {
         boolean shutdown = false;
-        List<Message> localUpMsgs, finishedMsgs;
+        List<Message> localUpMsgs, finishedMsgs, closedMsgs;
         Message msg;
         ReceiveMessageRequest rcvLocalUp = new ReceiveMessageRequest(Utils.localUpUrl),
-                              rcvFinished = new ReceiveMessageRequest(Utils.finishedUrl);
+                              rcvFinished = new ReceiveMessageRequest(Utils.finishedUrl),
+                              rcvClosed = new ReceiveMessageRequest(Utils.closedWorkersUrl);
 
         localUpMsgs = Utils.getMessages(rcvLocalUp, sqs);
         finishedMsgs = Utils.getMessages(rcvFinished, sqs);
+        closedMsgs = Utils.getMessages(rcvClosed, sqs);
 
         // Process new missions as long as there are any missions left,
+        // not all workers have been terminated (not just closed),
         // and shutdown flag is OFF.
-        while ( ! shutdown || missions.size() > 0) {
+        while ( ! shutdown || missions.size() > 0 || workerIds.size() > 0) {
 
             // Sleep if no messages were received.
             // Don't accept new missions if shutdown flag is ON.
             if (Utils.isEmpty(finishedMsgs)
+                    && Utils.isEmpty(closedMsgs)
                     && (shutdown || Utils.isEmpty(localUpMsgs))) {
+
                 logger.info("no messages, sleeping.");
 
                 try {
@@ -249,9 +266,15 @@ public class Manager {
                     msg = finishedMsgs.get(0);
                     finishTask(msg, sqs, s3);
                 }
+
+                // Process new 'worker closed' message (terminate instance).
+                if ( ! Utils.isEmpty(closedMsgs)){
+                    msg = closedMsgs.get(0);
+                    terminateWorker(ec2, msg);
+                }
             }
 
-            // Launch/terminate workers by workload.
+            // Launch/terminate workers by workload (tasks queue size).
             balanceWorkers(ec2, sqs);
 
             // Fetch more local missions if shutdown flag is OFF.
@@ -259,11 +282,12 @@ public class Manager {
                 localUpMsgs = Utils.getMessages(rcvLocalUp, sqs);
             }
 
-            // Fetch remaining worker finish tasks.
+            // Fetch remaining worker finish tasks and close messages.
             finishedMsgs = Utils.getMessages(rcvFinished, sqs);
+            closedMsgs = Utils.getMessages(rcvClosed, sqs);
         }
 
-        logger.info("No more missions.");
+        logger.info("No more missions, tasks, or workers.");
     }
 
 
@@ -274,13 +298,11 @@ public class Manager {
         logger.info("Starting.");
 
         AWSCredentials creds = Utils.loadCredentials();
-        if(creds == null) {
+        if (creds == null) {
             logger.severe("Couldn't load credentials.");
             // TODO close myself
             return;
         }
-
-        missions = new HashMap <String, MissionData>();
 
         // Start EC2, S3 and SQS connections.
         AmazonEC2 ec2 = new AmazonEC2Client(creds);
@@ -288,8 +310,5 @@ public class Manager {
         AmazonS3 s3 = new AmazonS3Client(creds);
 
         execute(ec2, sqs, s3);
-
-        // Balance workers one final time, in order to terminate all remaining workers.
-        balanceWorkers(ec2, sqs);
     }
 }
