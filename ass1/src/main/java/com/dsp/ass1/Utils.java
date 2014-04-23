@@ -45,11 +45,11 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 
 
 public class Utils {
-
     public static final String tasksUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/tasks",
             instanceType = "t1.micro",
             imageId = "ami-cfc0dba6",
             keyName = "ec2",
+            securityGroup = "launch-wizard-2",
             finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
             localUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/local",
             shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
@@ -217,12 +217,16 @@ public class Utils {
 
     // Creates a new AMI instance from pre-defined snapshot..
     public static RunInstancesResult createAmiFromSnapshot(AmazonEC2 ec2, int amount, String userData) {
+        ArrayList<String> securityGroups = new ArrayList<String>();
+        securityGroups.add(securityGroup);
+
         try {
             RunInstancesRequest request = new RunInstancesRequest();
             request.withImageId(imageId)  // Utils.imageId
                 .withInstanceType(instanceType)  // same
                 .withUserData(userData)
                 .withKeyName(keyName)
+                .withSecurityGroups(securityGroups)
                 .withMinCount(amount)
                 .withMaxCount(amount);
 
