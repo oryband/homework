@@ -45,10 +45,9 @@ public class Manager {
     // Launch/terminate workers according to workload (task queue size).
     private static void balanceWorkers(AmazonEC2 ec2, AmazonSQS sqs) {
         int tasksNum = getNumberOfMessages(sqs, Utils.tasksUrl),
-            workersNum = workerCount + getNumberOfMessages(sqs, Utils.finishedUrl),
-            delta = ((int) Math.ceil((float)tasksNum / (float)tasksPerWorker)) - workersNum;
+            delta = ((int) Math.ceil((float)tasksNum / (float)tasksPerWorker)) - workerCount;
 
-        logger.info("workers/tasks/delta: " + workersNum + "/" + tasksNum + "/" + delta);
+        logger.info("workers/tasks/delta: " + workerCount + "/" + tasksNum + "/" + delta);
 
         // If we need more workers, launch worker instances and remember their IDs.
         if (delta > 0) {
@@ -60,13 +59,13 @@ public class Manager {
             }
 
             workerIds.addAll(launched);
-            workerCount += launched.size();
 
         // If we have too many workers, shut down redundant workers.
         } else if (delta < 0) {
             Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");
-            workerCount += delta;  // delta < 0 so we actually do a substraction here.
         }
+
+        workerCount += delta;  // if delta < 0 we actually do a substraction.
     }
 
 
