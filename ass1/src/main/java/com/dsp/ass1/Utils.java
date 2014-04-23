@@ -20,19 +20,15 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FilenameUtils;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
 
 import com.amazonaws.auth.PropertiesCredentials;
 
 import com.amazonaws.services.ec2.AmazonEC2;
 
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
-import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
-import com.amazonaws.services.ec2.model.TerminateInstancesResult;
 import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.amazonaws.services.ec2.model.Instance;
 
@@ -53,6 +49,7 @@ public class Utils {
             imageId = "ami-cfc0dba6",
             keyName = "ec2",
             securityGroup = "launch-wizard-2",
+            closedWorkersUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/closedworkers",
             finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
             localUpUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localup",
             localDownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localdown",

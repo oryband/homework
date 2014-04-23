@@ -317,7 +317,6 @@ public class Worker {
 
 
     public static void main(String[] args) {
-        // TODO split main() to multiple functions.
 
         Utils.setLogger(logger);
         logger.info("Starting.");
@@ -335,6 +334,6 @@ public class Worker {
 
         execute(sqs, s3);
 
-        // TODO close myself
+        Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed");
     }
 }
