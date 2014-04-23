@@ -33,6 +33,7 @@ import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesResult;
+import com.amazonaws.services.ec2.model.InstanceStateChange;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -163,7 +164,7 @@ public class Utils {
     public static void sendMessage(AmazonSQS sqs, String sqsUrl, String info) {
         try {
             sqs.sendMessage(new SendMessageRequest(sqsUrl, info));
-            logger.info("Message sent to queqe : " + info);
+            logger.info("Sent to queue: " + info);
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
         }
@@ -248,14 +249,15 @@ public class Utils {
 
 
     // Terminates an instance and returns a result.
-    public static TerminateInstancesResult terminateInstances(AmazonEC2 ec2, Collection<String> ids) {
+    public static List<InstanceStateChange> terminateInstances(AmazonEC2 ec2, Collection<String> ids) {
         for (String id : ids) {
             logger.info("Terminating instance id: " + id);
         }
 
         TerminateInstancesRequest request = new TerminateInstancesRequest();
         request.setInstanceIds(ids);
-        return ec2.terminateInstances(request);
+
+        return ec2.terminateInstances(request).getTerminatingInstances();
     }
 
 
@@ -310,7 +312,7 @@ public class Utils {
 
     // checking if a list has is empty.
     public static boolean isEmpty(List<Message> messages) {
-        return ((messages == null) || (messages.size() == 0));
+        return (messages == null || messages.size() == 0);
     }
 
 }

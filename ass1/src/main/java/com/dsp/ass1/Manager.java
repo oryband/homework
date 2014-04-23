@@ -10,8 +10,14 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FilenameUtils;
 
 import com.amazonaws.auth.AWSCredentials;
+
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.model.Instance;
+
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
@@ -20,11 +26,11 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
 
 public class Manager {
-
     private static final Logger logger = Logger.getLogger(Manager.class.getName());
-    private static Map < String , MissionData> missions; // key is the number of the mission, value is how many task is in the queue
-    private static int workerCount = 0 ;
-    private static final int tasksForWorker  = 15;
+    private static Map <String, MissionData> missions;  // <Mission #, Data>
+    private static int workerCount = 0;
+    private static final int tasksPerWorker = 15;  // TODO set by first (launching manager) local app.
+    private static List<Instance> workers;
 
 
     // closing "number" of workers by sending shutdown messages to shutdown queue.
@@ -52,19 +58,25 @@ public class Manager {
     }
 
 
-    // checks the amount of the workers and the amount of the tasks. close or open new workers.
-    private static void checkWorkerCount(AmazonSQS sqs) {
-        int numberOfTasks = getNumberOfMessages(sqs, Utils.tasksUrl),
-            numberOfWorkers = workerCount + getNumberOfMessages(sqs, Utils.finishedUrl);
+    // Launch/terminate workers according to tasks queue.
+    private static void balanceWorkers(AmazonEC2 ec2, AmazonSQS sqs) {
+        int tasksNum = getNumberOfMessages(sqs, Utils.tasksUrl),
+            workersNum = workerCount + getNumberOfMessages(sqs, Utils.finishedUrl),
+            delta = ((int) Math.ceil(tasksNum / tasksPerWorker)) - workersNum;
 
-        if (numberOfTasks < numberOfWorkers * tasksForWorker) {
-            int workers2close = (int) ((numberOfWorkers * tasksForWorker) - numberOfTasks) / tasksForWorker;
-            logger.info("workersCount : got " + numberOfTasks + " tasks and " + numberOfWorkers + " workers. closing " + workers2close + " workers");
-            shutdownWorkers(sqs, workers2close);
-        } else {
-            int workers2open = (int) ((numberOfTasks - (numberOfWorkers * tasksForWorker)) / tasksForWorker);
-            logger.info("workersCount : got " + numberOfTasks + " tasks and " + numberOfWorkers + " workers. open " + workers2open + " workers");
-            creatNewWorkers(workers2open);
+        logger.info("workers/tasks/delta: " + workersNum + "/" + tasksNum + "/" + delta);
+
+        if (delta > 0) {
+            Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker"));
+        } else if (delta < 0) {
+            ArrayList<String> ids = new ArrayList<String>();
+            for (Instance instance : workers.subList(0, - delta)) {
+                ids.add(instance.getInstanceId());
+            }
+
+            // for (InstantStatChange stat : Utils.terminateInstances(ec2, ids)) {
+            //     workers.stat.getInstanceId()
+
         }
     }
 
@@ -78,19 +90,22 @@ public class Manager {
     }
 
 
-    private static void finishMission(AmazonSQS sqs, AmazonS3 s3, String missionNumber, MissionData data){
-        logger.info("finishing mission number : " + missionNumber);
+    // Handle a finished mission (a mission whose tasks are all finished):
+    // Upload result file to S3 and inform local.
+    private static void finishMission(AmazonSQS sqs, AmazonS3 s3, String missionNumber, MissionData data) {
+        logger.info("Finishing mission: " + missionNumber);
+
         String link = Utils.uploadFileToS3(s3, missionNumber + "_results.txt", Utils.resultPath, data.getInfo());
 
+        String msg;
         if (link == null) {
-            logger.info("failed task\tCant upload finish file\t" + missionNumber);
-            Utils.sendMessage(sqs, Utils.localDownUrl, "failed task\tCant upload finish file\t" + missionNumber);
-        }
-        else {
-            logger.info("done task\t" + link + "\t" + missionNumber);
-            Utils.sendMessage(sqs, Utils.localDownUrl, "done task\t" + link + "\t" + missionNumber);
+            msg = "failed task\terror uploading finish results.txt\t";
+        } else {
+            msg = "done task\t" + link + "\t" + missionNumber;
         }
 
+        logger.info(msg);
+        Utils.sendMessage(sqs, Utils.localDownUrl, msg);
         missions.remove(missionNumber);
     }
 
@@ -108,41 +123,37 @@ public class Manager {
 
         logger.info("Finish message: " + msg.getBody());
 
-        // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
+        // action = split[1], input = split[2], output = split[3], missionNumber = split[4];
         String[] split = msg.getBody().split("\t");
         if (split.length < 5) {
             logger.severe("Finished task message is too short < 5.");
             return;
         }
 
-        String missionNumber = split[4];
+        String action = split[0],
+               missionNumber = split[4];
         MissionData data = missions.get(missionNumber);
 
-        if (split[0].equals("done PDF task")) {
-            data.appendSucc(split);
-        } else if (split[0].equals("failed PDF task")) {
-            data.appendFailed(split);
+        if (action.equals("done PDF task") || action.equals("failed PDF task")) {
+            data.appendTask(split);
         } else {
             logger.severe("Received unknown message.");
             return;
         }
 
-        data.decrease();
-
-        // Finish mission if all its tasks were finished.
-        if (data.getNumber() == 0) {
-            finishMission(sqs, s3, missionNumber , data);
+        // Decrease remaining tasks and finish mission if all its tasks were finished.
+        if (--data.remaining == 0) {
+            finishMission(sqs, s3, missionNumber, data);
         } else {
-            missions.put(missionNumber,data);
+            missions.put(missionNumber, data);
         }
     }
 
 
-    // Receives an S3 mission link 'http://xxx/mission-id_input.txt'
+    // Receives an S3 mission link i.e. 'http://xxx/mission-id_input.txt'
     // and returns 'mission-id'.
     private static String getMissionNumber(String link) {
-        String base = FilenameUtils.getBaseName(link);
-        return base.split("_")[0];
+        return FilenameUtils.getBaseName(link).split("_")[0];
     }
 
 
@@ -158,7 +169,7 @@ public class Manager {
 
         // Don't do anything if any error occured.
         if (info == null) {
-            Utils.sendMessage(sqs, Utils.localDownUrl, "failed task\tCan't open the link\t" + missionNumber);
+            Utils.sendMessage(sqs, Utils.localDownUrl, "failed task\tcan't open URL\t" + missionNumber);
             return;
         }
 
@@ -180,10 +191,10 @@ public class Manager {
     // Creates a new mission (received from local) or shuts down.
     // Returns 'true' if needs to shutdown afterwards, 'false' otherwise.
     private static boolean handleLocalMessage(Message msg, AmazonSQS sqs) {
+        // Delete processed message.
         Utils.deleteTaskMessage(msg, Utils.localUpUrl, sqs);
 
         String body = msg.getBody();
-        // Delete processed message.
         if (body == null) {
             logger.severe("Error in message received, body is null.");
             return false;
@@ -209,7 +220,7 @@ public class Manager {
     }
 
 
-    private static void execute(AmazonSQS sqs, AmazonS3 s3) {
+    private static void execute(AmazonEC2 ec2, AmazonSQS sqs, AmazonS3 s3) {
         boolean shutdown = false;
         List<Message> localUpMsgs, finishedMsgs;
         Message msg;
@@ -221,7 +232,7 @@ public class Manager {
 
         // Process new missions as long as there are any missions left,
         // and shutdown flag is OFF.
-        while (missions.size() > 0 || ! shutdown) {
+        while ( ! shutdown || missions.size() > 0) {
 
             // Sleep if no messages were received.
             // Don't accept new missions if shutdown flag is ON.
@@ -252,7 +263,7 @@ public class Manager {
                 }
             }
 
-            //checkWorkerCount(sqs);  // TODO
+            // balanceWorkers(ec2, sqs);
 
             // Fetch more local missions if shutdown flag is OFF.
             if ( ! shutdown) {
@@ -267,6 +278,7 @@ public class Manager {
     }
 
 
+    // TODO set tasks/worker ratio according to the local who launched the manager instance.
     public static void main(String[] args) {
         Utils.setLogger(logger);
 
@@ -281,11 +293,12 @@ public class Manager {
 
         missions = new HashMap <String, MissionData>();
 
-        // Start S3 and SQS missions.
+        // Start EC2, S3 and SQS missions.
+        AmazonEC2 ec2 = new AmazonEC2Client(creds);
         AmazonSQS sqs = new AmazonSQSClient(creds);
         AmazonS3 s3 = new AmazonS3Client(creds);
 
-        execute(sqs, s3);
+        execute(ec2, sqs, s3);
         closeAll(sqs);
     }
 }
