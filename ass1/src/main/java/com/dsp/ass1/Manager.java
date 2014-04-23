@@ -55,16 +55,20 @@ public class Manager {
             List<String> launched = Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker"));
             workerIds.addAll(launched);
             workerCount += launched.size();
-        // If we have too many workers, terminate redundant workers and remove their IDs (forget them).
+        // If we have too many workers, shut down redundant workers.
         } else if (delta < 0) {
-            ArrayList<String> ids = new ArrayList<String>();
-            for (String id: workerIds.subList(0, - delta)) {
-                ids.add(id);
-            }
-
-            workerIds.removeAll(Utils.terminateInstances(ec2, ids));
-            workerCount -= ids.size();
+            Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");
+            workerCount += delta;  // delta < 0 so we actually do a substraction here.
         }
+    }
+
+
+    // Terminates a worker instance by given instance ID,
+    // and removes their ID (forgets them).
+    private static void terminateWorker(AmazonEC2 ec2, String id) {
+        ArrayList<String> ids = new ArrayList<String>();
+        ids.add(id);
+        workerIds.removeAll(Utils.terminateInstances(ec2, ids));
     }
 
 
@@ -278,7 +282,7 @@ public class Manager {
 
         missions = new HashMap <String, MissionData>();
 
-        // Start EC2, S3 and SQS missions.
+        // Start EC2, S3 and SQS connections.
         AmazonEC2 ec2 = new AmazonEC2Client(creds);
         AmazonSQS sqs = new AmazonSQSClient(creds);
         AmazonS3 s3 = new AmazonS3Client(creds);
