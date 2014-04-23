@@ -290,6 +290,7 @@ public class LocalApplication {
         // Load credentials.
         AWSCredentials creds = Utils.loadCredentials();
         if (creds == null) {
+            logger.severe("Couldn't load credentials.");
             return;
         }
 
