@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FilenameUtils;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -51,11 +52,13 @@ public class Utils {
             keyName = "ec2",
             securityGroup = "launch-wizard-2",
             finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
-            localUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/local",
+            localUpUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localup",
+            localDownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localdown",
             shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
             bucket = "dsp-ass1",
-            resultpath = "result/",
-            path = "here/";
+            resultPath = "result/",
+            inputsPath = "inputs/",
+            filesPath = "files/";
 
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
@@ -71,9 +74,14 @@ public class Utils {
     }
 
 
+    public static boolean checkResult(String result) {
+        return (result != null && result.startsWith("http"));
+    }
+
+
     // Returns uploaded file address or null on error.
-    public static String uploadFileToS3(AmazonS3 s3, String fileName, String info) {
-        String fileAddress = getS3FileAddress(s3, fileName);
+    public static String uploadFileToS3(AmazonS3 s3, String fileName, String path ,String info) {
+        String fileAddress = getS3FileAddress(s3, fileName , path);
         File file = createSampleFile(info);
 
         if (file == null || fileAddress == null) {
@@ -127,7 +135,7 @@ public class Utils {
 
 
     // Fetches S3-file url.
-    public static String getS3FileAddress(AmazonS3 s3, String fileName) {
+    public static String getS3FileAddress(AmazonS3 s3, String fileName, String path) {
         String address;
 
         try {
@@ -304,4 +312,5 @@ public class Utils {
     public static boolean isEmpty(List<Message> messages) {
         return ((messages == null) || (messages.size() == 0));
     }
+
 }
