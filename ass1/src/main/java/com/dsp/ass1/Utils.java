@@ -53,6 +53,7 @@ public class Utils {
             imageId = "ami-cfc0dba6",
             keyName = "ec2",
             securityGroup = "launch-wizard-2",
+            closedWorkersUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/closedworkers",
             finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
             localUpUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localup",
             localDownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localdown",
