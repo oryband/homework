@@ -236,10 +236,10 @@ public class Utils {
 
 
     // Execute worker/manager with default user-data, to be sent using an instance request.
-    public static String elementUserData(String element) {
+    public static String elementUserData(String element, String extra) {
         ArrayList<String> lines = new ArrayList<String>();
         lines.add("#!/bin/sh");
-        lines.add("cd /home/ec2-user/dsp/ass1 && git pull origin master && source ./.bash_profile && mvn clean compile && ./run-" + element + ".sh > output.log");
+        lines.add("cd /home/ec2-user/dsp/ass1 && git pull origin master && source ./.bash_profile && mvn clean compile && ./run-" + element + ".sh " + extra);
         return new String(Base64.encodeBase64(join(lines, "\n").getBytes()));
     }
 

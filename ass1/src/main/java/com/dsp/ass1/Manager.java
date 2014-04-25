@@ -58,7 +58,7 @@ public class Manager {
 
         // If we need more workers, launch worker instances and remember their IDs.
         if (delta > 0) {
-            List<String> launched = Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker"));
+            List<String> launched = Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker", ""));
 
             // Tag worker instances with 'worker' tag.
             for (String id : launched) {
