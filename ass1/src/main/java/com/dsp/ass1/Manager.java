@@ -299,7 +299,7 @@ public class Manager {
         logger.info("No more missions, tasks, or workers.");
 
         logger.info("Shutting down.");
-        Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed");  // Locals already know manager's instance ID.
+        Utils.sendMessage(sqs, Utils.localDownUrl, "closed");  // Locals already know manager's instance ID.
     }
 
 
