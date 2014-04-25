@@ -82,8 +82,8 @@ public class Manager {
         }
 
         String[] closed = body.split("\t");
-        if ( ! closed[0].equals("closed")) {
-            logger.severe("Unknown message received.");
+        if (closed.length < 2 || ! closed[0].equals("closed")) {
+            logger.severe("Bad message received: " + body);
             return;
         }
 
@@ -249,7 +249,7 @@ public class Manager {
                     && Utils.isEmpty(closedMsgs)
                     && (shutdown || Utils.isEmpty(localUpMsgs))) {
 
-                logger.info("no messages, sleeping.");
+                logger.fine("no messages, sleeping.");
 
                 try {
                     TimeUnit.SECONDS.sleep(5);

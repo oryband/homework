@@ -316,8 +316,7 @@ public class Worker {
         }
 
         // Send a 'closing' message to the manager, so he could terminate the worker instance.
-        Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed");
-        // Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed\t" + Utils.getHTML(Utils.instanceIdUrl));
+        Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed\t" + Utils.getHTML(Utils.instanceIdUrl));
     }
 
 
