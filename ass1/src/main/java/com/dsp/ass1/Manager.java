@@ -82,7 +82,7 @@ public class Manager {
         }
 
         String[] closed = body.split("\t");
-        if (closed.length < 2 || ! closed[0].equals("closed")) {
+        if ( ! closed[0].equals("closed")) {
             logger.severe("Unknown message received.");
             return;
         }

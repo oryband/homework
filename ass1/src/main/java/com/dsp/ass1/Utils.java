@@ -293,7 +293,7 @@ public class Utils {
 
     // Returns pending/running instance ID list.
     public static ArrayList<String> getInstanceIdsByTag(AmazonEC2 ec2, String key, String value) {
-        logger.info("Requesting instances by tag " + key + "=" + value);
+        logger.fine("Requesting instances by tag " + key + "=" + value);
 
         // Create tag request.
         DescribeInstancesRequest instanceReq = new DescribeInstancesRequest();
@@ -311,7 +311,7 @@ public class Utils {
             }
         }
 
-        logger.info(ids.size() + " instances found with tag " + key + "=" + value);
+        logger.fine(ids.size() + " instances found with tag " + key + "=" + value);
         return ids;
     }
 
