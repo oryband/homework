@@ -254,6 +254,9 @@ public class Manager {
 
                 logger.fine("no messages, sleeping.");
 
+                // Launch/terminate workers by workload (tasks queue size).
+                balanceWorkers(ec2, sqs);
+
                 try {
                     TimeUnit.SECONDS.sleep(30);
                 } catch(InterruptedException e) {
@@ -282,9 +285,6 @@ public class Manager {
                     terminateWorker(ec2, sqs, msg);
                 }
             }
-
-            // Launch/terminate workers by workload (tasks queue size).
-            balanceWorkers(ec2, sqs);
 
             // Fetch more local missions if shutdown flag is OFF.
             if ( ! shutdown) {
