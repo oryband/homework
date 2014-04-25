@@ -255,7 +255,7 @@ public class Manager {
                 logger.fine("no messages, sleeping.");
 
                 try {
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(30);
                 } catch(InterruptedException e) {
                     logger.severe(e.getMessage());
                     return;
@@ -297,6 +297,9 @@ public class Manager {
         }
 
         logger.info("No more missions, tasks, or workers.");
+
+        logger.info("Shutting down.");
+        Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed");  // Locals already know manager's instance ID.
     }
 
 
