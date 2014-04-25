@@ -228,7 +228,7 @@ public class Utils {
     public static String elementUserData(String element) {
         ArrayList<String> lines = new ArrayList<String>();
         lines.add("#!/bin/sh");
-        lines.add("cd /home/ec2-user/dsp/ass1 && git pull origin master && mvn clean compile && ./run-" + element + " >> output.log 2>&1");
+        lines.add("cd /home/ec2-user/dsp/ass1 && git pull origin master && source ./.bash_profile && .mvn clean compile && ./run-" + element + " >> output.log 2>&1");
         return new String(Base64.encodeBase64(join(lines, "\n").getBytes()));
     }
 
@@ -311,6 +311,7 @@ public class Utils {
             }
         }
 
+        logger.info(ids.size() + " instances found with tag " + key + "=" + value);
         return ids;
     }
 
