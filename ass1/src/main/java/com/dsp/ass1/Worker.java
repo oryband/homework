@@ -314,6 +314,10 @@ public class Worker {
             taskMsgs = Utils.getMessages(taskReq, sqs);
             shutdownMsgs = Utils.getMessages(shutdownReq, sqs);
         }
+
+        // Send a 'closing' message to the manager, so he could terminate the worker instance.
+        Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed");
+        // Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed\t" + Utils.getHTML(Utils.instanceIdUrl));
     }
 
 
@@ -332,8 +336,5 @@ public class Worker {
         AmazonS3 s3 = new AmazonS3Client(creds);
 
         execute(sqs, s3);
-
-        // Send a 'closing' message to the manager, so he could terminate the worker instance.
-        Utils.sendMessage(sqs, Utils.closedWorkersUrl, "closed\t" + Utils.getHTML(Utils.instanceIdUrl));
     }
 }

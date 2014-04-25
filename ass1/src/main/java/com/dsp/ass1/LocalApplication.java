@@ -20,12 +20,6 @@ import com.amazonaws.auth.AWSCredentials;
 
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
-import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.Filter;
-import com.amazonaws.services.ec2.model.Reservation;
-import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
-import com.amazonaws.services.ec2.model.DescribeInstancesResult;
-import com.amazonaws.services.ec2.model.RunInstancesResult;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -133,31 +127,18 @@ public class LocalApplication {
     }
 
 
-
-
     // Returns existing manager instance ID or null if no manager exists.
     private static String getManager(AmazonEC2 ec2) {
         logger.info("Requesting manager instance.");
 
-        DescribeInstancesRequest instanceReq = new DescribeInstancesRequest();
-        Filter managerFilter = new Filter("tag:Name").withValues("manager"),  // Filter instances by tag "Name=manager"
-                activeFilter = new Filter("instance-state-code").withValues("0", "16");  // 0||16 == pending||running
-        DescribeInstancesResult result = ec2.describeInstances(instanceReq.withFilters(managerFilter, activeFilter));
-        List<Reservation> reservations = result.getReservations();
-        List<Instance> instances;
-
-        if (reservations.size() > 0) {
-            for (Reservation reservation : reservations) {
-                instances = reservation.getInstances();
-                if (instances.size() > 0) {
-                    logger.info("Existing manager found.");
-                    return instances.get(0).getInstanceId();
-                }
-            }
+        ArrayList<String> ids = Utils.getInstanceIdsByTag(ec2, "Name", "manager");
+        if (ids.size() > 0) {
+            logger.info("Existing manager found.");
+            return ids.get(0);
+        } else {
+            logger.info("No manager instance exists.");
+            return null;
         }
-
-        logger.info("No manager instance exists.");
-        return null;
     }
 
 

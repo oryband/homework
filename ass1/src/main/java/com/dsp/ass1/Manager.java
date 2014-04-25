@@ -13,7 +13,6 @@ import com.amazonaws.auth.AWSCredentials;
 
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
-import com.amazonaws.services.ec2.model.Instance;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -28,9 +27,9 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 public class Manager {
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Manager.class.getName()));
     private static Map <String, MissionData> missions = new HashMap <String, MissionData>();
-    private static int workerCount = 0;
+    private static int workersShuttingDown = 0;  // Amount of workers about to shut down.
     private static int tasksPerWorker = 10;  // Default value, can be overriden by argument.
-    private static ArrayList<String> workerIds = new ArrayList<String>();
+    private static List<String> workerIds = new ArrayList<String>();
 
 
     // get the approximate number of the messages from the queue with the "url".
@@ -42,12 +41,20 @@ public class Manager {
     }
 
 
+    // Polls EC2 service for instances tagged by 'Name=worker',
+    // and returns worker ID list.
+    private static List<String> getWorkerIds(AmazonEC2 ec2) {
+        return Utils.getInstanceIdsByTag(ec2, "Name", "worker");
+    }
+
+
     // Launch/terminate workers according to workload (task queue size).
     private static void balanceWorkers(AmazonEC2 ec2, AmazonSQS sqs) {
         int tasksNum = getNumberOfMessages(sqs, Utils.tasksUrl),
-            delta = ((int) Math.ceil((float)tasksNum / (float)tasksPerWorker)) - workerCount;
+            workers = getWorkerIds(ec2).size(),
+            delta = ((int) Math.ceil((float)tasksNum / (float)tasksPerWorker)) - (workers - workersShuttingDown);
 
-        logger.info("workers/tasks/delta: " + workerCount + "/" + tasksNum + "/" + delta);
+        logger.info("workers/shutting/tasks/delta: " + workers + "/" + workersShuttingDown + "/" + tasksNum + "/" + delta);
 
         // If we need more workers, launch worker instances and remember their IDs.
         if (delta > 0) {
@@ -58,19 +65,15 @@ public class Manager {
                 Utils.nameInstance(ec2, id, "worker");
             }
 
-            workerIds.addAll(launched);
-
-        // If we have too many workers, shut down redundant workers.
+        // If we have too many workers, shut down unnecessary ones.
         } else if (delta < 0) {
             Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");
+            workersShuttingDown -= delta;  // delta < 0 so we actually do addition.
         }
-
-        workerCount += delta;  // if delta < 0 we actually do a substraction.
     }
 
 
-    // Terminates a worker instance by given instance ID,
-    // and removes their ID (forgets them).
+    // Terminates a worker instance by given instance ID.
     private static void terminateWorker(AmazonEC2 ec2, Message msg) {
         String body = msg.getBody();
         if (body == null) {
@@ -86,13 +89,10 @@ public class Manager {
 
         ArrayList<String> ids = new ArrayList<String>();
         ids.add(closed[1]);
-        workerIds.removeAll(Utils.terminateInstances(ec2, ids));
-    }
+        Utils.terminateInstances(ec2, ids);
 
-
-    // closing all the remain workers and the manager itself.
-    // TODO send messages to all local apps, so all locals won't wait for DONE msg.
-    private static void closeAll(AmazonSQS sqs) {
+        // One worker instance is no longer 'shutting down', but completely terminated.
+        workersShuttingDown --;
     }
 
 

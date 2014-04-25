@@ -28,11 +28,16 @@ import com.amazonaws.auth.PropertiesCredentials;
 
 import com.amazonaws.services.ec2.AmazonEC2;
 
+import com.amazonaws.services.ec2.model.Instance;
+import com.amazonaws.services.ec2.model.Tag;
+import com.amazonaws.services.ec2.model.Filter;
+import com.amazonaws.services.ec2.model.Reservation;
+import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
+import com.amazonaws.services.ec2.model.DescribeInstancesResult;
+import com.amazonaws.services.ec2.model.RunInstancesResult;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.TerminateInstancesRequest;
 import com.amazonaws.services.ec2.model.InstanceStateChange;
-import com.amazonaws.services.ec2.model.Instance;
-import com.amazonaws.services.ec2.model.Tag;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -283,6 +288,30 @@ public class Utils {
         }
 
         return terminated;
+    }
+
+
+    // Returns pending/running instance ID list.
+    public static ArrayList<String> getInstanceIdsByTag(AmazonEC2 ec2, String key, String value) {
+        logger.info("Requesting instances by tag " + key + "=" + value);
+
+        // Create tag request.
+        DescribeInstancesRequest instanceReq = new DescribeInstancesRequest();
+        Filter managerFilter = new Filter("tag:" + key).withValues(value),
+                activeFilter = new Filter("instance-state-code").withValues("0", "16");  // 0||16 == pending||running
+
+        // Send request.
+        DescribeInstancesResult result = ec2.describeInstances(instanceReq.withFilters(managerFilter, activeFilter));
+
+        // Build instance ID list.
+        ArrayList<String> ids = new ArrayList<String>();
+        for (Reservation reservation : result.getReservations()) {
+            for (Instance instance : reservation.getInstances()) {
+                ids.add(instance.getInstanceId());
+            }
+        }
+
+        return ids;
     }
 
 
