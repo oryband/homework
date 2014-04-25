@@ -164,19 +164,6 @@ public class Worker {
     }
 
 
-    // Deletes a 'new PDF task ..' message.
-    private static void deleteTaskMessage(Message msg, String sqsUrl, AmazonSQS sqs) {
-        String handle = msg.getReceiptHandle();
-
-        try {
-            sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, handle));
-            logger.info("Deleted: " + msg.getBody());
-        } catch (AmazonClientException e){
-            logger.severe(e.getMessage());
-        }
-    }
-
-
     // Sends a 'done PDF task ..' message to the queue.
     private static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
         // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
@@ -299,13 +286,13 @@ public class Worker {
                         sendFailedMessage(msg, result, Utils.finishedUrl, sqs);
                     }
 
-                    deleteTaskMessage(msg, Utils.tasksUrl, sqs);
+                    Utils.deleteTaskMessage(msg, Utils.tasksUrl, sqs);
                 }
 
                 if ( ! Utils.isEmpty(shutdownMsgs)) {
                     msg = shutdownMsgs.get(0);
                     if (handleShutdownMessage(msg, s3)) {
-                        deleteTaskMessage(msg, Utils.shutdownUrl, sqs);
+                        Utils.deleteTaskMessage(msg, Utils.shutdownUrl, sqs);
                         break;
                     }
                 }

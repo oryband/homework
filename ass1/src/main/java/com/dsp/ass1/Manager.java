@@ -74,7 +74,7 @@ public class Manager {
 
 
     // Terminates a worker instance by given instance ID.
-    private static void terminateWorker(AmazonEC2 ec2, Message msg) {
+    private static void terminateWorker(AmazonEC2 ec2, AmazonSQS sqs, Message msg) {
         String body = msg.getBody();
         if (body == null) {
             logger.severe("Error in message received, body is null.");
@@ -93,6 +93,9 @@ public class Manager {
 
         // One worker instance is no longer 'shutting down', but completely terminated.
         workersShuttingDown --;
+
+        // Clean 'closed' message from queue.
+        Utils.deleteTaskMessage(msg, Utils.closedWorkersUrl, sqs);
     }
 
 
@@ -276,7 +279,7 @@ public class Manager {
                 // Process new 'worker closed' message (terminate instance).
                 if ( ! Utils.isEmpty(closedMsgs)){
                     msg = closedMsgs.get(0);
-                    terminateWorker(ec2, msg);
+                    terminateWorker(ec2, sqs, msg);
                 }
             }
 
