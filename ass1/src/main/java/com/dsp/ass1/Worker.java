@@ -25,11 +25,11 @@ import org.apache.commons.io.FilenameUtils;
 import javax.imageio.ImageIO;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
 
 import com.amazonaws.auth.AWSCredentials;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -209,6 +209,9 @@ public class Worker {
 
         try {
             s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (AmazonServiceException e) {
+            logger.severe(e.getMessage());
+            return e.getMessage();
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
             return e.getMessage();
@@ -318,8 +321,7 @@ public class Worker {
         }
 
         AmazonSQS sqs = new AmazonSQSClient(creds);
-
-        AmazonS3 s3 = new AmazonS3Client(creds);
+        AmazonS3 s3 = Utils.createS3(creds);
 
         execute(sqs, s3);
     }

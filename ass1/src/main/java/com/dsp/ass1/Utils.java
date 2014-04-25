@@ -23,7 +23,9 @@ import java.util.List;
 import org.apache.commons.codec.binary.Base64;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.ClientConfiguration;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.PropertiesCredentials;
 
 import com.amazonaws.services.ec2.AmazonEC2;
@@ -41,6 +43,7 @@ import com.amazonaws.services.ec2.model.InstanceStateChange;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
@@ -81,6 +84,14 @@ public class Utils {
         logger.addHandler(handler);
 
         return logger;
+    }
+
+
+    // Creates an S3 connection with socket timeout = 0 (avoids exceptions).
+    public static AmazonS3 createS3(AWSCredentials creds) {
+        ClientConfiguration config = new ClientConfiguration();
+        config.setSocketTimeout(0);
+        return new AmazonS3Client(creds, config);
     }
 
 

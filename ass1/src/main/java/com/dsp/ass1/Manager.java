@@ -323,7 +323,7 @@ public class Manager {
         // Start EC2, S3 and SQS connections.
         AmazonEC2 ec2 = new AmazonEC2Client(creds);
         AmazonSQS sqs = new AmazonSQSClient(creds);
-        AmazonS3 s3 = new AmazonS3Client(creds);
+        AmazonS3 s3 = Utils.createS3(creds);
 
         execute(ec2, sqs, s3);
     }

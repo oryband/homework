@@ -52,6 +52,7 @@ public class LocalApplication {
     }
 
 
+    // Wraps a string with <html> stuff.
     private static String StringToHTMLString(String info) {
         StringBuilder content = new StringBuilder();
 
@@ -113,12 +114,20 @@ public class LocalApplication {
     private static String handleMessage(Message msg, AmazonS3 s3, String missionNumber) {
         String body = msg.getBody();
 
+        if (body == null) {
+            logger.severe("Error in message received, body is null.");
+            return null;
+        }
+
         logger.info("Received: " + body);
 
         String[] parts = msg.getBody().split("\t");
 
-        if (parts.length < 3 || ! parts[2].equals(missionNumber) ||
-                (! parts[0].equals("done task") && ! parts[0].equals("failed task"))){
+        if ( ! parts[0].equals("closed")
+                || parts.length <= 2
+                || ! parts[2].equals(missionNumber)  // If we reached here then length >= 3
+                || (! parts[0].equals("done task") && ! parts[0].equals("failed task"))) {
+
             logger.info("Ignoring: " + body);
             return null;
         }
@@ -179,12 +188,20 @@ public class LocalApplication {
     }
 
 
-    private static void execute(AmazonEC2 ec2, AmazonS3 s3, AmazonSQS sqs, String mission, String managerId, boolean terminate) {
+    // Sends a 'shutdown' message to the manager.
+    private static void shutdownManager(AmazonSQS sqs, String managerId) {
+        logger.info("Shutting down manager.");
+        Utils.sendMessage(sqs, Utils.localUpUrl, "shutdown");
+
+    }
+
+
+    private static void execute(AmazonEC2 ec2, AmazonS3 s3, AmazonSQS sqs, String mission, String managerId, boolean terminateManager) {
         // Upload new mission and inform manager.
         String missionNumber = Long.toString(System.currentTimeMillis());
 
         String uploadLink = Utils.uploadFileToS3(s3, missionNumber + "_input.txt", Utils.inputsPath, mission),
-                finishedLink;
+               finishedLink = null;
 
         Utils.sendMessage(sqs, Utils.localUpUrl, "new task\t" + uploadLink);
 
@@ -206,24 +223,44 @@ public class LocalApplication {
                     return;
                 }
 
-                // Process top message in queue if there are any messages.
-            } else {
+            // Process top message in queue if there are any messages.
+            } else if (finishedLink != null) {
                 msg = msgs.get(0);
-                String body = msg.getBody();
                 finishedLink = handleMessage(msg, s3 , missionNumber);
-                if (finishedLink != null) {
+
+                // Proccess 'regular' message (not a 'manager closed' message).
+                if ( ! finishedLink.equals("closed")) {
                     // Only handled messages are deleted.
                     Utils.deleteTaskMessage(msg, Utils.localDownUrl, sqs);
-                    break;
+
+                    // Exit loop if we don't need to terminateManager manager (given as argument on startup).
+                    if (terminateManager) {
+                        shutdownManager(sqs, managerId);
+                    } else {
+                        break;
+                    }
+                // Terminate manager if we need to and if it shutdown properly.
+                } else {
+                    if (terminateManager) {
+                        // Only handled messages are deleted.
+                        Utils.deleteTaskMessage(msg, Utils.localDownUrl, sqs);
+
+                        ArrayList<String> ids = new ArrayList<String>();
+                        ids.add(managerId);
+                        Utils.terminateInstances(ec2, ids);
+
+                        break;
+                    }
                 }
             }
 
             // Read next messages in queue and repeat.
             msgs = Utils.getMessages(req, sqs);
         }
+
         // if the task failed
         if ( ! Utils.checkResult(finishedLink)){
-            logger.severe("Mission failed - < " + finishedLink + " >");
+            logger.severe("Mission failed: " + finishedLink);
             return;
         }
 
@@ -235,21 +272,7 @@ public class LocalApplication {
 
         WriteToFile(missionNumber + "_results.html", StringToHTMLString(resultContent));
 
-        // See if manager needs to be terminated when finished.
-        if (terminate) {
-            terminateManager(ec2, managerId);
-        }
-
         logger.info("Shutting down.");
-    }
-
-
-    private static void terminateManager(AmazonEC2 ec2, String managerId) {
-        logger.info("Terminating manager.");
-
-        ArrayList<String> ids = new ArrayList<String>();
-        ids.add(managerId);
-        Utils.terminateInstances(ec2, ids);
     }
 
 
@@ -288,14 +311,14 @@ public class LocalApplication {
         }
 
         // Start S3 and SQS connections.
-        AmazonS3 s3 = new AmazonS3Client(creds);
+        AmazonS3 s3 = Utils.createS3(creds);
         AmazonSQS sqs = new AmazonSQSClient(creds);
 
-        boolean terminate = false;
+        boolean terminateManager = false;  // Tells manager to terminateManager after completing mission.
         if (args.length >= 2 && args[1].equals("shutdown")) {
-            terminate = true;
+            terminateManager = true;
         }
 
-        execute(ec2, s3, sqs, mission, managerId, terminate);
+        execute(ec2, s3, sqs, mission, managerId, terminateManager);
     }
 }
