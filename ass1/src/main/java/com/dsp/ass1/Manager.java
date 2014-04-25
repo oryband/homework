@@ -67,7 +67,10 @@ public class Manager {
 
         // If we have too many workers, shut down unnecessary ones.
         } else if (delta < 0) {
-            Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");
+            for (int i=0; i< -delta; i++) {
+                Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");
+            }
+
             workersShuttingDown -= delta;  // delta < 0 so we actually do addition.
         }
     }

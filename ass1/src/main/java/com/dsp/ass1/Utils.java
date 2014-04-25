@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 
@@ -161,6 +162,9 @@ public class Utils {
 
         try {
             address = s3.getBucketLocation(bucket);
+        } catch (AmazonServiceException e) {
+            logger.severe(e.getMessage());
+            return null;
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
             return null;
@@ -185,6 +189,8 @@ public class Utils {
         try {
             sqs.sendMessage(new SendMessageRequest(sqsUrl, info));
             logger.info("Sent to queue: " + info);
+        } catch (AmazonServiceException e) {
+            logger.severe(e.getMessage());
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
         }
@@ -197,6 +203,8 @@ public class Utils {
         try {
             sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, handle));
             logger.info("Deleted: " + msg.getBody());
+        } catch (AmazonServiceException e) {
+            logger.severe(e.getMessage());
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
         }
@@ -208,6 +216,9 @@ public class Utils {
 
         try {
             msgs = sqs.receiveMessage(req).getMessages();
+        } catch (AmazonServiceException e) {
+            logger.severe(e.getMessage());
+            return null;
         } catch (AmazonClientException e) {
             logger.severe(e.getMessage());
             return null;
