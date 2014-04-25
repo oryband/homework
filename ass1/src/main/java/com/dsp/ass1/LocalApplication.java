@@ -179,7 +179,7 @@ public class LocalApplication {
     }
 
 
-    private static void execute(AmazonS3 s3, AmazonSQS sqs, String mission) {
+    private static void execute(AmazonEC2 ec2, AmazonS3 s3, AmazonSQS sqs, String mission, String managerId, boolean terminate) {
         // Upload new mission and inform manager.
         String missionNumber = Long.toString(System.currentTimeMillis());
 
@@ -234,6 +234,22 @@ public class LocalApplication {
         }
 
         WriteToFile(missionNumber + "_results.html", StringToHTMLString(resultContent));
+
+        // See if manager needs to be terminated when finished.
+        if (terminate) {
+            terminateManager(ec2, managerId);
+        }
+
+        logger.info("Shutting down.");
+    }
+
+
+    private static void terminateManager(AmazonEC2 ec2, String managerId) {
+        logger.info("Terminating manager.");
+
+        ArrayList<String> ids = new ArrayList<String>();
+        ids.add(managerId);
+        Utils.terminateInstances(ec2, ids);
     }
 
 
@@ -275,17 +291,11 @@ public class LocalApplication {
         AmazonS3 s3 = new AmazonS3Client(creds);
         AmazonSQS sqs = new AmazonSQSClient(creds);
 
-        execute(s3, sqs, mission);
-
-        // See if manager needs to be terminated when finished.
+        boolean terminate = false;
         if (args.length >= 2 && args[1].equals("shutdown")) {
-            logger.info("Terminating manager.");
-
-            ArrayList<String> ids = new ArrayList<String>();
-            ids.add(managerId);
-            Utils.terminateInstances(ec2, ids);
+            terminate = true;
         }
 
-        logger.info("Shutting down.");
+        execute(ec2, s3, sqs, mission, managerId, terminate);
     }
 }

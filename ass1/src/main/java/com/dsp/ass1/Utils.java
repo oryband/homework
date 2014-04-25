@@ -54,7 +54,7 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 public class Utils {
     public static final String tasksUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/tasks",
             instanceType = "t1.micro",
-            imageId = "ami-cfc0dba6",
+            imageId = "ami-7618fd1e",
             keyName = "ec2",
             securityGroup = "launch-wizard-2",
             closedWorkersUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/closedworkers",
@@ -228,7 +228,7 @@ public class Utils {
     public static String elementUserData(String element) {
         ArrayList<String> lines = new ArrayList<String>();
         lines.add("#!/bin/sh");
-        lines.add("cd /home/ec2-user/dsp/ass1 && git pull origin master && source ./.bash_profile && mvn clean compile && ./run-" + element + " >> output.log 2>&1");
+        lines.add("cd /home/ec2-user/dsp/ass1 && git pull origin master && source ./.bash_profile && mvn clean compile && ./run-" + element + ".sh > output.log");
         return new String(Base64.encodeBase64(join(lines, "\n").getBytes()));
     }
 
