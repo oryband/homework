@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import java.net.MalformedURLException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import java.util.logging.Logger;
@@ -57,7 +58,7 @@ public class Utils {
             localDownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localdown",
             shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
             bucket = "dsp-ass1",
-            instanceidGet = "http://169.254.169.254/latest/meta-data/instance-id",
+            instanceIdUrl = "http://169.254.169.254/latest/meta-data/instance-id",
             resultPath = "results/",
             inputsPath = "inputs/",
             filesPath = "files/";
@@ -218,11 +219,11 @@ public class Utils {
     }
 
 
-    // Execute worker/manager user-data, to be sent using an instance request.
+    // Execute worker/manager with default user-data, to be sent using an instance request.
     public static String elementUserData(String element) {
         ArrayList<String> lines = new ArrayList<String>();
         lines.add("#!/bin/sh");
-        lines.add("cd /home/ec2-user/dsp/ass1 && git pull origin master && mvn package && ./run-" + element);
+        lines.add("cd /home/ec2-user/dsp/ass1 && git pull origin master && mvn clean compile && ./run-" + element + " >> output.log 2>&1");
         return new String(Base64.encodeBase64(join(lines, "\n").getBytes()));
     }
 
@@ -230,7 +231,7 @@ public class Utils {
     // Creates new AMI instances from pre-defined snapshot,
     // and returns launched instance IDs.
     public static List<String> createAmiFromSnapshot(AmazonEC2 ec2, int amount, String userData) {
-        logger.info("Lanching " + amount + " instances.");
+        logger.info("Launching " + amount + " instances.");
 
         ArrayList<String> securityGroups = new ArrayList<String>();
         securityGroups.add(securityGroup);
@@ -339,4 +340,29 @@ public class Utils {
         return (messages == null || messages.size() == 0);
     }
 
+
+    // Sends an HTTP GET request to URL and returns it's response.
+    public static String getHTML(String urlToRead) {
+        URL url;
+        HttpURLConnection conn;
+        BufferedReader rd;
+        String line,
+               result = "";
+
+        try {
+            url = new URL(urlToRead);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            while ((line = rd.readLine()) != null) {
+                result += line;
+            }
+            rd.close();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            // An empty string will be returned.
+        }
+
+        return result;
+    }
 }
