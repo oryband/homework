@@ -224,17 +224,30 @@ public class Worker {
 
     // Processes (or ignores) messages.
     private static String handleTaskMessage(Message msg, AmazonS3 s3) {
-        String body = msg.getBody();
+        String body = msg.getBody(),
+               result;
+
+        if (body == null) {
+            logger.severe("Error in message received, body is null.");
+            return "Message body is null.";
+        }
+
         logger.info("Message received: " + body);
 
         String[] parts = msg.getBody().split("\t");
         // parts[1] = action , parts [2] = link , parts[3] = mission counter
 
         if (parts[0].equals("new PDF task") && parts.length >= 4) {
-            return handleDocument(parts[1], parts[2], parts[3], s3);
+            result = handleDocument(parts[1], parts[2], parts[3], s3);
+            if (result == null) {
+                result = "Unknown error occured";
+            }
+
+            return result;
+
         } else  {
-            logger.info("Ignoring: " + body);
-            return "Message with wrong input";
+            logger.info("Ignoring message: " + body);
+            return "Bad input";
         }
     }
 
