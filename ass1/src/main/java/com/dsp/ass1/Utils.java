@@ -101,7 +101,7 @@ public class Utils {
 
 
     public static boolean checkResult(String result) {
-        return (result != null && result.startsWith("http"));
+        return result != null && result.startsWith("http");
     }
 
 
