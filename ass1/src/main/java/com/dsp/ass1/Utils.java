@@ -1,6 +1,10 @@
 package com.dsp.ass1;
 
+import java.awt.image.BufferedImage;
+
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -47,6 +53,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
@@ -92,6 +99,17 @@ public class Utils {
     }
 
 
+    public static PropertiesCredentials loadCredentials() {
+        try {
+            return new PropertiesCredentials(
+                    Utils.class.getResourceAsStream("/AWSCredentials.properties"));
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+    }
+
+
     // Creates an S3 connection with socket timeout = 0 (avoids exceptions).
     public static AmazonS3 createS3(AWSCredentials creds) {
         ClientConfiguration config = new ClientConfiguration();
@@ -105,62 +123,34 @@ public class Utils {
     }
 
 
-    // Returns uploaded file address or null on error.
-    public static String uploadFileToS3(AmazonS3 s3, String fileName, String path ,String info) {
-        String fileAddress = getS3FileAddress(s3, fileName , path);
-        File file = createTmpFile(info);
-
-        if (file == null || fileAddress == null) {
-            return null;
-        } else {
-            PutObjectRequest request = new PutObjectRequest(bucket, path + fileName, file);
-
-            try {
-                s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
-                logger.info("File saved: " + fileAddress);
-            } catch (AmazonClientException e) {
-                logger.severe(e.getMessage());
-                return null;
-            }
-
-            return fileAddress;
-        }
-    }
-
-    // Creates a temporary file and writes dataj.
-    private static File createTmpFile(String info) {
-        File file;
-
-        try {
-            file = File.createTempFile("aws-java-sdk-", ".txt");
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        file.deleteOnExit();
-
-        Writer writer;
-        try {
-            writer = new OutputStreamWriter(new FileOutputStream(file));
-            writer.write(info);
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        try {
-            writer.close();
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-        }
-
-        return file;
+    // Converts a string to stream, and sets byte buffer.
+    private static InputStream stringToStream(String data, byte[] buffer) {
+        buffer = data.getBytes();  // Convert to bytes.
+        return new ByteArrayInputStream(buffer);
     }
 
 
-    // Fetches S3-file url.
-    public static String getS3FileAddress(AmazonS3 s3, String fileName, String path) {
+    // Converts an image to stream, and sets byte buffer.
+    private static InputStream imageToStream(BufferedImage img, byte[] buffer) {
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+
+        // Read image stream.
+        try {
+            ImageIO.write(img, "png", outStream);
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        // Convert to bytes.
+        buffer = outStream.toByteArray();
+
+        return new ByteArrayInputStream(buffer);
+    }
+
+
+    // Appends a S3 http:// and bucket address to file path.
+    public static String generateS3FileAddress(AmazonS3 s3, String path) {
         String address;
 
         try {
@@ -173,16 +163,52 @@ public class Utils {
             return null;
         }
 
-        return "https://s3-" + address + ".amazonaws.com/" + bucket + "/" + path + fileName;
+        return "https://s3-" + address + ".amazonaws.com/" + bucket + "/" + path;
     }
 
 
-    public static PropertiesCredentials loadCredentials() {
+    // Uploads a stream to S3 (as a file), and returns true if successful.
+    private static boolean sendStreamToS3(AmazonS3 s3, String path, InputStream in, long length) {
+        // Generate S3 request.
+        ObjectMetadata meta = new ObjectMetadata();
+        meta.setContentLength(length);
+        PutObjectRequest request = new PutObjectRequest(bucket, path, in, meta);
+        request.withCannedAcl(CannedAccessControlList.PublicRead);
+
+        // Upload file.
         try {
-            return new PropertiesCredentials(
-                    Utils.class.getResourceAsStream("/AWSCredentials.properties"));
-        } catch (IOException e) {
+            s3.putObject(request);
+        } catch (AmazonServiceException e) {
             logger.severe(e.getMessage());
+            return false;
+        } catch (AmazonClientException e) {
+            logger.severe(e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public static String uploadStringToS3(AmazonS3 s3, String type, String mission, String fileName, String data) {
+        byte[] buffer = null;
+        InputStream in = stringToStream(data, buffer);
+        String path = type + mission + "/" + fileName;
+        if (sendStreamToS3(s3, path, in, buffer.length)) {
+            return generateS3FileAddress(s3, path);
+        } else {
+            return null;
+        }
+    }
+
+
+    public static String uploadImageToS3(AmazonS3 s3, String type, String mission, String fileName, BufferedImage img) {
+        byte[] buffer = null;
+        InputStream in = imageToStream(img, buffer);
+        String path = type + mission + "/" + fileName;
+        if (sendStreamToS3(s3, path, in, buffer.length)) {
+            return generateS3FileAddress(s3, path);
+        } else {
             return null;
         }
     }
@@ -233,12 +259,9 @@ public class Utils {
     }
 
 
-    public static void tagInstances(AmazonEC2 ec2, List<String> ids, String key, String value) {
-        for (String id : ids) {
-            logger.fine("Tagging instance " + id + ": '" + key + "=" + value + "'");
-        }
-
-        ec2.createTags(new CreateTagsRequest().withResources(ids).withTags(new Tag(key, value)));
+    // checking if a list has is empty.
+    public static boolean isEmpty(List<Message> messages) {
+        return (messages == null || messages.size() == 0);
     }
 
 
@@ -257,6 +280,15 @@ public class Utils {
         }
 
         return builder.toString();
+    }
+
+
+    public static void tagInstances(AmazonEC2 ec2, List<String> ids, String key, String value) {
+        for (String id : ids) {
+            logger.fine("Tagging instance " + id + ": '" + key + "=" + value + "'");
+        }
+
+        ec2.createTags(new CreateTagsRequest().withResources(ids).withTags(new Tag(key, value)));
     }
 
 
@@ -341,6 +373,7 @@ public class Utils {
     }
 
 
+    // Reads a URL and returns result as string.
     public static String LinkToString(String link) {
         URL url;
         String line;
@@ -387,12 +420,6 @@ public class Utils {
         }
 
         return content.toString();
-    }
-
-
-    // checking if a list has is empty.
-    public static boolean isEmpty(List<Message> messages) {
-        return (messages == null || messages.size() == 0);
     }
 
 

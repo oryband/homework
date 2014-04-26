@@ -102,21 +102,21 @@ public class Manager {
 
     // Handle a finished mission (a mission whose tasks are all finished):
     // Upload result file to S3 and inform local.
-    private static void finishMission(AmazonSQS sqs, AmazonS3 s3, String missionNumber, MissionData data) {
-        logger.info("Finishing mission: " + missionNumber);
+    private static void finishMission(AmazonSQS sqs, AmazonS3 s3, String mission, MissionData data) {
+        logger.info("Finishing mission: " + mission);
 
-        String link = Utils.uploadFileToS3(s3, missionNumber + "_results.txt", Utils.resultPath, data.getInfo());
+        String address = Utils.uploadStringToS3(s3, Utils.resultPath, mission, "_results.txt", data.getInfo()),
+               msg;
 
-        String msg;
-        if (link == null) {
-            msg = "failed task\terror uploading finish results.txt\t";
+        if (address == null) {
+            msg = "failed task\terror uploading to " + address + "\t" + mission;
         } else {
-            msg = "done task\t" + link + "\t" + missionNumber;
+            msg = "done task\t" + address + "\t" + mission;
         }
 
         logger.info(msg);
         Utils.sendMessage(sqs, Utils.localDownUrl, msg);
-        missions.remove(missionNumber);
+        missions.remove(mission);
     }
 
 

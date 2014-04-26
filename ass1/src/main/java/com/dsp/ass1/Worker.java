@@ -1,19 +1,14 @@
 package com.dsp.ass1;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.awt.image.BufferedImage;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import java.net.URL;
 
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.concurrent.TimeUnit;
-
-import java.awt.image.BufferedImage;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -22,8 +17,6 @@ import org.apache.pdfbox.util.PDFText2HTML;
 
 import org.apache.commons.io.FilenameUtils;
 
-import javax.imageio.ImageIO;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 
@@ -31,7 +24,6 @@ import com.amazonaws.auth.AWSCredentials;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import com.amazonaws.services.sqs.AmazonSQS;
@@ -61,28 +53,30 @@ public class Worker {
 
 
     // Converts PDF file to PNG image and uploads it to S3.
-    private static String toImage(PDPage page, String base, String missionNumber, AmazonS3 s3) {
-        String fileName = System.currentTimeMillis() + "_"+ base + ".png";
-        BufferedImage img;
+    private static String toImage(AmazonS3 s3, PDPage page, String mission, String base) {
+        String fileName = System.currentTimeMillis() + "_" + base + ".png";
 
         logger.info("Image: " + fileName);
 
+        BufferedImage img;
+
         try {
             img = page.convertToImage();  // PDF to PNG image.
-            return uploadImageToS3(s3, fileName, missionNumber, img);
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return e.getMessage();
         }
+
+        return Utils.uploadImageToS3(s3, Utils.filesPath, mission, fileName, img);
     }
 
 
     // Converts PDF to HTML and uploads it to S3.
-    private static String toHTML(PDDocument doc, String base, String missionNumber, AmazonS3 s3) {
+    private static String toHTML(AmazonS3 s3, PDDocument doc, String mission, String base) {
         String fileName = System.currentTimeMillis() + "_" + base + ".html";
+
         logger.info("HTML: " + fileName);
 
-        String pageText;
         PDFTextStripper stripper;
 
         try {
@@ -92,43 +86,45 @@ public class Worker {
             return e.getMessage();
         }
 
+        String data;
         try {
-            pageText = stripper.getText(doc);  // TODO maybe horrible crashes occur here as well? not sure.
+            data = stripper.getText(doc);  // TODO maybe horrible crashes occur here as well? not sure.
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return e.getMessage();
         }
 
-        return Utils.uploadFileToS3(s3, fileName, Utils.filesPath + missionNumber + "/", pageText);
+        return Utils.uploadStringToS3(s3, Utils.filesPath, mission, fileName, data);
     }
 
-
     // Converts PDF to clear text file and uploads it to S3.
-    private static String toText(PDDocument doc, String base, String missionNumber, AmazonS3 s3) {
-        String fileName = System.currentTimeMillis() + "_" + base + ".txt";
+    private static String toText(AmazonS3 s3, PDDocument doc, String mission, String base) {
+        String fileName = System.currentTimeMillis() + "_" + base + ".txt",
+               data;
+
         logger.info("Text: " + fileName);
 
         PDFTextStripper stripper;
-        String pageText;
 
         try {
             stripper = new PDFTextStripper();
             stripper.setStartPage(1);
             stripper.setEndPage(1);
-            pageText = stripper.getText(doc);  // TODO horrible crashes here.
+
+            data = stripper.getText(doc);  // TODO horrible crashes here.
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return e.getMessage();
         }
 
-        return Utils.uploadFileToS3(s3, fileName, Utils.filesPath + missionNumber + "/", pageText);
+        return Utils.uploadStringToS3(s3, Utils.filesPath, mission, fileName, data);
     }
 
 
     // Receives an action, PDF file url, and S3 connection and process action
     // on PDF url. Afterwards uploads result to S3.
-    private static String handleDocument(String action, String url, String missionNumber ,AmazonS3 s3) {
-        logger.info("Handling document: " + action + "\t" + url + "\t" + missionNumber);
+    private static String handleDocument(AmazonS3 s3, String action, String url, String mission) {
+        logger.info("Handling document: " + action + "\t" + url + "\t" + mission);
 
         String base = FilenameUtils.getBaseName(url),
                result = "Unknown action";
@@ -144,17 +140,17 @@ public class Worker {
                 }
 
                 PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
-                result = toImage(page, base, missionNumber, s3);
+                result = toImage(s3, page, mission, base);
 
             } else if (action.equals("ToText")) {
-                result = toText(doc, base, missionNumber,s3);
+                result = toText(s3, doc, mission, base);
 
             } else if (action.equals("ToHTML")) {
-                result = toHTML(doc, base, missionNumber, s3);
+                result = toHTML(s3, doc, mission, base);
             }
         }
 
-        logger.info("Finished handling document: " + action + "\t" + url + "\t" + missionNumber);
+        logger.info("Finished handling document: " + action + "\t" + url + "\t" + mission);
 
         try {
             doc.close();
@@ -168,7 +164,7 @@ public class Worker {
 
     // Sends a 'done PDF task ..' message to the queue.
     private static void sendFinishedMessage(Message msg, String pos, String sqsUrl, AmazonSQS sqs) {
-        // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
+        // action = split[1] , input = split[2], output = split[3], mission = split[4];  // TODO why split[4] is not used?
         String[] splitter = msg.getBody().split("\t");
         String reply = "done PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + pos + "\t" + splitter[3];
         Utils.sendMessage(sqs, sqsUrl, reply);
@@ -177,48 +173,10 @@ public class Worker {
 
     // Sends a 'Failed PDF task ..' message to the queue.
     private static void sendFailedMessage(Message msg, String result, String sqsUrl, AmazonSQS sqs) {
-        // action = split[1] , input = split[2], output = split[3], missionNumber = split[4];
+        // action = split[1] , input = split[2], output = split[3], mission = split[4];
         String[] splitter = msg.getBody().split("\t");
         String reply = "failed PDF task\t" + splitter[1] + "\t" + splitter[2] + "\t" + result + "\t" + splitter[3];
         Utils.sendMessage(sqs, sqsUrl, reply);
-    }
-
-
-    // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
-    private static String uploadImageToS3(AmazonS3 s3, String fileName, String missionNumber ,BufferedImage img) {
-        String address = Utils.getS3FileAddress(s3, fileName , Utils.filesPath);
-        if (address == null) {
-            return "Couldn't get S3 file addres.";
-        }
-
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-
-        // Write image to file.
-        try {
-            ImageIO.write(img, "png", outStream);
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return e.getMessage();
-        }
-
-        // Upload saved image to S3.
-        byte[] buffer = outStream.toByteArray();
-        ObjectMetadata meta = new ObjectMetadata();
-        meta.setContentLength(buffer.length);
-        InputStream inStream = new ByteArrayInputStream(buffer);
-        PutObjectRequest request = new PutObjectRequest(Utils.bucket, Utils.filesPath + missionNumber + "/" + fileName, inStream, meta);
-
-        try {
-            s3.putObject(request.withCannedAcl(CannedAccessControlList.PublicRead));
-        } catch (AmazonServiceException e) {
-            logger.severe(e.getMessage());
-            return e.getMessage();
-        } catch (AmazonClientException e) {
-            logger.severe(e.getMessage());
-            return e.getMessage();
-        }
-
-        return address;
     }
 
 
@@ -238,7 +196,7 @@ public class Worker {
         // parts[1] = action , parts [2] = link , parts[3] = mission counter
 
         if (parts[0].equals("new PDF task") && parts.length >= 4) {
-            result = handleDocument(parts[1], parts[2], parts[3], s3);
+            result = handleDocument(s3, parts[1], parts[2], parts[3]);
             if (result == null) {
                 result = "Unknown error occured";
             }
