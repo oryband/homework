@@ -28,6 +28,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 
+import org.apache.commons.io.IOUtils;
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
@@ -124,14 +126,13 @@ public class Utils {
 
 
     // Converts a string to stream, and sets byte buffer.
-    private static InputStream stringToStream(String data, byte[] buffer) {
-        buffer = data.getBytes();  // Convert to bytes.
-        return new ByteArrayInputStream(buffer);
+    private static InputStream stringToStream(String data) {
+        return new ByteArrayInputStream(data.getBytes());
     }
 
 
     // Converts an image to stream, and sets byte buffer.
-    private static InputStream imageToStream(BufferedImage img, byte[] buffer) {
+    private static InputStream imageToStream(BufferedImage img) {
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
         // Read image stream.
@@ -142,10 +143,7 @@ public class Utils {
             return null;
         }
 
-        // Convert to bytes.
-        buffer = outStream.toByteArray();
-
-        return new ByteArrayInputStream(buffer);
+        return new ByteArrayInputStream(outStream.toByteArray());
     }
 
 
@@ -168,10 +166,18 @@ public class Utils {
 
 
     // Uploads a stream to S3 (as a file), and returns true if successful.
-    private static boolean sendStreamToS3(AmazonS3 s3, String path, InputStream in, long length) {
-        // Generate S3 request.
+    private static boolean sendStreamToS3(AmazonS3 s3, String path, InputStream in) {
         ObjectMetadata meta = new ObjectMetadata();
-        meta.setContentLength(length);
+
+        // Calculate stream length in bytes.
+        try {
+            meta.setContentLength(Long.valueOf(IOUtils.toByteArray(in).length));
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return false;
+        }
+
+        // Generate S3 request.
         PutObjectRequest request = new PutObjectRequest(bucket, path, in, meta);
         request.withCannedAcl(CannedAccessControlList.PublicRead);
 
@@ -190,11 +196,9 @@ public class Utils {
     }
 
 
-    public static String uploadStringToS3(AmazonS3 s3, String type, String mission, String fileName, String data) {
-        byte[] buffer = null;
-        InputStream in = stringToStream(data, buffer);
+    private static String uploadStreamToS3(AmazonS3 s3, String type, String mission, String fileName, InputStream in) {
         String path = type + mission + "/" + fileName;
-        if (sendStreamToS3(s3, path, in, buffer.length)) {
+        if (sendStreamToS3(s3, path, in)) {
             return generateS3FileAddress(s3, path);
         } else {
             return null;
@@ -202,15 +206,15 @@ public class Utils {
     }
 
 
+    public static String uploadStringToS3(AmazonS3 s3, String type, String mission, String fileName, String data) {
+        InputStream in = stringToStream(data);
+        return uploadStreamToS3(s3, type, mission, fileName, in);
+    }
+
+
     public static String uploadImageToS3(AmazonS3 s3, String type, String mission, String fileName, BufferedImage img) {
-        byte[] buffer = null;
-        InputStream in = imageToStream(img, buffer);
-        String path = type + mission + "/" + fileName;
-        if (sendStreamToS3(s3, path, in, buffer.length)) {
-            return generateS3FileAddress(s3, path);
-        } else {
-            return null;
-        }
+        InputStream in = imageToStream(img);
+        return uploadStreamToS3(s3, type, mission, fileName, in);
     }
 
 
