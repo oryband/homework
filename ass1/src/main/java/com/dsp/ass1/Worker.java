@@ -93,7 +93,7 @@ public class Worker {
         }
 
         try {
-            pageText = stripper.getText(doc);
+            pageText = stripper.getText(doc);  // TODO maybe horrible crashes occur here as well? not sure.
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return e.getMessage();
@@ -115,7 +115,7 @@ public class Worker {
             stripper = new PDFTextStripper();
             stripper.setStartPage(1);
             stripper.setEndPage(1);
-            pageText = stripper.getText(doc);
+            pageText = stripper.getText(doc);  // TODO horrible crashes here.
         } catch (IOException e) {
             logger.severe(e.getMessage());
             return e.getMessage();
@@ -128,31 +128,33 @@ public class Worker {
     // Receives an action, PDF file url, and S3 connection and process action
     // on PDF url. Afterwards uploads result to S3.
     private static String handleDocument(String action, String url, String missionNumber ,AmazonS3 s3) {
-        logger.info("Handling: " + action + "\t" + url + "\t" + missionNumber);
+        logger.info("Handling document: " + action + "\t" + url + "\t" + missionNumber);
 
         String base = FilenameUtils.getBaseName(url),
-                result = "Unknown action";
+               result = "Unknown action";
+
         PDDocument doc = getDocument(url);
 
         if (doc == null) {
-            return "Cant open the PDF document";
+            return "Cant open PDF document";
         } else {
             if (action.equals("ToImage")) {
-                if (doc.getDocumentCatalog().getAllPages().size() == 0){
-                    return "Failed to get page number 0";
+                if (doc.getDocumentCatalog().getAllPages().size() == 0) {
+                    return "Failed to get page[0]";
                 }
+
                 PDPage page = (PDPage) doc.getDocumentCatalog().getAllPages().get(0);
                 result = toImage(page, base, missionNumber, s3);
-            }
-            else if (action.equals("ToText")) {
+
+            } else if (action.equals("ToText")) {
                 result = toText(doc, base, missionNumber,s3);
-            }
-            else if (action.equals("ToHTML")) {
+
+            } else if (action.equals("ToHTML")) {
                 result = toHTML(doc, base, missionNumber, s3);
             }
         }
 
-        logger.info("Finished handling: " + action + "\t" + url + "\t" + missionNumber);
+        logger.info("Finished handling document: " + action + "\t" + url + "\t" + missionNumber);
 
         try {
             doc.close();
@@ -185,9 +187,8 @@ public class Worker {
     // Get S3 file address (file doesn't exist yet, we're going to save the data to this address.)
     private static String uploadImageToS3(AmazonS3 s3, String fileName, String missionNumber ,BufferedImage img) {
         String address = Utils.getS3FileAddress(s3, fileName , Utils.filesPath);
-
         if (address == null) {
-            return " getS3FileAddress failed";
+            return "Couldn't get S3 file addres.";
         }
 
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
@@ -224,10 +225,11 @@ public class Worker {
     // Processes (or ignores) messages.
     private static String handleTaskMessage(Message msg, AmazonS3 s3) {
         String body = msg.getBody();
-        logger.info("Task queue received: " + body);
+        logger.info("Message received: " + body);
 
         String[] parts = msg.getBody().split("\t");
         // parts[1] = action , parts [2] = link , parts[3] = mission counter
+
         if (parts[0].equals("new PDF task") && parts.length >= 4) {
             return handleDocument(parts[1], parts[2], parts[3], s3);
         } else  {
@@ -238,8 +240,12 @@ public class Worker {
 
 
     private static boolean handleShutdownMessage(Message msg, AmazonS3 s3) {
-        // TODO handle body == null
         String body = msg.getBody();
+        if (body == null) {
+            logger.severe("Error in message received, body is null.");
+            return false;
+        }
+
         logger.info("Shutdown message received: " + body);
 
         if (body.equals("shutdown")) {
@@ -253,18 +259,16 @@ public class Worker {
 
 
     private static void execute(AmazonSQS sqs, AmazonS3 s3){
-
-        String result;
-
         ReceiveMessageRequest taskReq = new ReceiveMessageRequest(Utils.tasksUrl),
                 shutdownReq = new ReceiveMessageRequest(Utils.shutdownUrl);
 
-        List<Message> taskMsgs , shutdownMsgs;
+        List<Message> taskMsgs = Utils.getMessages(taskReq, sqs),
+            shutdownMsgs = Utils.getMessages(shutdownReq, sqs);
+
         Message msg;
+        String result;
 
         // Process messages.
-        taskMsgs = Utils.getMessages(taskReq, sqs);
-        shutdownMsgs = Utils.getMessages(shutdownReq, sqs);
         while (true) {
             // Sleep if no messages arrived, and retry re-fetch new ones afterwards.
             if (Utils.isEmpty(taskMsgs) && Utils.isEmpty(shutdownMsgs)) {
@@ -276,16 +280,13 @@ public class Worker {
                     logger.severe(e.getMessage());
                     result = "shutdown";
                 }
-
-            }
-            else {
+            } else {
                 if ( ! Utils.isEmpty(taskMsgs)){
                     msg = taskMsgs.get(0);
                     result = handleTaskMessage(msg, s3);
                     if (Utils.checkResult(result)) {
                         sendFinishedMessage(msg, result, Utils.finishedUrl, sqs);
-                    }
-                    else {
+                    } else {
                         sendFailedMessage(msg, result, Utils.finishedUrl, sqs);
                     }
 
@@ -315,8 +316,7 @@ public class Worker {
 
         AWSCredentials creds = Utils.loadCredentials();
         if(creds == null) {
-            logger.severe("Can't find  the credentials file : closing...");
-            // TODO close myself
+            logger.severe("Couldn't load credentials.");
             return;
         }
 

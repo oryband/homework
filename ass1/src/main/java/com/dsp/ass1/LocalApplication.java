@@ -182,7 +182,9 @@ public class LocalApplication {
         }
 
         // Tag manager with "Name=manager".
-        Utils.nameInstance(ec2, id, "manager");
+        ArrayList<String> ids = new ArrayList<String>();
+        ids.add(id);
+        Utils.tagInstances(ec2, ids, "Name", "manager");
 
         return id;
     }

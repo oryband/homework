@@ -56,21 +56,25 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 
 
 public class Utils {
-    public static final String tasksUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/tasks",
-            instanceType = "t1.micro",
-            imageId = "ami-7618fd1e",
-            keyName = "ec2",
-            securityGroup = "launch-wizard-2",
-            closedWorkersUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/closedworkers",
-            finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
-            localUpUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localup",
-            localDownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localdown",
-            shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
-            bucket = "dsp-ass1",
-            instanceIdUrl = "http://169.254.169.254/latest/meta-data/instance-id",
-            resultPath = "results/",
-            inputsPath = "inputs/",
-            filesPath = "files/";
+    public static final String instanceType = "t1.micro",  // Instance data.
+           imageId = "ami-7618fd1e",
+           keyName = "ec2",
+           securityGroup = "launch-wizard-2",
+
+           // SQS queue URLs.
+           tasksUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/tasks",
+           closedWorkersUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/closedworkers",
+           finishedUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/finished",
+           localUpUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localup",
+           localDownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/localdown",
+           shutdownUrl = "https://sqs.us-east-1.amazonaws.com/340657073537/shutdown",
+           instanceIdUrl = "http://169.254.169.254/latest/meta-data/instance-id",
+
+           // S3 bucket data.
+           bucket = "dsp-ass1",
+           resultPath = "results/",
+           inputsPath = "inputs/",
+           filesPath = "files/";
 
     private static final Logger logger = setLogger(Logger.getLogger(Utils.class.getName()));
 
@@ -104,7 +108,7 @@ public class Utils {
     // Returns uploaded file address or null on error.
     public static String uploadFileToS3(AmazonS3 s3, String fileName, String path ,String info) {
         String fileAddress = getS3FileAddress(s3, fileName , path);
-        File file = createSampleFile(info);
+        File file = createTmpFile(info);
 
         if (file == null || fileAddress == null) {
             return null;
@@ -123,9 +127,8 @@ public class Utils {
         }
     }
 
-    // TODO Write to stream and then save it to file,
-    // INSTEAD of creating a file and writing to it. >:(
-    private static File createSampleFile(String info) {
+    // Creates a temporary file and writes dataj.
+    private static File createTmpFile(String info) {
         File file;
 
         try {
@@ -188,7 +191,7 @@ public class Utils {
     public static void sendMessage(AmazonSQS sqs, String sqsUrl, String info) {
         try {
             sqs.sendMessage(new SendMessageRequest(sqsUrl, info));
-            logger.info("Sent to queue: " + info);
+            logger.info("Message sent to queue: " + info);
         } catch (AmazonServiceException e) {
             logger.severe(e.getMessage());
         } catch (AmazonClientException e) {
@@ -202,7 +205,7 @@ public class Utils {
 
         try {
             sqs.deleteMessage(new DeleteMessageRequest(sqsUrl, handle));
-            logger.info("Deleted: " + msg.getBody());
+            logger.info("Message deleted: " + msg.getBody());
         } catch (AmazonServiceException e) {
             logger.severe(e.getMessage());
         } catch (AmazonClientException e) {
@@ -212,6 +215,8 @@ public class Utils {
 
 
     public static List<Message> getMessages(ReceiveMessageRequest req, AmazonSQS sqs) {
+        logger.fine("Getting SQS messages.");
+
         List<Message> msgs;
 
         try {
@@ -225,6 +230,15 @@ public class Utils {
         }
 
         return msgs;
+    }
+
+
+    public static void tagInstances(AmazonEC2 ec2, List<String> ids, String key, String value) {
+        for (String id : ids) {
+            logger.fine("Tagging instance " + id + ": '" + key + "=" + value + "'");
+        }
+
+        ec2.createTags(new CreateTagsRequest().withResources(ids).withTags(new Tag(key, value)));
     }
 
 
@@ -281,17 +295,6 @@ public class Utils {
         }
 
         return ids;
-    }
-
-
-    // Tags an instance with "Name='name'".
-    public static void nameInstance(AmazonEC2 ec2, String id, String name) {
-        logger.info("Tagging instance " + id + ": 'Name=" + name + "'");
-
-        CreateTagsRequest tagReq = new CreateTagsRequest();
-        tagReq.withResources(id).withTags(new Tag("Name", name));
-
-        ec2.createTags(tagReq);
     }
 
 

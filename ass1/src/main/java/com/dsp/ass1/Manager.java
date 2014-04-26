@@ -52,23 +52,20 @@ public class Manager {
     private static void balanceWorkers(AmazonEC2 ec2, AmazonSQS sqs) {
         int tasksNum = getNumberOfMessages(sqs, Utils.tasksUrl),
             workers = getWorkerIds(ec2).size(),
+            // Calculate instance delta (launch/terminate workers).
             delta = ((int) Math.ceil((float)tasksNum / (float)tasksPerWorker)) - (workers - workersShuttingDown);
 
-        logger.info("workers/shutting/tasks/delta: " + workers + "/" + workersShuttingDown + "/" + tasksNum + "/" + delta);
+        logger.info("tasks/up/shutting/delta: " + tasksNum + "/" + workers + "/" + workersShuttingDown + "/" + delta);
 
         // If we need more workers, launch worker instances and remember their IDs.
         if (delta > 0) {
             List<String> launched = Utils.createAmiFromSnapshot(ec2, delta, Utils.elementUserData("worker", ""));
-
-            // Tag worker instances with 'worker' tag.
-            for (String id : launched) {
-                Utils.nameInstance(ec2, id, "worker");
-            }
+            Utils.tagInstances(ec2, launched, "Name", "worker");  // Tag worker instances with 'Name=worker'.
 
         // If we have too many workers, shut down unnecessary ones.
         } else if (delta < 0) {
             for (int i=0; i< -delta; i++) {
-                Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");
+                Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");  // TODO use SQS.SendMessageBatch
             }
 
             workersShuttingDown -= delta;  // delta < 0 so we actually do addition.
@@ -86,10 +83,11 @@ public class Manager {
 
         String[] closed = body.split("\t");
         if (closed.length < 2 || ! closed[0].equals("closed")) {
-            logger.severe("Bad message received: " + body);
+            logger.severe("Unknown message received: " + body);
             return;
         }
 
+        // Send EC2 termination request.
         ArrayList<String> ids = new ArrayList<String>();
         ids.add(closed[1]);
         Utils.terminateInstances(ec2, ids);
@@ -149,7 +147,7 @@ public class Manager {
         if (action.equals("done PDF task") || action.equals("failed PDF task")) {
             data.appendTask(split);
         } else {
-            logger.severe("Received unknown message.");
+            logger.severe("Unknown message received.");
             return;
         }
 
@@ -189,7 +187,7 @@ public class Manager {
 
         // Add PDF tasks to queue.
         logger.info("Adding new mission's PDF tasks to worker queue.");
-        for (int i = 0; i < tasks.length; i++) {
+        for (int i=0; i<tasks.length; i++) {
             msg = "new PDF task\t" + tasks[i] + "\t" + missionNumber ;
             Utils.sendMessage(sqs, Utils.tasksUrl, msg);
         }
@@ -212,8 +210,7 @@ public class Manager {
             return false;
         }
 
-        logger.info("Received: " + body);
-
+        logger.info("Message received: " + body);
 
         // Shutdown if 'shutdown' message received.
         if (body.equals("shutdown")) {
@@ -225,7 +222,7 @@ public class Manager {
         if (mission.length >= 2 && mission[0].equals("new task")) {
             handleNewMission(mission[1], sqs);  // mission[1] is a link.
         } else {
-            logger.info("Ignoring: " + msg.getBody());
+            logger.info("Ignoring message: " + msg.getBody());
         }
 
         return false;
@@ -233,23 +230,24 @@ public class Manager {
 
 
     private static void execute(AmazonEC2 ec2, AmazonSQS sqs, AmazonS3 s3) {
-        boolean shutdown = false;
-        List<Message> localUpMsgs, finishedMsgs, closedMsgs;
-        Message msg;
         ReceiveMessageRequest rcvLocalUp = new ReceiveMessageRequest(Utils.localUpUrl),
                               rcvFinished = new ReceiveMessageRequest(Utils.finishedUrl),
                               rcvClosed = new ReceiveMessageRequest(Utils.closedWorkersUrl);
 
-        localUpMsgs = Utils.getMessages(rcvLocalUp, sqs);
-        finishedMsgs = Utils.getMessages(rcvFinished, sqs);
-        closedMsgs = Utils.getMessages(rcvClosed, sqs);
+        List<Message> localUpMsgs = Utils.getMessages(rcvLocalUp, sqs),
+            finishedMsgs = Utils.getMessages(rcvFinished, sqs),
+            closedMsgs = Utils.getMessages(rcvClosed, sqs);
+
+        Message msg;
+
+        boolean shutdown = false;  // States whether to shutdown after current iteration.
 
         // Process new missions as long as there are any missions left,
         // not all workers have been terminated (not just closed),
         // and shutdown flag is OFF.
         while ( ! shutdown || missions.size() > 0 || workerIds.size() > 0) {
 
-            // Sleep if no messages were received.
+            // Balance workers and sleep if no messages were received.
             // Don't accept new missions if shutdown flag is ON.
             if (Utils.isEmpty(finishedMsgs)
                     && Utils.isEmpty(closedMsgs)
@@ -267,7 +265,7 @@ public class Manager {
                     return;
                 }
             } else {
-                // Process new mission, if shutdown is OFF.
+                // Process new mission if shutdown is OFF.
                 if ( ! shutdown && ! Utils.isEmpty(localUpMsgs)) {
                     msg = localUpMsgs.get(0);
                     shutdown = handleLocalMessage(msg, sqs);
@@ -306,20 +304,18 @@ public class Manager {
     }
 
 
-    // TODO set tasks/worker ratio according to the local who launched the manager instance.
     public static void main(String[] args) {
         logger.info("Starting.");
 
         // Read tasks per worker if given.
         if (args.length >= 1) {
             tasksPerWorker = Integer.parseInt(args[0]);
-            logger.info("Set tasks/worker value: " + tasksPerWorker);
         }
+        logger.info("Tasks/worker value: " + tasksPerWorker);
 
         AWSCredentials creds = Utils.loadCredentials();
         if (creds == null) {
             logger.severe("Couldn't load credentials.");
-            // TODO close myself
             return;
         }
 
