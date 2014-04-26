@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,6 +28,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import org.apache.commons.io.IOUtils;
 
@@ -165,23 +167,63 @@ public class Utils {
     }
 
 
-    // Uploads a stream to S3 (as a file), and returns true if successful.
-    private static boolean sendStreamToS3(AmazonS3 s3, String path, InputStream in) {
+    // Calculates stream length, md5.
+    private static ObjectMetadata setStreamMeta(InputStream in) {
         ObjectMetadata meta = new ObjectMetadata();
 
         // Calculate stream length in bytes.
+        byte[] buffer;
         try {
-            meta.setContentLength(Long.valueOf(IOUtils.toByteArray(in).length));
+            buffer = IOUtils.toByteArray(in);
         } catch (IOException e) {
             logger.severe(e.getMessage());
-            return false;
+
+            try {
+                in.close();
+            } catch (IOException ex) {
+                logger.severe(ex.getMessage());
+                return null;
+            }
+
+            return null;
         }
 
+        long length = Long.valueOf(buffer.length);
+        meta.setContentLength(length);
+
+        // Calculatet MD5 hash of stream.
+        byte[] md5buffer;
+        try {
+            md5buffer = DigestUtils.md5(in);
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+
+            try {
+                in.close();
+            } catch (IOException ex) {
+                logger.severe(ex.getMessage());
+                return null;
+            }
+
+            return null;
+        }
+
+        String streamMD5 = new String(Base64.encodeBase64(md5buffer));
+        meta.setContentMD5(streamMD5);
+
+        return meta;
+    }
+
+
+    // Sends an S3 putObject file request, returns true if successful.
+    private static boolean putObject(AmazonS3 s3, String path, File file) {
         // Generate S3 request.
-        PutObjectRequest request = new PutObjectRequest(bucket, path, in, meta);
+        PutObjectRequest request = new PutObjectRequest(bucket, path, file);
+
+        // Set file as public.
         request.withCannedAcl(CannedAccessControlList.PublicRead);
 
-        // Upload file.
+        // Send upload request.
         try {
             s3.putObject(request);
         } catch (AmazonServiceException e) {
@@ -196,9 +238,37 @@ public class Utils {
     }
 
 
+    private static File streamToFile(InputStream in) {
+        File file = null;
+        try {
+            file = File.createTempFile("stream", ".in");
+            file.deleteOnExit();
+            Writer writer = new OutputStreamWriter(new FileOutputStream(file));
+            writer.close();
+        } catch (FileNotFoundException e) {
+            logger.severe(e.getMessage());
+            return null;
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        return file;
+    }
+
+
     private static String uploadStreamToS3(AmazonS3 s3, String type, String mission, String fileName, InputStream in) {
         String path = type + mission + "/" + fileName;
-        if (sendStreamToS3(s3, path, in)) {
+
+        logger.info("Uploading file to S3: " + path);
+
+        File file = streamToFile(in);
+        if (file == null) {
+            logger.severe("Error creating temporary file.");
+            return null;
+        }
+
+        if (putObject(s3, path, file)) {
             return generateS3FileAddress(s3, path);
         } else {
             return null;
