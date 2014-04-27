@@ -201,7 +201,7 @@ public class LocalApplication {
     private static void execute(AmazonEC2 ec2, AmazonS3 s3, AmazonSQS sqs, String mission, String managerId, boolean terminateManager) {
         // Upload new mission and inform manager.
         String missionNumber = Long.toString(System.currentTimeMillis()),
-               uploadLink = Utils.uploadStringToS3(s3, Utils.inputsPath, missionNumber, "_input.txt", mission);
+               uploadLink = Utils.uploadStringToS3(s3, Utils.inputsPath, missionNumber, missionNumber + "_input.txt", mission);
 
         if (uploadLink == null) {
             logger.severe("Error uploading input to S3, exiting.");
@@ -210,7 +210,7 @@ public class LocalApplication {
 
         String finishedLink = null;
 
-        Utils.sendMessage(sqs, Utils.localUpUrl, "new task\t" + uploadLink);
+        Utils.sendMessage(sqs, Utils.localUpUrl, "new task\t" + uploadLink + "\t" + missionNumber);
 
         // Process messages indefinitely until manager is finished working for us.
 
@@ -224,7 +224,7 @@ public class LocalApplication {
                 logger.info("No messages, sleeping.");
 
                 try {
-                    TimeUnit.SECONDS.sleep(5);
+                    TimeUnit.SECONDS.sleep(10);
                 } catch(InterruptedException e) {
                     logger.severe(e.getMessage());
                     return;
@@ -322,9 +322,11 @@ public class LocalApplication {
         AmazonSQS sqs = new AmazonSQSClient(creds);
 
         boolean terminateManager = false;  // Tells manager to terminateManager after completing mission.
-        if (args.length >= 2 && args[1].equals("terminate")) {
+        if (args.length >= 2 && args[2].equals("terminate")) {
             logger.info("Terminating manager on shutdown.");
             terminateManager = true;
+        } else {
+            logger.info("NOT terminating manager on shutdown.");
         }
 
         execute(ec2, s3, sqs, mission, managerId, terminateManager);
