@@ -289,8 +289,8 @@ public class LocalApplication {
         logger.info("Starting.");
 
         // Exit if no arguments were given.
-        if (args.length == 0) {
-            logger.severe("no input: closing.");
+        if (args.length < 2) {
+            logger.severe("Missing arguments: <input> <tasks/worker>");
             return;
         }
 
@@ -300,16 +300,14 @@ public class LocalApplication {
             return;
         }
 
+        // Read tasksPerWorker value if given.
+        tasksPerWorker = Integer.parseInt(args[1]);
+
         // Load credentials.
         AWSCredentials creds = Utils.loadCredentials();
         if (creds == null) {
             logger.severe("Couldn't load credentials.");
             return;
-        }
-
-        // Read tasksPerWorker value if given.
-        if (args.length > 1) {
-            tasksPerWorker = Integer.parseInt(args[0]);
         }
 
         // Start ec2 connection and manager.
