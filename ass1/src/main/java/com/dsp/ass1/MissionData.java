@@ -3,16 +3,16 @@ package com.dsp.ass1;
 
 public class MissionData  {
     public int remaining;  // Remaining tasks.
-    public StringBuilder info;  // PDF data
+    public StringBuilder data;  // PDF data
 
     public MissionData(int remaining) {
         this.remaining = remaining;
-        this.info = new StringBuilder();
+        this.data = new StringBuilder();
     }
 
 
-    public String getInfo() {
-        return info.toString();
+    public String getData() {
+        return data.toString();
     }
 
 
@@ -21,7 +21,7 @@ public class MissionData  {
         if (task.length < 3) {
             return;
         } else {
-            info.append("\n" + task[1] + ": " + task[2] + "  " + task[3]);
+            data.append("\n" + task[1] + ": " + task[2] + "  " + task[3]);
         }
     }
 }

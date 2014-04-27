@@ -19,7 +19,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
-import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
@@ -32,15 +31,6 @@ public class Manager {
     private static List<String> workerIds = new ArrayList<String>();
 
 
-    // get the approximate number of the messages from the queue with the "url".
-    private static int getNumberOfMessages(AmazonSQS sqs, String url) {
-        List <String> attributeNames = new ArrayList<String>();
-        attributeNames.add("ApproximateNumberOfMessages");
-        GetQueueAttributesResult res = sqs.getQueueAttributes(url, attributeNames);
-        return Integer.parseInt(res.getAttributes().get("ApproximateNumberOfMessages"));
-    }
-
-
     // Polls EC2 service for instances tagged by 'Name=worker',
     // and returns worker ID list.
     private static List<String> getWorkerIds(AmazonEC2 ec2) {
@@ -50,7 +40,7 @@ public class Manager {
 
     // Launch/terminate workers according to workload (task queue size).
     private static void balanceWorkers(AmazonEC2 ec2, AmazonSQS sqs) {
-        int tasksNum = getNumberOfMessages(sqs, Utils.tasksUrl),
+        int tasksNum = Utils.getNumberOfMessages(sqs, Utils.tasksUrl),
             workers = getWorkerIds(ec2).size(),
             // Calculate instance delta (launch/terminate workers).
             delta = ((int) Math.ceil((float)tasksNum / (float)tasksPerWorker)) - (workers - workersShuttingDown);
@@ -105,7 +95,7 @@ public class Manager {
     private static void finishMission(AmazonSQS sqs, AmazonS3 s3, String mission, MissionData data) {
         logger.info("Finishing mission: " + mission);
 
-        String address = Utils.uploadStringToS3(s3, Utils.resultPath, mission, "_results.txt", data.getInfo()),
+        String address = Utils.uploadStringToS3(s3, Utils.resultPath, mission, mission + "_results.txt", data.getData()),
                msg;
 
         if (address == null) {
@@ -114,7 +104,6 @@ public class Manager {
             msg = "done task\t" + address + "\t" + mission;
         }
 
-        logger.info(msg);
         Utils.sendMessage(sqs, Utils.localDownUrl, msg);
         missions.remove(mission);
     }
@@ -142,6 +131,7 @@ public class Manager {
 
         String action = split[0],
                missionNumber = split[4];
+
         MissionData data = missions.get(missionNumber);
 
         if (action.equals("done PDF task") || action.equals("failed PDF task")) {
@@ -237,6 +227,11 @@ public class Manager {
         List<Message> localUpMsgs = Utils.getMessages(rcvLocalUp, sqs),
             finishedMsgs = Utils.getMessages(rcvFinished, sqs),
             closedMsgs = Utils.getMessages(rcvClosed, sqs);
+
+        if (localUpMsgs == null || finishedMsgs == null || closedMsgs == null) {
+            logger.severe("Error getting messages from queue, shutting down.");
+            return;
+        }
 
         Message msg;
 

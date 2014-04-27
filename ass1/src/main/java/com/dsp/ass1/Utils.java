@@ -60,8 +60,9 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 
 import com.amazonaws.services.sqs.AmazonSQS;
-import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
+import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 
@@ -111,6 +112,15 @@ public class Utils {
             logger.severe(e.getMessage());
             return null;
         }
+    }
+
+
+    // Get approximate number of the messages from queue.
+    public static int getNumberOfMessages(AmazonSQS sqs, String url) {
+        List <String> attr = new ArrayList<String>();
+        attr.add("ApproximateNumberOfMessages");
+        GetQueueAttributesResult res = sqs.getQueueAttributes(url, attr);
+        return Integer.parseInt(res.getAttributes().get("ApproximateNumberOfMessages"));
     }
 
 
@@ -241,10 +251,14 @@ public class Utils {
     private static File streamToFile(InputStream in) {
         File file = null;
         try {
-            file = File.createTempFile("stream", ".in");
+            file = File.createTempFile("stream", null);
             file.deleteOnExit();
-            Writer writer = new OutputStreamWriter(new FileOutputStream(file));
-            writer.close();
+
+            Writer out = new OutputStreamWriter(new FileOutputStream(file));
+
+            IOUtils.copy(in, out);
+
+            out.close();
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
             return null;
