@@ -123,9 +123,10 @@ public class LocalApplication {
 
         String[] parts = msg.getBody().split("\t");
 
-        if ( ! parts[0].equals("closed")
-                || parts.length <= 2
-                || ! parts[2].equals(missionNumber)  // If we reached here then length >= 3
+        if (parts[0].equals("closed")) {
+            return parts[0];
+        } else if (parts.length <= 2
+                || ! parts[2].equals(missionNumber)  // length >= 3
                 || (! parts[0].equals("done task") && ! parts[0].equals("failed task"))) {
 
             logger.info("Ignoring: " + body);
@@ -208,8 +209,6 @@ public class LocalApplication {
             return;
         }
 
-        String finishedLink = null;
-
         Utils.sendMessage(sqs, Utils.localUpUrl, "new task\t" + uploadLink + "\t" + missionNumber);
 
         // Process messages indefinitely until manager is finished working for us.
@@ -217,6 +216,8 @@ public class LocalApplication {
         ReceiveMessageRequest req = new ReceiveMessageRequest(Utils.localDownUrl);
         List<Message> msgs = Utils.getMessages(req, sqs);
         Message msg;
+        String result = null,
+               finishedLink = null;
 
         while (true) {
             // Sleep if no messages arrived, and retry to re-fetch new ones afterwards.
@@ -224,31 +225,20 @@ public class LocalApplication {
                 logger.info("No messages, sleeping.");
 
                 try {
-                    TimeUnit.SECONDS.sleep(10);
+                    TimeUnit.SECONDS.sleep(30);
                 } catch(InterruptedException e) {
                     logger.severe(e.getMessage());
                     return;
                 }
 
             // Process top message in queue if there are any messages.
-            } else if (finishedLink != null) {
+            } else if (msgs.size() > 0) {
                 msg = msgs.get(0);
-                finishedLink = handleMessage(msg, s3 , missionNumber);
+                result = handleMessage(msg, s3 , missionNumber);
 
-                // Proccess 'regular' message (not a 'manager closed' message).
-                if ( ! finishedLink.equals("closed")) {
-                    // Only handled messages are deleted.
-                    Utils.deleteTaskMessage(msg, Utils.localDownUrl, sqs);
-
-                    // Exit loop if we don't need to terminateManager manager (given as argument on startup).
-                    if (terminateManager) {
-                        shutdownManager(sqs, managerId);
-                    } else {
-                        break;
-                    }
-                // Terminate manager if we need to and if it shutdown properly.
-                } else {
-                    if (terminateManager) {
+                if (result != null) {
+                    // Terminate manager if we need to and if it shutdown properly.
+                    if (terminateManager && result.equals("closed")) {
                         logger.info("Terminating manager.");
 
                         // Only handled messages are deleted.
@@ -259,6 +249,21 @@ public class LocalApplication {
                         Utils.terminateInstances(ec2, ids);
 
                         break;
+
+                    // Mission finished and results file was uploaded,
+                    // with URL in 'results' variable.
+                    } else {
+                        finishedLink = result;
+
+                        // Only handled messages are deleted.
+                        Utils.deleteTaskMessage(msg, Utils.localDownUrl, sqs);
+
+                        // Exit loop if we don't need to terminateManager manager (given as argument on startup).
+                        if (terminateManager) {
+                            shutdownManager(sqs, managerId);
+                        } else {
+                            break;
+                        }
                     }
                 }
             }
@@ -269,17 +274,17 @@ public class LocalApplication {
 
         // if the task failed
         if ( ! Utils.checkResult(finishedLink)){
-            logger.severe("Mission failed: " + finishedLink);
+            logger.severe("Mission failed: " + missionNumber);
             return;
         }
 
         // Create <html> summary file.
-        String resultContent = Utils.LinkToString(finishedLink);
-        if (resultContent == null) {
+        String summary = Utils.LinkToString(finishedLink);
+        if (summary == null) {
             return;
         }
 
-        WriteToFile(missionNumber + "_results.html", StringToHTMLString(resultContent));
+        WriteToFile(missionNumber + "_results.html", StringToHTMLString(summary));
 
         logger.info("Shutting down.");
     }
