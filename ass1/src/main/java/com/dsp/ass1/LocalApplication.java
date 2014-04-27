@@ -249,6 +249,8 @@ public class LocalApplication {
                 // Terminate manager if we need to and if it shutdown properly.
                 } else {
                     if (terminateManager) {
+                        logger.info("Terminating manager.");
+
                         // Only handled messages are deleted.
                         Utils.deleteTaskMessage(msg, Utils.localDownUrl, sqs);
 
@@ -323,6 +325,7 @@ public class LocalApplication {
 
         boolean terminateManager = false;  // Tells manager to terminateManager after completing mission.
         if (args.length >= 2 && args[1].equals("terminate")) {
+            logger.info("Terminating manager on shutdown.");
             terminateManager = true;
         }
 
