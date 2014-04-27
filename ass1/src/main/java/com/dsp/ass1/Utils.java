@@ -137,28 +137,6 @@ public class Utils {
     }
 
 
-    // Converts a string to stream, and sets byte buffer.
-    private static InputStream stringToStream(String data) {
-        return new ByteArrayInputStream(data.getBytes());
-    }
-
-
-    // Converts an image to stream, and sets byte buffer.
-    private static InputStream imageToStream(BufferedImage img) {
-        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-
-        // Read image stream.
-        try {
-            ImageIO.write(img, "png", outStream);
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        return new ByteArrayInputStream(outStream.toByteArray());
-    }
-
-
     // Appends a S3 http:// and bucket address to file path.
     public static String generateS3FileAddress(AmazonS3 s3, String path) {
         String address;
@@ -177,65 +155,14 @@ public class Utils {
     }
 
 
-    // Calculates stream length, md5.
-    private static ObjectMetadata setStreamMeta(InputStream in) {
-        ObjectMetadata meta = new ObjectMetadata();
-
-        // Calculate stream length in bytes.
-        byte[] buffer;
-        try {
-            buffer = IOUtils.toByteArray(in);
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-
-            try {
-                in.close();
-            } catch (IOException ex) {
-                logger.severe(ex.getMessage());
-                return null;
-            }
-
-            return null;
-        }
-
-        long length = Long.valueOf(buffer.length);
-        meta.setContentLength(length);
-
-        // Calculatet MD5 hash of stream.
-        byte[] md5buffer;
-        try {
-            md5buffer = DigestUtils.md5(in);
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-
-            try {
-                in.close();
-            } catch (IOException ex) {
-                logger.severe(ex.getMessage());
-                return null;
-            }
-
-            return null;
-        }
-
-        String streamMD5 = new String(Base64.encodeBase64(md5buffer));
-        meta.setContentMD5(streamMD5);
-
-        return meta;
-    }
-
-
-    // Sends an S3 putObject file request, returns true if successful.
-    private static boolean putObject(AmazonS3 s3, String path, File file) {
-        // Generate S3 request.
-        PutObjectRequest request = new PutObjectRequest(bucket, path, file);
-
+    // Makes a putObjectRequest to make file public, and sends request.
+    private static boolean putObject(AmazonS3 s3, PutObjectRequest req) {
         // Set file as public.
-        request.withCannedAcl(CannedAccessControlList.PublicRead);
+        req.withCannedAcl(CannedAccessControlList.PublicRead);
 
         // Send upload request.
         try {
-            s3.putObject(request);
+            s3.putObject(req);
         } catch (AmazonServiceException e) {
             logger.severe(e.getMessage());
             return false;
@@ -248,16 +175,31 @@ public class Utils {
     }
 
 
-    private static File streamToFile(InputStream in) {
+    private static String buildPath(String type, String mission, String fileName) {
+        return type + mission + "/" + fileName;
+    }
+
+
+    public static String uploadToS3(AmazonS3 s3, PutObjectRequest req, String path) {
+        logger.info("Uploading to S3: " + path);
+
+        if (putObject(s3, req)) {
+            return generateS3FileAddress(s3, path);
+        } else {
+            return null;
+        }
+    }
+
+
+    public static String uploadStringToS3(AmazonS3 s3, String type, String mission, String fileName, String data) {
+        // Create temporary file and write to it.
         File file = null;
         try {
-            file = File.createTempFile("stream", null);
+            file = File.createTempFile("task", null);
             file.deleteOnExit();
 
             Writer out = new OutputStreamWriter(new FileOutputStream(file));
-
-            IOUtils.copy(in, out);
-
+            out.write(data);
             out.close();
         } catch (FileNotFoundException e) {
             logger.severe(e.getMessage());
@@ -267,38 +209,39 @@ public class Utils {
             return null;
         }
 
-        return file;
-    }
+        // Build relative file path.
+        String path = buildPath(type, mission, fileName);
 
+        // Generate upload request.
+        PutObjectRequest req = new PutObjectRequest(bucket, path, file);
 
-    private static String uploadStreamToS3(AmazonS3 s3, String type, String mission, String fileName, InputStream in) {
-        String path = type + mission + "/" + fileName;
-
-        logger.info("Uploading file to S3: " + path);
-
-        File file = streamToFile(in);
-        if (file == null) {
-            logger.severe("Error creating temporary file.");
-            return null;
-        }
-
-        if (putObject(s3, path, file)) {
-            return generateS3FileAddress(s3, path);
-        } else {
-            return null;
-        }
-    }
-
-
-    public static String uploadStringToS3(AmazonS3 s3, String type, String mission, String fileName, String data) {
-        InputStream in = stringToStream(data);
-        return uploadStreamToS3(s3, type, mission, fileName, in);
+        return uploadToS3(s3, req, path);
     }
 
 
     public static String uploadImageToS3(AmazonS3 s3, String type, String mission, String fileName, BufferedImage img) {
-        InputStream in = imageToStream(img);
-        return uploadStreamToS3(s3, type, mission, fileName, in);
+        // Create input stream and metadata.
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+        try {
+            ImageIO.write(img, "png", os);
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        byte[] buffer = os.toByteArray();
+        InputStream is = new ByteArrayInputStream(buffer);
+        ObjectMetadata meta = new ObjectMetadata();
+        meta.setContentLength(buffer.length);
+
+        // Build relative file path.
+        String path = buildPath(type, mission, fileName);
+
+        // Generate upload request.
+        PutObjectRequest req = new PutObjectRequest(bucket, path, is, meta);
+
+        return uploadToS3(s3, req, path);
     }
 
 
