@@ -28,7 +28,6 @@ public class Manager {
     private static Map <String, MissionData> missions = new HashMap <String, MissionData>();
     private static int workersShuttingDown = 0;  // Amount of workers about to shut down.
     private static int tasksPerWorker = 10;  // Default value, can be overriden by argument.
-    private static List<String> workerIds = new ArrayList<String>();
 
 
     // Polls EC2 service for instances tagged by 'Name=worker',
@@ -54,7 +53,7 @@ public class Manager {
 
         // If we have too many workers, shut down unnecessary ones.
         } else if (delta < 0) {
-            for (int i=0; i< -delta; i++) {
+            for (int i=0; i < -delta; i++) {
                 Utils.sendMessage(sqs, Utils.shutdownUrl, "shutdown");  // TODO use SQS.SendMessageBatch
             }
 
@@ -240,7 +239,7 @@ public class Manager {
         // Process new missions as long as there are any missions left,
         // not all workers have been terminated (not just closed),
         // and shutdown flag is OFF.
-        while ( ! shutdown || missions.size() > 0 || workerIds.size() > 0) {
+        while ( ! shutdown || missions.size() > 0 || getWorkerIds(ec2).size() > 0) {
 
             // Balance workers and sleep if no messages were received.
             // Don't accept new missions if shutdown flag is ON.
