@@ -322,7 +322,7 @@ public class LocalApplication {
         AmazonSQS sqs = new AmazonSQSClient(creds);
 
         boolean terminateManager = false;  // Tells manager to terminateManager after completing mission.
-        if (args.length >= 2 && args[1].equals("shutdown")) {
+        if (args.length >= 2 && args[1].equals("terminate")) {
             terminateManager = true;
         }
 
