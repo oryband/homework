@@ -1,0 +1,5 @@
+1. JS is dynamically typed, with type inference. Java is statically typed.
+   Note: Latest JS drafts (6, Next, Harmony) adds types.
+2. Javascript is an interpreted language, while Java has to be compiled first (and then interpreted via JIT).
+3. Javascript has function-based scoping, while Java uses block-based scoping.
+4. Javascript has closures, while Java partially-supports it via anonymous classes.
