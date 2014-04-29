@@ -139,3 +139,11 @@ footer {
 #input-label {
   color: red;
 }
+
+
+/* Exercise 3 part 3 */
+
+article.favorite_websites tbody tr:hover {
+  color: orange;  
+  font-style: italic;
+}
