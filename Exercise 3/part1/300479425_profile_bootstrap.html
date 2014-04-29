@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Ory Band</title>
+
+  <meta name="description" content="My Profile Page">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="300479425/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background-image: url("300479425/images/bg.png");
+    background-repeat: repeat;
+  }
+
+  /* Nice title & headers font. */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Merriweather', serif;
+  }
+
+  .header {
+    padding-top: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .container {
+    max-width: 700px;
+  }
+
+  /* Bold table headers. */
+  #url,
+  #desc {
+    font-weight: bold;
+  }
+
+  /* Polaroid image effect. */
+  .polaroid {
+    margin: 10px 0 30px 30px;
+    width: 150px;
+    height: 200px;
+    background: white;
+    padding: 5px;
+    transform: rotate(20deg);
+    -webkit-transform: rotate(20deg);
+  }
+
+  .image-holder {
+    display: block;
+    overflow: hidden;
+  }
+
+  .polaroid img {
+    width: 150px
+  }
+
+  .caption {
+    margin-top: 5px;
+    display: block;
+  }
+
+  #footer {
+    margin-top: 100px;
+    border-top: 1px solid #ccc;
+  }
+
+  /* Exercise 3 part 1 new CSS */
+
+  #calculator {
+    padding: 10px;
+  }
+
+  #calculator > * {
+    margin-bottom: 10px;
+  }
+
+  #calculator > * > * {
+    margin-right: 5px;
+  }
+
+  #input {
+    margin-right: 10px;
+  }
+
+
+  </style>
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,700|Merriweather:400,700' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+  <div class="container">
+    <header class="header clearfix">
+      <div class="pull-right">
+        <div id="login-form" class="form-inline">
+          <ul class="list-inline list-unstyled">
+            <li>
+              <input id="user" class="form-control" type="text" placeholder="User" />
+            </li>
+            <li>
+              <input id="password" class="form-control" type="password" placeholder="Password" />
+            </li>
+            <li>
+              <button id="login-button" class="btn btn-primary">Login</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="clearfix">
+      <article id="main-article">
+        <aside>
+          <div class="polaroid pull-right img-thumbnail">
+            <div class="image-holder">
+              <img src="300479425/images/avatar.jpg" alt="Image of Ory Band" />
+            </div>
+            <span class="caption">Getting a ride in Cozumel, Mexico</span>
+          </div>
+        </aside>
+
+        <h1>Ory Band</h1>
+        <h2>300479425</h2>
+        <h3>Hi, I'm Ory. <small>Welcome to my personal website!</small></h3>
+
+        <p>
+          I'm a Math &amp; CS BSc student at Ben-Gurion University, Israel.<br />
+          I play guitar, piano, and sometimes mess around with a harmonica and recorder as well.<br />
+          I also took a long trip to China and Mongolia, and documented it in an unfinished travel blog,
+          which you're welcome to read.
+        </p>
+
+        <table class="table table-condensed table-hover">
+          <thead>
+            <tr>
+              <td id="url">Websites</td>
+              <td id="desc">Description</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="http://oryband.com">oryband.com</a></td>
+              <td>My personal website.</td>
+            </tr>
+            <tr>
+              <td><a href="http://oryband.wordpress.com">oryband.wordpress.com</a></td>
+              <td>My travel blog.</td>
+            </tr>
+            <tr>
+              <td><a href="http://plus.google.com/photos/+OryBand/albums">plus.google.com/photos/+OryBand/albums</a></td>
+              <td>My photo albums.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </main>
+
+    <footer id="footer-container">
+      <div id="footer" class="wrapper clearfix">
+        <blockquote cite="https://en.wikiquote.org/wiki/Jack_Handey">
+          <p>
+            It takes a big man to cry, but it takes a bigger man to laugh at that man.
+          </p>
+          <footer>
+            <cite title="Jack Handy">Jack Handy</cite>
+          </footer>
+        </blockquote>
+      </div>
+    </footer>
+  </div>
+
+  <script src="calculator.js"></script>
+  <script src="events.js"></script>
+</body>
+</html>
