@@ -117,16 +117,16 @@ footer {
 
 /* Exercise 3 part 1 new CSS */
 
-#calculator {
+#calculator-container {
   width: 500px;
   margin: 10px auto;
 }
 
-#calculator > * {
+#calculator-container > * {
   margin-bottom: 10px;
 }
 
-#calculator > * > * {
+#calculator-container > * > * {
   margin-right: 5px;
 }
 

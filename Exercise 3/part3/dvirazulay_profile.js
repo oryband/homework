@@ -1,170 +1,176 @@
 "use strict";
 
 var Calculator = function () {
-    // Private.
-    var screen = 0;
+  // Private.
+  var screen = 0;
 
-    this.getScreen = function () {
-        return screen;
-    };
+  this.getScreen = function () {
+    return screen;
+  };
 
-    // We assume valid value was given.
-    this.add = function (value) {
-        screen += value;
-    };
+  // We assume valid value was given.
+  this.add = function (value) {
+    screen += value;
+  };
 
-    this.multiply = function (value) {
-        screen *= value;
-    };
+  this.multiply = function (value) {
+    screen *= value;
+  };
 
-    this.clear = function () {
-        screen = 0;
-    };
+  this.clear = function () {
+    screen = 0;
+  };
 };
 
-window.onload = (function () {
-    "use strict";
+$(document).ready(function () {
+  "use strict";
 
-    // Generate HTML elements.
-    var form = document.getElementById("login-form"),
-        button = document.getElementById("login-button"),
-        user = document.getElementById("user"),
-        password = document.getElementById("password"),
-        article = document.getElementById("main-article"),
-        footer = document.getElementById("footer-container"),
-        calculator = new Calculator();
+  // Generate HTML elements.
+  var form = $("#login-form"),
+      button = $("#login-button"),
+      user = $("#user"),
+      password = $("#password"),
+      article = $("#main-article"),
+      footer = $("#footer-container"),
+      calculator = new Calculator();
 
 
-    function validateLogin() {
-        button.disabled = user.value !== "admin" || user.value !== password.value;
+  function validateLogin() {
+    button.disabled = user.val() !== "admin" || user.val() !== password.val();
+  }
+
+
+  // Clears all page, except header.
+  function clearPage() {
+    article.empty();
+    if (footer) {
+      footer.remove();
+      footer = null;
     }
+  }
 
 
-    // Clears all page, except header.
-    function clearPage() {
-        article.innerHTML = "";
-        if (footer) {
-            footer.parentNode.removeChild(footer);
-            footer = null;
-        }
-    }
+  // Builds calculator element.
+  function showCalculator() {
+    clearPage();
+
+    // Build HTML elements.
+    var inputContainer = $("<div />"),
+    buttonContainer = $("<div />"),
+    screen = $("<input />"),
+    inputGroup = $("<div />"),
+    input = $("<input />"),
+    label = $("<label />"),
+    add = $("<button />"),
+    multiply = $("<button />"),
+    clear = $("<button />"),
+    calc = $("<div />");
+
+    inputGroup.append(input);
+    inputGroup.append(label);
+
+    inputContainer.append(screen);
+    inputContainer.append(inputGroup);
+
+    buttonContainer.append(add);
+    buttonContainer.append(multiply);
+    buttonContainer.append(clear);
+
+    calc.append(inputContainer);
+    calc.append(buttonContainer);
+
+    article.append(calc);
+
+    // Set element attributes, and registers events.
+    screen.attr("id", "screen");
+    screen.attr("class", "form-control");
+    screen.attr("type", "text");
+    screen.attr("placeholder", "0");
+    screen.disabled = true;
+
+    inputGroup.attr("id", "input-group");
+    inputGroup.attr("class", "form-group");
+
+    input.attr("id", "input");
+    input.attr("class", "form-control");
+    input.attr("type", "text");
+    input.attr("placeholder", "0");
+    input.on("keydown", function (e) {
+      var val = e.keyCode - 48;
+
+      // Accept only 'backspace' and numeric keys.
+      if (e.keyCode !== 8 && (val < 0 || val > 9)) {
+        e.preventDefault();
+        inputGroup.addClass("has-error");
+        label.text("Only positive integers are allowed.");
+      } else {
+        inputGroup.removeClass("has-error");
+        label.text("");
+      }
+    });
+
+    label.attr("id", "input-label");
+    label.attr("class", "control-label");
+
+    add.attr("id", "add");
+    add.attr("class", "btn btn-primary");
+    add.text("add");
+    add.on("click", function () {
+      calculator.add(parseInt(input.val() || 0));
+      refreshCalculator();
+    });
+
+    multiply.attr("id", "multiply");
+    multiply.attr("class", "btn btn-primary");
+    multiply.text("multiply");
+    multiply.on("click", function () {
+      calculator.multiply(parseInt(input.val() || 0));
+      refreshCalculator();
+    });
+
+    clear.attr("id", "clear");
+    clear.attr("class", "btn btn-primary");
+    clear.text("clear");
+    clear.on("click", function () {
+      calculator.clear();
+      refreshCalculator();
+    });
+
+    inputContainer.attr("id", "input-container");
+    inputContainer.attr("class", "form-inline");
+
+    buttonContainer.attr("id", "button-container");
+    buttonContainer.attr("class", "form-inline");
+
+    calc.attr("id", "calculator-container");
+  }
 
 
-    // Builds calculator element.
-    function showCalculator() {
-        clearPage();
+  // Runs on 'onload' events, initializes everything.
+  function init() {
+    button.disabled = true;
+    button.on("click", showCalculator);
 
-        // Build HTML elements.
-        var inputContainer = document.createElement("div"),
-            buttonContainer = document.createElement("div"),
-            screen = document.createElement("input"),
-            inputGroup = document.createElement("div"),
-            input = document.createElement("input"),
-            label = document.createElement("label"),
-            add = document.createElement("button"),
-            multiply = document.createElement("button"),
-            clear = document.createElement("button"),
-            calc = document.createElement("div");
+    form.on("submit", function () { return false; });
 
-        inputGroup.appendChild(input);
-        inputGroup.appendChild(label);
+    user.on("keyup", validateLogin);
+    password.on("keyup", validateLogin);
+  }
 
-        inputContainer.appendChild(screen);
-        inputContainer.appendChild(inputGroup);
+  function refreshCalculator() {
+    var screen = $("#screen"),
+        input = $("#input"),
+        label = $("#input-label"),
+        inputGroup = input.parent();
 
-        buttonContainer.appendChild(add);
-        buttonContainer.appendChild(multiply);
-        buttonContainer.appendChild(clear);
+    // update the screen with the new value
+    screen.val(calculator.getScreen());
 
-        calc.appendChild(inputContainer);
-        calc.appendChild(buttonContainer);
+    // clear input box and error state
+    input.val("");
+    inputGroup.removeClass("has-error");
+    label.text("");
+  }
 
-        article.appendChild(calc);
-
-        // Set element attributes, and registers events.
-        screen.setAttribute("id", "screen");
-        screen.setAttribute("class", "form-control");
-        screen.setAttribute("type", "text");
-        screen.setAttribute("placeholder", "0");
-        screen.disabled = true;
-
-        inputGroup.setAttribute("id", "input-group");
-        inputGroup.setAttribute("class", "form-group");
-
-        input.setAttribute("id", "input");
-        input.setAttribute("class", "form-control");
-        input.setAttribute("type", "text");
-        input.setAttribute("placeholder", "0");
-        input.addEventListener("keydown", function (e) {
-            var val = e.keyCode - 48;
-
-            // Accept only 'backspace' and numeric keys.
-            if (e.keyCode !== 8 && (val < 0 || val > 9)) {
-                e.preventDefault();
-                inputGroup.className += " has-error";
-                label.innerText = "Only positive integers are allowed.";
-            } else {
-                inputGroup.className = "form-group";
-                label.innerText = "";
-            }
-        });
-
-        label.setAttribute("id", "input-label");
-        label.setAttribute("class", "control-label");
-
-        add.setAttribute("id", "add");
-        add.setAttribute("class", "btn btn-primary");
-        add.innerText = "add";
-        add.addEventListener("click", function () {
-            calculator.add(parseInt(input.value || 0));
-            screen.value = calculator.getScreen();
-            input.value = "";
-            inputGroup.className = "form-group";
-            label.innerText = "";
-        });
-
-        multiply.setAttribute("id", "multiply");
-        multiply.setAttribute("class", "btn btn-primary");
-        multiply.innerText = "multiply";
-        multiply.addEventListener("click", function () {
-            calculator.multiply(parseInt(input.value || 0));
-            screen.value = calculator.getScreen();
-            input.value = "";
-            inputGroup.className = "form-group";
-            label.innerText = "";
-        });
-
-        clear.setAttribute("id", "clear");
-        clear.setAttribute("class", "btn btn-primary");
-        clear.innerText = "clear";
-        clear.addEventListener("click", function () {
-            calculator.clear();
-            screen.value = calculator.getScreen();
-            input.value = "";
-            inputGroup.className = "form-group";
-            label.innerText = "";
-        });
-
-        inputContainer.setAttribute("id", "input-container");
-        inputContainer.setAttribute("class", "form-inline");
-
-        buttonContainer.setAttribute("id", "button-container");
-        buttonContainer.setAttribute("class", "form-inline");
-
-        calc.setAttribute("id", "calculator");
-    }
-
-
-    // Runs on 'onload' events, initializes everything.
-    function init() {
-        button.disabled = true;
-        button.addEventListener("click", showCalculator);
-
-        form.addEventListener("submit", function () { return false; });
-
-        user.addEventListener("keyup", validateLogin);
-        password.addEventListener("keyup", validateLogin);
-    }
-
-    init();
+  init();
 });
