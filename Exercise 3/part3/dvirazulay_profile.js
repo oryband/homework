@@ -34,9 +34,12 @@ $(document).ready(function () {
       footer = $("#footer-container"),
       calculator = new Calculator();
 
-
   function validateLogin() {
-    button.disabled = user.val() !== "admin" || user.val() !== password.val();
+    button.prop("disabled", (user.val() !== "admin" || user.val() !== password.val()));
+
+    if (user.val() === "admin" && password.val() !== "admin") {
+      password.focus();
+    }
   }
 
 
@@ -148,13 +151,27 @@ $(document).ready(function () {
 
   // Runs on 'onload' events, initializes everything.
   function init() {
-    button.disabled = true;
+    user.focus();
+
+    button.prop("disabled", true);
     button.on("click", showCalculator);
 
     form.on("submit", function () { return false; });
 
     user.on("keyup", validateLogin);
     password.on("keyup", validateLogin);
+
+    user.on("blur", function () {
+      if (user.val() !== "admin") {
+        user.focus();
+      }
+    });
+
+    password.on("blur", function () {
+      if (password.val() !== "admin") {
+        password.focus();
+      }
+    });
   }
 
   function refreshCalculator() {
