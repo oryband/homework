@@ -68,6 +68,9 @@ main aside div.polaroid {
   transform: rotate(25deg);
   -webkit-transform: rotate(25deg);
   -moz-transform: rotate(25deg);
+  transition-duration: 1s;
+  -webkit-transition-duration: 1s;
+  -moz-transition-duration: 1s;
   box-sizing: content-box;
   -moz-box-sizing: content-box;
 }
@@ -151,4 +154,24 @@ article.favorite_websites tbody tr:hover {
 #general_info + p,
 #music_info + p {
   display: none;
+}
+
+img.octocat {
+  display: none;
+}
+
+#my_photo:hover {
+  transform: rotate(-25deg);
+  -webkit-transform: rotate(-25deg);
+  -moz-transform: rotate(-25deg);
+  transition-duration: 1s;
+  -webkit-transition-duration: 1s;
+  -moz-transition-duration: 1s;
+}
+
+#my_photo:hover img.me {
+  display: none;
+}
+#my_photo:hover img.octocat {
+  display: inline-block;
 }
