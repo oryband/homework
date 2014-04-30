@@ -172,6 +172,12 @@ $(document).ready(function () {
         password.focus();
       }
     });
+
+    var showingID = true;
+    $("#id").on("click", function () {
+      showingID = !showingID;
+      $(this).text(showingID ? "200534014" : "dvirazulay");
+    });
   }
 
   function refreshCalculator() {
