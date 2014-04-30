@@ -184,6 +184,20 @@ $(document).ready(function () {
       var nextSibling = $(this).next();
       nextSibling.toggle();
     });
+
+    $("#normal_quote").on("click", function () {
+      $("#legendary_quote").slideDown(400, function () {
+        setTimeout(function () {
+          $("#legendary_quote .dary").show();
+        }, 2600);
+      });
+    });
+
+    $("#legendary_quote").on("click", function () {
+      $(this).slideUp(400, function () {
+        $("#legendary_quote .dary").hide();
+      });
+    });
   }
 
   function refreshCalculator() {

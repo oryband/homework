@@ -175,3 +175,8 @@ img.octocat {
 #my_photo:hover img.octocat {
   display: inline-block;
 }
+
+#legendary_quote,
+#legendary_quote .dary {
+  display: none;
+}
