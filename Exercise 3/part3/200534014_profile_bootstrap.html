@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dvir's awesome profile</title>
+      <link rel="stylesheet" href="200534014/bootstrap/css/bootstrap.css">
+      <link rel="stylesheet" href="dvirazulay_profile.css">
+  </head>
+  <body>
+    <header>
+      <form id="login-form" method="POST" action="/login.php">
+        <label>Username: <input type="text" id="user" name="user" placeholder="user@example.com" /></label>
+        <label>Password: <input type="text" id="password" name="password" /></label>
+        <button type="button" id="login-button" name="login" class="login btn btn-primary btn-sm">Send</button>
+      </form>
+    </header>
+    <main id="main-article">
+      <section>
+        <article>
+          <h1><span class="first">Dvir</span>, Azulay (<span id="id">200534014</span>)</h1>
+          <p>Welcome to my personal page!</p>
+          <h3 id="general_info">General things about me</h3>
+          <p>
+            I'm a Computer Science student in Ben Gurion University, graduating in 2014. 
+            I like watching movies and TV shows, computers (mainly programming and games) 
+            and sports - football and american football.
+          </p>
+          <h3 id="music_info">Music I like</h3>
+          <p>
+            My favorite bands are Dream Theater, Paramore, Linkin Park and Disturbed 
+            in no particular order. I really like music, especially while driving.
+          </p>
+        </article>
+        <article class="favorite_websites">
+          <h3>Favorite Websites</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <td class="link">Link</td>
+                <td class="recommendation">Why I think it's cool</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="http://www.stackoverflow.com">Stack Overflow</a></td>
+                <td>Stack Overflow is the best resource for programmers. It's a Q&amp;A site led and managed by the community entirely.</td>
+              </tr>
+              <tr>
+                <td><a href="http://www.quora.com">Quora</a></td>
+                <td>Quora is (yet another) Q&amp;A website, but covers topics from all walks of life. 
+                    You can ask a specific person to answer a question and follow them. 
+                    For example, <a href="http://www.quora.com/Ashton-Kutcher-1/How-did-Ashton-Kutcher-prepare-for-his-role-as-Steve-Jobs-in-the-new-movie-Jobs">Ashton Kutcher</a>. 
+                    <a href="http://www.quora.com/Brogramming/How-does-a-programmer-become-a-brogrammer">Here is an example of a great quora question/answer.</a>
+                </td>
+              </tr>
+              <tr>
+                <td><a href="http://www.techcrunch.com">TechCrunch</a></td>
+                <td>TechCrunch is a news blog about (obviously) tech. 
+                    They provide a lot of insider insights into startups 
+                    and big tech companies and are wildly known in the tech community.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </section>
+      <aside>
+        <div class="polaroid" id="my_photo">
+          <div class="image-holder">
+            <a target="_blank" href="200534014/images/favorite_octocat.png">
+              <img class="me" src="200534014/images/me.jpg" alt="This is me!" />
+              <img class="octocat" src="200534014/images/favorite_octocat.png" alt="This is not me." />
+            </a>
+          </div>
+          <span class="caption">Me after a few Mojitos</span>
+        </div>
+      </aside>
+    </main>
+    <footer id="footer-container">
+      <figure class="quote" id="normal_quote">
+        <blockquote>
+          "Fight and you may die. Run and you will live at least awhile. And dying in your bed many years from now, would you be willing to trade all the days from this day to that for one chance, just one chance, to come back here as young men and tell our enemies that they may take our lives but they will never take our freedom!"
+        </blockquote>
+        <figcaption>
+          - William Wallace (Braveheart)
+        </figcaption>
+      </figure>
+      <figure class="quote" id="legendary_quote">
+        <blockquote>
+          Legen... wait for it... <span class="dary">dary. LEGENDARY!</span>
+        </blockquote>
+        <figcaption>
+          - Barney Stinson
+        </figcaption>
+      </figure>
+    </footer>
+
+    <script src="200534014/js/jquery-1.11.0.min.js"></script>
+    <script src="dvirazulay_profile.js"></script>
+  </body>
+</html>
