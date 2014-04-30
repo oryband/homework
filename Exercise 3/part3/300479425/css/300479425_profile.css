@@ -1,0 +1,106 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-image: url("../images/bg.png");
+  background-repeat: repeat;
+}
+
+/* Nice title & headers font. */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+}
+
+.header {
+  padding-top: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.container {
+  max-width: 700px;
+}
+
+#par-1,
+#par-2 {
+  display: none;
+}
+
+/* Bold table headers. */
+#url,
+#desc {
+  font-weight: bold;
+}
+
+/* Color and type change on hovering table row. */
+#websites-table tbody > tr:hover,
+#websites-table tbody > tr:hover a {
+  color: orange;
+  font-style: italic;
+}
+
+/* Polaroid image effect. */
+.polaroid {
+  margin: 10px 0 30px 30px;
+  width: 150px;
+  height: 200px;
+  background: white;
+  padding: 5px;
+  transform: rotate(20deg);
+  -webkit-transform: rotate(20deg);
+}
+
+.polaroid:hover {
+  transform: rotate(-20deg);
+  -webkit-transform: rotate(-20deg);
+}
+
+.image-holder {
+  display: block;
+  overflow: hidden;
+}
+
+.image-holder:hover #my-image {
+  display: none;
+}
+
+.image-holder #octocat-image {
+  display: none;
+}
+
+.image-holder:hover #octocat-image {
+  display: block;
+}
+
+.polaroid img {
+  width: 150px
+}
+
+.caption {
+  margin-top: 5px;
+  display: block;
+}
+
+#footer {
+  margin-top: 100px;
+  border-top: 1px solid #ccc;
+}
+
+#dary {
+  display: none;
+}
+
+/* Exercise 3 part 1 new CSS */
+
+#calculator {
+  padding: 10px;
+}
+
+#calculator > * {
+  margin-bottom: 10px;
+}
+
+#calculator > * > * {
+  margin-right: 5px;
+}
+
+#input {
+  margin-right: 10px;
+}
