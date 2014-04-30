@@ -178,6 +178,12 @@ $(document).ready(function () {
       showingID = !showingID;
       $(this).text(showingID ? "200534014" : "dvirazulay");
     });
+
+    $("#general_info, #music_info").on("click", function () {
+      // get the p element following the title
+      var nextSibling = $(this).next();
+      nextSibling.toggle();
+    });
   }
 
   function refreshCalculator() {

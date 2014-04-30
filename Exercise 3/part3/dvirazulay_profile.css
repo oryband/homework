@@ -147,3 +147,8 @@ article.favorite_websites tbody tr:hover {
   color: orange;  
   font-style: italic;
 }
+
+#general_info + p,
+#music_info + p {
+  display: none;
+}
