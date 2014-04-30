@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>Awesome HTTP Request Parser</title>
+
+  <meta name="description" content="HTTP Request Test">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <h1>Awesome HTTP Request Parser</h1>
+
+  <h2>Explanation</h2>
+
+  <p>
+    <code>HttpRequest</code> object is an immutable function object.
+    It is constructed by a constructor, and returns an object filled with getter
+    methods.
+  </p>
+
+  <p>
+    <code>parseRequest</code> receives a <code>req</code> variable, and parses
+    it according to the assignment instructions. It returns an empty object on
+    every error encountered:
+  </p>
+
+  <ol>
+    <li>Checks if the reqest is null or an empty string.</li>
+    <li>Splits the first (request) line using <code>"".split()</code> and checks if the request is either <code>GET</code> or <code>POST</code>.</li>
+    <li>Checks URI's validity using <code>RegExp.test()</code>.</li>
+    <li>Checks HTTP version to be either <code>1.0</code> or <code>1.1</code>.</li>
+    <li>Builds a headers object. Reading is stopped once an empty <code>CRLF</code> line is encountered.</li>
+    <li>The rest of the request is considered the <code>body</code> section.</li>
+    <li>Initializes an <code>HttpRequest</code> object and returns it.</li>
+  </ol>
+
+  <h2>Usage</h2>
+
+  <p>
+    The script also expost a <code>test</code> string variable which holds a valid HTTP request string.
+    You can test by typing this in the console:
+  </p>
+
+  <p>
+    <code>
+      var req = parseRequest(test);<br/>
+      req.method;<br/>
+      req.uri;<br/>
+      req resource;<br/>
+      req resPath;<br/>
+      req.headers;<br/>
+      req.body;<br/>
+    </code>
+  </p>
+
+
+  <script src="bitsplease_httpParser.js"></script>
+</body>
+</html>
