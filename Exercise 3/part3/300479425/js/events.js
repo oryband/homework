@@ -8,12 +8,6 @@ $(document).ready(function () {
         password = $("#password");
 
 
-    function validateLogin() {
-        button.prop("disabled",
-            (user.val() !== "admin" || user.val() !== password.val()));
-    }
-
-
     // Clears all page, except header.
     function clearPage() {
         $("#main-article").empty();
@@ -84,12 +78,87 @@ $(document).ready(function () {
     }
 
 
+    // Focuses on login inputs, and doesn't allow blurring until correct
+    // user and password have been given.
+    function focusLogin() {
+        var validateLogin = function () {
+            button.prop("disabled",
+                    (user.val() !== "admin" || user.val() !== password.val()));
+        };
+
+        user.on("keyup", validateLogin);
+        password.on("keyup", validateLogin);
+
+        user.focus();
+
+        user.on("blur keyup", function () {
+            if (user.val() !== "admin") {
+                user.focus();
+            } else {
+                password.focus();
+            }
+        });
+
+        password.on("blur", function () {
+            if (password.val() !== "admin") {
+                password.focus();
+            }
+        });
+    }
+
+
+    // Toggles ID/username on click.
+    function toggleIdOnClick() {
+        $("#id").on("click", function () {
+            if ($(this).html() === "300479425") {
+                $(this).html("oryband");
+            } else {
+                $(this).html("300479425");
+            }
+        });
+    }
+
+
+    // Shows/hides paragraphs on click.
+    function toggleParagraphsOnClick() {
+        $("#par-1-title").on("click", function () {
+            $("#par-1").toggle();
+        });
+
+        $("#par-2-title").on("click", function () {
+            $("#par-2").toggle();
+        });
+    }
+
+
+    // Adds a footer quote on click.
+    function addQuoteOnClick() {
+        $("#jack-quote").on("click", function () {
+            $("#footer").append(
+                $("<blockquote>", { "cite": "http://how-i-met-your-mother.wikia.com/wiki/Legendary" })
+                    .append($("<p>").html("Legen... wait for it...")
+                            // Show rest of quote after a 3 sec delay.
+                        .append($("<span>", { "id": "dary" }).text(" dary. LEGENDARY!").delay(3000).fadeIn(200),
+                                $("<footer>")
+                                    .append($("<cite>", { "title": "Barney Stinson" })
+                                        .text("Barney Stinson"))))
+
+                    // Clear quote on click.
+                    .on("click", function () { $(this).remove(); }));
+        });
+    }
+
+
     // Runs on 'onload' events, initializes everything.
     function init() {
         form.on("submit", function () { return false; });
         button.prop("disabled", true).on("click", showCalculator);
-        user.on("keyup", validateLogin);
-        password.on("keyup", validateLogin);
+
+        // Part 3 additions. Function names are self-documentary.
+        focusLogin();
+        toggleIdOnClick();
+        toggleParagraphsOnClick();
+        addQuoteOnClick();
     }
 
     init();
