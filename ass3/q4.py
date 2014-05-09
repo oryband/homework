@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import csv
-from random import shuffle, uniform
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,7 +25,7 @@ def read_data(path, features = []):
     # Fix labels from 1/0 to 1/-1
     data = [x[:-1] + [1] if x[-1] == 1.0 else x[:-1] + [-1] for x in data]
 
-    shuffle(data)
+    np.random.shuffle(data)
 
     return np.array(data)
 
@@ -35,25 +34,24 @@ def seperable_data(size):
     """Generates an easily seperated data set with 2 features."""
     data = []
     for _ in xrange(size):
-        x1 = uniform(0,10)
-        x2 = uniform(0,10)
-        label = 1 if x1 + x2 > 10 else -1
-        data.append([x1, x2, label])
+        x1, x2 = np.random.uniform(0,10, 2)
+        label = np.float_(1) if x1 + x2 > 10 else np.float_(-1)
+        data.append(np.array([x1, x2, label]))
 
     return np.array(data)
 
 
 def divide_list(l, percentage=0.75):
     """Divides a list into two parts by percentage size."""
-    index = (int(len(l) * percentage))
-    return l[:index], l[index + 1:]
+    i = int(l.shape[0] * percentage)
+    return l[:i], l[i+1:]
 
 
 def train(data, max_iter, r = 1):
     """Trains perceptron on data, and returns a w in R^n vector.
 
     max_iter: Maximum # of iterations.
-    r: Learning rate, marked by the Greek 'Eta' letter.
+    r: Learning rate - usually marked by the Greek letter 'Eta'.
     """
     # Number of features (N form R^N). The last value is the desired label,
     # so we omit it.
@@ -97,8 +95,8 @@ def test(data, w):
 
 def plot(data, w):
     """Draw plot."""
-    # x_pos = np.array([x for x in data if x[-1] == 1])
-    # x_neg = np.array([x for x in data if x[-1] == -1])
+    x_pos = np.array([x for x in data if x[-1] == 1])
+    x_neg = np.array([x for x in data if x[-1] == -1])
 
     # n = np.linalg.norm(w)
     # l = w/n
@@ -108,8 +106,8 @@ def plot(data, w):
     # aa, bb = -w[1]/w[2], -w[0]/w[2]
     # plt.plot(l, aa*l+bb, 'g-', lw=2)
 
-    # g_x_pos, g_x_neg = plt.plot(x_pos[:, 0], x_pos[:, 1], 'g+',
-    #                                  x_neg[:, 0], x_neg[:, 1], 'r_')
+    g_x_pos, g_x_neg = plt.plot(x_pos[:, 0], x_pos[:, 1], 'g+',
+                                x_neg[:, 0], x_neg[:, 1], 'r_')
                                      # l'k--')
 
 
@@ -125,16 +123,18 @@ def plot(data, w):
     # plt.xlim((0, 0.07))  # Limit y-axis
     # plt.ylim((0, 10))  # Limit y-axis
 
-    # plt.show()
+    plt.show()
 
 
 if __name__ == '__main__':
     # data = read_data('spambase.data', [3, 37, 57])  # 57 is the label.
     # data = read_data('spambase.data', [21, 44, 57])  # 57 is the label.
     data = seperable_data(4000)
+
     train_data, test_data = divide_list(data, 0.75)
+
     w = train(train_data, 100)
-    percentage = test(test_data, w)
-    # plot(data, w)
 
+    p = test(test_data, w)
 
+    plot(data, w)
