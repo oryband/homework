@@ -1,6 +1,6 @@
-# [Spambase][spambase]
+# [Skin Segmentation][skin]
 
-Classifying email as spam / not spam.
+Classifying human/non-human skin by color.
 
 
-[spambase]: http://archive.ics.uci.edu/ml/datasets/Spambase
+[skin]: http://archive.ics.uci.edu/ml/datasets/Skin+Segmentation
