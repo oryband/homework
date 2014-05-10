@@ -1,177 +1,113 @@
 #!/usr/bin/env python
 
-import csv
-from random import shuffle, uniform
 
-import matplotlib.pyplot as plt
-import numpy as np
+from perceptron import train, test
+from data import read_data, generate_sphere_data, split_list
+from plot import plot_data, plot_w, plot_w_legend, plot_success_per_size, show, figure
 
 
-def read_data(path, features = [], delim='\t'):
-    """Opens training file and returns a float matrix,
-    where each line is a vector of floats.
-    The last value is a label, which is fixed from 1/2 to 1/-1.
-    Returned list is randomly scrambled.
+def status(train_data, test_data, error):
+    """Print perceptron status message."""
+    print 'Train/Test/Success: %d/%d/%.2f %%' % (len(train_data),
+                                                 len(test_data),
+                                                 100-error)
 
-    path: Data file path.
-    features: List of features indexes to extract, and abandon all others.
-              If empty, extract all.
+
+def simulate_increasing(data_size, margin=0.3, max_iter=100, learning_rate=0.1,
+                        steps=5, start=None, end=None):
+    """Simulate learning an increasing training data set.
+
+    Generates an unseperable data set, and trains on an increasing training
+    set, then tests and plots.
+
+    start: Initial (first step) training data set size.
+    end: Final (last step) training data set size.
     """
-    with open(path, 'rb') as f:
-        data = [[float(xi) for xi in x] for x in csv.reader(f, delimiter=delim)]
+    data = generate_sphere_data(data_size, margin=margin)
+    train_data, test_data = split_list(data, 0.75)
 
-    # Extract desired features.
-    data = [[x[i] for i in features] for x in data] if features != [] else data
+    # Initialize start/end sizes if not given.
+    start = len(train_data)/steps if start is None else start
+    end = len(train_data) if end is None else end
 
-    # Fix labels from 1/0 to 1/-1
-    data = [x[:-1] + [1] if x[-1] == 1 else x[:-1] + [-1] for x in data]
+    w_colors = ['b', 'c', 'm', 'y', 'k']  # w vector (line) graph color.
+    w_gs = []  # w plot graphs.
+    sizes = []  # Training data set sizes.
+    success = []  # Success rates according to training data set sizes.
+    for i in xrange(steps):
+        # Increase training data size according to iteration.
+        size = start + i*end/steps
+        current_train_data = train_data[:size]
 
-    shuffle(data)
+        w = train(current_train_data, max_iter=max_iter, r=learning_rate)
+        error = test(test_data, w)
 
-    return data
+        status(current_train_data, test_data, error)
+        print
 
+        # Record size-success statistics.
+        sizes.append(size)
+        success.append(100 - error)
 
-def seperable_data(size):
-    """Generates an easily seperated data set with 2 features."""
-    data = []
-    for _ in xrange(size):
-        # x1, x2 = uniform(-5, 5), uniform(-5, 5)
-        x1, x2 = uniform(0, 10), uniform(0, 10)
-        label = 1 if x1 + x2 >= 10 else -1
-        data.append([x1, x2, label])
+        # Plot decision boundary.
+        w_color = w_colors[i] if i < len(w_colors) else w_colors[-1]
+        figure(0)
+        g, = plot_w(current_train_data, w, color=w_color)
+        w_gs.append(g)
 
-    return data
+    figure(0).suptitle('Test data size: %d\nMaximum iterations: %d' % (len(test_data), max_iter))
+    plot_w_legend(w_gs, sizes)
+    plot_data(data)
 
+    figure(1).suptitle('Success rate according to training set size.')
+    plot_success_per_size(sizes, success)
 
-def split_list(l, p=0.75):
-    """Splits a list into two parts by percentage size.
-
-    l: List to split.
-    p: Percentage (0.0 - 1.0).
-    """
-    i = int(p * len(l))
-    return l[:i], l[i+1:]
-
-
-def tag(w, s):
-    """Classifies a sample according to weights,
-    by calculating if wTx >= 0 (dot product).
-    """
-    dp = 0  # Dot product.
-    for wi, si in zip(w[:-1],s):
-        dp += wi*si
-
-    dp += w[-1]  # Add bias.
-
-    return 1 if dp >= 0 else -1
+    show()
 
 
-def train(data, max_iter=100, r=0.1):
-    """Trains perceptron on data, and returns a w in R^n vector.
+def simulate_seperable(data_size):
+    """Simulate learning a completely seperable data set."""
+    data = generate_sphere_data(10000, margin=0)
+    train_data, test_data = split_list(data, 0.75)
+    w = train(train_data, max_iter=500, r=0.01)
+    error = test(test_data, w)
+    status(train_data, test_data, error)
 
-    max_iter: Maximum # of iterations.
-    r: Learning rate.
-    """
-    # Number of features (N form R^N). The last value is the desired label,
-    # so we omit it.
-    dim = len(data[0]) -1
-    w = [0] * (dim+1)  # Weight vector. We add an extra dimension for the bias.
-
-    print 'Features: %d' % dim
-
-    for i in xrange(max_iter):  # Maximum of 100 iterations.
-        err = 0
-        for x in data:
-            s, d = x[:-1], x[-1]  # Sample / desired label.
-            if tag(w,s) != d:  # If we labeled wrong.
-                for i in xrange(dim):  # Update weights.
-                    w[i] += r * d * s[i]
-
-                w[-1] += r * d  # Adjust bias.
-
-                err += 1
-
-        if err == 0:
-            break
-
-    print 'Iterations: %s' % (i+1)
-    print 'Training errors: %s' % err
-
-    return w
+    plot_data(data)
+    plot_w(data, w)
+    show()
 
 
-def test(data, w):
-    """Tests perceptron w on data. Returns error/total percentage."""
-    errors = 0
+def simulate_skin(steps=5, max_iter=100, learning_rate=0.1):
+    """Simulate learning skin data set."""
+    data = read_data('Skin_NonSkin.txt')
+    train_data, test_data = split_list(data, 0.75)
 
-    for x in data:
-        s, d = x[:-1], x[-1]
-        if tag(w,s) != d:
-            errors += 1
+    start = len(train_data)/steps  # First step training set size.
+    end = len(train_data)  # Final step training set size.
 
-    percentage = 100.0 * errors / len(data)
+    sizes = []  # Training data set sizes.
+    success = []  # Success rates according to training data set sizes.
+    for i in xrange(steps):
+        # Increase training data size according to iteration.
+        size = start + i*end/steps
+        current_train_data = train_data[:size]
 
-    print 'Avg. test error: %.2f %%' % percentage
-    return percentage
+        w = train(current_train_data, max_iter=max_iter, r=learning_rate)
+        error = test(test_data, w)
 
+        status(current_train_data, test_data, error)
+        print
 
-def plot(data, w, lim_avg=True):
-    """Draw plot."""
-    data = np.array(data)
+        # Record size-success statistics.
+        sizes.append(size)
+        success.append(100 - error)
 
-    s_pos = np.array([x for x in data if x[-1] == 1])
-    s_neg = np.array([x for x in data if x[-1] == -1])
-    s_pos_x = s_pos[:,0]
-    s_pos_y = s_pos[:,1]
-    s_neg_x = s_neg[:,0]
-    s_neg_y = s_neg[:,1]
-
-    s_x = data[:,0]
-    s_y = data[:,1]
-    s_x_max = s_x.max()
-    s_x_min = s_x.min()
-    s_y_max = s_y.max()
-    s_y_min = s_y.min()
-    s_x_avg = s_x.mean()
-    s_y_avg = s_y.mean()
-    a, b = -w[0]/w[1], -w[-1]/w[1]
-    w_x = np.linspace(s_x_min, s_x_max)
-    w_y = a*w_x + b
-
-    g_s_pos, g_s_neg, g_w = plt.plot(s_pos_x, s_pos_y, 'g+',
-                                     s_neg_x, s_neg_y, 'r_',
-                                     w_x, w_y, 'k--')
-
-    # Legend
-    # plt.legend((g_s_pos, g_s_neg, g_w),
-    #            [r'Positive labeled points',
-    #             r'Negative labeled points',
-    #             r'Decision boundary'])
-
-    plt.xlabel(r'Feature 1')
-    plt.ylabel(r'Feature 2')
-
-    # Limit axis.
-    if lim_avg:
-        plt.xlim((s_x_min, s_x_avg))
-        plt.ylim((s_y_min, s_y_avg))
-    else:
-        plt.xlim((s_x_min, s_x_max))
-        plt.ylim((s_y_min, s_y_max))
-
-    print 'Close the plot window to exit.'
-    plt.show()
+    plot_success_per_size(sizes, success)
+    show()
 
 
 if __name__ == '__main__':
-    data = read_data('Skin_NonSkin.txt', [0, 1, 3])  # 3 is the label.
-    # data = read_data('spambase.data', [0, 1, 57], delim=',')  # 3 is the label.
-    # data = seperable_data(4000)
-
-    train_data, test_data = split_list(data, 0.75)
-
-    w = train(train_data, max_iter=10)
-
-    p = test(test_data, w)
-
-    plot(data, w, lim_avg=False)
+    # simulate_seperable(data_size=10000)
+    # simulate_increasing(data_size=10000, margin=0.7, max_iter=1000, learning_rate=0.01, steps=5)
+    simulate_skin(steps=10, max_iter=1000, learning_rate=0.1)

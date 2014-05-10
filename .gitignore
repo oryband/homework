@@ -1,8 +1,10 @@
 venv/
 .DS_Store
+*.swp
 *.png
 *.pyc
 *.pdf
 *.aux
 *.log
 *.out
+*.dvi
