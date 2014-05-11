@@ -83,24 +83,25 @@ around the edges, and "scrambled" around the center.
 URL: \url{https://archive.ics.uci.edu/ml/datasets/Skin+Segmentation}
 \\\\
 Afterwards, I tested the perceptron on UCI's skin segmentation data set.
-Data was in $\mathbb{R}^3$, and seemed pretty much seperable according to the results.
+Data was in $\mathbb{R}^3$, and seemed pretty much seperable according to the
+results. That is, a very high success rate was achieved, as can be seen in the
+graphs on this page.
 \\\\
 I tested twice with an increasing data set over 10 sizes,
 once with a bound of 300 iterations, and then with a bound of 1000.
-Both bounds showed a high success rate (about 90\%) at all training sizes.
+Both bounds showed a high success rate (about 90\%) on all training sizes.
 \\\\
 However, I noticed that at every training size,
-the perceptron used all the iterations until he reached the iteration bound.
+the perceptron used all the iterations until it reached the iteration bound.
 I believe this is due to the data not being completely seperable.
+\\\\
+Afterwards I tested LibSVM again with linear, polynomial, and radial kernel functions.
+Tests concluded with success rate of 93\%, 87\%, and 92\% respectively.
+No data-scaling or soft-margins were necessary due to the very high success rate.
 
 \begin{figure}[h!]
-    \includegraphics[width=0.8\textwidth]{images/300_iterations.png}
-    \includegraphics[width=0.8\textwidth]{images/1000_iterations.png}
+    \includegraphics[width=0.5\textwidth]{images/300_iterations.png}
+    \includegraphics[width=0.5\textwidth]{images/1000_iterations.png}
 \end{figure}
-
-\newpage
-
-Afterwards I tested LibSVM again with linear, polynomial, and radial functions.
-
 
 \end{document}
