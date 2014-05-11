@@ -111,7 +111,7 @@ def simulate_skin(steps=5, max_iter=100, learning_rate=0.1):
 
 def simulate_skin_with_svm(data_size=None, train_params='-s 0 -t 0'):
     """Simulate learning skin data set with libsvm."""
-    convert_skin_to_svm(None)
+    convert_skin_to_svm(data_size)
 
     train_y, train_x = svm.svm_read_problem('skin_train.svm')
     model = svm.svm_train(train_y, train_x, train_params)
@@ -125,4 +125,4 @@ if __name__ == '__main__':
     # simulate_increasing(data_size=10000, margin=0.7, max_iter=1000, learning_rate=0.01, steps=5)
     # simulate_skin(steps=10, max_iter=1000, learning_rate=0.1)
     # convert_seperable_to_svm(data_size=10000, margin=0)
-    # simulate_skin_with_svm(data_size=50000, train_params='-s 0 -t 0')
+    # simulate_skin_with_svm(data_size=10000, train_params='-s 0 -t 2')
