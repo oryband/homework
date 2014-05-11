@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+"""Simulates perceptron and svm machine-learning tests."""
 
+import svmutil as svm
 
 from perceptron import train, test
-from data import read_data, generate_sphere_data, split_list
+from data import read_data, generate_sphere_data, split_list, convert_skin_to_svm
 from plot import plot_data, plot_w, plot_w_legend, plot_success_per_size, show, figure
 
 
@@ -107,7 +109,20 @@ def simulate_skin(steps=5, max_iter=100, learning_rate=0.1):
     show()
 
 
+def simulate_skin_with_svm(data_size=None, train_params='-s 0 -t 0'):
+    """Simulate learning skin data set with libsvm."""
+    convert_skin_to_svm(None)
+
+    train_y, train_x = svm.svm_read_problem('skin_train.svm')
+    model = svm.svm_train(train_y, train_x, train_params)
+
+    test_y, test_x = svm.svm_read_problem('skin_test.svm')
+    p_label, p_acc, p_val = svm.svm_predict(test_y, test_x, model)
+
+
 if __name__ == '__main__':
     # simulate_seperable(data_size=10000)
     # simulate_increasing(data_size=10000, margin=0.7, max_iter=1000, learning_rate=0.01, steps=5)
-    simulate_skin(steps=10, max_iter=1000, learning_rate=0.1)
+    # simulate_skin(steps=10, max_iter=1000, learning_rate=0.1)
+    # convert_seperable_to_svm(data_size=10000, margin=0)
+    simulate_skin_with_svm(data_size=50000, train_params='-s 0 -t 0')

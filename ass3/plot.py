@@ -1,11 +1,12 @@
 #!/usr/bin/env python
+"""Plotting perceptron tests using matplotlib and numpy."""
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
 def plot_data(data, avg=False):
-    """Plots 2d data."""
+    """Plot 2d data."""
     data = np.array(data)
 
     s_pos = np.array([x for x in data if x[-1] == 1])
@@ -55,7 +56,7 @@ def plot_success_per_size(sizes, success):
 
 
 def plot_w(data, w, color='k'):
-    """Plots decision boundary according to vector w."""
+    """Plot decision boundary according to vector w."""
     data = np.array(data)
 
     s_x = data[:, 0]
@@ -72,13 +73,15 @@ def plot_w(data, w, color='k'):
 
 
 def plot_w_legend(gs, sizes):
-    """Plots decision boundary vector legend."""
+    """Plot decision boundary vector legend."""
     plt.legend(gs, sizes)
 
 
 def show():
+    """Show matplotlib graph, plotted beforehand.."""
     plt.show()
 
 
 def figure(i):
+    """Switch to a different matplotlob graph."""
     return plt.figure(i)

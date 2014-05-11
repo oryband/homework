@@ -1,9 +1,11 @@
 #!/usr/bin/env python
+"""Perceptron train and test functions."""
 
 
 def tag(w, s):
-    """Classifies a sample according to weights,
-    by calculating if wTx >= 0 (dot product).
+    """Classifiy a sample according to weights.
+
+    Done by calculating if wTx >= 0 (dot product).
     """
     dp = 0  # Dot product.
     for wi, si in zip(w[:-1], s):
@@ -15,7 +17,7 @@ def tag(w, s):
 
 
 def train(data, max_iter=100, r=0.1):
-    """Trains perceptron on data, and returns a w in R^n vector.
+    """Train perceptron on data, and returns a w in R^n vector.
 
     max_iter: Maximum # of iterations.
     r: Learning rate.
@@ -46,7 +48,7 @@ def train(data, max_iter=100, r=0.1):
 
 
 def test(data, w):
-    """Tests perceptron w on data. Returns error/total percentage."""
+    """Test perceptron w on data, and returns error/total percentage."""
     errors = 0
 
     for x in data:
