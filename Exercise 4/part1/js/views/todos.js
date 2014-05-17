@@ -18,7 +18,8 @@ var app = app || {};
         // The DOM events specific to an item.
         events: {
             'click .toggle': 'toggleCompleted',
-            'dblclick label': 'edit',
+            'dblclick #title': 'editTitle',
+            'dblclick #owner': 'editOwner',
             'click .destroy': 'clear',
             'keypress .edit': 'updateOnEnter',
             'blur .edit': 'close'
@@ -38,7 +39,8 @@ var app = app || {};
             this.$el.html(this.template(this.model.toJSON()));
             this.$el.toggleClass('completed', this.model.get('completed'));
             this.toggleVisible();
-            this.$input = this.$('.edit');
+            this.$title = this.$('#title-input');
+            this.$owner = this.$('#owner-input');
             return this;
         },
 
@@ -59,18 +61,25 @@ var app = app || {};
             this.model.toggle();
         },
 
-        // Switch this view into `"editing"` mode, displaying the input field.
-        edit: function () {
+        // Switch this view into `"editing"` mode, displaying the title field.
+        editTitle: function () {
             this.$el.addClass('editing');
-            this.$input.focus();
+            this.$title.focus();
+        },
+
+        // Same, but for owner field.
+        editOwner: function () {
+            this.$el.addClass('editing');
+            this.$owner.focus();
         },
 
         // Close the `"editing"` mode, saving changes to the todo.
         close: function () {
-            var value = this.$input.val().trim();
+            var titleVal = this.$title.val().trim(),
+                ownerVal = this.$owner.val().trim();
 
-            if (value) {
-                this.model.save({ title: value });
+            if (titleVal || ownerVal) {
+                this.model.save({ title: titleVal, owner: ownerVal });
             } else {
                 this.clear();
             }
