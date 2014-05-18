@@ -21,6 +21,7 @@ var app = app || {};
             'dblclick #title': 'editTitle',
             'dblclick #owner': 'editOwner',
             'click .destroy': 'clear',
+            'click .show': 'info',
             'keypress .edit': 'updateOnEnter',
             'blur .edit': 'close'
         },
@@ -97,6 +98,10 @@ var app = app || {};
         // Remove the item, destroy the model from *localStorage* and delete its view.
         clear: function () {
             this.model.destroy();
+        },
+
+        // Show item meta data next to it
+        info: function () {
         }
     });
 })(jQuery);
