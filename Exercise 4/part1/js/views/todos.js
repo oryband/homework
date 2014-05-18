@@ -62,7 +62,6 @@ var app = app || {};
             this.model.toggle();
         },
 
-        // Switch this view into `"editing"` mode, displaying the title field.
         editTitle: function () {
             this.$el.addClass('editing');
             this.$title.focus();
@@ -102,6 +101,8 @@ var app = app || {};
 
         // Show item meta data next to it
         info: function () {
+            var view = new app.TodoInfoView({ model: this.model });
+            this.$el.html(view.render().el);
         }
     });
 })(jQuery);
