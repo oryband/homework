@@ -14,7 +14,8 @@ var app = app || {};
         defaults: {
             title: '',
             owner: '',
-            completed: false
+            completed: false,
+            date: (new Date()).toLocaleString()
         },
 
         // Toggle the `completed` state of this todo item.
