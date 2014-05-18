@@ -36,6 +36,9 @@
       <input id="title-input" class="edit" value="<%- title %>">
       <input id="owner-input" class="edit" value="<%- owner %>">
     </script>
+    <script type="text/template" id="item-info-template">
+      This task was assigned to <%- owner %> on <%- date %>
+    </script>
     <script type="text/template" id="stats-template">
       <span id="todo-count"><strong><%= remaining %></strong> <%= remaining === 1 ? 'item' : 'items' %> left</span>
       <ul id="filters">
