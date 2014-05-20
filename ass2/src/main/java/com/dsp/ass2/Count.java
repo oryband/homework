@@ -10,7 +10,6 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Partitioner;
-import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.io.LongWritable;
@@ -19,30 +18,35 @@ import org.apache.hadoop.io.LongWritable;
 public class Count {
 
     public static class MapClass extends Mapper<LongWritable, Text, Text, IntWritable> {
+
         private final static IntWritable one = new IntWritable(1);
         private Text word = new Text();
 
         @Override
+        // map function emit 5 times for each 5-gram : 4 times for the center word with the other words,
+        // and one time (with '*' as word) to calculate the instance of the word itself.
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String[] arr = value.toString().split(" ");
 
-            word.set(arr[2] + " *");
+            word.set(arr[2] + "\t*"); // to calculate c(arr[2]).
             context.write(word, one);
 
-            word.set(arr[2] + " " + arr[0]);
+            word.set(arr[2] + "\t" + arr[0]);  // to calculate c(arr[2],arr[0]).
             context.write(word, one);
 
-            word.set(arr[2] + " " + arr[1]);
+            word.set(arr[2] + "\t" + arr[1]);  // to calculate c(arr[2],arr[1]).
             context.write(word, one);
 
-            word.set(arr[2] + " " + arr[3]);
+            word.set(arr[2] + "\t" + arr[3]);  // to calculate c(arr[2],arr[3]).
             context.write(word, one);
 
-            word.set(arr[2] + " " + arr[4]);
+            word.set(arr[2] + "\t" + arr[4]);  // to calculate c(arr[2],arr[4]).
             context.write(word, one);
         }
     }
 
+
+    // Combiner class just summing to values before sending it.
     public static class CombineClass extends Reducer<Text,IntWritable,Text,IntWritable> {
         @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
@@ -68,7 +72,7 @@ public class Count {
                 sum += value.get();
             }
 
-            if (key.toString().split(" ")[1].equals("*")) {
+            if (key.toString().split("\t")[1].equals("*")) {
                 wordSum = sum;
             }
 
@@ -83,7 +87,7 @@ public class Count {
     public static class PartitionerClass extends Partitioner<Text, IntWritable> {
         @Override
         public int getPartition(Text key, IntWritable value, int numPartitions) {
-            return getLanguage(key) % numPartitions;
+            return getLanguage(new Text(key.toString().split("\t")[0])) % numPartitions;
         }
 
         private int getLanguage(Text key) {
