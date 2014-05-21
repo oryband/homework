@@ -4,6 +4,7 @@
 .classpath
 .project
 .settings/
+workbench.xmi
 
 *.jar
 *.class
