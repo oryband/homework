@@ -22,26 +22,72 @@ public class Count {
         private final static IntWritable one = new IntWritable(1);
         private Text word = new Text();
 
-        @Override
         // map function emit 5 times for each 5-gram : 4 times for the center word with the other words,
         // and one time (with '*' as word) to calculate the instance of the word itself.
+        @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String[] arr = value.toString().split(" ");
 
-            word.set(arr[2] + "\t*"); // to calculate c(arr[2]).
-            context.write(word, one);
+            switch (arr.length) {
 
-            word.set(arr[2] + "\t" + arr[0]);  // to calculate c(arr[2],arr[0]).
-            context.write(word, one);
+                case 1:  //  just counting to word.
+                    word.set(arr[0] + "\t*");
+                    context.write(word, one);
 
-            word.set(arr[2] + "\t" + arr[1]);  // to calculate c(arr[2],arr[1]).
-            context.write(word, one);
+                    break;
 
-            word.set(arr[2] + "\t" + arr[3]);  // to calculate c(arr[2],arr[3]).
-            context.write(word, one);
+                case 2:  // consider the pair.
+                    word.set(arr[0] + "\t*");
+                    context.write(word, one);
 
-            word.set(arr[2] + "\t" + arr[4]);  // to calculate c(arr[2],arr[4]).
-            context.write(word, one);
+                    word.set(arr[0] + "\t" + arr[1]);
+                    context.write(word, one);
+
+                    break;
+
+                case 3: // choose the middle word and create its context
+                    word.set(arr[1] + "\t*");
+                    context.write(word, one);
+
+                    for (int i = 0 ; i < 3 ; i++) {
+                        if (i != 1) {
+                            word.set(arr[1] + "\t" + arr[i]);
+                            context.write(word, one);
+                        }
+                    }
+
+                    break;
+
+                case 4: // choose the third word and create its context
+
+                    word.set(arr[2] + "\t*");
+                    context.write(word, one);
+
+                    for (int i = 0 ; i < 4 ; i++) {
+                        if (i != 2) {
+                            word.set(arr[2] + "\t" + arr[i]);
+                            context.write(word, one);
+                        }
+                    }
+
+                    break;
+
+                case 5:
+                    word.set(arr[2] + "\t*");
+                    context.write(word, one);
+
+                    for (int i = 0 ; i < 5 ; i++) {
+                        if (i != 2) {
+                            word.set(arr[2] + "\t" + arr[i]);
+                            context.write(word, one);
+                        }
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 
@@ -61,10 +107,31 @@ public class Count {
 
 
     public static class ReduceClass extends Reducer<Text,IntWritable,Text,Text> {
-        private int wordSum = 0;
+        private int w1sum = 0;
+
+        /* public void setup(Context context){
+        Configuration conf = context.getConfiguration();
+        JobConf jobConf = new JobConf(conf);
+        JobClient client;
+        try {
+            jobID = jobConf.get("mapred.job.id");
+            System.out.println(jobID);
+            client = new JobClient(jobConf);
+            RunningJob job = client.getJob(JobID.forName(jobID));
+
+            if (job == null) {
+                System.out.println("No job with ID found " + jobID);
+            } else {
+                Counters counters = job.getCounters();
+                N = counters.getCounter(MapClass.Counter.count);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    } */
 
         @Override
-
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
 
             int sum = 0;
@@ -73,11 +140,11 @@ public class Count {
             }
 
             if (key.toString().split("\t")[1].equals("*")) {
-                wordSum = sum;
+                w1sum = sum;
             }
 
             else {
-                String val = Integer.toString(sum) + "\t" + Integer.toString(wordSum);
+                String val = Integer.toString(sum) + "\t" + Integer.toString(w1sum);
                 context.write(key, new Text(val));
             }
         }
