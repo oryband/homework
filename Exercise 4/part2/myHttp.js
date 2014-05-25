@@ -3,10 +3,11 @@ var net = require('net'),
 
 
 // Immutable HTTP Request object.
-var HttpRequest = function (reqMethod, reqUri, reqResource, reqResPath, reqHeaders, reqBody) {
+var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPath, reqHeaders, reqBody) {
     'use strict';
 
-    var method = reqMethod,
+    var version = reqVersion,
+        method = reqMethod,
         uri = reqUri,
         resource = reqResource,
         resPath = reqResPath,
@@ -14,9 +15,22 @@ var HttpRequest = function (reqMethod, reqUri, reqResource, reqResPath, reqHeade
         body = reqBody;
 
     return {
+        get version() { return version; },
         get method() { return method; },
         get uri() { return uri; },
         get resource() { return resource; },
+        get contentType() { 
+          // get extension of the resource
+          switch (this.resource.substring(this.resource.lastIndexOf('.')+1)) {
+            case 'js': return 'application/javascript';
+            case 'html': return 'text/html';
+            case 'css': return 'text/css';
+            case 'jpg': return 'image/jpeg';
+            case 'gif': return 'image/gif';
+            case 'json': return 'application/json';
+            default: return 'text/plain';
+          }
+        },
         get resPath() { return resPath; },
         get headers() { return headers; },
         get body() { return body; }
@@ -133,7 +147,7 @@ function parseRequest(req) {
     var body = lines.splice(i, lines.length).join('\r\n');
 
     // Build response.
-    var httpRequest = new HttpRequest(method, uri, resource, resPath, headers, body);
+    var httpRequest = new HttpRequest(version, method, uri, resource, resPath, headers, body);
 
     return httpRequest;
 }
@@ -145,10 +159,9 @@ var Server = function (rootFolder) {
     var serverStarted = false,
         startDate = null,
         serverPort = null,
-        serverCurrentRequests = 0,  // TODO: update on connection open & close.
+        serverCurrentRequests = 0,
         serverTotalRequests = 0,
         serverSuccessfulRequests = 0;
-
 
     // Return a server status object with the above fields.
     var status = function () {
@@ -164,9 +177,13 @@ var Server = function (rootFolder) {
 
     var netServer = net.createServer(function (socket) {
         socket.on('data', function (request) {
-            socket.setTimeout(settings.LAST_REQUEST_TIMEOUT_SEC * 1000, function () {
+            serverTotalRequests++;
+            serverCurrentRequests++;
+
+            var closeServer = function () {
+                serverCurrentRequests--;
                 socket.end();
-            });
+            };
 
             var httpRequest = parseRequest(request.toString());
 
@@ -180,6 +197,9 @@ var Server = function (rootFolder) {
                 socket.write(new HttpResponse(1.1, 405).toString());
                 return;
             }
+
+            // if we got here, the http request is successful (but need to be parsed further)
+            serverSuccessfulRequests++;
 
             // Route '/status' to status page.
             if (httpRequest.resource === '/status') {
@@ -205,6 +225,19 @@ var Server = function (rootFolder) {
                 ).toString();
 
                 socket.write(res);
+            }
+
+            // close connection if protocol is 1.0 and no keep-alive header
+            if (httpRequest.headers["Connection"] === "close"
+                || (httpRequest.version === "1.0" && httpRequest.headers["Connection"] !== "Keep-Alive")
+            ) {
+              closeServer();
+            } else {
+              // we shouldn't immediatly close the connection; set a timeout
+              // based on the config value.
+              socket.setTimeout(settings.LAST_REQUEST_TIMEOUT_SEC * 1000, function () {
+                closeServer();
+              });
             }
         });
     });
