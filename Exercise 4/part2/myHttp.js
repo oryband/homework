@@ -51,7 +51,6 @@ var HttpResponse = function (resVersion, resStatusCode, resResponseHeader, resBo
                 'HTTP/' + version + ' ' + statusCode + ' ' + settings.HTTP_STATUS_CODES[statusCode],
                 responseHeader.join('\r\n'),
                 '',
-                '',
                 body
             ].join('\r\n');
         }
