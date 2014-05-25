@@ -38,7 +38,7 @@
       <input id="owner-input" class="edit" value="<%- owner %>">
     </script>
     <script type="text/template" id="item-info-template">
-      This task was assigned to <%- owner %> on <%- date %>
+      This task was assigned to <span class="owner"><%- owner %></span> on <span class="date"><%- date %></span>
     </script>
     <script type="text/template" id="stats-template">
       <span id="todo-count"><strong><%= remaining %></strong> <%= remaining === 1 ? 'item' : 'items' %> left</span>

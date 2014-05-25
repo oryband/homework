@@ -115,8 +115,9 @@ var app = app || {};
 
             $infoContainer.html(view.render().el);
             $infoContainer.css({
-              'left': position.left + this.$el.width(),
-              'top': position.top
+              'left': position.left + this.$el.width() + 1,
+              'top': position.top - 1,
+              'height': this.$el.height() - 16
             });
             $infoContainer.data('current-item-id', this.model.id); 
             $infoContainer.show();

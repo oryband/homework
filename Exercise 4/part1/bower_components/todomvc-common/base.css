@@ -178,6 +178,18 @@ label[for='toggle-all'] {
 #todo-info {
   position: absolute;
   display: none;
+
+  background: #f3eeee;
+  /*background: white;*/
+  padding: 8px;
+  min-width: 200px;
+  border: 1px dotted #adadad;
+  border-left: 0;
+}
+
+#todo-info .owner,
+#todo-info .date {
+  font-weight: bold;
 }
 
 #todo-list {
