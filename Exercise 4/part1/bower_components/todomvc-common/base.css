@@ -175,6 +175,11 @@ label[for='toggle-all'] {
   color: #737373;
 }
 
+#todo-info {
+  position: absolute;
+  display: none;
+}
+
 #todo-list {
   margin: 0;
   padding: 0;

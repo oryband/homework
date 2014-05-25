@@ -102,7 +102,24 @@ var app = app || {};
         // Show item meta data next to it
         info: function () {
             var view = new app.TodoInfoView({ model: this.model });
-            this.$el.html(view.render().el);
+            var $infoContainer = $('#todo-info');
+            var position = this.$el.position();
+            var currentItemID = $infoContainer.data('current-item-id');
+            if (currentItemID && currentItemID === this.model.id) {
+              // the info div for this item is already shown.
+              // hide it and reset the shown id.
+              $infoContainer.hide();
+              $infoContainer.data('current-item-id', null); 
+              return;
+            }
+
+            $infoContainer.html(view.render().el);
+            $infoContainer.css({
+              'left': position.left + this.$el.width(),
+              'top': position.top
+            });
+            $infoContainer.data('current-item-id', this.model.id); 
+            $infoContainer.show();
         }
     });
 })(jQuery);
