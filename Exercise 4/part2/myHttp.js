@@ -1,4 +1,5 @@
 var net = require('net'),
+    fs = require('fs'),
     settings = require('./settings');
 
 
@@ -19,7 +20,7 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
         get method() { return method; },
         get uri() { return uri; },
         get resource() { return resource; },
-        get contentType() { 
+        get contentType() {
           // get extension of the resource
           switch (this.resource.substring(this.resource.lastIndexOf('.')+1)) {
             case 'js': return 'application/javascript';
@@ -176,7 +177,7 @@ var Server = function (rootFolder) {
 
 
     var netServer = net.createServer(function (socket) {
-        socket.on('data', function (request) {
+        socket.on('data', function (req) {
             serverTotalRequests++;
             serverCurrentRequests++;
 
@@ -185,15 +186,15 @@ var Server = function (rootFolder) {
                 socket.end();
             };
 
-            var httpRequest = parseRequest(request.toString());
+            var request = parseRequest(req.toString());
 
             // Return Bad Request HTTP response on bad requests.
-            if (!httpRequest) {
+            if (!request) {
                 socket.write(new HttpResponse(1.1, 400).toString());
                 return;
             }
 
-            if (httpRequest.method !== 'GET' && httpRequest.method !== 'POST') {
+            if (request.method !== 'GET' && request.method !== 'POST') {
                 socket.write(new HttpResponse(1.1, 405).toString());
                 return;
             }
@@ -202,7 +203,7 @@ var Server = function (rootFolder) {
             serverSuccessfulRequests++;
 
             // Route '/status' to status page.
-            if (httpRequest.resource === '/status') {
+            if (request.resource === '/status') {
                 var stat = status(),
                     body = '<html><h1>Status</h1><ul>';
 
@@ -214,7 +215,7 @@ var Server = function (rootFolder) {
 
                 body += '</ul></html>';
 
-                var res = new HttpResponse(
+                socket.write(new HttpResponse(
                     1.1,
                     200,
                     [
@@ -222,14 +223,36 @@ var Server = function (rootFolder) {
                         'Content-Length: ' + body.length
                     ],
                     body
-                ).toString();
+                ).toString());
 
-                socket.write(res);
+            } else {
+                // TODO Make sure people don't use ../ and access restricted files.
+                // TODO filter parameters (?a&b&c)
+                // Build HTTP response and return file requested as resource.
+                var response = new HttpResponse(1.1, 200),
+                    path = rootFolder + request.resource;
+
+                fs.stat(path, function (err, stats) {
+                    if (err) throw err;
+
+                    response.responseHeader = [
+                        'Content-Type: ' + request.contentType,
+                        'Content-Length: ' + stats.size
+                    ];
+
+                    fs.readFile(path, function (err, data) {
+                        if (err) throw err;
+
+                        response.body = data;
+
+                        socket.write(response.toString());
+                    });
+                });
             }
 
             // close connection if protocol is 1.0 and no keep-alive header
-            if (httpRequest.headers["Connection"] === "close"
-                || (httpRequest.version === "1.0" && httpRequest.headers["Connection"] !== "Keep-Alive")
+            if (request.headers.Connection === 'close' ||
+                (request.version === '1.0' && request.headers.Connection !== 'Keep-Alive')
             ) {
               closeServer();
             } else {
@@ -245,13 +268,11 @@ var Server = function (rootFolder) {
 
     return {
         start: function (port) {
-            netServer.listen(port, function (c) {
-
+            netServer.listen(port, function () {
+                serverStarted = true;
+                startDate = new Date().toLocaleDateString();
+                serverPort = port;
             });
-
-            serverStarted = true;
-            startDate = new Date().toLocaleDateString();
-            serverPort = port;
         },
 
         stop: function () {
