@@ -35,16 +35,11 @@ req = http.request({
     method: 'GET'
   }, function(res){
   assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /status request (Got '+res.httpVersion+')');
-  assert(res.statusCode === '200', 'Wrong status code received for /status request (Got '+res.statusCode+')');
+  assert(res.statusCode === 200, 'Wrong status code received for /status request (Got '+res.statusCode+')');
   assert(res.headers['content-type'] === 'text/html', '/status request should return text/html content (Got '+res.headers['content-type']+')');
 
-  res.setEncoding('utf8');
-  res.on('data', function(data) {
-    // assert stuff about the data
-  });
-
   var serverStatus = server.status();
-  assert(serverStatus.numOfCurrentRequests === 1, 'Server should report 1 requests on init');
+  assert(serverStatus.numOfCurrentRequests === 1, 'Server should report 1 requests after /status');
   assert(serverStatus.percentageOfSuccesfulRequests === 100, 'Server should report 100% success rate after a successful status request');
 });
 req.on('error', function(e) {
@@ -59,12 +54,10 @@ req = http.request({
     method: 'PUT'
   }, function(res){
   assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /status request (Got '+res.httpVersion+')');
-  assert(res.statusCode === '400', 'Wrong status code received for a bad request (Got '+res.statusCode+')');
-
-  res.setEncoding('utf8');
+  assert(res.statusCode === 405, 'Wrong status code received for a method not allowed request (Got '+res.statusCode+')');
 
   var serverStatus = server.status();
-  assert(serverStatus.numOfCurrentRequests === 2, 'Server should report 2 requests on init');
+  assert(serverStatus.numOfCurrentRequests === 2, 'Server should report 2 requests after bad method request');
   assert(serverStatus.percentageOfSuccesfulRequests === 50, 'Server should report 50% success rate after a successful and then a bad request');
 });
 req.on('error', function(e) {
