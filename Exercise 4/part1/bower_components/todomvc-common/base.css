@@ -276,7 +276,7 @@ label[for='toggle-all'] {
   transition: all 0.2s;
 }
 #todo-list li .show {
-  right: 35px;
+  right: 50px;
 }
 
 #todo-list li .destroy:hover,
