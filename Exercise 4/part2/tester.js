@@ -41,13 +41,13 @@ server.start(settings.TEST_PORT, function () {
         // Test the server status on init.
         var serverStatus = server.status();
         assert(serverStatus.isStarted === true, 'Server should have been started by now');
-        assert(serverStatus.port === TEST_PORT, 'Server is running on the wrong port');
+        assert(serverStatus.port === settings.TEST_PORT, 'Server is running on the wrong port');
         assert(serverStatus.numOfCurrentRequests === 0, 'Server should report 0 requests on init');
         assert(serverStatus.percentageOfSuccesfulRequests === 100, 'Server should report 100% success rate on init');
 
         var req = http.request({
             hostname: 'localhost',
-            port: TEST_PORT,
+            port: settings.TEST_PORT,
             path: '/status',
             method: 'GET'
         }, function(res){
@@ -64,7 +64,7 @@ server.start(settings.TEST_PORT, function () {
 
         req = http.request({
             hostname: 'localhost',
-            port: TEST_PORT,
+            port: settings.TEST_PORT,
             path: '/status',
             method: 'PUT'
         }, function(res){
@@ -80,7 +80,7 @@ server.start(settings.TEST_PORT, function () {
 
         req = http.request({
             hostname: 'localhost',
-            port: TEST_PORT,
+            port: settings.TEST_PORT,
             path: '/test.jpg',
             method: 'GET'
         }, function(res){
