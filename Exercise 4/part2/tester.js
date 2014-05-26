@@ -1,5 +1,12 @@
 'use strict';
 
+/*
+ * tester takes two optional arguments:
+ * [shouldSkipTests - 'yes'/'no' - default to 'no'] 
+ * [serverTimeoutMilliseconds - default 10000]
+ */
+
+// self explanatory. I hope...
 function assert(condition, message) {
     if (!condition) {
         throw message || 'Assertion failed';
@@ -13,9 +20,13 @@ var http = require('http');
 
 var TEST_PORT = 3008;
 
+// run server for tests, and pass as a callback our test units.
+// we do this so the server is ready for connections when we run the tests.
 server.start(TEST_PORT, function () {
     setTimeout(function () {
         server.stop();
+        console.log("Finished running tests.");
+        process.exit(0);
     }, process.argv[3] || 10000);
 
     // Execute tests.
