@@ -25,7 +25,7 @@ var TEST_PORT = 3008;
 server.start(TEST_PORT, function () {
     setTimeout(function () {
         server.stop();
-        console.log("Finished running tests.");
+        console.log('Finished running tests.');
         process.exit(0);
     }, process.argv[3] || 10000);
 
