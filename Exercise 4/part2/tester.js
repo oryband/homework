@@ -7,12 +7,17 @@
  */
 
 // self explanatory. I hope...
-var testsCount = 1;
+var testsCount = 0,
+    failedTestsCount = 0;
+
 function assert(condition, message) {
     if (!condition) {
+        console.log("Test %d failed", ++testsCount);
+        failedTestsCount++;
         throw message || 'Assertion failed';
     }
-    console.log("Test %d succeeded", testsCount++);
+
+    console.log("Test %d succeeded", ++testsCount);
 }
 
 var myHttp = require('./myHttp'),
@@ -25,13 +30,17 @@ var serverTimeoutMilliseconds = process.argv[3] || 10000;
 
 // run server for tests, and pass as a callback our test units.
 // we do this so the server is ready for connections when we run the tests.
-server.start(settings.TEST_PORT);
 server.onStart(function () {
     console.log('Starting tests...');
 
     setTimeout(function () {
         server.stop();
         console.log('Finished running tests.');
+        if (failedTestsCount === 0) {
+          console.log('all tests passed!');
+        } else {
+          console.log('%d/%d failed tests.', failedTestsCount, testsCount);
+        }
         process.exit(0);
     }, serverTimeoutMilliseconds);
 
@@ -123,6 +132,32 @@ server.onStart(function () {
             console.log('problem with /../tester.js request: ' + e.message);
         });
         req.end();
+
+        // test parameterized requests
+        req = http.request({
+            hostname: 'localhost',
+            port: settings.TEST_PORT,
+            path: '/status/7/45',
+            method: 'GET'
+        }, function(res){
+            assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /status/7/45 request (Got '+res.httpVersion+')');
+            assert(res.statusCode === 200, 'Wrong status code received for /status/7/45 request (Got '+res.statusCode+')');
+        });
+        req.on('error', function(e) {
+            console.log('problem with /status/7/45 request: ' + e.message);
+        });
+        req.end();
+
         break;
     }
 });
+
+server.get('/status/:id/:phone', function(request, response) {
+  assert(request.params.id == 7, "Given params.id doesn't match (Got "+request.params.id+")");
+  assert(request.params.phone == 45, "Given params.phone doesn't match (Got "+request.params.phone+")");
+
+  response.status = 200;
+  response.end();
+});
+
+server.start(settings.TEST_PORT);
