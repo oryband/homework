@@ -16,7 +16,8 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
         resource = reqResource,
         resPath = reqResPath,
         headers = reqHeaders,
-        body = reqBody;
+        body = reqBody,
+        params = {};
 
     return {
         get version() { return version; },
@@ -37,7 +38,9 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
         },
         get resPath() { return resPath; },
         get headers() { return headers; },
-        get body() { return body; }
+        get body() { return body; },
+        get params() { return params; },
+        set params(newParams) { params = newParams; }
     };
 };
 
@@ -50,7 +53,7 @@ var HttpResponse = function (resSocket, resVersion, resStatus, resHeaders, resBo
     var version = resVersion || '1.1',
         status = resStatus,
         body = resBody || '',
-        headers = resHeaders || {'Content-Length': 0},
+        headers = resHeaders || {},
         socket = resSocket;
 
     return {
@@ -72,7 +75,12 @@ var HttpResponse = function (resSocket, resVersion, resStatus, resHeaders, resBo
 
         end: function (str) {
           body += str || '';
-          this.headers['Content-Length'] = body.length;
+
+          // don't set content-length if it's already set manually
+          if (!this.headers['Content-Length']) {
+            this.headers['Content-Length'] = body.length;
+          }
+
           socket.write(this.toString());
         },
 
@@ -245,7 +253,7 @@ var Server = function (rootFolder) {
 
 
     // Route '/status' to status page.
-    function processStatus(socket) {
+    function processStatus(response) {
         var stat = status(),
             body = '<html><h1>Status</h1><ul>';
 
@@ -260,20 +268,17 @@ var Server = function (rootFolder) {
         body += '</ul></html>';
 
         // Return response.
-        new HttpResponse(
-            socket,
-            1.1,
-            200,
-            {'Content-Type': 'text/html'}
-        ).end(body);
+        response.status = 200;
+        response.headers['Content-Type'] = 'text/html';
+        response.end(body);
     }
 
 
     // Handle annoying favicon requests.
-    function processFavicon(socket) {
-        new HttpResponse(socket, 1.1, 404).end();
+    function processFavicon(response) {
+        response.status = 404;
+        response.end();
     }
-
 
     // Close socket and update current request counter.
     function closeConnection(socket) {
@@ -301,7 +306,15 @@ var Server = function (rootFolder) {
     // Build HTTP response and return file requested as resource.
     function processValidRequest(socket, request, rootFolder) {
         // TODO Make sure people don't use ../ and access restricted files.
-        var path = rootFolder + request.resPath + request.resource;
+        var response = new HttpResponse(socket),
+            path = rootFolder + request.resPath + request.resource;
+
+        if (path.indexOf('../') !== -1) {
+          console.error('tried to access illegal path "%s"', path);
+          response.status = 500;
+          response.end();
+          return;
+        }
 
         fs.stat(path, function (err, stats) {
             if (err) {
@@ -309,17 +322,20 @@ var Server = function (rootFolder) {
                 // or the client is trying to be smart.
                 // In any case - respond with 404.
                 console.error('stat failed: %s', err.message);
-                new HttpResponse(socket, 1.1, 404).end();
+                response.status = 404;
+                response.end();
                 return;
             } else if (stats.isDirectory()) {
                 console.error('resource "%s" a directory', path);
-                new HttpResponse(socket, 1.1, 403).end();
+                response.status = 403;
+                response.end();
                 return;
             }
 
 
-            var response = new HttpResponse(socket, 1.1, 200);
+            response.status = 200;
             response.headers['Content-Type'] = request.contentType;
+            response.headers['Content-Length'] = stats.size;
 
             // Write HTTP headers first.
             response.end();
@@ -366,24 +382,9 @@ var Server = function (rootFolder) {
             serverSuccessfulRequests++;
 
             if (request.method === 'GET') {
-              that.emit('get', request);
+              that.emit('get', socket, request);
             } else if (request.method === 'POST') {
-              that.emit('post', request);
-            }
-
-            // Process request.
-            if (request.resource === '/status') {
-                processStatus(socket);
-            } else if (request.resource === '/favicon.ico') {
-                processFavicon(socket);
-            } else {
-                processValidRequest(socket, request, rootFolder);
-            }
-
-            // Check if we need to close the connection.
-            if (checkCloseConnection(socket, request)) {
-                // Update current request counter.
-                serverCurrentRequests--;
+              that.emit('post', socket, request);
             }
         });
     });
@@ -400,18 +401,55 @@ var Server = function (rootFolder) {
                 // Fire 'server started' event.
                 that.emit('start');
 
-                that.on('get', function(request) {
+                that.on('get', function(socket, request) {
                   // find a getCallbacks that matches the request.resPath
                   for (var i in getCallbacks) {
                     var obj = getCallbacks[i];
-                    // TODO: match between resource to the actual resPath
-                    if (obj.resource === request.resPath) {
-                      obj.callback(request, new HttpResponse());
+
+                    var resource = obj.resource;
+
+                    // create a regex from the parameterized resource
+                    // for example: /status/:id/:phone => /^\/status\/([^\s/]+)\/([^\s/]+)$/
+                    var paramRegex = /:[^\s/$]+/g;
+                    var matchRegex = new RegExp(resource.replace(paramRegex, '([^\s/]+)'));
+
+                    // check for a match between the re and the request resource
+                    var result = request.uri.match(matchRegex);
+                    if (result) {
+                      // extract param names
+                      var paramNames = resource.match(paramRegex) || [];
+                      
+                      // construct the param object
+                      var params = {};
+                      for (var i = 0; i < paramNames.length; ++i) {
+                        params[paramNames[i].substring(1)] = result[i+1];
+                      }
+                      request.params = params;
+                      obj.callback(request, new HttpResponse(socket));
                       return;
                     }
                   }
 
                   // execute the default static behavior
+                  processValidRequest(socket, request, rootFolder);
+                });
+
+                // Check if we need to close the connection.
+                that.on('get', function(socket, request) {
+                  if (checkCloseConnection(socket, request)) {
+                      // Update current request counter.
+                      serverCurrentRequests--;
+                  }
+                });
+
+                // serve status requests
+                this.get('/status', function (request, response) {
+                  processStatus(response);
+                });
+
+                // serve favicon requests
+                this.get('/favicon.ico', function (request, response) {
+                  processFavicon(response);
                 });
 
                 that.on('post', function(request) {
@@ -427,7 +465,7 @@ var Server = function (rootFolder) {
 
                   // execute the default static behavior
                 });
-            });
+            }.bind(this));
         },
 
         stop: function stopServer () {

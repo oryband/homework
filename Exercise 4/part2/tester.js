@@ -12,12 +12,12 @@ var testsCount = 0,
 
 function assert(condition, message) {
     if (!condition) {
-        console.log("Test %d failed", ++testsCount);
+        console.log('Test %d failed', ++testsCount);
         failedTestsCount++;
         throw message || 'Assertion failed';
     }
 
-    console.log("Test %d succeeded", ++testsCount);
+    console.log('Test %d succeeded', ++testsCount);
 }
 
 var myHttp = require('./myHttp'),
@@ -133,7 +133,7 @@ server.onStart(function () {
         });
         req.end();
 
-        // test parameterized requests
+        // test GET parameterized requests
         req = http.request({
             hostname: 'localhost',
             port: settings.TEST_PORT,
@@ -148,14 +148,50 @@ server.onStart(function () {
         });
         req.end();
 
+        // test POST parameterized requests
+        req = http.request({
+            hostname: 'localhost',
+            port: settings.TEST_PORT,
+            path: '/some-resource',
+            method: 'POST'
+        }, function(res){
+            assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /some-resource request (Got '+res.httpVersion+')');
+            assert(res.statusCode === 200, 'Wrong status code received for /some-resource request (Got '+res.statusCode+')');
+        });
+        req.on('error', function(e) {
+            console.log('problem with /some-resource request: ' + e.message);
+        });
+        req.end();
+
+        // test inexistant POST request
+        req = http.request({
+            hostname: 'localhost',
+            port: settings.TEST_PORT,
+            path: '/some-inexistant-resource',
+            method: 'POST'
+        }, function(res){
+            assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /some-inexistant-resource request (Got '+res.httpVersion+')');
+            assert(res.statusCode === 404, 'Wrong status code received for /some-inexistant-resource request (Got '+res.statusCode+')');
+        });
+        req.on('error', function(e) {
+            console.log('problem with /some-inexistant-resource request: ' + e.message);
+        });
+        req.end();
+
         break;
     }
 });
 
 server.get('/status/:id/:phone', function(request, response) {
-  assert(request.params.id == 7, "Given params.id doesn't match (Got "+request.params.id+")");
-  assert(request.params.phone == 45, "Given params.phone doesn't match (Got "+request.params.phone+")");
+  assert(request.params.id == 7, 'Given params.id doesn\'t match (Got '+request.params.id+')');
+  assert(request.params.phone == 45, 'Given params.phone doesn\'t match (Got '+request.params.phone+')');
 
+  response.status = 200;
+  response.end();
+});
+
+server.post('/some-resource', function(request, response) {
+  assert(true, 'Post callback work');
   response.status = 200;
   response.end();
 });
