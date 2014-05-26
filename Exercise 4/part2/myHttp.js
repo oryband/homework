@@ -175,7 +175,6 @@ var Server = function (rootFolder) {
         };
     };
 
-
     var netServer = net.createServer(function (socket) {
         socket.on('error', function (err) {
           console.log("Socket error: %s\n", err.message);
@@ -246,14 +245,16 @@ var Server = function (rootFolder) {
                         'Content-Type: ' + request.contentType,
                         'Content-Length: ' + stats.size
                     ];
+                    
+                    // write HTTP headers first
+                    socket.write(response.toString());
 
-                    fs.readFile(path, function (err, data) {
-                        if (err) throw err;
-
-                        response.body = data;
-
-                        socket.write(response.toString());
-                    });
+                    // now stream the file. we are streaming it instead of 
+                    // fs.readFile because readFile will load it to memory
+                    // first before serving, which might crash our server for
+                    // big files.
+                    var stream = fs.createReadStream(path);
+                    stream.pipe(socket, {"end": false});
                 });
             }
 
@@ -274,11 +275,15 @@ var Server = function (rootFolder) {
 
 
     return {
-        start: function (port) {
+        start: function (port, callback) {
             netServer.listen(port, function () {
                 serverStarted = true;
                 startDate = new Date().toLocaleDateString();
                 serverPort = port;
+
+                if (callback) {
+                  callback();
+                }
             });
         },
 
