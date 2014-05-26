@@ -116,7 +116,7 @@ function parseRequest(req) {
 
     // Parse path and resource.
     var resource = uri.substring(uri.lastIndexOf('/'), uri.length),
-    resPath = uri.substring(0, uri.lastIndexOf('/') -1);
+    resPath = uri.substring(0, uri.lastIndexOf('/'));
 
     // Parse headers.
     var i,
@@ -258,7 +258,7 @@ var Server = function (rootFolder) {
                 // TODO Make sure people don't use ../ and access restricted files.
                 // Build HTTP response and return file requested as resource.
                 var response = new HttpResponse(1.1, 200),
-                    path = rootFolder + request.resource;
+                    path = rootFolder + request.resPath + request.resource;
 
                 fs.stat(path, function (err, stats) {
                     if (err) {
@@ -267,6 +267,10 @@ var Server = function (rootFolder) {
                         // In any case - respond with 404.
                         console.error('stat failed: %s', err.message);
                         socket.write(new HttpResponse(1.1, 404).toString());
+                        return;
+                    } else if (stats.isDirectory()) {
+                        console.error('resource "%s" a directory', path);
+                        socket.write(new HttpResponse(1.1, 403).toString());
                         return;
                     }
 
