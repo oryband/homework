@@ -188,7 +188,9 @@ var Server = function (rootFolder) {
         serverCurrentRequests = 0,
         serverTotalRequests = 0,
         serverSuccessfulRequests = 0,
-        shouldShutdownServer = false;
+        shouldShutdownServer = false,
+        getCallbacks = [],
+        postCallbacks = [];
 
     // Return a server status object with the above fields.
     function status () {
@@ -342,7 +344,6 @@ var Server = function (rootFolder) {
           console.error(err.stack);
         });
 
-
         // Handle incoming requests for this socket.
         socket.on('data', function (req) {
             // Don't process request if server is in process of shutting down,
@@ -363,6 +364,12 @@ var Server = function (rootFolder) {
 
             // If we got this far, the request is successful (but needs to be further parsed)
             serverSuccessfulRequests++;
+
+            if (request.method === 'GET') {
+              that.emit('get', request);
+            } else if (request.method === 'POST') {
+              that.emit('post', request);
+            }
 
             // Process request.
             if (request.resource === '/status') {
@@ -392,6 +399,34 @@ var Server = function (rootFolder) {
 
                 // Fire 'server started' event.
                 that.emit('start');
+
+                that.on('get', function(request) {
+                  // find a getCallbacks that matches the request.resPath
+                  for (var i in getCallbacks) {
+                    var obj = getCallbacks[i];
+                    // TODO: match between resource to the actual resPath
+                    if (obj.resource === request.resPath) {
+                      obj.callback(request, new HttpResponse());
+                      return;
+                    }
+                  }
+
+                  // execute the default static behavior
+                });
+
+                that.on('post', function(request) {
+                  // find a postCallbacks that matches the request.resPath
+                  for (var i in postCallbacks) {
+                    var obj = postCallbacks[i];
+                    // TODO: match between resource to the actual resPath
+                    if (obj.resource === request.resPath) {
+                      obj.callback(request, new HttpResponse());
+                      return;
+                    }
+                  }
+
+                  // execute the default static behavior
+                });
             });
         },
 
@@ -412,10 +447,15 @@ var Server = function (rootFolder) {
 
         onStart: function (callback) {
             that.on('start', callback);
-        }
+        },
 
-        // get: function(resource, callback) {
-        // }
+        get: function(resource, callback) {
+            getCallbacks.push({'resource': resource, 'callback': callback});
+        },
+
+        post: function(resource, callback) {
+            postCallbacks.push({'resource': resource, 'callback': callback});
+        }
     };
 };
 
