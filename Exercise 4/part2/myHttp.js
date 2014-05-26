@@ -96,8 +96,8 @@ var HttpResponse = function (resSocket, resVersion, resStatus, resHeaders, resBo
     };
 };
 
-// Parses a HTTP request string, and returns an HttpRequest object on success,
-// returns {} otherwise.
+
+// Parses a HTTP request string, and returns an HttpRequest object on success or {} otherwise.
 function parseRequest(req) {
     'use strict';
 
@@ -177,6 +177,7 @@ function parseRequest(req) {
 }
 
 
+// Server class to be instantiated and returned upon calling createHTTPServer().
 var Server = function (rootFolder) {
     'use strict';
     var that = this;  // Reference for use in inner closures.
@@ -381,7 +382,7 @@ var Server = function (rootFolder) {
     });
 
 
-    // Public methods.
+    // Public.
     return {
         start: function (port) {
             netServer.listen(port, function () {
