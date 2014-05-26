@@ -177,6 +177,11 @@ var Server = function (rootFolder) {
 
 
     var netServer = net.createServer(function (socket) {
+        socket.on('error', function (err) {
+          console.log("Socket error: %s\n", err.message);
+          console.log(err.stack);
+        });
+
         socket.on('data', function (req) {
             serverTotalRequests++;
             serverCurrentRequests++;
@@ -224,7 +229,9 @@ var Server = function (rootFolder) {
                     ],
                     body
                 ).toString());
-
+            } else if (request.resource === '/favicon.ico') {
+                // tell the browser we don't have a favicon
+                socket.write(new HttpResponse(1.1, 404).toString());
             } else {
                 // TODO Make sure people don't use ../ and access restricted files.
                 // TODO filter parameters (?a&b&c)
