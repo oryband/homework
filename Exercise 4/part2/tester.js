@@ -14,39 +14,40 @@ function assert(condition, message) {
 }
 
 var myHttp = require('./myHttp'),
-    server = myHttp.createStaticHttpServer('./public');
+    server = myHttp.createStaticHttpServer('./public'),
+    settings = require('./settings'),
+    http = require('http');
 
-var http = require('http');
-
-var TEST_PORT = 3008;
+var shouldSkipTests = process.argv[2] || 'no';
+var serverTimeoutMilliseconds = process.argv[3] || 10000;
 
 // run server for tests, and pass as a callback our test units.
 // we do this so the server is ready for connections when we run the tests.
-server.start(TEST_PORT, function () {
+server.start(settings.TEST_PORT, function () {
     setTimeout(function () {
         server.stop();
         console.log('Finished running tests.');
         process.exit(0);
-    }, process.argv[3] || 10000);
+    }, serverTimeoutMilliseconds);
 
     // Execute tests.
     while (true) {
         // If the second command line argument is yes, we should skip running
         // tests and just launch the server. default: run tests
-        if ((process.argv[2] || 'no') === 'yes') {
+        if (shouldSkipTests === 'yes') {
             break;
         }
 
         // Test the server status on init.
         var serverStatus = server.status();
         assert(serverStatus.isStarted === true, 'Server should have been started by now');
-        assert(serverStatus.port === TEST_PORT, 'Server is running on the wrong port');
+        assert(serverStatus.port === settings.TEST_PORT, 'Server is running on the wrong port');
         assert(serverStatus.numOfCurrentRequests === 0, 'Server should report 0 requests on init');
         assert(serverStatus.percentageOfSuccesfulRequests === 100, 'Server should report 100% success rate on init');
 
         var req = http.request({
             hostname: 'localhost',
-            port: TEST_PORT,
+            port: settings.TEST_PORT,
             path: '/status',
             method: 'GET'
         }, function(res){
@@ -63,7 +64,7 @@ server.start(TEST_PORT, function () {
 
         req = http.request({
             hostname: 'localhost',
-            port: TEST_PORT,
+            port: settings.TEST_PORT,
             path: '/status',
             method: 'PUT'
         }, function(res){
@@ -79,7 +80,7 @@ server.start(TEST_PORT, function () {
 
         req = http.request({
             hostname: 'localhost',
-            port: TEST_PORT,
+            port: settings.TEST_PORT,
             path: '/test.jpg',
             method: 'GET'
         }, function(res){

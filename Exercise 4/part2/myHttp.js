@@ -194,8 +194,8 @@ var Server = function (rootFolder) {
             if (lastRequests.length >= settings.MAX_REQUESTS_PER_CONNECTION &&
                 currentTime - lastRequests[settings.MAX_REQUESTS_PER_CONNECTION -1] < settings.REQUESTS_TIME_THRESHOLD_IN_SEC * 1000) {
 
-                // Return an error if too many requests happenned too quickly.
-                socket.write(new HttpResponse(1.1, 500).toString());
+                // don't respond to this request! 
+                // the user is DoSing us and that's what he wants us to do exactly.
                 return;
             } else {
                 // Forget oldest request time (we remember only a capped amount).
