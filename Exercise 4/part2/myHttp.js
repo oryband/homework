@@ -175,20 +175,40 @@ var Server = function (rootFolder) {
         };
     };
 
+    // Handle new connections.
     var netServer = net.createServer(function (socket) {
+        // Used to remember time of last requests, to defend against (psuedo-)DoS attacks.
+        var lastRequests = [];
+
+        // Handle Errors.
         socket.on('error', function (err) {
           console.error('Socket error: %s', err.message);
           console.error(err.stack);
         });
 
+
+        // Handle incoming requests for this socket.
         socket.on('data', function (req) {
+            // Allow a capped amount of requests per connection.
+            var currentTime = new Date().getTime();
+            if (lastRequests.length >= settings.MAX_REQUESTS_PER_CONNECTION &&
+                currentTime - lastRequests[settings.MAX_REQUESTS_PER_CONNECTION -1] < settings.REQUESTS_TIME_THRESHOLD_IN_SEC * 1000) {
+
+                // Return an error if too many requests happenned too quickly.
+                socket.write(new HttpResponse(1.1, 500).toString());
+                return;
+            } else {
+                // Forget oldest request time (we remember only a capped amount).
+                if (lastRequests.length >= settings.MAX_REQUESTS_PER_CONNECTION) {
+                    lastRequests.pop();
+                }
+
+                // If this request is approved, remember its time for future tests.
+                lastRequests.unshift(currentTime);  // Remember request time.
+            }
+
             serverTotalRequests++;
             serverCurrentRequests++;
-
-            var closeServer = function () {
-                serverCurrentRequests--;
-                socket.end();
-            };
 
             var request = parseRequest(req.toString());
 
@@ -196,14 +216,12 @@ var Server = function (rootFolder) {
             if (!request) {
                 socket.write(new HttpResponse(1.1, 400).toString());
                 return;
-            }
-
-            if (request.method !== 'GET' && request.method !== 'POST') {
+            } else if (request.method !== 'GET' && request.method !== 'POST') {
                 socket.write(new HttpResponse(1.1, 405).toString());
                 return;
             }
 
-            // if we got here, the http request is successful (but need to be parsed further)
+            // If we got this far, the request is successful (but needs to be further parsed)
             serverSuccessfulRequests++;
 
             if (request.resource === '/status') {
@@ -211,14 +229,17 @@ var Server = function (rootFolder) {
                 var stat = status(),
                     body = '<html><h1>Status</h1><ul>';
 
+                // Append status elements.
                 for (var key in stat) {
                     if (stat.hasOwnProperty(key)) {
                         body += '<li><b>' + key + '</b>: ' + stat[key] + '</li>';
                     }
                 }
 
+                // Finish building status page.
                 body += '</ul></html>';
 
+                // Return response.
                 socket.write(new HttpResponse(
                     1.1,
                     200,
@@ -230,19 +251,19 @@ var Server = function (rootFolder) {
                 ).toString());
 
             } else if (request.resource === '/favicon.ico') {
-                // Handle favicon requests.
+                // Handle annoying favicon requests.
                 socket.write(new HttpResponse(1.1, 404).toString());
 
             } else {
                 // TODO Make sure people don't use ../ and access restricted files.
-                // TODO filter parameters (?a&b&c)
                 // Build HTTP response and return file requested as resource.
                 var response = new HttpResponse(1.1, 200),
                     path = rootFolder + request.resource;
 
                 fs.stat(path, function (err, stats) {
                     if (err) {
-                        // Probably means file doesn't exist, or the client is trying to be smart.
+                        // Errors probably means file doesn't exist,
+                        // or the client is trying to be smart.
                         // In any case - respond with 404.
                         console.error('stat failed: %s', err.message);
                         socket.write(new HttpResponse(1.1, 404).toString());
@@ -266,22 +287,28 @@ var Server = function (rootFolder) {
             }
 
             // Close connection if protocol is 1.0 and missing keep-alive header.
+            var closeConnection = function () {
+                serverCurrentRequests--;
+                socket.end();
+            };
+
             if (request.headers.Connection === 'close' ||
                 (request.version === '1.0' && request.headers.Connection !== 'Keep-Alive')
             ) {
-              closeServer();
+              closeConnection();
 
             } else {
                 // Set a timeout based on the config value,
                 // Because we shouldn't immediatly close the connection.
                 socket.setTimeout(settings.LAST_REQUEST_TIMEOUT_SEC * 1000, function () {
-                    closeServer();
+                    closeConnection();
                 });
             }
         });
     });
 
 
+    // Public methods.
     return {
         start: function (port, callback) {
             netServer.listen(port, function () {
@@ -304,6 +331,5 @@ var Server = function (rootFolder) {
 
 exports.createStaticHttpServer = function (rootFolder) {
     'use strict';
-
     return new Server(rootFolder);
 };

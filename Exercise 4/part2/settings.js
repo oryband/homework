@@ -1,5 +1,6 @@
 exports.LAST_REQUEST_TIMEOUT_SEC = 2;
-
+exports.REQUESTS_TIME_THRESHOLD_IN_SEC = 5;
+exports.MAX_REQUESTS_PER_CONNECTION = 1;
 exports.HTTP_STATUS_CODES = {
     100: "Continue",
     101: "Switching Protocols",
