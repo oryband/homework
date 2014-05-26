@@ -39,21 +39,6 @@ server.start(TEST_PORT, function () {
     req = http.request({
         hostname: 'localhost',
         port: TEST_PORT,
-        path: '/test.jpg',
-        method: 'GET'
-      }, function(res){
-      assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /test.jpg request (Got '+res.httpVersion+')');
-      assert(res.statusCode === 200, 'Wrong status code received for /test.jpg request (Got '+res.statusCode+')');
-      assert(res.headers['content-type'] === 'image/jpeg', '/test.jpg request should return text/jpeg content (Got '+res.headers['content-type']+')');
-    });
-    req.on('error', function(e) {
-      console.log('problem with /test.jpg request: ' + e.message);
-    });
-    req.end();
-
-    req = http.request({
-        hostname: 'localhost',
-        port: TEST_PORT,
         path: '/status',
         method: 'GET'
       }, function(res){
@@ -77,6 +62,21 @@ server.start(TEST_PORT, function () {
     });
     req.on('error', function(e) {
       console.log('problem with PUT /status BAD request: ' + e.message);
+    });
+    req.end();
+
+    req = http.request({
+        hostname: 'localhost',
+        port: TEST_PORT,
+        path: '/test.jpg',
+        method: 'GET'
+      }, function(res){
+      assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /test.jpg request (Got '+res.httpVersion+')');
+      assert(res.statusCode === 200, 'Wrong status code received for /test.jpg request (Got '+res.statusCode+')');
+      assert(res.headers['content-type'] === 'image/jpeg', '/test.jpg request should return text/jpeg content (Got '+res.headers['content-type']+')');
+    });
+    req.on('error', function(e) {
+      console.log('problem with /test.jpg request: ' + e.message);
     });
     req.end();
 
