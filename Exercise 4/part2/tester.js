@@ -60,11 +60,9 @@ server.onStart(function () {
             assert(res.statusCode === 200, 'Wrong status code received for /status request (Got '+res.statusCode+')');
             assert(res.headers['content-type'] === 'text/html', '/status request should return text/html content (Got '+res.headers['content-type']+')');
         });
-
         req.on('error', function(e) {
             console.log('problem with /status request: ' + e.message);
         });
-
         req.end();
 
         req = http.request({
@@ -76,11 +74,9 @@ server.onStart(function () {
             assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /status request (Got '+res.httpVersion+')');
             assert(res.statusCode === 405, 'Wrong status code received for a method not allowed request (Got '+res.statusCode+')');
         });
-
         req.on('error', function(e) {
             console.log('problem with PUT /status BAD request: ' + e.message);
         });
-
         req.end();
 
         req = http.request({
@@ -93,13 +89,40 @@ server.onStart(function () {
             assert(res.statusCode === 200, 'Wrong status code received for /test.jpg request (Got '+res.statusCode+')');
             assert(res.headers['content-type'] === 'image/jpeg', '/test.jpg request should return text/jpeg content (Got '+res.headers['content-type']+')');
         });
-
         req.on('error', function(e) {
             console.log('problem with /test.jpg request: ' + e.message);
         });
-
         req.end();
 
+        // test for a non existant file
+        req = http.request({
+            hostname: 'localhost',
+            port: settings.TEST_PORT,
+            path: '/test.non_existant',
+            method: 'GET'
+        }, function(res){
+            assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /test.non_existant request (Got '+res.httpVersion+')');
+            assert(res.statusCode === 404, 'Wrong status code received for /test.non_existant request (Got '+res.statusCode+')');
+        });
+        req.on('error', function(e) {
+            console.log('problem with /test.non_existant request: ' + e.message);
+        });
+        req.end();
+
+        // try to 'hack' the server by trying to get a file higher than the server root
+        req = http.request({
+            hostname: 'localhost',
+            port: settings.TEST_PORT,
+            path: '/../tester.js',
+            method: 'GET'
+        }, function(res){
+            assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /../tester.js request (Got '+res.httpVersion+')');
+            assert(res.statusCode === 500, 'Wrong status code received for /../tester.js request (Got '+res.statusCode+')');
+        });
+        req.on('error', function(e) {
+            console.log('problem with /../tester.js request: ' + e.message);
+        });
+        req.end();
         break;
     }
 });
