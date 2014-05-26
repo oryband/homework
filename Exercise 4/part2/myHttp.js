@@ -21,14 +21,14 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
         get uri() { return uri; },
         get resource() { return resource; },
         get contentType() {
-          // get extension of the resource
-          switch (this.resource.substring(this.resource.lastIndexOf('.')+1)) {
-            case 'js': return 'application/javascript';
-            case 'html': return 'text/html';
+          // Get resource extension.
+          switch (this.resource.substring(this.resource.lastIndexOf('.') +1)) {
             case 'css': return 'text/css';
-            case 'jpg': return 'image/jpeg';
             case 'gif': return 'image/gif';
+            case 'html': return 'text/html';
+            case 'js': return 'application/javascript';
             case 'json': return 'application/json';
+            case 'jpg': return 'image/jpeg';
             default: return 'text/plain';
           }
         },
@@ -177,8 +177,8 @@ var Server = function (rootFolder) {
 
     var netServer = net.createServer(function (socket) {
         socket.on('error', function (err) {
-          console.log("Socket error: %s\n", err.message);
-          console.log(err.stack);
+          console.error('Socket error: %s', err.message);
+          console.error(err.stack);
         });
 
         socket.on('data', function (req) {
@@ -206,8 +206,8 @@ var Server = function (rootFolder) {
             // if we got here, the http request is successful (but need to be parsed further)
             serverSuccessfulRequests++;
 
-            // Route '/status' to status page.
             if (request.resource === '/status') {
+                // Route '/status' to status page.
                 var stat = status(),
                     body = '<html><h1>Status</h1><ul>';
 
@@ -228,9 +228,11 @@ var Server = function (rootFolder) {
                     ],
                     body
                 ).toString());
+
             } else if (request.resource === '/favicon.ico') {
-                // tell the browser we don't have a favicon
+                // Handle favicon requests.
                 socket.write(new HttpResponse(1.1, 404).toString());
+
             } else {
                 // TODO Make sure people don't use ../ and access restricted files.
                 // TODO filter parameters (?a&b&c)
@@ -240,41 +242,41 @@ var Server = function (rootFolder) {
 
                 fs.stat(path, function (err, stats) {
                     if (err) {
-                      // stat error means the file probably does not exist
-                      // or the client is trying to be smart. respond with 404
-                      console.error("stat failed: %s\n", err.message);
-                      socket.write(new HttpResponse(1.1, 404).toString());
-                      return;
+                        // Probably means file doesn't exist, or the client is trying to be smart.
+                        // In any case - respond with 404.
+                        console.error('stat failed: %s', err.message);
+                        socket.write(new HttpResponse(1.1, 404).toString());
+                        return;
                     }
 
                     response.responseHeader = [
                         'Content-Type: ' + request.contentType,
                         'Content-Length: ' + stats.size
                     ];
-                    
-                    // write HTTP headers first
+
+                    // Write HTTP headers first.
                     socket.write(response.toString());
 
-                    // now stream the file. we are streaming it instead of 
-                    // fs.readFile because readFile will load it to memory
-                    // first before serving, which might crash our server for
-                    // big files.
+                    // Now stream the file: we are streaming it instead of
+                    // fs.readFile() because readFile will load to memory
+                    // first before serving, which might cause a memory overflow.
                     var stream = fs.createReadStream(path);
-                    stream.pipe(socket, {"end": false});
+                    stream.pipe(socket, {'end': false});
                 });
             }
 
-            // close connection if protocol is 1.0 and no keep-alive header
+            // Close connection if protocol is 1.0 and missing keep-alive header.
             if (request.headers.Connection === 'close' ||
                 (request.version === '1.0' && request.headers.Connection !== 'Keep-Alive')
             ) {
               closeServer();
+
             } else {
-              // we shouldn't immediatly close the connection; set a timeout
-              // based on the config value.
-              socket.setTimeout(settings.LAST_REQUEST_TIMEOUT_SEC * 1000, function () {
-                closeServer();
-              });
+                // Set a timeout based on the config value,
+                // Because we shouldn't immediatly close the connection.
+                socket.setTimeout(settings.LAST_REQUEST_TIMEOUT_SEC * 1000, function () {
+                    closeServer();
+                });
             }
         });
     });
@@ -287,9 +289,7 @@ var Server = function (rootFolder) {
                 startDate = new Date().toLocaleDateString();
                 serverPort = port;
 
-                if (callback) {
-                  callback();
-                }
+                if (callback) { callback(); }
             });
         },
 
