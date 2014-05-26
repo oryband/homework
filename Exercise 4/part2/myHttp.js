@@ -43,38 +43,56 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
 
 
 // HTTP Response object.
-var HttpResponse = function (resVersion, resStatusCode, resResponseHeader, resBody) {
+var HttpResponse = function (resSocket, resVersion, resStatus, resHeaders, resBody) {
     'use strict';
 
     // TODO add error checks, out of exercise's scope.
-    var version = resVersion,
-        statusCode = resStatusCode,
-        responseHeader = resResponseHeader || ['Content-Length: 0'],
-        body = resBody || '';
+    var version = resVersion || '1.1',
+        status = resStatus,
+        body = resBody || '',
+        headers = resHeaders || {'Content-Length': 0},
+        socket = resSocket;
 
     return {
         get version() { return version; },
-        get statusCode() { return statusCode; },
-        get responseHeader() { return responseHeader; },
-        get body() { return body; },
-
         set version(x) { version = x; },
-        set statusCode(x) { statusCode = x; },
-        set responseHeader(x) { responseHeader = x; },
+
+        get status() { return status; },
+        set status(x) { status = x; },
+
+        get body() { return body; },
         set body(x) { body = x; },
+
+        get headers() { return headers; },
+        set headers(new_headers) { headers = new_headers; },
+
+        write: function (str) {
+          body += str;
+        },
+
+        end: function (str) {
+          body += str || '';
+          this.headers['Content-Length'] = body.length;
+          socket.write(this.toString());
+        },
 
         // Build response string and return it.
         toString: function() {
             return [
-                'HTTP/' + version + ' ' + statusCode + ' ' + settings.HTTP_STATUS_CODES[statusCode],
-                responseHeader.join('\r\n'),
+                'HTTP/' + version + ' ' + status + ' ' + settings.HTTP_STATUS_CODES[status],
+                (function () {
+                  var processed_headers = [];
+                  for (var key in headers) {
+                    processed_headers.push(key + ':' + headers[key]); 
+                  }
+                  return processed_headers;
+                })().join('\r\n'),
                 '',
                 body
             ].join('\r\n');
         }
     };
 };
-
 
 // Parses a HTTP request string, and returns an HttpRequest object on success,
 // returns {} otherwise.
@@ -226,10 +244,10 @@ var Server = function (rootFolder) {
 
             // Return Bad Request HTTP response on bad requests.
             if (!request) {
-                socket.write(new HttpResponse(1.1, 400).toString());
+                new HttpResponse(socket, 1.1, 400).end();
                 return;
             } else if (request.method !== 'GET' && request.method !== 'POST') {
-                socket.write(new HttpResponse(1.1, 405).toString());
+                new HttpResponse(socket, 1.1, 405).end();
                 return;
             }
 
@@ -252,25 +270,19 @@ var Server = function (rootFolder) {
                 body += '</ul></html>';
 
                 // Return response.
-                socket.write(new HttpResponse(
+                new HttpResponse(
+                    socket,
                     1.1,
                     200,
-                    [
-                        'Content-Type: text/html',
-                        'Content-Length: ' + body.length
-                    ],
-                    body
-                ).toString());
-
+                    {'Content-Type': 'text/html'}
+                ).end(body);
             } else if (request.resource === '/favicon.ico') {
                 // Handle annoying favicon requests.
-                socket.write(new HttpResponse(1.1, 404).toString());
-
+                new HttpResponse(socket, 1.1, 404).end();
             } else {
                 // TODO Make sure people don't use ../ and access restricted files.
                 // Build HTTP response and return file requested as resource.
-                var response = new HttpResponse(1.1, 200),
-                    path = rootFolder + request.resPath + request.resource;
+                var path = rootFolder + request.resPath + request.resource;
 
                 fs.stat(path, function (err, stats) {
                     if (err) {
@@ -278,21 +290,19 @@ var Server = function (rootFolder) {
                         // or the client is trying to be smart.
                         // In any case - respond with 404.
                         console.error('stat failed: %s', err.message);
-                        socket.write(new HttpResponse(1.1, 404).toString());
+                        new HttpResponse(socket, 1.1, 404).end();
                         return;
                     } else if (stats.isDirectory()) {
                         console.error('resource "%s" a directory', path);
-                        socket.write(new HttpResponse(1.1, 403).toString());
+                        new HttpResponse(socket, 1.1, 403).end();
                         return;
                     }
 
-                    response.responseHeader = [
-                        'Content-Type: ' + request.contentType,
-                        'Content-Length: ' + stats.size
-                    ];
+                    var response = new HttpResponse(socket, 1.1, 200);
+                    response.headers['Content-Type'] = request.contentType;
 
                     // Write HTTP headers first.
-                    socket.write(response.toString());
+                    response.end();
 
                     // Now stream the file: we are streaming it instead of
                     // fs.readFile() because readFile will load to memory
