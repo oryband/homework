@@ -159,7 +159,7 @@ function parseRequest(req) {
 
 var Server = function (rootFolder) {
     'use strict';
-    var that = this;  // Reference for use inner closures.
+    var that = this;  // Reference for use in inner closures.
 
     var serverStarted = false,
         startDate = null,
@@ -170,7 +170,7 @@ var Server = function (rootFolder) {
         shouldShutdownServer = false;
 
     // Return a server status object with the above fields.
-    var status = function () {
+    function status () {
         return {
             isStarted: serverStarted,
             startedDate: startDate,
@@ -178,7 +178,141 @@ var Server = function (rootFolder) {
             numOfCurrentRequests: serverCurrentRequests,
             percentageOfSuccesfulRequests: serverTotalRequests === 0 ? 100 : Math.floor(serverSuccessfulRequests * 100 / serverTotalRequests)
         };
+    }
+
+
+    // Return true if we should process the connection, false other wise.
+    function checkConnectionCap(lastRequests) {
+        // Allow only a capped amount of requests per connection.
+        var currentTime = new Date().getTime();
+        if (lastRequests.length >= settings.MAX_REQUESTS_PER_CONNECTION &&
+            currentTime - lastRequests[settings.MAX_REQUESTS_PER_CONNECTION -1] < settings.REQUESTS_TIME_THRESHOLD_IN_SEC * 1000) {
+
+            // don't respond to this request!
+            // the user is DoS-ing and that's what he wants us to do exactly.
+            return false;
+        } else {
+            // Forget oldest request time (we remember only a capped amount).
+            if (lastRequests.length >= settings.MAX_REQUESTS_PER_CONNECTION) {
+                lastRequests.pop();
+            }
+
+            // If this request is approved, remember its time for future tests.
+            lastRequests.unshift(currentTime);  // Remember request time.
+
+            return true;
+        }
+    }
+
+
+    // Return Bad Request HTTP response on bad requests.
+    function checkBadRequest(socket, request) {
+        if (!request) {
+            // Handle invalid requests.
+            socket.write(new HttpResponse(1.1, 400).toString());
+            return false;
+        } else if (request.method !== 'GET' && request.method !== 'POST') {
+            // Only GET or POST requests are allowed.
+            socket.write(new HttpResponse(1.1, 405).toString());
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    // Route '/status' to status page.
+    function processStatus(socket) {
+        var stat = status(),
+            body = '<html><h1>Status</h1><ul>';
+
+        // Append status elements.
+        for (var key in stat) {
+            if (stat.hasOwnProperty(key)) {
+                body += '<li><b>' + key + '</b>: ' + stat[key] + '</li>';
+            }
+        }
+
+        // Finish building status page.
+        body += '</ul></html>';
+
+        // Return response.
+        socket.write(new HttpResponse(
+            1.1,
+            200,
+            [
+                'Content-Type: text/html',
+                'Content-Length: ' + body.length
+            ],
+            body
+        ).toString());
+    }
+
+
+    // Handle annoying favicon requests.
+    function processFavicon(socket) {
+        socket.write(new HttpResponse(1.1, 404).toString());
+    }
+
+
+    // Close socket and update current request counter.
+    function closeConnection(socket) {
+        serverCurrentRequests--;
+        socket.end();
     };
+
+
+    // Close connection if protocol is 1.0 and missing keep-alive header.
+    function checkCloseConnection(socket, request) {
+        if (request.headers.Connection === 'close' ||
+            (request.version === '1.0' && request.headers.Connection !== 'Keep-Alive')) {
+
+            closeConnection(socket);
+        } else {
+            // Set a timeout based on the config value,
+            // Because we shouldn't immediatly close the connection.
+            socket.setTimeout(settings.LAST_REQUEST_TIMEOUT_SEC * 1000, function () {
+                closeConnection(socket);
+            });
+        }
+    }
+
+
+    // Build HTTP response and return file requested as resource.
+    function processValidRequest(socket, request, rootFolder) {
+        // TODO Make sure people don't use ../ and access restricted files.
+        var response = new HttpResponse(1.1, 200),
+            path = rootFolder + request.resPath + request.resource;
+
+        fs.stat(path, function (err, stats) {
+            if (err) {
+                // Errors probably means file doesn't exist,
+                // or the client is trying to be smart.
+                // In any case - respond with 404.
+                console.error('stat failed: %s', err.message);
+                socket.write(new HttpResponse(1.1, 404).toString());
+                return;
+            } else if (stats.isDirectory()) {
+                console.error('resource "%s" a directory', path);
+                socket.write(new HttpResponse(1.1, 403).toString());
+                return;
+            }
+
+            response.responseHeader = [
+                'Content-Type: ' + request.contentType,
+                'Content-Length: ' + stats.size
+            ];
+
+            // Write HTTP headers first.
+            socket.write(response.toString());
+
+            // Now stream the file: we are streaming it instead of
+            // fs.readFile() because readFile will load to memory
+            // first before serving, which might cause a memory overflow.
+            var stream = fs.createReadStream(path);
+            stream.pipe(socket, {'end': false});
+        });
+    }
 
 
     // Handle new connections.
@@ -195,130 +329,38 @@ var Server = function (rootFolder) {
 
         // Handle incoming requests for this socket.
         socket.on('data', function (req) {
-            if (shouldShutdownServer) {
-                // server is in process of shutting down.
-                // don't accept anymore requests
-                return;
-            }
+            // Don't process request if server is in process of shutting down,
+            // and don't accept anymore requests
+            if (shouldShutdownServer) { return; }
 
-            // Allow a capped amount of requests per connection.
-            var currentTime = new Date().getTime();
-            if (lastRequests.length >= settings.MAX_REQUESTS_PER_CONNECTION &&
-                currentTime - lastRequests[settings.MAX_REQUESTS_PER_CONNECTION -1] < settings.REQUESTS_TIME_THRESHOLD_IN_SEC * 1000) {
+            // Check if this socket sent too many requests.
+            if (!checkConnectionCap(lastRequests)) { return; }
 
-                // don't respond to this request!
-                // the user is DoSing us and that's what he wants us to do exactly.
-                return;
-            } else {
-                // Forget oldest request time (we remember only a capped amount).
-                if (lastRequests.length >= settings.MAX_REQUESTS_PER_CONNECTION) {
-                    lastRequests.pop();
-                }
-
-                // If this request is approved, remember its time for future tests.
-                lastRequests.unshift(currentTime);  // Remember request time.
-            }
-
+            // If not, start processing.
             serverTotalRequests++;
             serverCurrentRequests++;
 
             var request = parseRequest(req.toString());
 
-            // Return Bad Request HTTP response on bad requests.
-            if (!request) {
-                socket.write(new HttpResponse(1.1, 400).toString());
-                return;
-            } else if (request.method !== 'GET' && request.method !== 'POST') {
-                socket.write(new HttpResponse(1.1, 405).toString());
-                return;
-            }
+            // Handle bad requests.
+            if (!checkBadRequest(socket, request)) { return; }
 
             // If we got this far, the request is successful (but needs to be further parsed)
             serverSuccessfulRequests++;
 
+            // Process request.
             if (request.resource === '/status') {
-                // Route '/status' to status page.
-                var stat = status(),
-                    body = '<html><h1>Status</h1><ul>';
-
-                // Append status elements.
-                for (var key in stat) {
-                    if (stat.hasOwnProperty(key)) {
-                        body += '<li><b>' + key + '</b>: ' + stat[key] + '</li>';
-                    }
-                }
-
-                // Finish building status page.
-                body += '</ul></html>';
-
-                // Return response.
-                socket.write(new HttpResponse(
-                    1.1,
-                    200,
-                    [
-                        'Content-Type: text/html',
-                        'Content-Length: ' + body.length
-                    ],
-                    body
-                ).toString());
-
+                processStatus(socket);
             } else if (request.resource === '/favicon.ico') {
-                // Handle annoying favicon requests.
-                socket.write(new HttpResponse(1.1, 404).toString());
-
+                processFavicon(socket);
             } else {
-                // TODO Make sure people don't use ../ and access restricted files.
-                // Build HTTP response and return file requested as resource.
-                var response = new HttpResponse(1.1, 200),
-                    path = rootFolder + request.resPath + request.resource;
-
-                fs.stat(path, function (err, stats) {
-                    if (err) {
-                        // Errors probably means file doesn't exist,
-                        // or the client is trying to be smart.
-                        // In any case - respond with 404.
-                        console.error('stat failed: %s', err.message);
-                        socket.write(new HttpResponse(1.1, 404).toString());
-                        return;
-                    } else if (stats.isDirectory()) {
-                        console.error('resource "%s" a directory', path);
-                        socket.write(new HttpResponse(1.1, 403).toString());
-                        return;
-                    }
-
-                    response.responseHeader = [
-                        'Content-Type: ' + request.contentType,
-                        'Content-Length: ' + stats.size
-                    ];
-
-                    // Write HTTP headers first.
-                    socket.write(response.toString());
-
-                    // Now stream the file: we are streaming it instead of
-                    // fs.readFile() because readFile will load to memory
-                    // first before serving, which might cause a memory overflow.
-                    var stream = fs.createReadStream(path);
-                    stream.pipe(socket, {'end': false});
-                });
+                processValidRequest(socket, request, rootFolder);
             }
 
-            // Close connection if protocol is 1.0 and missing keep-alive header.
-            var closeConnection = function () {
+            // Check if we need to close the connection.
+            if (checkCloseConnection(socket, request)) {
+                // Update current request counter.
                 serverCurrentRequests--;
-                socket.end();
-            };
-
-            if (request.headers.Connection === 'close' ||
-                (request.version === '1.0' && request.headers.Connection !== 'Keep-Alive')
-            ) {
-              closeConnection();
-
-            } else {
-                // Set a timeout based on the config value,
-                // Because we shouldn't immediatly close the connection.
-                socket.setTimeout(settings.LAST_REQUEST_TIMEOUT_SEC * 1000, function () {
-                    closeConnection();
-                });
             }
         });
     });
@@ -355,6 +397,9 @@ var Server = function (rootFolder) {
         onStart: function (callback) {
             that.on('start', callback);
         }
+
+        // get: function(resource, callback) {
+        // }
     };
 };
 
