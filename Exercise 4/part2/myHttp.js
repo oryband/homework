@@ -239,7 +239,13 @@ var Server = function (rootFolder) {
                     path = rootFolder + request.resource;
 
                 fs.stat(path, function (err, stats) {
-                    if (err) throw err;
+                    if (err) {
+                      // stat error means the file probably does not exist
+                      // or the client is trying to be smart. respond with 404
+                      console.error("stat failed: %s\n", err.message);
+                      socket.write(new HttpResponse(1.1, 404).toString());
+                      return;
+                    }
 
                     response.responseHeader = [
                         'Content-Type: ' + request.contentType,
