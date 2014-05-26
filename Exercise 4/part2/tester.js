@@ -14,26 +14,27 @@ function assert(condition, message) {
 }
 
 var myHttp = require('./myHttp'),
-    server = myHttp.createStaticHttpServer('./public');
+    server = myHttp.createStaticHttpServer('./public'),
+    settings = require('./settings'),
+    http = require('http');
 
-var http = require('http');
-
-var TEST_PORT = 3008;
+var shouldSkipTests = process.argv[2] || 'no';
+var serverTimeoutMilliseconds = process.argv[3] || 10000;
 
 // run server for tests, and pass as a callback our test units.
 // we do this so the server is ready for connections when we run the tests.
-server.start(TEST_PORT, function () {
+server.start(settings.TEST_PORT, function () {
     setTimeout(function () {
         server.stop();
         console.log('Finished running tests.');
         process.exit(0);
-    }, process.argv[3] || 10000);
+    }, serverTimeoutMilliseconds);
 
     // Execute tests.
     while (true) {
         // If the second command line argument is yes, we should skip running
         // tests and just launch the server. default: run tests
-        if ((process.argv[2] || 'no') === 'yes') {
+        if (shouldSkipTests === 'yes') {
             break;
         }
 
