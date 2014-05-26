@@ -452,18 +452,48 @@ var Server = function (rootFolder) {
                   processFavicon(response);
                 });
 
-                that.on('post', function(request) {
+                that.on('post', function(socket, request) {
                   // find a postCallbacks that matches the request.resPath
                   for (var i in postCallbacks) {
                     var obj = postCallbacks[i];
-                    // TODO: match between resource to the actual resPath
-                    if (obj.resource === request.resPath) {
-                      obj.callback(request, new HttpResponse());
+
+                    var resource = obj.resource;
+
+                    // create a regex from the parameterized resource
+                    // for example: /status/:id/:phone => /^\/status\/([^\s/]+)\/([^\s/]+)$/
+                    var paramRegex = /:[^\s/$]+/g;
+                    var matchRegex = new RegExp(resource.replace(paramRegex, '([^\s/]+)'));
+
+                    // check for a match between the re and the request resource
+                    var result = request.uri.match(matchRegex);
+                    if (result) {
+                      // extract param names
+                      var paramNames = resource.match(paramRegex) || [];
+                      
+                      // construct the param object
+                      var params = {};
+                      for (var i = 0; i < paramNames.length; ++i) {
+                        params[paramNames[i].substring(1)] = result[i+1];
+                      }
+                      request.params = params;
+                      obj.callback(request, new HttpResponse(socket));
                       return;
                     }
                   }
 
-                  // execute the default static behavior
+                  // for post, if no resource matched from the callback list,
+                  // respond with resource not found
+                  var response = new HttpResponse(socket);
+                  response.status = 404;
+                  response.end();
+                });
+
+                // Check if we need to close the connection.
+                that.on('post', function(socket, request) {
+                  if (checkCloseConnection(socket, request)) {
+                      // Update current request counter.
+                      serverCurrentRequests--;
+                  }
                 });
             }.bind(this));
         },
