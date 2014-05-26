@@ -7,10 +7,12 @@
  */
 
 // self explanatory. I hope...
+var testsCount = 1;
 function assert(condition, message) {
     if (!condition) {
         throw message || 'Assertion failed';
     }
+    console.log("Test %d succeeded", testsCount++);
 }
 
 var myHttp = require('./myHttp'),
