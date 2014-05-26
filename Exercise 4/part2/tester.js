@@ -2,7 +2,7 @@
 
 /*
  * tester takes two optional arguments:
- * [shouldSkipTests - 'yes'/'no' - default to 'no'] 
+ * [shouldSkipTests - 'yes'/'no' - default to 'no']
  * [serverTimeoutMilliseconds - default 10000]
  */
 
@@ -23,7 +23,10 @@ var serverTimeoutMilliseconds = process.argv[3] || 10000;
 
 // run server for tests, and pass as a callback our test units.
 // we do this so the server is ready for connections when we run the tests.
-server.start(settings.TEST_PORT, function () {
+server.start(settings.TEST_PORT);
+server.onStart(function () {
+    console.log('Starting tests...');
+
     setTimeout(function () {
         server.stop();
         console.log('Finished running tests.');

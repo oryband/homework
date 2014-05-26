@@ -1,5 +1,8 @@
-var net = require('net'),
+var events = require('events'),
     fs = require('fs'),
+    net = require('net'),
+    util = require('util'),
+
     settings = require('./settings');
 
 
@@ -156,6 +159,7 @@ function parseRequest(req) {
 
 var Server = function (rootFolder) {
     'use strict';
+    var that = this;  // Reference for use inner closures.
 
     var serverStarted = false,
         startDate = null,
@@ -176,6 +180,7 @@ var Server = function (rootFolder) {
         };
     };
 
+
     // Handle new connections.
     var netServer = net.createServer(function (socket) {
         // Used to remember time of last requests, to defend against (psuedo-)DoS attacks.
@@ -191,7 +196,7 @@ var Server = function (rootFolder) {
         // Handle incoming requests for this socket.
         socket.on('data', function (req) {
             if (shouldShutdownServer) {
-                // server is in process of shutting down. 
+                // server is in process of shutting down.
                 // don't accept anymore requests
                 return;
             }
@@ -201,7 +206,7 @@ var Server = function (rootFolder) {
             if (lastRequests.length >= settings.MAX_REQUESTS_PER_CONNECTION &&
                 currentTime - lastRequests[settings.MAX_REQUESTS_PER_CONNECTION -1] < settings.REQUESTS_TIME_THRESHOLD_IN_SEC * 1000) {
 
-                // don't respond to this request! 
+                // don't respond to this request!
                 // the user is DoSing us and that's what he wants us to do exactly.
                 return;
             } else {
@@ -321,13 +326,14 @@ var Server = function (rootFolder) {
 
     // Public methods.
     return {
-        start: function (port, callback) {
+        start: function (port) {
             netServer.listen(port, function () {
                 serverStarted = true;
                 startDate = new Date().toLocaleDateString();
                 serverPort = port;
 
-                if (callback) { callback(); }
+                // Fire 'server started' event.
+                that.emit('start');
             });
         },
 
@@ -335,7 +341,7 @@ var Server = function (rootFolder) {
             shouldShutdownServer = true;
 
             if (serverCurrentRequests === 0) {
-                console.log("Shutting down server...");
+                console.log('Shutting down server...');
                 netServer.close();
                 return;
             }
@@ -344,9 +350,17 @@ var Server = function (rootFolder) {
             setInterval(stopServer, 1000);
         },
 
-        status: status
+        status: status,
+
+        onStart: function (callback) {
+            that.on('start', callback);
+        }
     };
 };
+
+
+// Server implements EventEmitter interface.
+util.inherits(Server, events.EventEmitter);
 
 
 exports.createHTTPServer = function (rootFolder) {
