@@ -33,9 +33,7 @@ server.start(TEST_PORT, function () {
         assert(serverStatus.numOfCurrentRequests === 0, 'Server should report 0 requests on init');
         assert(serverStatus.percentageOfSuccesfulRequests === 100, 'Server should report 100% success rate on init');
 
-        var req;
-
-        req = http.request({
+        var req = http.request({
             hostname: 'localhost',
             port: TEST_PORT,
             path: '/status',
