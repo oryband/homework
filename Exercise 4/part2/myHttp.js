@@ -162,7 +162,8 @@ var Server = function (rootFolder) {
         serverPort = null,
         serverCurrentRequests = 0,
         serverTotalRequests = 0,
-        serverSuccessfulRequests = 0;
+        serverSuccessfulRequests = 0,
+        shouldShutdownServer = false;
 
     // Return a server status object with the above fields.
     var status = function () {
@@ -189,6 +190,12 @@ var Server = function (rootFolder) {
 
         // Handle incoming requests for this socket.
         socket.on('data', function (req) {
+            if (shouldShutdownServer) {
+                // server is in process of shutting down. 
+                // don't accept anymore requests
+                return;
+            }
+
             // Allow a capped amount of requests per connection.
             var currentTime = new Date().getTime();
             if (lastRequests.length >= settings.MAX_REQUESTS_PER_CONNECTION &&
@@ -324,8 +331,17 @@ var Server = function (rootFolder) {
             });
         },
 
-        stop: function () {
-            netServer.close();
+        stop: function stopServer () {
+            shouldShutdownServer = true;
+
+            if (serverCurrentRequests === 0) {
+                console.log("Shutting down server...");
+                netServer.close();
+                return;
+            }
+
+            // retry stop in a second
+            setInterval(stopServer, 1000);
         },
 
         status: status
@@ -333,7 +349,7 @@ var Server = function (rootFolder) {
 };
 
 
-exports.createStaticHttpServer = function (rootFolder) {
+exports.createHTTPServer = function (rootFolder) {
     'use strict';
     return new Server(rootFolder);
 };

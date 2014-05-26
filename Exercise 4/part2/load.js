@@ -7,7 +7,7 @@
  */
 
 var myHttp = require('./myHttp'),
-    server = myHttp.createStaticHttpServer('./public'),
+    server = myHttp.createHTTPServer('./public'),
     settings = require('./settings'),
     http = require('http');
 
