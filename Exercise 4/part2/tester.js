@@ -25,8 +25,8 @@ var myHttp = require('./myHttp'),
     settings = require('./settings'),
     http = require('http');
 
-var shouldSkipTests = process.argv[2] || 'no';
-var serverTimeoutMilliseconds = process.argv[3] || 10000;
+var shouldSkipTests = process.argv[2] || 'no',
+    serverTimeoutMilliseconds = process.argv[3] || 10000;
 
 // run server for tests, and pass as a callback our test units.
 // we do this so the server is ready for connections when we run the tests.
@@ -182,18 +182,21 @@ server.onStart(function () {
     }
 });
 
+// Test GET and POST callbacks.
 server.get('/status/:id/:phone', function(request, response) {
-  assert(request.params.id == 7, 'Given params.id doesn\'t match (Got '+request.params.id+')');
-  assert(request.params.phone == 45, 'Given params.phone doesn\'t match (Got '+request.params.phone+')');
+    assert(request.params.id === '7', 'Given params.id doesn\'t match (Got '+request.params.id+')');
+    assert(request.params.phone === '45', 'Given params.phone doesn\'t match (Got '+request.params.phone+')');
 
-  response.status = 200;
-  response.end();
+    response.status = 200;
+    response.end();
 });
 
 server.post('/some-resource', function(request, response) {
-  assert(true, 'Post callback work');
-  response.status = 200;
-  response.end();
+    assert(true, 'Post callback work');
+    response.status = 200;
+    response.end();
 });
 
+
+// Start server and tests.
 server.start(settings.TEST_PORT);

@@ -25,16 +25,16 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
         get uri() { return uri; },
         get resource() { return resource; },
         get contentType() {
-          // Get resource extension.
-          switch (this.resource.substring(this.resource.lastIndexOf('.') +1)) {
-            case 'css': return 'text/css';
-            case 'gif': return 'image/gif';
-            case 'html': return 'text/html';
-            case 'js': return 'application/javascript';
-            case 'json': return 'application/json';
-            case 'jpg': return 'image/jpeg';
-            default: return 'text/plain';
-          }
+            // Get resource extension.
+            switch (this.resource.substring(this.resource.lastIndexOf('.') +1)) {
+                case 'css': return 'text/css';
+                case 'gif': return 'image/gif';
+                case 'html': return 'text/html';
+                case 'js': return 'application/javascript';
+                case 'json': return 'application/json';
+                case 'jpg': return 'image/jpeg';
+                default: return 'text/plain';
+            }
         },
         get resPath() { return resPath; },
         get headers() { return headers; },
@@ -69,33 +69,33 @@ var HttpResponse = function (resSocket, resVersion, resStatus, resHeaders, resBo
         get headers() { return headers; },
         set headers(x) { headers = x; },
 
+        // Append data to body
         write: function (str) {
-          body += str;
+            body += str;
         },
 
+        // Append data to body and write response to socket.
         end: function (str) {
-          body += str || '';
+            body += str || '';
 
-          // don't set content-length if it's already set manually
-          if (!this.headers['Content-Length']) {
-            this.headers['Content-Length'] = body.length;
-          }
+            // Set content-length automatically if not already set by user.
+            this.headers['Content-Length'] = this.headers['Content-Length'] || body.length;
 
-          socket.write(this.toString());
+            socket.write(this.toString());
         },
 
-        // Build response string and return it.
+        // Return response string.
         toString: function() {
             return [
                 'HTTP/' + version + ' ' + status + ' ' + settings.HTTP_STATUS_CODES[status],
                 (function () {
-                  var processedHeaders = [];
-                  for (var key in headers) {
-                      if (headers.hasOwnProperty(key)) {
-                          processedHeaders.push(key + ':' + headers[key]);
-                      }
-                  }
-                  return processedHeaders;
+                    var processedHeaders = [];
+                    for (var key in headers) {
+                        if (headers.hasOwnProperty(key)) {
+                            processedHeaders.push(key + ':' + headers[key]);
+                        }
+                    }
+                    return processedHeaders;
                 })().join('\r\n'),
                 '',
                 body
@@ -188,7 +188,7 @@ function parseRequest(req) {
 // Server class to be instantiated and returned upon calling createHTTPServer().
 var Server = function (rootFolder) {
     'use strict';
-    var that = this;  // Reference for use in inner closures.
+    var server = this;  // Reference for use in inner closures.
 
     var serverStarted = false,
         startDate = null,
@@ -280,6 +280,7 @@ var Server = function (rootFolder) {
         response.end();
     }
 
+
     // Close socket and update current request counter.
     function closeConnection(socket) {
         serverCurrentRequests--;
@@ -303,12 +304,57 @@ var Server = function (rootFolder) {
     }
 
 
+    // Execute a user-defined GET/POST request callback that matches
+    // the request's resource path with the given parameters.
+    function processCallback(socket, request, type) {
+        var callbacks = type === 'get' ? getCallbacks : postCallbacks;
+        for (var i in callbacks) {
+            if (callbacks.hasOwnProperty(i)) {
+                var obj = callbacks[i],
+                    resource = obj.resource;
+
+                // Create a regex from the parameterized resource.
+                // ie: /status/:id/:phone => /^\/status\/([^\s/]+)\/([^\s/]+)$/
+                var paramRegex = /:[^\s/$]+/g,
+                    matchRegex = new RegExp(resource.replace(paramRegex, '([^\\s/]+)'));
+
+                // Check for a match between the regex and the requested resource.
+                var result = request.uri.match(matchRegex);
+                if (result) {
+                    // Extract param names.
+                    var paramNames = resource.match(paramRegex) || [];
+
+                    // Construct the param object.
+                    var params = {};
+                    for (var j = 0; j < paramNames.length; ++j) {
+                        params[paramNames[j].substring(1)] = result[j+1];
+                    }
+
+                    request.params = params;
+                    obj.callback(request, new HttpResponse(socket));
+                    return;
+                }
+            }
+        }
+
+        if (type === 'get') {
+            // If no callback was found, try serving the static file.
+            processValidRequest(socket, request, rootFolder);
+        } else { // POST
+            // Respond with 'not found' if no resource matched from the callback list,
+            var response = new HttpResponse(socket);
+            response.status = 404;
+            response.end();
+        }
+    }
+
+
     // Build HTTP response and return file requested as resource.
     function processValidRequest(socket, request, rootFolder) {
-        // TODO Make sure people don't use ../ and access restricted files.
         var response = new HttpResponse(socket),
             path = rootFolder + request.resPath + request.resource;
 
+        // Avoid higher-level directory access attempts in resource.
         if (path.indexOf('../') !== -1) {
           console.error('tried to access illegal path "%s"', path);
           response.status = 500;
@@ -318,8 +364,7 @@ var Server = function (rootFolder) {
 
         fs.stat(path, function (err, stats) {
             if (err) {
-                // Errors probably means file doesn't exist,
-                // or the client is trying to be smart.
+                // Errors probably means file doesn't exist, or the client is trying to be smart.
                 // In any case - respond with 404.
                 console.error('stat failed: %s', err.message);
                 response.status = 404;
@@ -331,7 +376,6 @@ var Server = function (rootFolder) {
                 response.end();
                 return;
             }
-
 
             response.status = 200;
             response.headers['Content-Type'] = request.contentType;
@@ -351,13 +395,13 @@ var Server = function (rootFolder) {
 
     // Handle new connections.
     var netServer = net.createServer(function (socket) {
-        // Used to remember time of last requests, to defend against (psuedo-)DoS attacks.
+        // Used to remember time of last requests, to protect against (psuedo-)DoS attacks.
         var lastRequests = [];
 
         // Handle Errors.
         socket.on('error', function (err) {
-          console.error('Socket error: %s', err.message);
-          console.error(err.stack);
+            console.error('Socket error: %s', err.message);
+            console.error(err.stack);
         });
 
         // Handle incoming requests for this socket.
@@ -378,13 +422,14 @@ var Server = function (rootFolder) {
             // Handle bad requests.
             if (!checkBadRequest(socket, request)) { return; }
 
-            // If we got this far, the request is successful (but needs to be further parsed)
+            // If we got this far, the request is successful (but needs to be further parsed).
             serverSuccessfulRequests++;
 
+            // Emit request type event, so registered callbacks would be executed.
             if (request.method === 'GET') {
-              that.emit('get', socket, request);
+              server.emit('get', socket, request, 'get');
             } else if (request.method === 'POST') {
-              that.emit('post', socket, request);
+              server.emit('post', socket, request, 'post');
             }
         });
     });
@@ -399,101 +444,28 @@ var Server = function (rootFolder) {
                 serverPort = port;
 
                 // Fire 'server started' event.
-                that.emit('start');
+                server.emit('start');
 
-                that.on('get', function(socket, request) {
-                  // find a getCallbacks that matches the request.resPath
-                  for (var i in getCallbacks) {
-                    var obj = getCallbacks[i];
+                // Process user callbacks (if defined).
+                server.on('get', processCallback);
+                server.on('post', processCallback);
 
-                    var resource = obj.resource;
-
-                    // create a regex from the parameterized resource
-                    // for example: /status/:id/:phone => /^\/status\/([^\s/]+)\/([^\s/]+)$/
-                    var paramRegex = /:[^\s/$]+/g;
-                    var matchRegex = new RegExp(resource.replace(paramRegex, '([^\s/]+)'));
-
-                    // check for a match between the re and the request resource
-                    var result = request.uri.match(matchRegex);
-                    if (result) {
-                      // extract param names
-                      var paramNames = resource.match(paramRegex) || [];
-                      
-                      // construct the param object
-                      var params = {};
-                      for (var i = 0; i < paramNames.length; ++i) {
-                        params[paramNames[i].substring(1)] = result[i+1];
-                      }
-                      request.params = params;
-                      obj.callback(request, new HttpResponse(socket));
-                      return;
-                    }
-                  }
-
-                  // execute the default static behavior
-                  processValidRequest(socket, request, rootFolder);
+                // Close connection if necessary.
+                server.on('get', function(socket, request) {
+                    checkCloseConnection(socket, request);
+                });
+                server.on('post', function(socket, request) {
+                    checkCloseConnection(socket, request);
                 });
 
-                // Check if we need to close the connection.
-                that.on('get', function(socket, request) {
-                  if (checkCloseConnection(socket, request)) {
-                      // Update current request counter.
-                      serverCurrentRequests--;
-                  }
-                });
-
-                // serve status requests
+                // Handle status requests.
                 this.get('/status', function (request, response) {
-                  processStatus(response);
+                    processStatus(response);
                 });
 
-                // serve favicon requests
+                // Handle annoying favicon requests.
                 this.get('/favicon.ico', function (request, response) {
-                  processFavicon(response);
-                });
-
-                that.on('post', function(socket, request) {
-                  // find a postCallbacks that matches the request.resPath
-                  for (var i in postCallbacks) {
-                    var obj = postCallbacks[i];
-
-                    var resource = obj.resource;
-
-                    // create a regex from the parameterized resource
-                    // for example: /status/:id/:phone => /^\/status\/([^\s/]+)\/([^\s/]+)$/
-                    var paramRegex = /:[^\s/$]+/g;
-                    var matchRegex = new RegExp(resource.replace(paramRegex, '([^\s/]+)'));
-
-                    // check for a match between the re and the request resource
-                    var result = request.uri.match(matchRegex);
-                    if (result) {
-                      // extract param names
-                      var paramNames = resource.match(paramRegex) || [];
-                      
-                      // construct the param object
-                      var params = {};
-                      for (var i = 0; i < paramNames.length; ++i) {
-                        params[paramNames[i].substring(1)] = result[i+1];
-                      }
-                      request.params = params;
-                      obj.callback(request, new HttpResponse(socket));
-                      return;
-                    }
-                  }
-
-                  // for post, if no resource matched from the callback list,
-                  // respond with resource not found
-                  var response = new HttpResponse(socket);
-                  response.status = 404;
-                  response.end();
-                });
-
-                // Check if we need to close the connection.
-                that.on('post', function(socket, request) {
-                  if (checkCloseConnection(socket, request)) {
-                      // Update current request counter.
-                      serverCurrentRequests--;
-                  }
+                    processFavicon(response);
                 });
             }.bind(this));
         },
@@ -507,14 +479,14 @@ var Server = function (rootFolder) {
                 return;
             }
 
-            // retry stop in a second
+            // Retry stop in a second
             setInterval(stopServer, 1000);
         },
 
         status: status,
 
         onStart: function (callback) {
-            that.on('start', callback);
+            server.on('start', callback);
         },
 
         get: function(resource, callback) {
@@ -528,7 +500,7 @@ var Server = function (rootFolder) {
 };
 
 
-// Server implements EventEmitter interface.
+// Server extends EventEmitter.
 util.inherits(Server, events.EventEmitter);
 
 
