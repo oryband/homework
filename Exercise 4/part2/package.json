@@ -1,0 +1,7 @@
+{
+    "name": "myHttp",
+    "description": "dvirazulay and oryband's custom http module",
+    "version": "1.0.0",
+    "private": true,
+    "dependencies": {}
+}
