@@ -182,7 +182,7 @@ server.onStart(function () {
     }
 });
 
-// Test GET and POST callbacks.
+// Interesting function #1: Test GET callback.
 server.get('/status/:id/:phone', function(request, response) {
     assert(request.params.id === '7', 'Given params.id doesn\'t match (Got '+request.params.id+')');
     assert(request.params.phone === '45', 'Given params.phone doesn\'t match (Got '+request.params.phone+')');
@@ -191,11 +191,14 @@ server.get('/status/:id/:phone', function(request, response) {
     response.end();
 });
 
+// Interesting function #2: Test POST callback.
 server.post('/some-resource', function(request, response) {
     assert(true, 'Post callback work');
     response.status = 200;
     response.end();
 });
+
+// TODO: Interesting function #3: AJAX callback.
 
 
 // Start server and tests.
