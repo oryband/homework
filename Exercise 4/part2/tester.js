@@ -28,8 +28,8 @@ var myHttp = require('./myHttp'),
 var shouldSkipTests = process.argv[2] || 'no',
     serverTimeoutMilliseconds = process.argv[3] || 10000;
 
-// run server for tests, and pass as a callback our test units.
-// we do this so the server is ready for connections when we run the tests.
+// Run server for tests, and pass as a callback our test units.
+// We do this so the server is ready for connections when we run the tests.
 server.onStart(function () {
     console.log('Starting tests...');
 
@@ -182,23 +182,21 @@ server.onStart(function () {
     }
 });
 
-// Interesting function #1: Test GET callback.
-server.get('/status/:id/:phone', function(request, response) {
-    assert(request.params.id === '7', 'Given params.id doesn\'t match (Got '+request.params.id+')');
-    assert(request.params.phone === '45', 'Given params.phone doesn\'t match (Got '+request.params.phone+')');
-
+// TODO add docs.
+server.get('/test/:number', function(request, response) {
+    var number = request.params.number;
     response.status = 200;
-    response.end();
+    if (number === 'one') {
+        response.end('<html><body>A: ' + request.params.a + '<br/>B: ' + request.params.b + '</body></html>');
+    } else if (number === 'two') {
+        console.log(request.body);
+        response.headers['Content-Type'] = 'application/json';
+        response.end(JSON.stringify(request.params));
+    } else {
+        response.status = 404;
+        response.end();
+    }
 });
-
-// Interesting function #2: Test POST callback.
-server.post('/some-resource', function(request, response) {
-    assert(true, 'Post callback work');
-    response.status = 200;
-    response.end();
-});
-
-// TODO: Interesting function #3: AJAX callback.
 
 
 // Start server and tests.

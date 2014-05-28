@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Interesting Function #3 Test - Ajax Request</title>
+  <meta name="viewport" content="width=device-width">
+</head>
+<body>
+  <h1>Interesting Function #3 Test - Ajax Request</h1>
+  <p>
+    The button triggers an Ajax GET request, which sends and image name, and triggers a server-side callback.<br/>
+    The callback returns the image file, which is then shown on this page.</br>
+  </p>
+  <div id="ajax-form">
+    <input id="a-input" placeholder=":a">
+    <input id="b-input" placeholder=":b">
+    <button id="send-get-button">GET</button>
+    <button id="send-post-button">POST</button>
+  </div>
+  <div id="data-container"></div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      'use strict';
+
+      $('#ajax-form').submit(function () { return false; });
+
+      var container = $('#data-container');
+
+      // TODO finish this.
+      function sendJson(event) {
+        console.log(event);
+        $.ajax({
+          url: event.data.type === 'get' ? '/test/two' : '/test/three',
+          type: event.data.type,
+          data: {
+            'a': $('#a-input').val(),
+            'b': $('#b-input').val(),
+          },
+          success: function (data) {
+            var list = $('<ul/>');
+            container.empty().append(list);
+            console.log(data);
+            for (var key in data) {
+              if (data.hasOwnProperty(key)) {
+                list.append('<li>' + key + ': ' + data.key + '</li>');
+              }
+            }
+          }
+        });
+      }
+
+      $('#send-get-button').click({type: 'get'}, sendJson);
+      $('#send-post-button').click({type: 'post'},sendJson);
+    });
+  </script>
+</body>
+</html>
+
