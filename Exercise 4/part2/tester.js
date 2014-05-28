@@ -186,12 +186,26 @@ server.onStart(function () {
 server.get('/test/:number', function(request, response) {
     var number = request.params.number;
     response.status = 200;
+
     if (number === 'one') {
-        response.end('<html><body>A: ' + request.params.a + '<br/>B: ' + request.params.b + '</body></html>');
+        response.end('<html><body>Test Number: ' + request.params.number + '</body></html>');
     } else if (number === 'two') {
-        console.log(request.body);
         response.headers['Content-Type'] = 'application/json';
-        response.end(JSON.stringify(request.params));
+        response.end(JSON.stringify( { 'test_number': number } ));
+    } else {
+        response.status = 404;
+        response.end();
+    }
+});
+
+server.post('/test/:number', function(request, response) {
+    var number = request.params.number;
+
+    // TODO AJAX parameters are in response object, find out how to fetch them.
+    if (number === 'three') {
+        console.log(request);
+        response.headers['Content-Type'] = 'application/json';
+        response.end(JSON.stringify(request.body));
     } else {
         response.status = 404;
         response.end();

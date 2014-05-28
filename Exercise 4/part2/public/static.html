@@ -12,10 +12,14 @@
     The callback returns the image file, which is then shown on this page.</br>
   </p>
   <div id="ajax-form">
-    <input id="a-input" placeholder=":a">
-    <input id="b-input" placeholder=":b">
-    <button id="send-get-button">GET</button>
-    <button id="send-post-button">POST</button>
+    <div>
+      <button id="test-two-button">GET /test/two (no parameters)</button>
+    </div>
+    <div>
+      <input id="a-input" placeholder=":a">
+      <input id="b-input" placeholder=":b">
+      <button id="test-three-button">POST /test/three (with input)</button>
+    </div>
   </div>
   <div id="data-container"></div>
 
@@ -29,31 +33,33 @@
 
       var container = $('#data-container');
 
-      // TODO finish this.
-      function sendJson(event) {
-        console.log(event);
-        $.ajax({
-          url: event.data.type === 'get' ? '/test/two' : '/test/three',
-          type: event.data.type,
-          data: {
-            'a': $('#a-input').val(),
-            'b': $('#b-input').val(),
-          },
-          success: function (data) {
-            var list = $('<ul/>');
-            container.empty().append(list);
-            console.log(data);
-            for (var key in data) {
-              if (data.hasOwnProperty(key)) {
-                list.append('<li>' + key + ': ' + data.key + '</li>');
-              }
+      $('#test-two-button').click(function () {
+        $.get('/test/two', function (data) {
+          var list = $('<ul/>');
+          container.empty().append(list);
+          for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+              list.append('<li>' + key + ': ' + data[key] + '</li>');
             }
           }
         });
-      }
+      });
 
-      $('#send-get-button').click({type: 'get'}, sendJson);
-      $('#send-post-button').click({type: 'post'},sendJson);
+      $('#test-three-button').click(function () {
+        $.post(
+          '/test/three', // URL
+          { 'a': $('#a-input').val(), 'b': $('#b-input').val() },  // Data
+          function (data) {  // Success function.
+            var list = $('<ul/>');
+            container.empty().append(list);
+            for (var key in data) {
+              if (data.hasOwnProperty(key)) {
+                list.append('<li>' + key + ': ' + data[key] + '</li>');
+              }
+            }
+          }
+        );
+      });
     });
   </script>
 </body>
