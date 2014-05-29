@@ -1,6 +1,6 @@
 # [Skin Segmentation][skin]
 
-Classifying human/non-human skin by color.
+Perceptron Vs. SVM test of classifying human/non-human skin by color.
 
 ## Installation
 
