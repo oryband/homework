@@ -8,11 +8,11 @@ from math import pi, sin, cos, sqrt
 
 
 def read_data(path, features=[], delim='\t'):
-    """Open training file and returns a float matrix.
+    """Open training file and return a float samples, labels.
 
     Each line is a vector of floats.
     The last value is a label, which is fixed from 1/2 to 1/-1.
-    Returned list is randomly scrambled.
+    Returned samples are randomly scrambled.
 
     path: Data file path.
     features: List of features indexes to extract, and abandon all others.
@@ -31,7 +31,7 @@ def read_data(path, features=[], delim='\t'):
 
     shuffle(data)
 
-    return data
+    return data[:-1], data[-1]
 
 
 def generate_sphere_data(size, margin=0.2, radius=1):
@@ -39,7 +39,8 @@ def generate_sphere_data(size, margin=0.2, radius=1):
 
     The center is randomly classified, and the borders are strictly classified.
     """
-    data = []
+    samples = []
+    labels = []
     for _ in xrange(size):
         t = 2*pi*random()
         r = sqrt(uniform(0, radius))
@@ -53,9 +54,10 @@ def generate_sphere_data(size, margin=0.2, radius=1):
         else:
             label = choice((-1, 1))
 
-        data.append([x1+1, x2+1, label])
+        samples.append([x1+1, x2+1])
+        labels.append(label)
 
-    return data
+    return samples, labels
 
 
 def split_list(l, ratio=0.75):
