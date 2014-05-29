@@ -155,10 +155,10 @@ function parseRequest(req) {
     for (i = 1; i < lines.length; ++i) {
         var line = lines[i];
 
-        // Headers and body are separated by CRLF. This will result in an
-        // empty line. If detected, break the headers parsing and start parsing
-        // the body lines.
+        // Headers and body are separated by CRLF. This will result in an empty line.
+        // If detected, break the headers parsing and start parsing the body lines.
         if (line === '') {
+            i++;  // Index points at last header line, increase to point at first body line.
             break;
         }
 
@@ -175,7 +175,6 @@ function parseRequest(req) {
     }
 
     // Parse body.
-    i += 2;
     var body = lines.splice(i, lines.length).join('\r\n');
 
     // Build response.
@@ -229,7 +228,7 @@ var Server = function (rootFolder) {
             }
 
             // If this request is approved, remember its time for future tests.
-            lastRequests.unshift(currentTime);  // Remember request time.
+            lastRequests.unshift(currentTime);
 
             return true;
         }
@@ -330,6 +329,7 @@ var Server = function (rootFolder) {
                         params[paramNames[j].substring(1)] = result[j+1];
                     }
 
+                    // Push to request object and return.
                     request.params = params;
                     obj.callback(request, new HttpResponse(socket));
                     return;
@@ -437,6 +437,7 @@ var Server = function (rootFolder) {
 
     // Public.
     return {
+        // Server start.
         start: function (port) {
             netServer.listen(port, function () {
                 serverStarted = true;
@@ -470,6 +471,7 @@ var Server = function (rootFolder) {
             }.bind(this));
         },
 
+        // Server stop.
         stop: function stopServer () {
             shouldShutdownServer = true;
 
@@ -483,16 +485,20 @@ var Server = function (rootFolder) {
             setInterval(stopServer, 1000);
         },
 
+        // Return status object.
         status: status,
 
+        // Register on-start callback.
         onStart: function (callback) {
             server.on('start', callback);
         },
 
+        // Register GET request callback.
         get: function(resource, callback) {
             getCallbacks.push({'resource': resource, 'callback': callback});
         },
 
+        // Register POST request callback.
         post: function(resource, callback) {
             postCallbacks.push({'resource': resource, 'callback': callback});
         }
@@ -504,6 +510,7 @@ var Server = function (rootFolder) {
 util.inherits(Server, events.EventEmitter);
 
 
+// Module exports: Function returns a new Server object (defined above).
 exports.createHTTPServer = function (rootFolder) {
     'use strict';
     return new Server(rootFolder);

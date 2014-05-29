@@ -1,14 +1,23 @@
 'use strict';
 
-/*
- * tester takes two optional arguments:
+/* tester takes two optional arguments:
  * [shouldSkipTests - 'yes'/'no' - default to 'no']
  * [serverTimeoutMilliseconds - default 10000]
  */
 
-// self explanatory. I hope...
+var myHttp = require('./myHttp'),
+    server = myHttp.createHTTPServer('./public'),
+    settings = require('./settings'),
+    http = require('http');
+
+
+// Test counters.
 var testsCount = 0,
-    failedTestsCount = 0;
+    failedTestsCount = 0,
+
+    shouldSkipTests = process.argv[2] || 'no',
+    serverTimeoutMilliseconds = process.argv[3] || 10000;
+
 
 function assert(condition, message) {
     if (!condition) {
@@ -20,13 +29,6 @@ function assert(condition, message) {
     console.log('Test %d succeeded', ++testsCount);
 }
 
-var myHttp = require('./myHttp'),
-    server = myHttp.createHTTPServer('./public'),
-    settings = require('./settings'),
-    http = require('http');
-
-var shouldSkipTests = process.argv[2] || 'no',
-    serverTimeoutMilliseconds = process.argv[3] || 10000;
 
 // Run server for tests, and pass as a callback our test units.
 // We do this so the server is ready for connections when we run the tests.
@@ -167,7 +169,7 @@ server.onStart(function () {
         req = http.request({
             hostname: 'localhost',
             port: settings.TEST_PORT,
-            path: '/some-inexistant-resource',
+            path: '/some-nonexistant-resource',
             method: 'POST'
         }, function(res){
             assert(res.httpVersion === '1.1', 'Wrong HTTP version received for /some-inexistant-resource request (Got '+res.httpVersion+')');
@@ -182,7 +184,29 @@ server.onStart(function () {
     }
 });
 
-// TODO add docs.
+
+// GET/POST callback tests:
+server.get('/status/:id/:phone', function(request, response) {
+    assert(request.params.id === '7', 'Given params.id doesn\'t match (Got '+request.params.id+')');
+    assert(request.params.phone === '45', 'Given params.phone doesn\'t match (Got '+request.params.phone+')');
+
+    response.status = 200;
+    response.end();
+});
+
+server.post('/some-resource', function(request, response) {
+    assert(true, 'Post callback work');
+    response.status = 200;
+    response.end();
+});
+
+
+/* Interesting function #1 + #2:
+ * #1: returns a html page with the parameter number.
+ *     Try: 'http://localhost:3008/test/89' and you'll receive 'Test Number: 89' in the page.
+ * #2: returns a json response with the param number.
+ *     Try: 'http://[address]:[port]/interesting.html'
+ */
 server.get('/test/:number', function(request, response) {
     var number = request.params.number;
     response.status = 200;
@@ -198,12 +222,16 @@ server.get('/test/:number', function(request, response) {
     }
 });
 
+
+/* Interesting function #3:
+ * Receives a json object, and echoes it back as a response.
+ * Try: 'http://[address]:[port]/interesting.html'
+ */
 server.post('/test/:number', function(request, response) {
     var number = request.params.number;
 
     // TODO AJAX parameters are in response object, find out how to fetch them.
     if (number === 'three') {
-        console.log(request);
         response.headers['Content-Type'] = 'application/json';
         response.end(JSON.stringify(request.body));
     } else {
@@ -211,6 +239,11 @@ server.post('/test/:number', function(request, response) {
         response.end();
     }
 });
+
+
+// Verbose prints.
+console.log('Skipping tests: ' + shouldSkipTests);
+console.log('Server alive for ' + (serverTimeoutMilliseconds / 1000) + ' seconds.\n');
 
 
 // Start server and tests.

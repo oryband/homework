@@ -1,7 +1,6 @@
 'use strict';
 
-/*
- * Tester takes two optional arguments:
+/* Tester takes two optional arguments:
  * [amountOfConcurrentRequests - amount of requests to execute - default 1000]
  * [serverTimeoutMilliseconds - default 10000]
  */
@@ -13,6 +12,12 @@ var myHttp = require('./myHttp'),
 
 var amountOfConcurrentRequests = process.argv[2] || 1000,
     serverTimeoutMilliseconds = process.argv[3] || 10000;
+
+
+// Verbose prints.
+console.log('Requests: ' + amountOfConcurrentRequests);
+console.log('Timeout: ' + (serverTimeoutMilliseconds / 1000) + ' seconds.');
+
 
 // Run server for tests, and pass as a callback our test units.
 // We do this so the server is ready for connections when we run the tests.
