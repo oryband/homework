@@ -3,8 +3,9 @@
 
 import svmutil as svm
 
-from perceptron import train, test
-from data import read_data, generate_sphere_data, split_list, convert_skin_to_svm
+import perceptron
+import adaboost
+from data import read_data, generate_sphere_data, split_list  # , convert_skin_to_svm
 from plot import plot_data, plot_w, plot_w_legend, plot_success_per_size, show, figure
 
 
@@ -69,15 +70,19 @@ def simulate_increasing(data_size, margin=0.3, max_iter=100, learning_rate=0.1,
 
 def simulate_seperable(data_size):
     """Simulate learning a completely seperable data set."""
-    data = generate_sphere_data(10000, margin=0)
-    train_data, test_data = split_list(data, 0.75)
-    w = train(train_data, max_iter=500, r=0.01)
-    error = test(test_data, w)
-    status(train_data, test_data, error)
+    samples, labels = generate_sphere_data(10000, margin=0.5)
+    train_samples, test_samples = split_list(samples, 0.75)
+    train_labels, test_labels = split_list(labels, 0.75)
+    # classifier = adaboost.train(train_samples, train_labels, max_iter=1000)
+    # print adaboost.test(test_samples, test_labels, classifier)
+    classifier = perceptron.train(train_samples, train_labels, max_iter=100)
+    print perceptron.test(test_samples, test_labels, classifier)
+    # error = test(test_data, w)
+    # status(train_data, test_data, error)
 
-    plot_data(data)
-    plot_w(data, w)
-    show()
+    # plot_data(data)
+    # plot_w(data, w)
+    # show()
 
 
 def simulate_skin(steps=5, max_iter=100, learning_rate=0.1):
@@ -109,15 +114,15 @@ def simulate_skin(steps=5, max_iter=100, learning_rate=0.1):
     show()
 
 
-def simulate_skin_with_svm(data_size=None, train_params='-s 0 -t 0'):
-    """Simulate learning skin data set with libsvm."""
-    convert_skin_to_svm(data_size)
+# def simulate_skin_with_svm(data_size=None, train_params='-s 0 -t 0'):
+#     """Simulate learning skin data set with libsvm."""
+#     convert_skin_to_svm(data_size)
 
-    train_y, train_x = svm.svm_read_problem('skin_train.svm')
-    model = svm.svm_train(train_y, train_x, train_params)
+#     train_y, train_x = svm.svm_read_problem('skin_train.svm')
+#     model = svm.svm_train(train_y, train_x, train_params)
 
-    test_y, test_x = svm.svm_read_problem('skin_test.svm')
-    p_label, p_acc, p_val = svm.svm_predict(test_y, test_x, model)
+#     test_y, test_x = svm.svm_read_problem('skin_test.svm')
+#     p_label, p_acc, p_val = svm.svm_predict(test_y, test_x, model)
 
 
 if __name__ == '__main__':
