@@ -1,0 +1,44 @@
+\documentclass[a4paper]{article}
+
+\usepackage{amssymb,,hyperref,graphicx}
+
+\title{Assignment 4 - Question 5}
+\author{Ory Band \texttt{300479425}}
+\date{\today}
+
+\newtheorem{thm}{Theorem}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{Ory Band \texttt{300479425}}
+\rhead{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document}
+
+\section {Question 5 - AdaBoost vs. SVM}
+
+Dataset URL: \url{https://archive.ics.uci.edu/ml/datasets/Skin+Segmentation}
+\\\\
+Using the same dataset from the last assignment (Skin Segmentation),
+I tested AdaBoost on varying iterations ranging from 1 to 200.
+I used linear threshold decision stumps as weak classifiers.
+\\\\
+The success rate was high on all iteration runs,
+but showed notable improvement when running more than 100 iterations.
+\\\\\
+Since the dataset is pretty much seperable, SVM also showed a good success rate.
+However, it was painfully slower than AdaBoost:
+While adaboost took less then a minute on each run (even when using 200 iterations),
+SVM took more than 10 minutes!
+\\\\
+I suspect the big difference in time complexity
+is due to very simple (and fast) weak classifiers (decision stumps) in use.
+In comparison, SVM has much more computations to perform (even with the linear kernel).
+
+\begin{figure}[h!]
+    \includegraphics[width=1\textwidth]{adaboost_iterations.png}
+\end{figure}
+
+\end{document}
