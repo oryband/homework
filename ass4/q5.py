@@ -1,133 +1,70 @@
 #!/usr/bin/env python
 """Simulates perceptron and svm machine-learning tests."""
 
-import svmutil as svm
+from sklearn.datasets import load_svmlight_files
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import svm
 
-import perceptron
-import adaboost
-from data import read_data, generate_sphere_data, split_list  # , convert_skin_to_svm
-from plot import plot_data, plot_w, plot_w_legend, plot_success_per_size, show, figure
-
-
-def status(train_data, test_data, error):
-    """Print perceptron status message."""
-    print 'Train/Test/Success: %d/%d/%.2f %%' % (len(train_data),
-                                                 len(test_data),
-                                                 100-error)
+from data import split_libsvm_dataset
+from plot import plot_success_per_size, show
 
 
-def simulate_increasing(data_size, margin=0.3, max_iter=100, learning_rate=0.1,
-                        steps=5, start=None, end=None):
-    """Simulate learning an increasing training data set.
+def adaboost_skin(X_train, y_train, X_test, y_test):
+    """Learn the skin data sets with AdaBoost.
 
-    Generates an unseperable data set, and trains on an increasing training
-    set, then tests and plots.
-
-    start: Initial (first step) training data set size.
-    end: Final (last step) training data set size.
+    X_*: Samples.
+    y_*: labels.
     """
-    data = generate_sphere_data(data_size, margin=margin)
-    train_data, test_data = split_list(data, 0.75)
+    print 'AdaBoost'
 
-    # Initialize start/end sizes if not given.
-    start = len(train_data)/steps if start is None else start
-    end = len(train_data) if end is None else end
+    min_iter = 1
+    max_iter = 200
+    steps = 30
+    diff = (max_iter - min_iter) / steps
+    iterations = [min_iter + diff * step for step in xrange(steps+1)]
+    scores = []
+    for T in iterations:
 
-    w_colors = ['b', 'c', 'm', 'y', 'k']  # w vector (line) graph color.
-    w_gs = []  # w plot graphs.
-    sizes = []  # Training data set sizes.
-    success = []  # Success rates according to training data set sizes.
-    for i in xrange(steps):
-        # Increase training data size according to iteration.
-        size = start + i*end/steps
-        current_train_data = train_data[:size]
+        clf = AdaBoostClassifier(
+            base_estimator=DecisionTreeClassifier(max_depth=1),
+            algorithm="SAMME",
+            n_estimators=T)
 
-        w = train(current_train_data, max_iter=max_iter, r=learning_rate)
-        error = test(test_data, w)
+        clf.fit(X_train.toarray(), y_train)
+        scores.append(100 * clf.score(X_test.toarray(), y_test))
 
-        status(current_train_data, test_data, error)
-        print
+        print '\t%d Iterations: %.2f%%' % (T, scores[-1])
 
-        # Record size-success statistics.
-        sizes.append(size)
-        success.append(100 - error)
-
-        # Plot decision boundary.
-        w_color = w_colors[i] if i < len(w_colors) else w_colors[-1]
-        figure(0)
-        g, = plot_w(current_train_data, w, color=w_color)
-        w_gs.append(g)
-
-    figure(0).suptitle('Test data size: %d\nMaximum iterations: %d' % (len(test_data), max_iter))
-    plot_w_legend(w_gs, sizes)
-    plot_data(data)
-
-    figure(1).suptitle('Success rate according to training set size.')
-    plot_success_per_size(sizes, success)
-
-    show()
+    return iterations, scores
 
 
-def simulate_seperable(data_size):
-    """Simulate learning a completely seperable data set."""
-    samples, labels = generate_sphere_data(10000, margin=0.5)
-    train_samples, test_samples = split_list(samples, 0.75)
-    train_labels, test_labels = split_list(labels, 0.75)
-    # classifier = adaboost.train(train_samples, train_labels, max_iter=1000)
-    # print adaboost.test(test_samples, test_labels, classifier)
-    classifier = perceptron.train(train_samples, train_labels, max_iter=100)
-    print perceptron.test(test_samples, test_labels, classifier)
-    # error = test(test_data, w)
-    # status(train_data, test_data, error)
+def svm_skin(X_train, y_train, X_test, y_test):
+    """Learn the skin data sets with SVM with Linear kernel.
 
-    # plot_data(data)
-    # plot_w(data, w)
-    # show()
+    X_*: Samples.
+    y_*: labels.
+    """
+    print 'SVM w/ Linear kernel'
+    clf = svm.LinearSVC()
+    clf.fit(X_train, y_train)
+    score = 100 * clf.score(X_test.toarray(), y_test)
 
-
-def simulate_skin(steps=5, max_iter=100, learning_rate=0.1):
-    """Simulate learning skin data set."""
-    data = read_data('Skin_NonSkin.txt')
-    train_data, test_data = split_list(data, 0.75)
-
-    start = len(train_data)/steps  # First step training set size.
-    end = len(train_data)  # Final step training set size.
-
-    sizes = []  # Training data set sizes.
-    success = []  # Success rates according to training data set sizes.
-    for i in xrange(steps):
-        # Increase training data size according to iteration.
-        size = start + i*end/steps
-        current_train_data = train_data[:size]
-
-        w = train(current_train_data, max_iter=max_iter, r=learning_rate)
-        error = test(test_data, w)
-
-        status(current_train_data, test_data, error)
-        print
-
-        # Record size-success statistics.
-        sizes.append(size)
-        success.append(100 - error)
-
-    plot_success_per_size(sizes, success)
-    show()
-
-
-# def simulate_skin_with_svm(data_size=None, train_params='-s 0 -t 0'):
-#     """Simulate learning skin data set with libsvm."""
-#     convert_skin_to_svm(data_size)
-
-#     train_y, train_x = svm.svm_read_problem('skin_train.svm')
-#     model = svm.svm_train(train_y, train_x, train_params)
-
-#     test_y, test_x = svm.svm_read_problem('skin_test.svm')
-#     p_label, p_acc, p_val = svm.svm_predict(test_y, test_x, model)
+    print 'SVM score: %.2f%%' % score
+    return score
 
 
 if __name__ == '__main__':
-    simulate_seperable(data_size=10000)
-    # simulate_increasing(data_size=10000, margin=0.7, max_iter=1000, learning_rate=0.01, steps=5)
-    # simulate_skin(steps=10, max_iter=1000, learning_rate=0.1)
-    # convert_seperable_to_svm(data_size=10000, margin=0)
-    # simulate_skin_with_svm(data_size=10000, train_params='-s 0 -t 2')
+    # `data_size` is an integer which controls how big the data set is.
+    # Use none for to use the whole dataset.
+    # split_libsvm_dataset(path='skin.txt', data_size=None)
+
+    # Load train and test samples (X) + labels (y).
+    X_train, y_train, X_test, y_test = load_svmlight_files(
+        ('skin-train.libsvm', 'skin-test.libsvm'))
+
+    svm_skin(X_train, y_train, X_test, y_test)
+
+    # iterations, scores = adaboost_skin(X_train, y_train, X_test, y_test)
+    # graph = plot_success_per_size(iterations, scores)
+    # show()
