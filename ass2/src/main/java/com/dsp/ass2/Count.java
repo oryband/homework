@@ -6,6 +6,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -76,27 +77,6 @@ public class Count {
     }
 
 
-    public static class ReduceClass extends Reducer<Text,IntWritable,Text,Text> {
-
-        private int cw;  // c(w)
-
-        // If key is <w,*>: Write { <w,*> : c(w) }
-        // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
-        @Override
-        public void reduce(Text key, Iterable<IntWritable> values, Context context)
-            throws IOException, InterruptedException {
-
-            int sum = sumValues(values);
-            if (key.toString().split(Utils.delim)[1].equals(wordHeader)) {
-                cw = sum;
-            } else {
-                String val = Integer.toString(cw) + Utils.delim + Integer.toString(sum);
-                context.write(key, new Text(val));
-            }
-        }
-    }
-
-
     public static class PartitionerClass extends Partitioner<Text, IntWritable> {
         // TODO Do this in a smarter way.
         @Override
@@ -116,12 +96,44 @@ public class Count {
     }
 
 
+    public static class ReduceClass extends Reducer<Text,IntWritable,Text,Text> {
+
+        private int cw;  // c(w)
+
+        public static enum N_COUNTER {
+            N
+        };
+
+        // If key is <w,*>: Write { <w,*> : c(w) }
+        // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
+        @Override
+        public void reduce(Text key, Iterable<IntWritable> values, Context context)
+            throws IOException, InterruptedException {
+
+            int sum = sumValues(values);
+            if (key.toString().split(Utils.delim)[1].equals(wordHeader)) {
+                // <w,*> case:
+                cw = sum;
+
+                // TODO sort by decades
+                // Increment global word counter per decade.
+                context.getCounter(N_COUNTER.N).increment(cw);
+            } else {
+                String val = Integer.toString(cw) + Utils.delim + Integer.toString(sum);
+                context.write(key, new Text(val));
+            }
+        }
+    }
+
+
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
+        conf.set("pairsPerDecade", args[2]);  // TODO change from 2 to 3 for amazon.
         //conf.set("mapred.map.tasks","10");
         //conf.set("mapred.reduce.tasks","2");
-        Job job = new Job(conf, "Count");
+
+        Job job = new Job(conf, "Join");
 
         job.setJarByClass(Count.class);
         job.setMapperClass(MapClass.class);
@@ -136,6 +148,15 @@ public class Count {
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        boolean result = job.waitForCompletion(true);
+
+        if (result) {
+            Counters counters = job.getCounters();
+            long nCounter = counters.findCounter(ReduceClass.N_COUNTER.N).getValue();
+            System.out.println(nCounter);
+            conf.set("n", Long.toString(nCounter));
+        }
+
+        System.exit(result ? 0 : 1);
     }
 }

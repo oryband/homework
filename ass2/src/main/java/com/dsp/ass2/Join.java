@@ -43,6 +43,24 @@ public class Join {
     }
 
 
+    public static class PartitionerClass extends Partitioner<Text, Text> {
+        // TODO make this smarter.
+        @Override
+        public int getPartition(Text key, Text value, int numPartitions) {
+            return getLanguage(key) % numPartitions;
+        }
+
+        private int getLanguage(Text key) {
+            if (key.getLength() > 0) {
+                int c = key.charAt(0);
+                if (c >= Long.decode("0x05D0").longValue() && c <= Long.decode("0x05EA").longValue())
+                    return 1;
+            }
+            return 0;
+        }
+    }
+
+
     public static class ReduceClass extends Reducer<Text,Text,Text,Text> {
 
         // For every <w1,w2> - Write { <w1,w2> : c(w1), c(w2), c(w1,w2) }
@@ -63,6 +81,10 @@ public class Join {
 
                 if (counters[0].equals(w1)) {
                     cW1 = counters[1];
+
+                    // TODO sort by decades
+                    // Increment global word counter per decade.
+                    context.getCounter(N_COUNTER.N).increment(Integer.parseInt((cW1)));
                 } else {
                     cW2 = counters[1];
                 }
@@ -75,39 +97,26 @@ public class Join {
     }
 
 
-    public static class PartitionerClass extends Partitioner<Text, Text> {
-        // TODO make this smarter.
-        @Override
-        public int getPartition(Text key, Text value, int numPartitions) {
-            return getLanguage(key) % numPartitions;
-        }
-
-        private int getLanguage(Text key) {
-            if (key.getLength() > 0) {
-                int c = key.charAt(0);
-                if (c >= Long.decode("0x05D0").longValue() && c <= Long.decode("0x05EA").longValue())
-                    return 1;
-            }
-            return 0;
-        }
-    }
-
-
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
+        conf.set("mapreduce.framework.name", "yarn");
         //conf.set("mapred.map.tasks","10");
         //conf.set("mapred.reduce.tasks","2");
+
         Job job = new Job(conf, "Join");
+
         job.setJarByClass(Join.class);
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
+
        // job.setCombinerClass(CombineClass.class);
         job.setReducerClass(ReduceClass.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
