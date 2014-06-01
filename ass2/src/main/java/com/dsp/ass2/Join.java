@@ -58,7 +58,7 @@ public class Join {
 
             String[] counters;
             for (Text value : values) {
-                counters = value.toString().counters(Utils.delim);
+                counters = value.toString().split(Utils.delim);
                 cW1W2 = counters[2];
 
                 if (counters[0].equals(w1)) {
