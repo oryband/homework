@@ -12,8 +12,10 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.io.LongWritable;
+
 
 
 public class Count {
@@ -30,6 +32,11 @@ public class Count {
         return sum;
     }
 
+    // to read from google n-gram
+    /*public static class MySequenceFileInputFormat extends SequenceFileInputFormat<LongWritable,Text> {
+
+
+    }*/
 
     public static class MapClass extends Mapper<LongWritable, Text, Text, IntWritable> {
 
@@ -134,6 +141,9 @@ public class Count {
         //conf.set("mapred.reduce.tasks","2");
 
         Job job = new Job(conf, "Join");
+
+         // to read from google n-gram
+        //job.setInputFormatClass(MySequenceFileInputFormat.class);
 
         job.setJarByClass(Count.class);
         job.setMapperClass(MapClass.class);
