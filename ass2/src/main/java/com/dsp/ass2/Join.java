@@ -96,7 +96,6 @@ public class Join {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        conf.set("mapreduce.framework.name", "yarn");
         //conf.set("mapred.map.tasks","10");
         //conf.set("mapred.reduce.tasks","2");
 
