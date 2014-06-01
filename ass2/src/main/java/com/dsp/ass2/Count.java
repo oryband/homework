@@ -36,8 +36,8 @@ public class Count {
         private Text word = new Text();
 
         // Emit 5 times for each 5-gram:
-        // 1 time for  <w,c(w)> , emitted as { <w,*> : c(w) }
-        // 4 times for each <<w,wi>, c(w,wi)>, i=1..4 , emitted as { <w,wi> : c(w), c(w,wi) }
+        // 1 time for <w,c(w)> , emitted as { <w,*> : c(w) }
+        // 4 times for each <<w,wi>, c(w,wi)> s.t. i=1..4 , emitted as { <w,wi> : c(w), c(w,wi) }
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
@@ -78,15 +78,14 @@ public class Count {
 
     public static class ReduceClass extends Reducer<Text,IntWritable,Text,Text> {
 
-        private int cw = 0;  // c(w)
+        private int cw;  // c(w)
 
-        // Slit <w,wi> key and count both <w,*> and <w,wi> cases.
+        // If key is <w,*>: Write { <w,*> : c(w) }
+        // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
         @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context)
             throws IOException, InterruptedException {
 
-            // If key is <w,*>: Write c(w),
-            // Else key is <w,wi>: Write { c(w), c(w,wi) }
             int sum = sumValues(values);
             if (key.toString().split(Utils.delim)[1].equals(wordHeader)) {
                 cw = sum;
