@@ -2,7 +2,6 @@ var events = require('events'),
     fs = require('fs'),
     net = require('net'),
     util = require('util'),
-
     settings = require('./settings');
 
 
@@ -10,20 +9,20 @@ var events = require('events'),
 var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPath, reqHeaders, reqBody) {
     'use strict';
 
-    var version = reqVersion,
-        method = reqMethod,
-        uri = reqUri,
-        resource = reqResource,
-        resPath = reqResPath,
-        headers = reqHeaders,
-        body = reqBody,
-        params = {};
+    var _version = reqVersion,
+        _method = reqMethod,
+        _uri = reqUri,
+        _resource = reqResource,
+        _resPath = reqResPath,
+        _headers = reqHeaders,
+        _body = reqBody,
+        _params = {};
 
     return {
-        get version() { return version; },
-        get method() { return method; },
-        get uri() { return uri; },
-        get resource() { return resource; },
+        get version() { return _version; },
+        get method() { return _method; },
+        get uri() { return _uri; },
+        get resource() { return _resource; },
         get contentType() {
             // Get resource extension.
             switch (this.resource.substring(this.resource.lastIndexOf('.') +1)) {
@@ -36,11 +35,11 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
                 default: return 'text/plain';
             }
         },
-        get resPath() { return resPath; },
-        get headers() { return headers; },
-        get body() { return body; },
-        get params() { return params; },
-        set params(newParams) { params = newParams; }
+        get resPath() { return _resPath; },
+        get headers() { return _headers; },
+        get body() { return _body; },
+        get params() { return _params; },
+        set params(newParams) { _params = newParams; }
     };
 };
 
@@ -49,56 +48,55 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
 var HttpResponse = function (resSocket, resVersion, resStatus, resHeaders, resBody) {
     'use strict';
 
-    // TODO add error checks, out of exercise's scope.
-    var version = resVersion || '1.1',
-        status = resStatus,
-        body = resBody || '',
-        headers = resHeaders || {},
-        socket = resSocket;
+    var _version = resVersion || '1.1',
+        _status = resStatus,
+        _body = resBody || '',
+        _headers = resHeaders || {},
+        _socket = resSocket;
 
     return {
-        get version() { return version; },
-        set version(x) { version = x; },
+        get version() { return _version; },
+        set version(x) { _version = x; },
 
-        get status() { return status; },
-        set status(x) { status = x; },
+        get status() { return _status; },
+        set status(x) { _status = x; },
 
-        get body() { return body; },
-        set body(x) { body = x; },
+        get body() { return _body; },
+        set body(x) { _body = x; },
 
-        get headers() { return headers; },
-        set headers(x) { headers = x; },
+        get headers() { return _headers; },
+        set headers(x) { _headers = x; },
 
         // Append data to body
         write: function (str) {
-            body += str;
+            _body += str;
         },
 
         // Append data to body and write response to socket.
         end: function (str) {
-            body += str || '';
+            _body += str || '';
 
             // Set content-length automatically if not already set by user.
-            this.headers['Content-Length'] = this.headers['Content-Length'] || body.length;
+            this.headers['Content-Length'] = this.headers['Content-Length'] || _body.length;
 
-            socket.write(this.toString());
+            _socket.write(this.toString());
         },
 
         // Return response string.
         toString: function() {
             return [
-                'HTTP/' + version + ' ' + status + ' ' + settings.HTTP_STATUS_CODES[status],
+                'HTTP/' + _version + ' ' + _status + ' ' + settings.HTTP_STATUS_CODES[_status],
                 (function () {
                     var processedHeaders = [];
-                    for (var key in headers) {
-                        if (headers.hasOwnProperty(key)) {
-                            processedHeaders.push(key + ':' + headers[key]);
+                    for (var key in _headers) {
+                        if (_headers.hasOwnProperty(key)) {
+                            processedHeaders.push(key + ':' + _headers[key]);
                         }
                     }
                     return processedHeaders;
                 })().join('\r\n'),
                 '',
-                body
+                _body
             ].join('\r\n');
         }
     };
@@ -189,24 +187,24 @@ var Server = function (rootFolder) {
     'use strict';
     var server = this;  // Reference for use in inner closures.
 
-    var serverStarted = false,
-        startDate = null,
-        serverPort = null,
-        serverCurrentRequests = 0,
-        serverTotalRequests = 0,
-        serverSuccessfulRequests = 0,
-        shouldShutdownServer = false,
-        getCallbacks = [],
-        postCallbacks = [];
+    var _serverStarted = false,
+        _startDate = null,
+        _serverPort = null,
+        _serverCurrentRequests = 0,
+        _serverTotalRequests = 0,
+        _serverSuccessfulRequests = 0,
+        _shouldShutdownServer = false,
+        _getCallbacks = [],
+        _postCallbacks = [];
 
     // Return a server status object with the above fields.
     function status () {
         return {
-            isStarted: serverStarted,
-            startedDate: startDate,
-            port: serverPort,
-            numOfCurrentRequests: serverCurrentRequests,
-            percentageOfSuccesfulRequests: serverTotalRequests === 0 ? 100 : Math.floor(serverSuccessfulRequests * 100 / serverTotalRequests)
+            isStarted: _serverStarted,
+            startedDate: _startDate,
+            port: _serverPort,
+            numOfCurrentRequests: _serverCurrentRequests,
+            percentageOfSuccesfulRequests: _serverTotalRequests === 0 ? 100 : Math.floor(_serverSuccessfulRequests * 100 / _serverTotalRequests)
         };
     }
 
@@ -282,7 +280,7 @@ var Server = function (rootFolder) {
 
     // Close socket and update current request counter.
     function closeConnection(socket) {
-        serverCurrentRequests--;
+        _serverCurrentRequests--;
         socket.end();
     }
 
@@ -306,7 +304,7 @@ var Server = function (rootFolder) {
     // Execute a user-defined GET/POST request callback that matches
     // the request's resource path with the given parameters.
     function processCallback(socket, request, type) {
-        var callbacks = type === 'get' ? getCallbacks : postCallbacks;
+        var callbacks = type === 'get' ? _getCallbacks : _postCallbacks;
         for (var i in callbacks) {
             if (callbacks.hasOwnProperty(i)) {
                 var obj = callbacks[i],
@@ -408,14 +406,14 @@ var Server = function (rootFolder) {
         socket.on('data', function (req) {
             // Don't process request if server is in process of shutting down,
             // and don't accept anymore requests
-            if (shouldShutdownServer) { return; }
+            if (_shouldShutdownServer) { return; }
 
             // Check if this socket sent too many requests.
             if (!checkConnectionCap(lastRequests)) { return; }
 
             // If not, start processing.
-            serverTotalRequests++;
-            serverCurrentRequests++;
+            _serverTotalRequests++;
+            _serverCurrentRequests++;
 
             var request = parseRequest(req.toString());
 
@@ -423,7 +421,7 @@ var Server = function (rootFolder) {
             if (!checkBadRequest(socket, request)) { return; }
 
             // If we got this far, the request is successful (but needs to be further parsed).
-            serverSuccessfulRequests++;
+            _serverSuccessfulRequests++;
 
             // Emit request type event, so registered callbacks would be executed.
             if (request.method === 'GET') {
@@ -440,9 +438,9 @@ var Server = function (rootFolder) {
         // Server start.
         start: function (port) {
             netServer.listen(port, function () {
-                serverStarted = true;
-                startDate = new Date().toLocaleDateString();
-                serverPort = port;
+                _serverStarted = true;
+                _startDate = new Date().toLocaleDateString();
+                _serverPort = port;
 
                 // Fire 'server started' event.
                 server.emit('start');
@@ -473,9 +471,9 @@ var Server = function (rootFolder) {
 
         // Server stop.
         stop: function stopServer () {
-            shouldShutdownServer = true;
+            _shouldShutdownServer = true;
 
-            if (serverCurrentRequests === 0) {
+            if (_serverCurrentRequests === 0) {
                 console.log('Shutting down server...');
                 netServer.close();
                 return;
@@ -495,12 +493,12 @@ var Server = function (rootFolder) {
 
         // Register GET request callback.
         get: function(resource, callback) {
-            getCallbacks.push({'resource': resource, 'callback': callback});
+            _getCallbacks.push({'resource': resource, 'callback': callback});
         },
 
         // Register POST request callback.
         post: function(resource, callback) {
-            postCallbacks.push({'resource': resource, 'callback': callback});
+            _postCallbacks.push({'resource': resource, 'callback': callback});
         }
     };
 };
