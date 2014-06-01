@@ -69,12 +69,24 @@ var app = app || {};
             }
 
             this.allCheckbox.checked = !remaining;
+
+            // re-order list
+            this.addAll();
         },
 
         // Add a single todo item to the list by creating a view for it, and
         // appending its element to the `<ul>`.
         addOne: function (todo) {
             var view = new app.TodoView({ model: todo });
+
+            // unbind previous events to the model priority changes
+            this.stopListening(todo);
+
+            // when a priority changes, re-sort the todos list
+            this.listenTo(todo, 'change:priority', function() {
+              app.Todos.sort();
+            });
+
             $('#todo-list').append(view.render().el);
         },
 

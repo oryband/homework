@@ -38,8 +38,9 @@ var app = app || {};
         },
 
         // Todos are sorted by their original insertion order.
+        // we are also sorting by priorities - the higher the better.
         comparator: function (todo) {
-            return todo.get('order');
+            return todo.get('order') + (-1 * (10000 * todo.get('priority')));
         }
     });
 

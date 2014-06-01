@@ -11,10 +11,12 @@ var app = app || {};
     app.Todo = Backbone.Model.extend({
         // Default attributes for the todo
         // and ensure that each todo created has `title`, `owner`, and `completed` keys.
+        // 'date' and 'priority' keys.
         defaults: {
             title: '',
             owner: '',
             completed: false,
+            priority: 1, // the higher the better. new items get medium priority.
             date: (new Date()).toLocaleString()
         },
 

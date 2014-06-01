@@ -22,6 +22,8 @@ var app = app || {};
             'dblclick #owner': 'editOwner',
             'click .destroy': 'clear',
             'click .show': 'info',
+            'click .priority_up': 'increasePriority',
+            'click .priority_down': 'decreasePriority',
             'keypress .edit': 'updateOnEnter',
             'blur .edit': 'close'
         },
@@ -121,6 +123,16 @@ var app = app || {};
             });
             $infoContainer.data('current-item-id', this.model.id); 
             $infoContainer.show();
+        },
+
+        // increase the model's priority when the P+ button is pressed
+        increasePriority: function () {
+          this.model.save({ priority: Math.min(this.model.get('priority')+1, 2) });
+        },
+
+        // decrease the model's priority when the P+ button is pressed
+        decreasePriority: function () {
+          this.model.save({ priority: Math.max(this.model.get('priority')-1, 0) });
         }
     });
 })(jQuery);

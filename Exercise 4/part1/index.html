@@ -27,10 +27,23 @@
       <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
     </footer>
     <script type="text/template" id="item-template">
-      <div class="view">
+      <div class="view priority_<%- priority %>">
         <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>
+        <span class="priority">
+          <% 
+            if (priority == 0) {
+              print('Low priority')
+            } else if (priority == 1) {
+              print('Medium priority')
+            } else {
+              print('High priority')
+            }
+          %>
+        </span>
         <label id="title"><%- title %></label>
         <label id="owner"><%- owner %></label>
+        <button class="priority_up"></button>
+        <button class="priority_down"></button>
         <button class="show"></button>
         <button class="destroy"></button>
       </div>
