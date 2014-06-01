@@ -81,10 +81,6 @@ public class Join {
 
                 if (counters[0].equals(w1)) {
                     cW1 = counters[1];
-
-                    // TODO sort by decades
-                    // Increment global word counter per decade.
-                    context.getCounter(N_COUNTER.N).increment(Integer.parseInt((cW1)));
                 } else {
                     cW2 = counters[1];
                 }
