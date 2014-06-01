@@ -1,57 +1,43 @@
 package com.dsp.ass2;
 
 import java.io.IOException;
-
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
-// import org.apache.hadoop.conf.Configuration;
-// import org.apache.hadoop.fs.Path;
-// import org.apache.hadoop.io.IntWritable;
-// import org.apache.hadoop.io.Text;
-// import org.apache.hadoop.mapreduce.Job;
-// import org.apache.hadoop.mapreduce.Mapper;
-// import org.apache.hadoop.mapreduce.Reducer;
-// import org.apache.hadoop.mapreduce.Partitioner;
-// import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-// import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-// import org.apache.hadoop.io.LongWritable;
-
 import com.amazonaws.auth.AWSCredentials;
-
+import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.ec2.model.InstanceType;
-
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClient;
-import com.amazonaws.services.elasticmapreduce.model.StepConfig;
 import com.amazonaws.services.elasticmapreduce.model.HadoopJarStepConfig;
 import com.amazonaws.services.elasticmapreduce.model.JobFlowInstancesConfig;
+import com.amazonaws.services.elasticmapreduce.model.PlacementType;
 import com.amazonaws.services.elasticmapreduce.model.RunJobFlowRequest;
 import com.amazonaws.services.elasticmapreduce.model.RunJobFlowResult;
-import com.amazonaws.services.elasticmapreduce.model.PlacementType;
-
-// import java.io.IOException;
-
-// import java.util.logging.Logger;
-import java.util.logging.ConsoleHandler;
-
-import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.elasticmapreduce.model.StepConfig;
 
 
 public class JobFlow {
 
-    private static String countPairsJarUrl = "s3n://yourbucket/yourfile.jar",
-            countPairsClass = "CountPairs",
-            countPairsInput = "s3n://yourbucket/input/",
-            countPairsOutput = "s3n://yourbucket/output/",
+    private static String credentialsPath = "/AWSCredentials.properties",
+
             actionOnFailure = "TERMINATE_JOB_FLOW",
             jobName = "jobname",
-            hadoopVersion = "2.2.0",
-            credentialsPath = "/AWSCredentials.properties",
-            ec2KeyName = "ec2.pem",
-            placementType = "us-east-1a",
-            logUri = "s3n://yourbucket/logs/";
 
-    private static int instanceCount = 2;
+            ec2KeyName = "ec2",
+            placementType = "us-east-1a",
+            amiVersion = "2.4.2",
+            hadoopVersion = "1.0.3",
+            instanceType = InstanceType.M1Small.toString(),
+
+            logUri = "s3n://ory-dsp-ass2/logs/",
+
+            countPairsClass = "WordCount",
+            countPairsJarUrl = "s3n://ory-dsp-ass2/jars/WordCount.jar",
+            countPairsInput = "s3n://ory-dsp-ass2/steps/WordCount/input/in",
+            countPairsOutput = "s3n://ory-dsp-ass2/steps/WordCount/output/";
+
+    private static int instanceCount = 1;
 
     private static final Logger logger = setLogger(Logger.getLogger(JobFlow.class.getName()));
 
@@ -81,9 +67,11 @@ public class JobFlow {
 
 
     public static void main(String[] args) throws Exception {
+        // Load credentials.
         AWSCredentials credentials = loadCredentials();
         AmazonElasticMapReduce mapReduce = new AmazonElasticMapReduceClient(credentials);
 
+        // Set WordCount job flow step.
         HadoopJarStepConfig hadoopJarStep = new HadoopJarStepConfig()
             .withJar(countPairsJarUrl)
             .withMainClass(countPairsClass)
@@ -94,20 +82,25 @@ public class JobFlow {
             .withHadoopJarStep(hadoopJarStep)
             .withActionOnFailure(actionOnFailure);
 
+        // Set instances.
         JobFlowInstancesConfig instances = new JobFlowInstancesConfig()
             .withInstanceCount(instanceCount)
-            .withMasterInstanceType(InstanceType.M1Small.toString())
-            .withSlaveInstanceType(InstanceType.M1Small.toString())
-            .withHadoopVersion(hadoopVersion).withEc2KeyName(ec2KeyName)
+            .withMasterInstanceType(instanceType)
+            .withSlaveInstanceType(instanceType)
+            .withHadoopVersion(hadoopVersion)
+            .withEc2KeyName(ec2KeyName)
             .withKeepJobFlowAliveWhenNoSteps(false)
             .withPlacement(new PlacementType(placementType));
 
+        // Set job flow request.
         RunJobFlowRequest runFlowRequest = new RunJobFlowRequest()
             .withName(jobName)
+            .withAmiVersion(amiVersion)
             .withInstances(instances)
             .withSteps(stepConfig)
             .withLogUri(logUri);
 
+        // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
         String jobFlowId = runJobFlowResult.getJobFlowId();
         System.out.println("Ran job flow with id: " + jobFlowId);
