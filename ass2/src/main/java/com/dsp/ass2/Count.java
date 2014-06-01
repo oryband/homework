@@ -63,6 +63,7 @@ public class Count {
 
 
     public static class CombineClass extends Reducer<Text,IntWritable,Text,IntWritable> {
+
         private IntWritable sumWrt = new IntWritable();
 
         // Sum every identical count values before sending to reducer.
@@ -76,6 +77,7 @@ public class Count {
 
 
     public static class ReduceClass extends Reducer<Text,IntWritable,Text,Text> {
+
         private int cw = 0;  // c(w)
 
         // Slit <w,wi> key and count both <w,*> and <w,wi> cases.
@@ -89,7 +91,7 @@ public class Count {
             if (key.toString().split(Utils.delim)[1].equals(wordHeader)) {
                 cw = sum;
             } else {
-                String val = Integer.toString(sum) + Utils.delim + Integer.toString(cw);
+                String val = Integer.toString(cw) + Utils.delim + Integer.toString(sum);
                 context.write(key, new Text(val));
             }
         }
