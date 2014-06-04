@@ -2,24 +2,25 @@ package com.dsp.ass2;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.logging.Logger;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Partitioner;
+import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.io.LongWritable;
-
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.util.CharArraySet;
@@ -28,11 +29,14 @@ import org.apache.lucene.util.Version;
 
 public class Count {
 
-    private final static String ngramDelim = "\t",
-            wordsDelim = " ",
-            wordHeader = "!";
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
 
-    private final static int minCentury = 199;
+    private static final String ngramDelim = "\t",
+            wordsDelim = " ",
+            wordHeader = "*";
+
+    private static final int minCentury = 199;
+
 
     // Sum all members in list.
     private static int sumValues(Iterable<IntWritable> values) {
@@ -50,26 +54,30 @@ public class Count {
         private Text word = new Text();
 
 
+        // TODO This should replace stop words with '*' instead of removing them completely. It screws up c(w,wi).
         // Returns the same string with stop words & punctuation removed. removed.
         public String removeStopWords(String words) {
             CharArraySet stopWords = EnglishAnalyzer.getDefaultStopSet();
+            // CharArraySet stopWords = StandardAnalyzer.STOP_WORDS_SET;
             TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_48, new StringReader(words.trim()));
-
             tokenStream = new StopFilter(Version.LUCENE_48, tokenStream, stopWords);
-            StringBuilder sb = new StringBuilder();
             CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
+            StringBuilder sb = new StringBuilder();
             String output;
 
             try {
+                // Append only non stop words.
                 tokenStream.reset();
                 while (tokenStream.incrementToken()) {
                     String term = charTermAttribute.toString();
                     sb.append(term + " ");
                 }
 
-                output = sb.toString();
+                output = sb.toString().trim();  // Clean trailing whitespace.
                 tokenStream.close();
             } catch (IOException e) {
+                // On any error, return the original n-gram (and notify user).
+                logger.severe("Error filtering stop words from n-gram: " + words);
                 return words;
             }
 
@@ -83,27 +91,51 @@ public class Count {
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
-            // Split n-gram into words, and handle <w,wi> pairs.
+            // Convert n-gram to lowercase, Split into words, and handle <w,wi> pairs.
             String[] ngram = value.toString().toLowerCase().split(ngramDelim),
-                words = removeStopWords(ngram[0]).split(wordsDelim);
+                words = ngram[0].split(wordsDelim);
+
+            String centralWord;
 
             int century = Integer.parseInt(ngram[1]) / 10,
-                occurences = Integer.parseInt(ngram[2]);
-            int center, i;
+                occurences = Integer.parseInt(ngram[2]),
+                center,
+                i;
+
             if (words.length > 0 && century >= minCentury) {
-                center = words.length / 2;  // Main (central) word index.
+                // Get central word in n-gram.
+                center = words.length / 2;
+                centralWord = words[center];
 
-                for (i=0; i < words.length; i++) {
-                    // Emit for every word in n-gram.
-                    num.set(occurences);
+                // Remove stop words, count c(w) for every word in pair,
+                // and count pairs only if central word wasn't filtered.
+                // That is - it wasn't a stop word.
+                words = removeStopWords(ngram[0]).split(wordsDelim);
 
-                    word.set(century + Utils.delim + words[i] + Utils.delim + wordHeader);
-                    context.write(word, num);
+                if (words.length > 0) {
+                    center = words.length / 2;
 
-                    // Emit for every central word.
-                    if (i != center) {
-                        word.set(century + Utils.delim + words[center] + Utils.delim + words[i]);
+                    boolean countPairs = false;
+
+                    // Count pairs if central word in n-gram was not a stop word.
+                    if (centralWord.equals(words[center])) {
+                        centralWord = words[center];
+                        countPairs = true;
+                    }
+
+                    for (i=0; i < words.length; i++) {
+                        // Emit for every word in n-gram.
+                        num.set(occurences);
+
+                        // Emit c(w) for every word.
+                        word.set(century + Utils.delim + words[i] + Utils.delim + wordHeader);
                         context.write(word, num);
+
+                        // Emit c(w,wi) for central word, if central wors wasn't a stop word.
+                        if (countPairs && i != center) {
+                            word.set(century + Utils.delim + words[center] + Utils.delim + words[i]);
+                            context.write(word, num);
+                        }
                     }
                 }
             }
@@ -235,6 +267,7 @@ public class Count {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
         // conf.set("pairsPerDecade", args[2]);  // TODO change from 2 to 3 for amazon.
         // conf.set("mapred.map.tasks","10");
