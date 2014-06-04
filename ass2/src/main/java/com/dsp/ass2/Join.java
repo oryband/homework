@@ -18,27 +18,29 @@ public class Join {
 
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
-        private Text word = new Text();
+        private Text newKey = new Text();
+        private Text newValue = new Text();
 
-        // Write { <w1,w2> : w1, c(w1), c(w1,w2) }
+        // Write { <w1,w2> : century , w1, c(w1), c(w1,w2) }
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
             // Fetch words from value.
             String[] words = value.toString().split(Utils.delim);
-            String w1 = words[0],
-                   w2 = words[1],
-                   cW1 = words[2],
-                   cW1W2 = words[3];
+            String century = words[0],
+                   w1 = words[1],
+                   w2 = words[2],
+                   cW1 = words[3],
+                   cW1W2 = words[4];
 
-            Text newValue = new Text(w1 + Utils.delim + cW1 + Utils.delim + cW1W2);
+            newValue.set(w1 + Utils.delim + cW1 + Utils.delim + cW1W2);
 
-            word.set(w1 + Utils.delim + w2);
-            context.write(word, newValue);
+            newKey.set(century + Utils.delim + w1 + Utils.delim + w2);
+            context.write(newKey, newValue);
 
-            word.set(w2 + Utils.delim + w1);
-            context.write(word, newValue);
+            newKey.set(century + Utils.delim + w2 + Utils.delim + w1);
+            context.write(newKey, newValue);
         }
     }
 
@@ -47,32 +49,25 @@ public class Join {
         // TODO make this smarter.
         @Override
         public int getPartition(Text key, Text value, int numPartitions) {
-            return getLanguage(key) % numPartitions;
+            return key.hashCode() & Integer.MAX_VALUE % numPartitions;
         }
 
-        private int getLanguage(Text key) {
-            if (key.getLength() > 0) {
-                int c = key.charAt(0);
-                if (c >= Long.decode("0x05D0").longValue() && c <= Long.decode("0x05EA").longValue())
-                    return 1;
-            }
-            return 0;
-        }
     }
 
 
     public static class ReduceClass extends Reducer<Text,Text,Text,Text> {
 
-        // For every <w1,w2> - Write { <w1,w2> : c(w1), c(w2), c(w1,w2) }
+        private Text newValue = new Text();
+
+        // For every <w1,w2> - Write { <century ,w1 ,w2> : c(w1), c(w2), c(w1,w2) }
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
             String cW1 = "0", cW2 = "0", cW1W2 = "0";
 
             // Fetch w1, w2, c(w1), c(w2), c(w1,w2).
-            String[] w1w2 = key.toString().split(Utils.delim);
-            String w1 = w1w2[0],
-                   w2 = w1w2[1];
+            String[] parseKey = key.toString().split(Utils.delim);
+            String  w1 = parseKey[1];
 
             String[] counters;
             for (Text value : values) {
@@ -86,9 +81,9 @@ public class Join {
                 }
             }
 
-            Text newKey = new Text(w1 + Utils.delim + w2),
-                 newValue = new Text(cW1 + Utils.delim + cW2 + Utils.delim + cW1W2);
-            context.write(newKey, newValue);
+            //TODO add the century count to the key
+            newValue.set(cW1 + Utils.delim + cW2 + Utils.delim + cW1W2);
+            context.write(key, newValue);
         }
     }
 
