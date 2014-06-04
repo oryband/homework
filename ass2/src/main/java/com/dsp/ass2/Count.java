@@ -7,7 +7,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counters;
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -30,7 +30,7 @@ public class Count {
 
     private final static String ngramDelim = "\t",
             wordsDelim = " ",
-            wordHeader = "*";
+            wordHeader = "!";
 
     private final static int minCentury = 199;
 
@@ -153,18 +153,66 @@ public class Count {
         public void reduce(Text key, Iterable<IntWritable> values, Context context)
             throws IOException, InterruptedException {
 
+            String[] words = key.toString().split(Utils.delim);
+            String century = words[0], wi = words[2];
             int sum = sumValues(values);
-            if (key.toString().split(Utils.delim)[2].equals(wordHeader)) {
+
+            if (wi.equals(wordHeader)) {
                 // 'century, w,*' case:
                 cw = sum;
+                updateCounter(century, context);
 
-                // TODO sort by decades
-                // Increment global word counter per decade.
-                context.getCounter(N_COUNTER.N).increment(cw);
             } else {
                 String val = Integer.toString(cw) + Utils.delim + Integer.toString(sum);
                 context.write(key, new Text(val));
             }
+        }
+
+        private void updateCounter(String century, Context context) {
+
+            N_COUNTER currentCentury = N_COUNTER.valueOf("N_" + century);
+            Counter counter = null;
+            switch (currentCentury) {
+                case N_190:
+                    counter = context.getCounter(N_COUNTER.N_190);
+                    break;
+                case N_191:
+                    counter = context.getCounter(N_COUNTER.N_191);
+                    break;
+                case N_192:
+                    counter = context.getCounter(N_COUNTER.N_192);
+                    break;
+                case N_193:
+                    counter = context.getCounter(N_COUNTER.N_193);
+                    break;
+                case N_194:
+                    counter = context.getCounter(N_COUNTER.N_194);
+                    break;
+                case N_195:
+                    counter = context.getCounter(N_COUNTER.N_195);
+                    break;
+                case N_196:
+                    counter = context.getCounter(N_COUNTER.N_196);
+                    break;
+                case N_197:
+                    counter = context.getCounter(N_COUNTER.N_197);
+                    break;
+                case N_198:
+                    counter = context.getCounter(N_COUNTER.N_198);
+                    break;
+                case N_199:
+                    counter = context.getCounter(N_COUNTER.N_199);
+                    break;
+                case N_200:
+                    counter = context.getCounter(N_COUNTER.N_200);
+                    break;
+                case N_201:
+                    counter = context.getCounter(N_COUNTER.N_201);
+                    break;
+            }
+
+            if (counter != null)
+                counter.increment(cw);
         }
     }
 
