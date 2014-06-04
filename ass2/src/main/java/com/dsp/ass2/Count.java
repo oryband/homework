@@ -17,12 +17,12 @@ import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.io.LongWritable;
 
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.core.StopFilter;
-
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.util.Version;
 
 
@@ -50,21 +50,32 @@ public class Count {
         private Text word = new Text();
 
 
-        public String removeStopWords(String words) throws IOException {
-            StandardAnalyzer ana = new StandardAnalyzer(Version.LUCENE_48);
-            TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_48, new StringReader(words));
-            StringBuilder sb = new StringBuilder();
-            tokenStream = new StopFilter(Version.LUCENE_48, tokenStream, ana.STOP_WORDS_SET);
-            CharTermAttribute token = tokenStream.getAttribute(CharTermAttribute.class);
+        // Returns the same string with stop words & punctuation removed. removed.
+        public String removeStopWords(String words) {
+            CharArraySet stopWords = EnglishAnalyzer.getDefaultStopSet();
+            TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_48, new StringReader(words.trim()));
 
-            while (tokenStream.incrementToken()) {
-                if (sb.length() > 0) {
-                    sb.append(" ");
+            tokenStream = new StopFilter(Version.LUCENE_48, tokenStream, stopWords);
+            StringBuilder sb = new StringBuilder();
+            CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
+            String output;
+
+            try {
+                tokenStream.reset();
+                while (tokenStream.incrementToken()) {
+                    String term = charTermAttribute.toString();
+                    sb.append(term + " ");
                 }
-                sb.append(token.toString());
+
+                output = sb.toString();
+                tokenStream.close();
+            } catch (IOException e) {
+                return words;
             }
-            return sb.toString();
+
+            return output;
         }
+
 
         // For every word `w` in n-gram: emit { century, w, * : c(w) }
         // For every central word `w` in n-gram: emit { century, w, wi : c(w,wi) } , i=1..4 (its neithbours)
@@ -73,8 +84,8 @@ public class Count {
             throws IOException, InterruptedException {
 
             // Split n-gram into words, and handle <w,wi> pairs.
-            String[] ngram = value.toString().split(ngramDelim),
-                words = ngram[0].split(wordsDelim);
+            String[] ngram = value.toString().toLowerCase().split(ngramDelim),
+                words = removeStopWords(ngram[0]).split(wordsDelim);
 
             int century = Integer.parseInt(ngram[1]) / 10,
                 occurences = Integer.parseInt(ngram[2]);
@@ -211,8 +222,9 @@ public class Count {
                     break;
             }
 
-            if (counter != null)
+            if (counter != null) {
                 counter.increment(cw);
+            }
         }
     }
 

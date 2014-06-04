@@ -26,8 +26,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
       </plugin>
 
@@ -36,7 +36,7 @@
         <executions>
 
           <execution> <!-- Duplicate this for every jar or main-class you want. -->
-            <id>WordCount</id>
+            <id>Count</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
@@ -44,13 +44,13 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>com.dsp.ass2.WordCount</mainClass>
+                  <mainClass>com.dsp.ass2.Count</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
                 <descriptorRef>jar-with-dependencies</descriptorRef>
               </descriptorRefs>
-              <finalName>WordCount</finalName>
+              <finalName>Count</finalName>
             </configuration>
           </execution>
 
@@ -76,12 +76,6 @@
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-analyzers-common</artifactId>
       <version>4.8.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-analyzers</artifactId>
-      <version>3.6.2</version>
     </dependency>
 
     <dependency>
