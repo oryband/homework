@@ -1,6 +1,7 @@
 package com.dsp.ass2;
 
 import java.io.IOException;
+import java.io.StringReader;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -16,6 +17,13 @@ import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.io.LongWritable;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.core.StopFilter;
+
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.util.Version;
 
 
 public class Count {
@@ -40,6 +48,23 @@ public class Count {
 
         private IntWritable num = new IntWritable();
         private Text word = new Text();
+
+
+        public String removeStopWords(String words) throws IOException {
+            StandardAnalyzer ana = new StandardAnalyzer(Version.LUCENE_48);
+            TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_48, new StringReader(words));
+            StringBuilder sb = new StringBuilder();
+            tokenStream = new StopFilter(Version.LUCENE_48, tokenStream, ana.STOP_WORDS_SET);
+            CharTermAttribute token = tokenStream.getAttribute(CharTermAttribute.class);
+
+            while (tokenStream.incrementToken()) {
+                if (sb.length() > 0) {
+                    sb.append(" ");
+                }
+                sb.append(token.toString());
+            }
+            return sb.toString();
+        }
 
         // For every word `w` in n-gram: emit { century, w, * : c(w) }
         // For every central word `w` in n-gram: emit { century, w, wi : c(w,wi) } , i=1..4 (its neithbours)

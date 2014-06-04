@@ -18,11 +18,8 @@ import org.apache.hadoop.io.LongWritable;
 
 public class NgramReader {
 
+    public static class Sequence extends SequenceFileInputFormat<LongWritable,Text> {}
 
-    public static class Sequence extends SequenceFileInputFormat<LongWritable,Text> {
-
-
-    }
 
     public static class MapClass extends Mapper<LongWritable, Text, Text, IntWritable> {
 
@@ -35,11 +32,12 @@ public class NgramReader {
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
-                if (times > 0) {
-                    times --;
-                    context.write(value, one);
-                    }
-                }
+
+            if (times > 0) {
+                times --;
+                context.write(value, one);
+            }
+        }
     }
 
 
