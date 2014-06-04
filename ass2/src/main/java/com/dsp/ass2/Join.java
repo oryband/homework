@@ -1,27 +1,31 @@
 package com.dsp.ass2;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Partitioner;
+import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.io.LongWritable;
 
 
 public class Join {
+
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
+
 
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
         private Text newKey = new Text();
         private Text newValue = new Text();
 
-        // Write { <w1,w2> : century , w1, c(w1), c(w1,w2) }
+        // Write { <w1,w2> : century, w1, c(w1), c(w1,w2) }
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
@@ -34,9 +38,8 @@ public class Join {
                    cW1 = words[3],
                    cW1W2 = words[4];
 
-            newValue.set(w1 + Utils.delim + cW1 + Utils.delim + cW1W2);
-
             newKey.set(century + Utils.delim + w1 + Utils.delim + w2);
+            newValue.set(w1 + Utils.delim + cW1 + Utils.delim + cW1W2);
             context.write(newKey, newValue);
 
             newKey.set(century + Utils.delim + w2 + Utils.delim + w1);
@@ -46,10 +49,9 @@ public class Join {
 
 
     public static class PartitionerClass extends Partitioner<Text, Text> {
-        // TODO make this smarter.
         @Override
         public int getPartition(Text key, Text value, int numPartitions) {
-            return key.hashCode() & Integer.MAX_VALUE % numPartitions;
+            return (key.hashCode() & Integer.MAX_VALUE) % numPartitions;
         }
 
     }
@@ -59,7 +61,7 @@ public class Join {
 
         private Text newValue = new Text();
 
-        // For every <w1,w2> - Write { <century ,w1 ,w2> : c(w1), c(w2), c(w1,w2) }
+        // For every <w1,w2> - Write { <century, w1 ,w2> : c(w1), c(w2), c(w1,w2) }
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
@@ -67,7 +69,7 @@ public class Join {
 
             // Fetch w1, w2, c(w1), c(w2), c(w1,w2).
             String[] parseKey = key.toString().split(Utils.delim);
-            String  w1 = parseKey[1];
+            String w1 = parseKey[1];
 
             String[] counters;
             for (Text value : values) {
@@ -81,7 +83,7 @@ public class Join {
                 }
             }
 
-            //TODO add the century count to the key
+            // TODO add the N-Century to the key
             newValue.set(cW1 + Utils.delim + cW2 + Utils.delim + cW1W2);
             context.write(key, newValue);
         }
@@ -91,8 +93,8 @@ public class Join {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        //conf.set("mapred.map.tasks","10");
-        //conf.set("mapred.reduce.tasks","2");
+        //conf.set("mapred.map.tasks", "10");
+        //conf.set("mapred.reduce.tasks", "2");
 
         Job job = new Job(conf, "Join");
 

@@ -165,7 +165,7 @@ public class Count {
             Text data = new Text(words[0] + Utils.delim + words[1]);
             // Calculate data's hash code, and bound by Integer maximum value,
             // then calculate the result(mod numPartition).
-            return data.hashCode() & Integer.MAX_VALUE % numPartitions;
+            return (data.hashCode() & Integer.MAX_VALUE) % numPartitions;
         }
     }
 
@@ -269,9 +269,9 @@ public class Count {
         Configuration conf = new Configuration();
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        // conf.set("pairsPerDecade", args[2]);  // TODO change from 2 to 3 for amazon.
-        // conf.set("mapred.map.tasks","10");
-        // conf.set("mapred.reduce.tasks","2");
+        // conf.set("pairsPerCentury", args[2]);  // TODO change from 2 to 3 for amazon.
+        // conf.set("mapred.map.tasks", "10");
+        // conf.set("mapred.reduce.tasks", "2");
 
         Job job = new Job(conf, "Join");
 
