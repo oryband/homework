@@ -20,8 +20,11 @@ import org.apache.hadoop.io.LongWritable;
 
 public class Count {
 
-    private final static String ngramDelim = " ",
+    private final static String ngramDelim = "\t",
+            wordsDelim = " ",
             wordHeader = "*";
+
+    private final static int minCentury = 199;
 
     // Sum all members in list.
     private static int sumValues(Iterable<IntWritable> values) {
@@ -32,37 +35,39 @@ public class Count {
         return sum;
     }
 
-    // to read from google n-gram
-    /*public static class MySequenceFileInputFormat extends SequenceFileInputFormat<LongWritable,Text> {
-
-
-    }*/
 
     public static class MapClass extends Mapper<LongWritable, Text, Text, IntWritable> {
 
-        private final IntWritable one = new IntWritable(1);
+        private IntWritable num = new IntWritable();
         private Text word = new Text();
 
-        // Emit 5 times for each 5-gram:
-        // 1 time for <w,c(w)> , emitted as { <w,*> : c(w) }
-        // 4 times for each <<w,wi>, c(w,wi)> s.t. i=1..4 , emitted as { <w,wi> : c(w), c(w,wi) }
+        // For every word `w` in n-gram: emit { century, w, * : c(w) }
+        // For every central word `w` in n-gram: emit { century, w, wi : c(w,wi) } , i=1..4 (its neithbours)
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
-            // Split n-gram line into words, and handle <w,wi> pairs.
-            String[] words = value.toString().split(ngramDelim);
+            // Split n-gram into words, and handle <w,wi> pairs.
+            String[] ngram = value.toString().split(ngramDelim),
+                words = ngram[0].split(wordsDelim);
+
+            int century = Integer.parseInt(ngram[1]) / 10,
+                occurences = Integer.parseInt(ngram[2]);
             int center, i;
-            if (words.length > 0) {
+            if (words.length > 0 && century >= minCentury) {
                 center = words.length / 2;  // Main (central) word index.
 
-                word.set(words[center] + Utils.delim + wordHeader);
-                context.write(word, one);
+                for (i=0; i < words.length; i++) {
+                    // Emit for every word in n-gram.
+                    num.set(occurences);
 
-                for (i=0 ; i < words.length; i++) {
+                    word.set(century + Utils.delim + words[i] + Utils.delim + wordHeader);
+                    context.write(word, num);
+
+                    // Emit for every central word.
                     if (i != center) {
-                        word.set(words[center] + Utils.delim + words[i]);
-                        context.write(word, one);
+                        word.set(century + Utils.delim + words[center] + Utils.delim + words[i]);
+                        context.write(word, num);
                     }
                 }
             }
@@ -85,41 +90,47 @@ public class Count {
 
 
     public static class PartitionerClass extends Partitioner<Text, IntWritable> {
-        // TODO Do this in a smarter way.
         @Override
+        // Partition by 'century + w' hash code.
         public int getPartition(Text key, IntWritable value, int numPartitions) {
-            return getLanguage(new Text(
-                        key.toString().split(Utils.delim)[0])) % numPartitions;
-        }
-
-        private int getLanguage(Text key) {
-            if (key.getLength() > 0) {
-                int c = key.charAt(0);
-                if (c >= Long.decode("0x05D0").longValue() && c <= Long.decode("0x05EA").longValue())
-                    return 1;
-            }
-            return 0;
+            String[] words = key.toString().split(Utils.delim);
+            Text data = new Text(words[0] + Utils.delim + words[1]);
+            // Calculate data's hash code, and bound by Integer maximum value,
+            // then calculate the result(mod numPartition).
+            return data.hashCode() & Integer.MAX_VALUE % numPartitions;
         }
     }
 
 
     public static class ReduceClass extends Reducer<Text,IntWritable,Text,Text> {
 
-        private int cw;  // c(w)
-
+        // Corpus word counter by century.
         public static enum N_COUNTER {
-            N
+            N_190,  // 1900
+            N_191,  // 1910
+            N_192,
+            N_193,
+            N_194,
+            N_195,
+            N_196,
+            N_197,
+            N_198,
+            N_199,
+            N_200,
+            N_201;  // 2010
         };
 
-        // If key is <w,*>: Write { <w,*> : c(w) }
+        private int cw;  // c(w)
+
+        // If key is 'century, w, *' Write { century, w, * : c(w) }
         // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
         @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context)
             throws IOException, InterruptedException {
 
             int sum = sumValues(values);
-            if (key.toString().split(Utils.delim)[1].equals(wordHeader)) {
-                // <w,*> case:
+            if (key.toString().split(Utils.delim)[2].equals(wordHeader)) {
+                // 'century, w,*' case:
                 cw = sum;
 
                 // TODO sort by decades
@@ -133,17 +144,22 @@ public class Count {
     }
 
 
+    // Google N-Gram reader.
+    public static class MySequenceFileInputFormat extends SequenceFileInputFormat<LongWritable,Text> {}
+
+
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        conf.set("pairsPerDecade", args[2]);  // TODO change from 2 to 3 for amazon.
-        //conf.set("mapred.map.tasks","10");
-        //conf.set("mapred.reduce.tasks","2");
+        // conf.set("pairsPerDecade", args[2]);  // TODO change from 2 to 3 for amazon.
+        // conf.set("mapred.map.tasks","10");
+        // conf.set("mapred.reduce.tasks","2");
 
         Job job = new Job(conf, "Join");
 
-         // to read from google n-gram
-        //job.setInputFormatClass(MySequenceFileInputFormat.class);
+        // Read from Google N-Gram.
+        // TODO try to use original SequenceFileInputFormat.class.
+        job.setInputFormatClass(MySequenceFileInputFormat.class);
 
         job.setJarByClass(Count.class);
         job.setMapperClass(MapClass.class);
@@ -160,12 +176,12 @@ public class Count {
 
         boolean result = job.waitForCompletion(true);
 
-        if (result) {
-            Counters counters = job.getCounters();
-            long nCounter = counters.findCounter(ReduceClass.N_COUNTER.N).getValue();
-            System.out.println(nCounter);
-            conf.set("n", Long.toString(nCounter));
-        }
+        // if (result) {
+        //     Counters counters = job.getCounters();
+        //     long nCounter = counters.findCounter(ReduceClass.N_COUNTER.N).getValue();
+        //     System.out.println(nCounter);
+        //     conf.set("n", Long.toString(nCounter));
+        // }
 
         System.exit(result ? 0 : 1);
     }
