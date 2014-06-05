@@ -19,8 +19,12 @@
       crash.
 
 3.
-  i.
-  ii.
+  i. Aggregation has a set of defined operations that could be executed upon a
+     collection, where as MapReduce defines its own map/reduce(&finalize) functions
+     to be executed.
+  ii. Aggregation Framework is implemented in C++ (efficiently) while when using
+      MapReduce we are forced to JavaScript implementation which is bound to be
+      slower (but easier to write).
 
 4. ACID - Atomicity, Consistency, Isolation, Durability.
    - Atomicity stands for being able to execute queries atomically, which means
