@@ -4,13 +4,19 @@
      If this is a requirement for our database solution, NoSQL is the obvious
      better choice for this use case.
 
-  ii.
+  ii. Easy scaling. NoSQL has big advantages regarding to scaling, as it's very
+     simple to shard the data into multiple servers, as a document is being sent as
+     a whole to the same server, this will reduce fetching time. So basically Big
+     Data applications will find it very easy to scale with MongoDB compared to
+     RDBMs.
 
 2.
   i. If our use case requires heavy join operations, heavy set operations and
-  manipulation, relational databases are a better choice than document DBs.
+     manipulation (on multiple schemas), relational databases are a better choice than document DBs.
 
-  ii.
+  ii. No transaction support, which means we cannot perform complicated
+      operations on multiple schemas and cannot rollback in case of an error or a sudden
+      crash.
 
 3.
   i.
