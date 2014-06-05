@@ -1,0 +1,44 @@
+1.
+  i. No set schema or a schema that changes a lot - NoSQL databases allow
+     defining keys and adding/remove them on the fly and on per-document basis.
+     If this is a requirement for our database solution, NoSQL is the obvious
+     better choice for this use case.
+
+  ii.
+
+2.
+  i. If our use case requires heavy join operations, heavy set operations and
+  manipulation, relational databases are a better choice than document DBs.
+
+  ii.
+
+3.
+  i.
+  ii.
+
+4. ACID - Atomicity, Consistency, Isolation, Durability.
+   - Atomicity stands for being able to execute queries atomically, which means
+   either everything that was intended to happen, happens, or nothing at all.
+   - Consistency stands for the database always being in a valid state, and at any
+   point while accessing it we will not read it in a bad state.
+   - Isolation stands for isolating the effect of executing transactions in
+   parallel, i.e they will not alter the state the database could be at if they
+   would run serially instead.
+   - Durability stands for the quality that after a query has successfuly ran, the
+   database will not revert to a previous state regardless of crashes and
+   failures.
+
+   MongoDB is only ACID on the document level. Per document it maintains all
+   these qualities (except durability, because writes to the file system are
+   being carried out asynchronously and on a timer. A crash before a flush to
+   the file system will cause data to be lost). Though, on a multi-document
+   level, MongoDB cannot guarantee ACIDness as there are no transactions to
+   be used for rollbacking unwanted changes or to not commit until the database
+   is in a valid state.
+
+5. Normalizing a database to the point where too many joins are required for
+simple queries - this isn't MongoDB's strength (although it will work). A more
+reasonable solution would be to embed related data in the same document (as much
+as it makes sense at least) in order to save round trips to the database server,
+especially if we are in a sharded databases environment, in which data for the
+same document will be kept in the same shard.
