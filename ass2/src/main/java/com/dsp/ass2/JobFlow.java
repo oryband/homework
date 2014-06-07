@@ -9,13 +9,14 @@ import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClient;
+import com.amazonaws.services.elasticmapreduce.model.BootstrapActionConfig;
 import com.amazonaws.services.elasticmapreduce.model.HadoopJarStepConfig;
 import com.amazonaws.services.elasticmapreduce.model.JobFlowInstancesConfig;
 import com.amazonaws.services.elasticmapreduce.model.PlacementType;
 import com.amazonaws.services.elasticmapreduce.model.RunJobFlowRequest;
 import com.amazonaws.services.elasticmapreduce.model.RunJobFlowResult;
+import com.amazonaws.services.elasticmapreduce.model.ScriptBootstrapActionConfig;
 import com.amazonaws.services.elasticmapreduce.model.StepConfig;
-
 
 public class JobFlow {
 
@@ -31,6 +32,8 @@ public class JobFlow {
             instanceType = InstanceType.M1Small.toString(),
 
             logUri = "s3n://ory-dsp-ass2/logs/",
+
+            updateLuceneUri = "s3n://ory-dsp-ass2/lucene/update-lucene.sh",
 
             // Steps constants.
             countClass = "Count",
@@ -109,13 +112,19 @@ public class JobFlow {
             .withKeepJobFlowAliveWhenNoSteps(false)
             .withPlacement(new PlacementType(placementType));
 
+        // Set bootstrap action to update lucene version to the one stated in pom.xml.
+        BootstrapActionConfig bootstrapConfig = new BootstrapActionConfig()
+            .withName("Update Lucene")
+            .withScriptBootstrapAction(new ScriptBootstrapActionConfig().withPath(updateLuceneUri));
+
         // Set job flow request.
         RunJobFlowRequest runFlowRequest = new RunJobFlowRequest()
             .withName(jobName)
             .withAmiVersion(amiVersion)
             .withInstances(instances)
             .withSteps(countConfig, joinConfig)
-            .withLogUri(logUri);
+            .withLogUri(logUri)
+            .withBootstrapActions(bootstrapConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
