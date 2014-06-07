@@ -20,10 +20,11 @@ public class Calculate {
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
 
 
-    public static class MapClass extends Mapper<LongWritable, Text, CenturyPmi, Text> {
+    public static class MapClass extends Mapper<LongWritable, Text, DecadePmi, Text> {
 
-        private CenturyPmi newKey = new CenturyPmi();
+        private DecadePmi decadePmi = new DecadePmi();
         private Text newValue = new Text();
+        private String[] cDecades = new String[12];
 
 
         private static String calculatePMI(double cW1, double cW2, double cW1W2, double N) {
@@ -32,24 +33,33 @@ public class Calculate {
         }
 
 
-        // Write { <w1,w2> : century , w1, c(w1), c(w1,w2) }
+        // Set decade counters.
+        @Override
+        public void setup(Context context) {
+            for (int i=0; i < cDecades.length; i++) {
+                cDecades[i] = context.getConfiguration().get("N_" + (i + 190), "-1");
+            }
+        }
+
+
+        // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
             // Fetch words from value.
             String[] words = value.toString().split(Utils.delim);
-            String century = words[0],
-                    w1 = words[1],
-                    w2 = words[2],
-                    cW1 = words[3],
-                    cW2 = words[4],
-                    cW1W2 = words[5],
-                    N = context.getConfiguration().get("N_" + century, "-1"), // TODO Move this to setup, avoid redundany.
-                    pmi;
+            String decade = words[0],
+                   w1 = words[1],
+                   w2 = words[2],
+                   cW1 = words[3],
+                   cW2 = words[4],
+                   cW1W2 = words[5],
+                   cDecade = cDecades[Integer.parseInt(decade) - 190],
+                   pmi;
 
-            if (N.equals("-1")) {
-                logger.severe("Unsupported century: " + century);
+            if (cDecade.equals("-1")) {
+                logger.severe("Unsupported decade: " + decade);
                 return;
             }
 
@@ -57,49 +67,49 @@ public class Calculate {
                     Double.parseDouble(cW1),
                     Double.parseDouble(cW2),
                     Double.parseDouble(cW1W2),
-                    Double.parseDouble(N));
+                    Double.parseDouble(cDecade));
 
-            newKey.set(century, pmi);
-            newValue.set(w1 + Utils.delim + w2);
-            context.write(newKey, newValue);
+            decadePmi.set(decade, pmi);
+            newValue.set(decade + Utils.delim + w1 + Utils.delim + w2);
+            context.write(decadePmi, newValue);
         }
     }
 
 
-    // Partition by century. That is, each reducer receives keys with a single century.
-    // If there are more reducers then centuries, then these are unused.
-    public static class PartitionerClass extends Partitioner<CenturyPmi, Text> {
+    // Partition by decade. That is, each reducer receives keys from a single decade.
+    // If there are more reducers then decades, then these are unused.
+    public static class PartitionerClass extends Partitioner<DecadePmi, Text> {
         @Override
-        public int getPartition(CenturyPmi key, Text value, int numPartitions) {
-            return Integer.parseInt(key.century) % numPartitions;
+        public int getPartition(DecadePmi key, Text value, int numPartitions) {
+            return Integer.parseInt(key.decade) % numPartitions;
         }
     }
 
 
-    public static class ReduceClass extends Reducer<CenturyPmi,Text,Text,Text> {
+    public static class ReduceClass extends Reducer<DecadePmi, Text, Text, Text> {
 
         private Text newKey = new Text();
-        private int[] pairsPerCentury = new int[12];  // Counter for remaining pairs for each century to write.
+        private int[] pairsPerDecade = new int[12];  // Counter for remaining pairs for each decade to write.
 
 
-        // Init counter for remaining pairs for each century.
+        // Init counter for remaining pairs for each decade.
         @Override
         public void setup(Context context) {
-            int pairsNum = Integer.parseInt(context.getConfiguration().get("pairsPerCentury", "-1"));
+            int pairsNum = Integer.parseInt(context.getConfiguration().get("pairsPerDecade", "-1"));
             for (int i=0; i < 12; i++) {
-                pairsPerCentury[i] = pairsNum;
+                pairsPerDecade[i] = pairsNum;
             }
         }
 
 
-        public void reduce(CenturyPmi key, Iterable<Text> values, Context context)
+        public void reduce(DecadePmi key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
 
-            String century = key.century;
+            String decade = key.decade;
 
-            int centuryIndex = Integer.parseInt(century) - 190;
-            if (pairsPerCentury[centuryIndex] -- > 0) {
-                newKey.set(key.century + Utils.delim + key.PMI);
+            int decadeIndex = Integer.parseInt(decade) - 190;
+            if (pairsPerDecade[decadeIndex] -- > 0) {
+                newKey.set(key.decade + Utils.delim + key.PMI);
                 context.write(newKey, values.iterator().next());
             }
         }
@@ -108,9 +118,14 @@ public class Calculate {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        conf.set("mapred.reduce.slowstart.completed.maps", "1");
         //conf.set("mapred.map.tasks", "10");
         //conf.set("mapred.reduce.tasks", "2");
+
+        conf.set("mapred.reduce.slowstart.completed.maps", "1");
+        conf.set("pairsPerDecade", args[2]);  // TODO Change args index for amazon.
+
+        conf.set("N_199", "9559");
+        conf.set("N_200", "23823");
 
         Job job = new Job(conf, "Join");
 

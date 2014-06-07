@@ -25,14 +25,14 @@ public class Join {
         private Text newKey = new Text();
         private Text newValue = new Text();
 
-        // Write { <w1,w2> : century, w1, c(w1), c(w1,w2) }
+        // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
             // Fetch words from value.
             String[] words = value.toString().split(Utils.delim);
-            String century = words[0],
+            String decade = words[0],
                    w1 = words[1],
                    w2 = words[2],
                    cW1 = words[3],
@@ -40,16 +40,16 @@ public class Join {
 
             newValue.set(w1 + Utils.delim + cW1 + Utils.delim + cW1W2);
 
-            newKey.set(century + Utils.delim + w1 + Utils.delim + w2);
+            newKey.set(decade + Utils.delim + w1 + Utils.delim + w2);
             context.write(newKey, newValue);
 
-            newKey.set(century + Utils.delim + w2 + Utils.delim + w1);
+            newKey.set(decade + Utils.delim + w2 + Utils.delim + w1);
             context.write(newKey, newValue);
         }
     }
 
 
-    // Partition by 'century + w1 + w2' hash code.
+    // Partition by 'decade + w1 + w2' hash code.
     public static class PartitionerClass extends Partitioner<Text, Text> {
         @Override
         public int getPartition(Text key, Text value, int numPartitions) {
@@ -63,7 +63,7 @@ public class Join {
 
         private Text newValue = new Text();
 
-        // For every <w1,w2> - Write { <century, w1 ,w2> : c(w1), c(w2), c(w1,w2) }
+        // For every <w1,w2> - Write { <decade, w1 ,w2> : c(w1), c(w2), c(w1,w2) }
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {

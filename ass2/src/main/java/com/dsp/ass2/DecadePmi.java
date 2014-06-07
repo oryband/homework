@@ -7,33 +7,35 @@ import java.io.IOException;
 import org.apache.hadoop.io.WritableComparable;
 
 
-public class CenturyPmi implements WritableComparable<CenturyPmi> {
-    public String century = "",
+public class DecadePmi implements WritableComparable<DecadePmi> {
+    public String decade = "",
            PMI = "";
 
 
-    public void set(String century, String PMI) {
-        this.century = century;
+    public void set(String decade, String PMI) {
+        this.decade = decade;
         this.PMI = PMI;
     }
 
 
-    // Parse century & PMI from stream.
+    // Parse decade & PMI from stream.
+    @Override
     public void readFields(DataInput in) throws IOException {
         String[] split = in.readLine().split(Utils.delim);
-        this.century = split[0];
+        this.decade = split[0];
         this.PMI = split[1];
     }
 
 
+    @Override
     public void write(DataOutput out) throws IOException {
-        out.writeBytes(century + Utils.delim + PMI);
-
+        out.writeBytes(decade + Utils.delim + PMI);
     }
 
     // TODO check if it works!
     // Pairs with larger PMI are placed before smaller PMj.
-    public int compareTo(CenturyPmi other) {
+    @Override
+    public int compareTo(DecadePmi other) {
         double myPMI = Double.parseDouble(this.PMI),
                otherPMI = Double.parseDouble(other.PMI);
 
