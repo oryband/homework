@@ -11,6 +11,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
@@ -35,7 +36,7 @@ public class Count {
             wordsDelim = " ",
             wordHeader = "*";
 
-    private static final int minCentury = 199;
+    private static final int minDecade = 199;
 
 
     // Sum all members in list.
@@ -83,8 +84,8 @@ public class Count {
         }
 
 
-        // For every word `w` in n-gram: emit { century, w, * : c(w) }
-        // For every central word `w` in n-gram: emit { century, w, wi : c(w,wi) } , i=1..4 (its neithbours)
+        // For every word `w` in n-gram: emit { decade, w, * : c(w) }
+        // For every central word `w` in n-gram: emit { decade, w, wi : c(w,wi) } and { " : c(wi,w) } , i=1..4 (its neithbours)
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
@@ -93,10 +94,10 @@ public class Count {
             String[] ngram = value.toString().toLowerCase().split(ngramDelim),
                 words = ngram[0].split(wordsDelim);
 
-            int century = Integer.parseInt(ngram[1]) / 10,
+            int decade = Integer.parseInt(ngram[1]) / 10,
                 occurences = Integer.parseInt(ngram[2]);
 
-            if (words.length > 0 && century >= minCentury) {
+            if (words.length > 0 && decade >= minDecade) {
                 // Get central word in n-gram.
                 String centralWord = words[words.length / 2];
 
@@ -120,12 +121,15 @@ public class Count {
                         num.set(occurences);
 
                         // Emit c(w) for every word.
-                        word.set(century + Utils.delim + words[i] + Utils.delim + wordHeader);
+                        word.set(decade + Utils.delim + words[i] + Utils.delim + wordHeader);
                         context.write(word, num);
 
-                        // Emit c(w,wi) for central word, if central wors wasn't a stop word.
+                        // Emit c(w,wi), c(wi,w) for central word, if central word wasn't a stop word.
                         if (countPairs && i != centralIndex) {
-                            word.set(century + Utils.delim + centralWord + Utils.delim + words[i]);
+                            word.set(decade + Utils.delim + centralWord + Utils.delim + words[i]);
+                            context.write(word, num);
+
+                            word.set(decade + Utils.delim + words[i] + Utils.delim + centralWord);
                             context.write(word, num);
                         }
                     }
@@ -149,9 +153,9 @@ public class Count {
     }
 
 
+    // Partition by 'decade + word' hash code.
     public static class PartitionerClass extends Partitioner<Text, IntWritable> {
         @Override
-        // Partition by 'century + w' hash code.
         public int getPartition(Text key, IntWritable value, int numPartitions) {
             String[] words = key.toString().split(Utils.delim);
             Text data = new Text(words[0] + Utils.delim + words[1]);
@@ -164,7 +168,7 @@ public class Count {
 
     public static class ReduceClass extends Reducer<Text,IntWritable,Text,Text> {
 
-        // Corpus word counter by century.
+        // Corpus word counter by decade.
         public static enum N_COUNTER {
             N_190,  // 1900
             N_191,  // 1910
@@ -182,32 +186,13 @@ public class Count {
 
         private int cw;  // c(w)
 
-        // If key is 'century, w, *' Write { century, w, * : c(w) }
-        // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
-        @Override
-        public void reduce(Text key, Iterable<IntWritable> values, Context context)
-            throws IOException, InterruptedException {
 
-            String[] words = key.toString().split(Utils.delim);
-            String century = words[0], wi = words[2];
-            int sum = sumValues(values);
-
-            if (wi.equals(wordHeader)) {
-                // 'century, w,*' case:
-                cw = sum;
-                updateCounter(century, context);
-
-            } else {
-                String val = Integer.toString(cw) + Utils.delim + Integer.toString(sum);
-                context.write(key, new Text(val));
-            }
-        }
-
-        private void updateCounter(String century, Context context) {
-
-            N_COUNTER currentCentury = N_COUNTER.valueOf("N_" + century);
+        // Update decade counter.
+        private void updateCounter(String decade, Context context) {
+            N_COUNTER currentDecade = N_COUNTER.valueOf("N_" + decade);
             Counter counter = null;
-            switch (currentCentury) {
+
+            switch (currentDecade) {
                 case N_190:
                     counter = context.getCounter(N_COUNTER.N_190);
                     break;
@@ -250,6 +235,27 @@ public class Count {
                 counter.increment(cw);
             }
         }
+
+
+        // If key is 'decade, w, *' Write { decade, w, * : c(w) }
+        // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
+        @Override
+        public void reduce(Text key, Iterable<IntWritable> values, Context context)
+            throws IOException, InterruptedException {
+
+            String[] words = key.toString().split(Utils.delim);
+            String decade = words[0], wi = words[2];
+            int sum = sumValues(values);
+
+            if (wi.equals(wordHeader)) {
+                // 'decade, w,*' case:
+                cw = sum;
+                updateCounter(decade, context);
+            } else {
+                String val = Integer.toString(cw) + Utils.delim + Integer.toString(sum);
+                context.write(key, new Text(val));
+            }
+        }
     }
 
 
@@ -261,7 +267,7 @@ public class Count {
         Configuration conf = new Configuration();
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        // conf.set("pairsPerCentury", args[2]);  // TODO change from 2 to 3 for amazon.
+        // conf.set("pairsPerDecade", args[2]);  // TODO change from 2 to 3 for amazon.
         // conf.set("mapred.map.tasks", "10");
         // conf.set("mapred.reduce.tasks", "2");
 
@@ -286,12 +292,28 @@ public class Count {
 
         boolean result = job.waitForCompletion(true);
 
-        // if (result) {
-        //     Counters counters = job.getCounters();
-        //     long nCounter = counters.findCounter(ReduceClass.N_COUNTER.N).getValue();
-        //     System.out.println(nCounter);
-        //     conf.set("n", Long.toString(nCounter));
-        // }
+        // Set decade counters for next job.
+        if (result) {
+            Counters counters = job.getCounters();
+            long[] decadeCounters = {
+                counters.findCounter(ReduceClass.N_COUNTER.N_190).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_191).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_192).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_193).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_194).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_195).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_196).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_197).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_198).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_199).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_200).getValue(),
+                counters.findCounter(ReduceClass.N_COUNTER.N_201).getValue()
+            };
+
+            for (int i=0; i < decadeCounters.length; i++) {
+                conf.set("N_" + (i + 190), Long.toString(decadeCounters[i]));
+            }
+        }
 
         System.exit(result ? 0 : 1);
     }
