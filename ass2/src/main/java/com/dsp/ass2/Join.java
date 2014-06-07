@@ -71,7 +71,12 @@ public class Join {
 
             // Fetch w1, w2, c(w1), c(w2), c(w1,w2).
             String[] parseKey = key.toString().split(Utils.delim);
-            String w1 = parseKey[1];
+            String w1 = parseKey[1],
+                    w2 = parseKey[2];
+
+            if (w1.compareTo(w2) < 0) {
+                return;
+            }
 
             String[] counters;
             for (Text value : values) {
@@ -80,7 +85,8 @@ public class Join {
                 if (counters[0].equals(w1)) {
                     cW1 = counters[1];
                     cW1W2 = counters[2];  // TODO Should we sum cW1W2 + cW2W1 ? Does the order of words matter?
-                } else {
+                }
+                if (counters[0].equals(w2)) { //handle the case of (w, w);
                     cW2 = counters[1];
                 }
             }
