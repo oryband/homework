@@ -38,8 +38,9 @@ public class Join {
                    cW1 = words[3],
                    cW1W2 = words[4];
 
-            newKey.set(century + Utils.delim + w1 + Utils.delim + w2);
             newValue.set(w1 + Utils.delim + cW1 + Utils.delim + cW1W2);
+
+            newKey.set(century + Utils.delim + w1 + Utils.delim + w2);
             context.write(newKey, newValue);
 
             newKey.set(century + Utils.delim + w2 + Utils.delim + w1);
@@ -48,6 +49,7 @@ public class Join {
     }
 
 
+    // Partition by 'century + w1 + w2' hash code.
     public static class PartitionerClass extends Partitioner<Text, Text> {
         @Override
         public int getPartition(Text key, Text value, int numPartitions) {
@@ -74,16 +76,15 @@ public class Join {
             String[] counters;
             for (Text value : values) {
                 counters = value.toString().split(Utils.delim);
-                cW1W2 = counters[2];
 
                 if (counters[0].equals(w1)) {
                     cW1 = counters[1];
+                    cW1W2 = counters[2];  // TODO Should we sum cW1W2 + cW2W1 ? Does the order of words matter?
                 } else {
                     cW2 = counters[1];
                 }
             }
 
-            // TODO add the N-Century to the key
             newValue.set(cW1 + Utils.delim + cW2 + Utils.delim + cW1W2);
             context.write(key, newValue);
         }
