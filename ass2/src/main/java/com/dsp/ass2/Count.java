@@ -3,6 +3,7 @@ package com.dsp.ass2;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.logging.Logger;
+import java.util.Arrays;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -20,7 +21,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.util.CharArraySet;
@@ -54,11 +54,9 @@ public class Count {
         private Text word = new Text();
 
 
-        // TODO This should replace stop words with '*' instead of removing them completely. It screws up c(w,wi).
         // Returns the same string with stop words & punctuation removed. removed.
         public String removeStopWords(String words) {
             CharArraySet stopWords = EnglishAnalyzer.getDefaultStopSet();
-            // CharArraySet stopWords = StandardAnalyzer.STOP_WORDS_SET;
             TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_48, new StringReader(words.trim()));
             tokenStream = new StopFilter(Version.LUCENE_48, tokenStream, stopWords);
             CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
@@ -95,17 +93,12 @@ public class Count {
             String[] ngram = value.toString().toLowerCase().split(ngramDelim),
                 words = ngram[0].split(wordsDelim);
 
-            String centralWord;
-
             int century = Integer.parseInt(ngram[1]) / 10,
-                occurences = Integer.parseInt(ngram[2]),
-                center,
-                i;
+                occurences = Integer.parseInt(ngram[2]);
 
             if (words.length > 0 && century >= minCentury) {
                 // Get central word in n-gram.
-                center = words.length / 2;
-                centralWord = words[center];
+                String centralWord = words[words.length / 2];
 
                 // Remove stop words, count c(w) for every word in pair,
                 // and count pairs only if central word wasn't filtered.
@@ -113,17 +106,16 @@ public class Count {
                 words = removeStopWords(ngram[0]).split(wordsDelim);
 
                 if (words.length > 0) {
-                    center = words.length / 2;
-
-                    boolean countPairs = false;
-
                     // Count pairs if central word in n-gram was not a stop word.
-                    if (centralWord.equals(words[center])) {
-                        centralWord = words[center];
-                        countPairs = true;
+                    int centralIndex = Arrays.asList(words).indexOf(centralWord);
+                    boolean countPairs = false;
+                    if (centralIndex >= 0) {
+                       countPairs = true;
                     }
 
-                    for (i=0; i < words.length; i++) {
+                    // TODO What about if n-gram = 'a a a a a'?
+                    // Do we emit the same occurence 4 more times than necessary?
+                    for (int i=0; i < words.length; i++) {
                         // Emit for every word in n-gram.
                         num.set(occurences);
 
@@ -132,8 +124,8 @@ public class Count {
                         context.write(word, num);
 
                         // Emit c(w,wi) for central word, if central wors wasn't a stop word.
-                        if (countPairs && i != center) {
-                            word.set(century + Utils.delim + words[center] + Utils.delim + words[i]);
+                        if (countPairs && i != centralIndex) {
+                            word.set(century + Utils.delim + centralWord + Utils.delim + words[i]);
                             context.write(word, num);
                         }
                     }
