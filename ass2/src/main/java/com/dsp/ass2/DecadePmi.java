@@ -25,13 +25,13 @@ public class DecadePmi implements WritableComparable<DecadePmi> {
         this.PMI = split[1];
     }
 
+
     public void write(DataOutput out) throws IOException {
         out.writeBytes(decade + Utils.delim + PMI);
     }
 
-    // TODO check if it works!
-    // Pairs with larger PMI are placed before smaller PMj.
 
+    // Pairs with larger PMI are placed before smaller PMI.
     public int compareTo(DecadePmi other) {
         double myPMI = Double.parseDouble(this.PMI),
                otherPMI = Double.parseDouble(other.PMI);

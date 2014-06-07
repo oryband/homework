@@ -100,9 +100,9 @@ public class Join {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        conf.set("mapred.reduce.slowstart.completed.maps", "1");
         //conf.set("mapred.map.tasks", "10");
         //conf.set("mapred.reduce.tasks", "2");
+        conf.set("mapred.reduce.slowstart.completed.maps", "1");
 
         Job job = new Job(conf, "Join");
 
@@ -114,8 +114,10 @@ public class Join {
         job.setReducerClass(ReduceClass.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        // TODO Increment index for amazon.
+        FileInputFormat.addInputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }

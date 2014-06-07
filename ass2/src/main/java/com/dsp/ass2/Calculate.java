@@ -122,8 +122,9 @@ public class Calculate {
         //conf.set("mapred.reduce.tasks", "2");
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        conf.set("pairsPerDecade", args[2]);  // TODO Change args index for amazon.
+        conf.set("pairsPerDecade", args[3]);  // TODO Change args index for amazon.
 
+        // TODO These need to be set automatically for amazon.
         conf.set("N_199", "9559");
         conf.set("N_200", "23823");
 
@@ -139,8 +140,10 @@ public class Calculate {
         job.setMapOutputValueClass(Text.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        // TODO Change args index for amazion.
+        FileInputFormat.addInputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }

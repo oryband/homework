@@ -287,8 +287,8 @@ public class Count {
         job.setOutputValueClass(IntWritable.class);
 
         // TODO change args to 1,2 when testing on amazon ecr.
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileInputFormat.addInputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         boolean result = job.waitForCompletion(true);
 
