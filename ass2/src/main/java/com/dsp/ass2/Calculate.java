@@ -70,7 +70,7 @@ public class Calculate {
                     Double.parseDouble(cDecade));
 
             decadePmi.set(decade, pmi);
-            newValue.set(decade + Utils.delim + w1 + Utils.delim + w2);
+            newValue.set(cDecade + Utils.delim + w1 + Utils.delim + w2);
             context.write(decadePmi, newValue);
         }
     }
@@ -135,6 +135,8 @@ public class Calculate {
 
         // job.setCombinerClass(CombineClass.class);
         job.setReducerClass(ReduceClass.class);
+        job.setMapOutputKeyClass(DecadePmi.class);
+        job.setMapOutputValueClass(Text.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));

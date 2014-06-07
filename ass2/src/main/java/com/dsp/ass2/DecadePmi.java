@@ -19,22 +19,19 @@ public class DecadePmi implements WritableComparable<DecadePmi> {
 
 
     // Parse decade & PMI from stream.
-    @Override
     public void readFields(DataInput in) throws IOException {
         String[] split = in.readLine().split(Utils.delim);
         this.decade = split[0];
         this.PMI = split[1];
     }
 
-
-    @Override
     public void write(DataOutput out) throws IOException {
         out.writeBytes(decade + Utils.delim + PMI);
     }
 
     // TODO check if it works!
     // Pairs with larger PMI are placed before smaller PMj.
-    @Override
+
     public int compareTo(DecadePmi other) {
         double myPMI = Double.parseDouble(this.PMI),
                otherPMI = Double.parseDouble(other.PMI);

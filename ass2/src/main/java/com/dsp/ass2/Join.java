@@ -40,10 +40,13 @@ public class Join {
 
             newValue.set(w1 + Utils.delim + cW1 + Utils.delim + cW1W2);
 
-            newKey.set(decade + Utils.delim + w1 + Utils.delim + w2);
-            context.write(newKey, newValue);
+            // Emit key by lexicographical order.
+            if (w1.compareTo(w2) < 0) {
+                newKey.set(decade + Utils.delim + w1 + Utils.delim + w2);
+            } else {
+                newKey.set(decade + Utils.delim + w2 + Utils.delim + w1);
+            }
 
-            newKey.set(decade + Utils.delim + w2 + Utils.delim + w1);
             context.write(newKey, newValue);
         }
     }
@@ -71,7 +74,8 @@ public class Join {
 
             // Fetch w1, w2, c(w1), c(w2), c(w1,w2).
             String[] parseKey = key.toString().split(Utils.delim);
-            String w1 = parseKey[1];
+            String w1 = parseKey[1],
+                   w2 = parseKey[2];
 
             String[] counters;
             for (Text value : values) {
@@ -80,7 +84,10 @@ public class Join {
                 if (counters[0].equals(w1)) {
                     cW1 = counters[1];
                     cW1W2 = counters[2];  // TODO Should we sum cW1W2 + cW2W1 ? Does the order of words matter?
-                } else {
+                }
+
+                // If w1 = w2, prevent cases where c(w2) = 0.
+                if (counters[0].equals(w2)) {
                     cW2 = counters[1];
                 }
             }
