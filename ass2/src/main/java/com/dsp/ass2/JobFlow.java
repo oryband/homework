@@ -32,10 +32,16 @@ public class JobFlow {
 
             logUri = "s3n://ory-dsp-ass2/logs/",
 
-            countPairsClass = "WordCount",
-            countPairsJarUrl = "s3n://ory-dsp-ass2/jars/WordCount.jar",
-            countPairsInput = "s3n://ory-dsp-ass2/steps/WordCount/input/in",
-            countPairsOutput = "s3n://ory-dsp-ass2/steps/WordCount/output/";
+            // Steps constants.
+            countClass = "Count",
+            countJarUrl = "s3n://ory-dsp-ass2/jars/Count.jar",
+            countInput = "s3n://ory-dsp-ass2/steps/Count/input/eng.corp.10k",
+            countOutput = "s3n://ory-dsp-ass2/steps/Count/output/",
+
+            joinClass = "Join",
+            joinJarUrl = "s3n://ory-dsp-ass2/jars/Join.jar",
+            joinInput = "s3n://ory-dsp-ass2/steps/Join/input/join",
+            joinOutput = "s3n://ory-dsp-ass2/steps/Join/output/";
 
     private static int instanceCount = 1;
 
@@ -71,15 +77,26 @@ public class JobFlow {
         AWSCredentials credentials = loadCredentials();
         AmazonElasticMapReduce mapReduce = new AmazonElasticMapReduceClient(credentials);
 
-        // Set WordCount job flow step.
-        HadoopJarStepConfig hadoopJarStep = new HadoopJarStepConfig()
-            .withJar(countPairsJarUrl)
-            .withMainClass(countPairsClass)
-            .withArgs(countPairsInput, countPairsOutput);
+        // Set Count job flow step.
+        HadoopJarStepConfig countJarConfig = new HadoopJarStepConfig()
+            .withJar(countJarUrl)
+            .withMainClass(countClass)
+            .withArgs(countInput, countOutput);
 
-        StepConfig stepConfig = new StepConfig()
-            .withName("stepname")
-            .withHadoopJarStep(hadoopJarStep)
+        StepConfig countConfig = new StepConfig()
+            .withName("Count")
+            .withHadoopJarStep(countJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
+        // Set Join job flow step.
+        HadoopJarStepConfig joinJarConfig = new HadoopJarStepConfig()
+            .withJar(joinJarUrl)
+            .withMainClass(joinClass)
+            .withArgs(joinInput, joinOutput);
+
+        StepConfig joinConfig = new StepConfig()
+            .withName("Join")
+            .withHadoopJarStep(joinJarConfig)
             .withActionOnFailure(actionOnFailure);
 
         // Set instances.
@@ -97,7 +114,7 @@ public class JobFlow {
             .withName(jobName)
             .withAmiVersion(amiVersion)
             .withInstances(instances)
-            .withSteps(stepConfig)
+            .withSteps(countConfig, joinConfig)
             .withLogUri(logUri);
 
         // Execute job flow.
