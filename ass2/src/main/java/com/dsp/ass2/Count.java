@@ -262,7 +262,6 @@ public class Count {
     // Google N-Gram reader.
     public static class MySequenceFileInputFormat extends SequenceFileInputFormat<LongWritable,Text> {}
 
-
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
@@ -287,8 +286,8 @@ public class Count {
         job.setOutputValueClass(IntWritable.class);
 
         // TODO change args to 1,2 when testing on amazon ecr.
-        FileInputFormat.addInputPath(job, new Path(args[1]));
-        FileOutputFormat.setOutputPath(job, new Path(args[2]));
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         boolean result = job.waitForCompletion(true);
 
@@ -313,6 +312,10 @@ public class Count {
             for (int i=0; i < decadeCounters.length; i++) {
                 conf.set("N_" + (i + 190), Long.toString(decadeCounters[i]));
             }
+
+            // getting totalRecord from task counter. passing it to Join.class through conf.
+            long totalRecords = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+            conf.set("totalRecords", Long.toString(totalRecords));
         }
 
         System.exit(result ? 0 : 1);
