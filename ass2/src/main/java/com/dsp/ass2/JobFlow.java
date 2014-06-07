@@ -44,7 +44,12 @@ public class JobFlow {
             joinClass = "Join",
             joinJarUrl = "s3n://ory-dsp-ass2/jars/Join.jar",
             joinInput = "s3n://ory-dsp-ass2/steps/Count/output/part-r-00000",
-            joinOutput = "s3n://ory-dsp-ass2/steps/Join/output/";
+            joinOutput = "s3n://ory-dsp-ass2/steps/Join/output/",
+
+            calculateClass = "Calculate",
+            calculateJarUrl = "s3n://ory-dsp-ass2/jars/Calculate.jar",
+            calculateInput = "s3n://ory-dsp-ass2/steps/calculate/output/part-r-00000",
+            calculateOutput = "s3n://ory-dsp-ass2/steps/Calculate/output/";
 
     private static int instanceCount = 1;
 
@@ -102,6 +107,17 @@ public class JobFlow {
             .withHadoopJarStep(joinJarConfig)
             .withActionOnFailure(actionOnFailure);
 
+        // Set Calculate job flow step.
+        HadoopJarStepConfig calculateJarConfig = new HadoopJarStepConfig()
+            .withJar(calculateJarUrl)
+            .withMainClass(calculateClass)
+            .withArgs(calculateInput, calculateOutput);
+
+        StepConfig calculateConfig = new StepConfig()
+            .withName("Calculate")
+            .withHadoopJarStep(calculateJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
         // Set instances.
         JobFlowInstancesConfig instances = new JobFlowInstancesConfig()
             .withInstanceCount(instanceCount)
@@ -122,7 +138,7 @@ public class JobFlow {
             .withName(jobName)
             .withAmiVersion(amiVersion)
             .withInstances(instances)
-            .withSteps(countConfig, joinConfig)
+            .withSteps(countConfig, joinConfig, calculateConfig)
             .withLogUri(logUri)
             .withBootstrapActions(bootstrapConfig);
 
