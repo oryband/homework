@@ -118,7 +118,7 @@ public class Calculate {
         }
     }
 
-    // uploading the totalRecords result to "https://s3.amazonaws.com/ory-dsp-ass2/steps/Records/totalRecord.txt"
+    // Upload totalRecords result to "https://s3.amazonaws.com/ory-dsp-ass2/steps/Records/totalRecord.txt"
     private static void uploadToS3(long totalRecords) {
         AWSCredentials creds = Utils.loadCredentials();
 
@@ -132,17 +132,14 @@ public class Calculate {
         Utils.uploadStringToS3(s3, String.valueOf(totalRecords));
     }
 
+
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         //conf.set("mapred.map.tasks", "10");
         //conf.set("mapred.reduce.tasks", "2");
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        conf.set("pairsPerDecade", args[2]);  // TODO Change args index for amazon.
-
-        // TODO These need to be set automatically for amazon.
-        conf.set("N_199", "9559");
-        conf.set("N_200", "23823");
+        conf.set("pairsPerDecade", args[3]);
 
         Job job = new Job(conf, "Join");
 
@@ -157,14 +154,12 @@ public class Calculate {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        // TODO Change args index for amazon.
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileInputFormat.addInputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         boolean result = job.waitForCompletion(true);
 
-        // getting the totalRecords parameter of Count.class and Join.class from conf.
-        // adding the totalRecords parameter of Claculate.class to it and upload the result to s3.
+        // Get totalRecords counter from Count & Join steps, and add this step (Calculate) records to it.
         if (result) {
             long countAndJoinTotalRecord =  Long.parseLong(conf.get("totalRecords", "-1"));
 
@@ -174,6 +169,7 @@ public class Calculate {
 
             }
             else {
+                // On any error with totalRecords, exit with error.
                 logger.severe("cant get totalRecords from Count & Join.");
                 result = false;
             }

@@ -266,7 +266,6 @@ public class Count {
         Configuration conf = new Configuration();
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        // conf.set("pairsPerDecade", args[2]);  // TODO change from 2 to 3 for amazon.
         // conf.set("mapred.map.tasks", "10");
         // conf.set("mapred.reduce.tasks", "2");
 
@@ -286,8 +285,8 @@ public class Count {
         job.setOutputValueClass(IntWritable.class);
 
         // TODO change args to 1,2 when testing on amazon ecr.
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileInputFormat.addInputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         boolean result = job.waitForCompletion(true);
 
@@ -313,7 +312,7 @@ public class Count {
                 conf.set("N_" + (i + 190), Long.toString(decadeCounters[i]));
             }
 
-            // getting totalRecord from task counter. passing it to Join.class through conf.
+            // Set totalRecord from task counter, so we could pass it to Join step.
             long totalRecords = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
             conf.set("totalRecords", Long.toString(totalRecords));
         }

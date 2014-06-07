@@ -7,7 +7,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
@@ -116,21 +115,21 @@ public class Join {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        // TODO Increment index for amazon.
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileInputFormat.addInputPath(job, new Path(args[1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[2]));
 
         boolean result = job.waitForCompletion(true);
 
-        // getting the totalRecords parameter of Count.class from conf. adding the totalRecords parameter of Join.class to it
+        // Get totalRecords parameter of Count step, and add this (Join) step total records.
         if (result) {
-            long countTotalRecord =  Long.parseLong(conf.get("totalRecords", "-1"));
+            long countTotalRecord = Long.parseLong(conf.get("totalRecords", "-1"));
 
             if (countTotalRecord != -1) {
                 long joinTotalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
                 conf.set("totalRecords", Long.toString(countTotalRecord + joinTotalRecords));
-            }   //TODO set overwrites the name ?
+            }
             else {
+                // If there was some error with totalRecords, exit with error.
                 logger.severe("cant get totalRecords from Count.");
                 result = false;
             }

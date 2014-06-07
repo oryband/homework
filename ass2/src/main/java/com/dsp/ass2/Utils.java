@@ -48,6 +48,7 @@ public class Utils {
         return new AmazonS3Client(creds, config);
     }
 
+
     public static PropertiesCredentials loadCredentials() {
         try {
             return new PropertiesCredentials(
@@ -57,6 +58,7 @@ public class Utils {
             return null;
         }
     }
+
 
     private static boolean putObject(AmazonS3 s3, PutObjectRequest req) {
         // Set file as public.
@@ -87,6 +89,7 @@ public class Utils {
         }
     }
 
+
     public static String generateS3FileAddress(AmazonS3 s3, String path) {
         String address;
 
@@ -102,7 +105,6 @@ public class Utils {
 
         return "https://s3-" + address + ".amazonaws.com/" + bucket + "/" + path;
     }
-
 
 
     public static String uploadStringToS3(AmazonS3 s3, String data) {

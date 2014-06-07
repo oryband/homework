@@ -49,7 +49,8 @@ public class JobFlow {
             calculateClass = "Calculate",
             calculateJarUrl = "s3n://ory-dsp-ass2/jars/Calculate.jar",
             calculateInput = "s3n://ory-dsp-ass2/steps/calculate/output/part-r-00000",
-            calculateOutput = "s3n://ory-dsp-ass2/steps/Calculate/output/";
+            calculateOutput = "s3n://ory-dsp-ass2/steps/Calculate/output/",
+            calculateTopPmiPairs = "10";
 
     private static int instanceCount = 1;
 
@@ -111,7 +112,7 @@ public class JobFlow {
         HadoopJarStepConfig calculateJarConfig = new HadoopJarStepConfig()
             .withJar(calculateJarUrl)
             .withMainClass(calculateClass)
-            .withArgs(calculateInput, calculateOutput);
+            .withArgs(calculateInput, calculateOutput, calculateTopPmiPairs);
 
         StepConfig calculateConfig = new StepConfig()
             .withName("Calculate")
