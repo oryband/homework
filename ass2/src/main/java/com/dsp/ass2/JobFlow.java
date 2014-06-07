@@ -40,7 +40,7 @@ public class JobFlow {
 
             joinClass = "Join",
             joinJarUrl = "s3n://ory-dsp-ass2/jars/Join.jar",
-            joinInput = "s3n://ory-dsp-ass2/steps/Join/input/join",
+            joinInput = "s3n://ory-dsp-ass2/steps/Count/output/part-r-00000",
             joinOutput = "s3n://ory-dsp-ass2/steps/Join/output/";
 
     private static int instanceCount = 1;
