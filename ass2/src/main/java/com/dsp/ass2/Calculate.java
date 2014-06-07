@@ -14,6 +14,9 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+
 
 public class Calculate {
 
@@ -115,6 +118,19 @@ public class Calculate {
         }
     }
 
+    // uploading the totalRecords result to "https://s3.amazonaws.com/ory-dsp-ass2/steps/Records/totalRecord.txt"
+    private static void uploadToS3(long totalRecords) {
+        AWSCredentials creds = Utils.loadCredentials();
+
+        if (creds == null) {
+            logger.severe("Couldn't load credentials.");
+            return;
+        }
+
+        AmazonS3 s3 = Utils.createS3(creds);
+
+        Utils.uploadStringToS3(s3, String.valueOf(totalRecords));
+    }
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
@@ -122,7 +138,7 @@ public class Calculate {
         //conf.set("mapred.reduce.tasks", "2");
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        conf.set("pairsPerDecade", args[3]);  // TODO Change args index for amazon.
+        conf.set("pairsPerDecade", args[2]);  // TODO Change args index for amazon.
 
         // TODO These need to be set automatically for amazon.
         conf.set("N_199", "9559");
@@ -141,10 +157,28 @@ public class Calculate {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        // TODO Change args index for amazion.
-        FileInputFormat.addInputPath(job, new Path(args[1]));
-        FileOutputFormat.setOutputPath(job, new Path(args[2]));
+        // TODO Change args index for amazon.
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        boolean result = job.waitForCompletion(true);
+
+        // getting the totalRecords parameter of Count.class and Join.class from conf.
+        // adding the totalRecords parameter of Claculate.class to it and upload the result to s3.
+        if (result) {
+            long countAndJoinTotalRecord =  Long.parseLong(conf.get("totalRecords", "-1"));
+
+            if (countAndJoinTotalRecord != -1) {
+                long joinTotalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+                uploadToS3(joinTotalRecords + countAndJoinTotalRecord);
+
+            }
+            else {
+                logger.severe("cant get totalRecords from Count & Join.");
+                result = false;
+            }
+        }
+
+        System.exit(result ? 0 : 1);
     }
 }
