@@ -9,6 +9,7 @@ var Participant = mongoose.model('Participant', new mongoose.Schema({
   pet: String,
   food: String,
   // TODO: fix after there's an answer for the issue with query 7
+  // if we are staying with embedded songs, just remove comments
   //songs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Song'}],
   songs: [{title: String, length: Number}],
   singingDay: Number
@@ -19,12 +20,14 @@ var Show = mongoose.model('Show', new mongoose.Schema({
     sms: Number,
     participant: {type: mongoose.Schema.Types.ObjectId, ref: 'Participant'},
     // TODO: fix after there's an answer for the issue with query 7
+    // if we are staying with embedded songs, just remove comments
     //song: {type: mongoose.Schema.Types.ObjectId, ref: 'Song'}
     song: {title: String, length: Number}
   }]
 }));
 
 // TODO: fix after there's an answer for the issue with query 7
+// if we are staying with embedded songs, just remove comments
 //var Song = mongoose.model('Song', new mongoose.Schema({
   //title: String,
   //length: Number
@@ -153,6 +156,7 @@ exports.getListOfParticipantsForDays = function (callback) {
       {$group: {
         _id: '$singingDay', 
         // TODO: fix after there's an answer for the issue with the query
+        // if we are staying with embedded songs, keep. else fix
         participants: {$push: {name: '$name', song: '$songs[0]'}}
       }},
       {$project: {
