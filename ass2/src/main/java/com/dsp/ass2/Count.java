@@ -36,6 +36,8 @@ public class Count {
             wordsDelim = " ",
             wordHeader = "*";
 
+    public static final String  outputFile = "steps/Count/output/output.txt";
+
     private static final int minDecade = 199;
 
 
@@ -285,8 +287,8 @@ public class Count {
         job.setOutputValueClass(IntWritable.class);
 
         // TODO change args to 1,2 when testing on amazon ecr.
-        FileInputFormat.addInputPath(job, new Path(args[1]));
-        FileOutputFormat.setOutputPath(job, new Path(args[2]));
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         boolean result = job.waitForCompletion(true);
 
@@ -308,13 +310,20 @@ public class Count {
                 counters.findCounter(ReduceClass.N_COUNTER.N_201).getValue()
             };
 
-            for (int i=0; i < decadeCounters.length; i++) {
-                conf.set("N_" + (i + 190), Long.toString(decadeCounters[i]));
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("counters\t");
+            for (int i = 0; i < decadeCounters.length; i++) {
+                sb.append(Long.toString(decadeCounters[i])).append("\t");
             }
+            sb.append("\n");
 
             // Set totalRecord from task counter, so we could pass it to Join step.
             long totalRecords = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-            conf.set("totalRecords", Long.toString(totalRecords));
+            sb.append("totalrecords\t").append(Long.toString(totalRecords));
+
+            Utils.uploadToS3(sb.toString(), outputFile);
+
         }
 
         System.exit(result ? 0 : 1);
