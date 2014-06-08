@@ -22,6 +22,11 @@ public class Calculate {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
 
+    private static final String joinOutput = Join.outputFile,
+                                countOutput = Count.outputFile,
+                                path = "https://s3.amazonaws.com/ory-dsp-ass2/",
+                                outputFile = "steps/Calculate/output/output.txt";
+    private static long totalRecords = 0;
 
     public static class MapClass extends Mapper<LongWritable, Text, DecadePmi, Text> {
 
@@ -48,18 +53,18 @@ public class Calculate {
         // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
         @Override
         public void map(LongWritable key, Text value, Context context)
-            throws IOException, InterruptedException {
+                throws IOException, InterruptedException {
 
             // Fetch words from value.
             String[] words = value.toString().split(Utils.delim);
             String decade = words[0],
-                   w1 = words[1],
-                   w2 = words[2],
-                   cW1 = words[3],
-                   cW2 = words[4],
-                   cW1W2 = words[5],
-                   cDecade = cDecades[Integer.parseInt(decade) - 190],
-                   pmi;
+                    w1 = words[1],
+                    w2 = words[2],
+                    cW1 = words[3],
+                    cW2 = words[4],
+                    cW1W2 = words[5],
+                    cDecade = cDecades[Integer.parseInt(decade) - 190],
+                    pmi;
 
             if (cDecade.equals("-1")) {
                 logger.severe("Unsupported decade: " + decade);
@@ -106,7 +111,7 @@ public class Calculate {
 
 
         public void reduce(DecadePmi key, Iterable<Text> values, Context context)
-            throws IOException, InterruptedException {
+                throws IOException, InterruptedException {
 
             String decade = key.decade;
 
@@ -118,20 +123,47 @@ public class Calculate {
         }
     }
 
-    // Upload totalRecords result to "https://s3.amazonaws.com/ory-dsp-ass2/steps/Records/totalRecord.txt"
-    private static void uploadToS3(long totalRecords) {
-        AWSCredentials creds = Utils.loadCredentials();
+    private static void updateConf(Configuration conf) {
+        String[] splitFile, splitRow;
+        String info;
 
-        if (creds == null) {
-            logger.severe("Couldn't load credentials.");
+        //reading from Count output
+        info = Utils.LinkToString(path + countOutput);
+        if (info == null) {
+            logger.severe("Cant open Count output file");
             return;
         }
 
-        AmazonS3 s3 = Utils.createS3(creds);
+        splitFile = info.split("\n");
 
-        Utils.uploadStringToS3(s3, String.valueOf(totalRecords));
+        for (int i = 0 ; i< splitFile.length ; i++) {
+            splitRow = splitFile[i].split("\t");
+            if (splitRow[0].equals("counters")) {
+                for (int j = 1 ; j < splitRow.length ; j++ ) {
+                    conf.set("N_" + (j + 189), splitRow[j]);
+                }
+            }
+            else if (splitRow[0].equals("totalrecords")) {
+                totalRecords = Long.parseLong(splitRow[1]);
+            }
+        }
+
+        //reading from Join output
+        info = Utils.LinkToString(path + joinOutput);
+        if (info == null) {
+            logger.severe("Cant open Join output file");
+            return;
+        }
+
+        splitFile = info.split("\n");
+        for (int i = 0 ; i< splitFile.length ; i++) {
+            splitRow = splitFile[i].split("\t");
+
+            if (splitRow[0].equals("totalrecords")) {
+                totalRecords += Long.parseLong(splitRow[1]);
+            }
+        }
     }
-
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
@@ -139,7 +171,8 @@ public class Calculate {
         //conf.set("mapred.reduce.tasks", "2");
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        conf.set("pairsPerDecade", args[3]);
+        conf.set("pairsPerDecade", args[2]);
+        updateConf(conf);
 
         Job job = new Job(conf, "Join");
 
@@ -154,25 +187,16 @@ public class Calculate {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[1]));
-        FileOutputFormat.setOutputPath(job, new Path(args[2]));
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         boolean result = job.waitForCompletion(true);
 
         // Get totalRecords counter from Count & Join steps, and add this step (Calculate) records to it.
         if (result) {
-            long countAndJoinTotalRecord =  Long.parseLong(conf.get("totalRecords", "-1"));
-
-            if (countAndJoinTotalRecord != -1) {
-                long joinTotalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-                uploadToS3(joinTotalRecords + countAndJoinTotalRecord);
-
-            }
-            else {
-                // On any error with totalRecords, exit with error.
-                logger.severe("cant get totalRecords from Count & Join.");
-                result = false;
-            }
+                long calculateTotalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+                String info = "totalrecords\t" + Long.toString(totalRecords + calculateTotalRecords);
+                Utils.uploadToS3(info, outputFile);
         }
 
         System.exit(result ? 0 : 1);

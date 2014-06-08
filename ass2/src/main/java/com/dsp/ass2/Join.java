@@ -19,6 +19,7 @@ public class Join {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
 
+    public static final String outputFile = "steps/Join/output/output.txt";
 
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
@@ -115,24 +116,17 @@ public class Join {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[1]));
-        FileOutputFormat.setOutputPath(job, new Path(args[2]));
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         boolean result = job.waitForCompletion(true);
 
         // Get totalRecords parameter of Count step, and add this (Join) step total records.
         if (result) {
-            long countTotalRecord = Long.parseLong(conf.get("totalRecords", "-1"));
+            long totalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+            String info = "totalrecords\t" + Long.toString(totalRecords);
 
-            if (countTotalRecord != -1) {
-                long joinTotalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-                conf.set("totalRecords", Long.toString(countTotalRecord + joinTotalRecords));
-            }
-            else {
-                // If there was some error with totalRecords, exit with error.
-                logger.severe("cant get totalRecords from Count.");
-                result = false;
-            }
+            Utils.uploadToS3(info, outputFile);
         }
 
         System.exit(result ? 0 : 1);
