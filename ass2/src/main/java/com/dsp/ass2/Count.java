@@ -89,8 +89,13 @@ public class Count {
             throws IOException, InterruptedException {
 
             // Convert n-gram to lowercase, Split into words, and handle <w,wi> pairs.
-            String[] ngram = value.toString().toLowerCase().split(ngramDelim),
-                words = ngram[0].split(wordsDelim);
+            String[] ngram = value.toString().split(ngramDelim),
+                words = ngram[0].toLowerCase().split(wordsDelim);
+
+            if (ngram.length < 3) {
+                logger.severe("ngram too short: " + ngram.toString());
+                return;
+            }
 
             int decade = Integer.parseInt(ngram[1]) / 10,
                 occurences = Integer.parseInt(ngram[2]);

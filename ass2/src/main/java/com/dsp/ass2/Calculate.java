@@ -168,7 +168,7 @@ public class Calculate {
         Configuration conf = new Configuration();
 
         // conf.set("mapred.map.tasks", Utils.mapTasks);
-        // conf.set("mapred.reduce.tasks", Utils.reduceTasks);
+        conf.set("mapred.reduce.tasks", Utils.reduceTasks);
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
         conf.set("pairsPerDecade", args[Utils.argInIndex + 2]);

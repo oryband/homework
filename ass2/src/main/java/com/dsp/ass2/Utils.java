@@ -39,7 +39,7 @@ public class Utils {
             countersFileName = "counters.txt",
 
             mapTasks = "10",
-            reduceTasks = "10";
+            reduceTasks = "12";
 
 
     public static final int minDecade = 190,

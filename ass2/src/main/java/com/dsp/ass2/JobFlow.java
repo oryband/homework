@@ -30,9 +30,11 @@ public class JobFlow {
             ec2KeyName = "ec2",
             placementType = "us-east-1a",
             amiVersion = "2.4.2",
+            // amiVersion = "3.1.0",
             hadoopVersion = "1.0.3",
+            // hadoopVersion = "2.4.0",
             // instanceType = InstanceType.M1Small.toString(),
-            instanceType = InstanceType.M32xlarge.toString(),
+            instanceType = InstanceType.M1Xlarge.toString(),
 
             s3BaseUri = "s3n://" + Utils.bucket + "/",
 
