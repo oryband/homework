@@ -36,7 +36,10 @@ public class Utils {
             joinOutput =  "steps/Join/output/",
             calculateOutput = "steps/Calculate/output/",
             hadoopOutputFileName = "part-r-00000",
-            countersFileName = "counters.txt";
+            countersFileName = "counters.txt",
+
+            mapTasks = "10",
+            reduceTasks = "10";
 
 
     public static final int minDecade = 190,

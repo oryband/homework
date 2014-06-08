@@ -265,8 +265,8 @@ public class Count {
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
 
-        // conf.set("mapred.map.tasks", "10");
-        // conf.set("mapred.reduce.tasks", "2");
+        // conf.set("mapred.map.tasks", Utils.mapTasks);
+        // conf.set("mapred.reduce.tasks", Utils.reduceTasks);
 
         Job job = new Job(conf, "Join");
 

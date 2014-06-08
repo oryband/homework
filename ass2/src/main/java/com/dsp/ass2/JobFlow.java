@@ -31,13 +31,14 @@ public class JobFlow {
             placementType = "us-east-1a",
             amiVersion = "2.4.2",
             hadoopVersion = "1.0.3",
-            instanceType = InstanceType.M1Small.toString(),
+            // instanceType = InstanceType.M1Small.toString(),
+            instanceType = InstanceType.M32xlarge.toString(),
 
             s3BaseUri = "s3n://" + Utils.bucket + "/",
 
-            logUri = s3BaseUri + "/logs/",
+            logUri = s3BaseUri + "logs/",
 
-            updateLuceneUri = s3BaseUri + "/lucene/update-lucene.sh",
+            updateLuceneUri = s3BaseUri + "lucene/update-lucene.sh",
 
             joinClass = "Join",
             countClass = "Count",
@@ -51,12 +52,13 @@ public class JobFlow {
             joinOutput = s3BaseUri + Utils.joinOutput,
             calculateOutput = s3BaseUri + Utils.calculateOutput,
 
-            countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",
+            // countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
+            countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data",
             joinInput = s3BaseUri + Utils.countOutput + Utils.hadoopOutputFileName,
             calculateInput = s3BaseUri + Utils.joinOutput + Utils.hadoopOutputFileName;
 
 
-    private static int instanceCount = 1;
+    private static int instanceCount = 12;
 
 
     // Use custom string format for logger.

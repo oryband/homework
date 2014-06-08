@@ -100,8 +100,9 @@ public class Join {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
-        //conf.set("mapred.map.tasks", "10");
-        //conf.set("mapred.reduce.tasks", "2");
+        // conf.set("mapred.map.tasks", Utils.mapTasks);
+        // conf.set("mapred.reduce.tasks", Utils.reduceTasks);
+
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
 
         Job job = new Job(conf, "Join");
