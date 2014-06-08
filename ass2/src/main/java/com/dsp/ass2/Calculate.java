@@ -171,7 +171,7 @@ public class Calculate {
         //conf.set("mapred.reduce.tasks", "2");
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        conf.set("pairsPerDecade", args[2]);
+        conf.set("pairsPerDecade", args[Utils.argInIndex + 2]);
 
         updateCounters(conf);
 
@@ -187,8 +187,8 @@ public class Calculate {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
+        FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 1]));
 
         boolean result = job.waitForCompletion(true);
 

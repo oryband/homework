@@ -20,6 +20,8 @@ import com.amazonaws.services.elasticmapreduce.model.StepConfig;
 
 public class JobFlow {
 
+    private static final Logger logger = setLogger(Logger.getLogger(JobFlow.class.getName()));
+
     private static String credentialsPath = "/AWSCredentials.properties",
 
             actionOnFailure = "TERMINATE_JOB_FLOW",
@@ -55,8 +57,6 @@ public class JobFlow {
 
 
     private static int instanceCount = 1;
-
-    private static final Logger logger = setLogger(Logger.getLogger(JobFlow.class.getName()));
 
 
     // Use custom string format for logger.
@@ -114,7 +114,7 @@ public class JobFlow {
         HadoopJarStepConfig calculateJarConfig = new HadoopJarStepConfig()
             .withJar(calculateJarUrl)
             .withMainClass(calculateClass)
-            .withArgs(calculateInput, calculateOutput, args[2]);
+            .withArgs(calculateInput, calculateOutput, args[0]);  // args[0] is how many top PMI pairs to display.
 
         StepConfig calculateConfig = new StepConfig()
             .withName("Calculate")

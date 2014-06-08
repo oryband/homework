@@ -39,7 +39,8 @@ public class Utils {
             countersFileName = "counters.txt";
 
 
-    public static final int minDecade = 190;
+    public static final int minDecade = 190,
+           argInIndex = 1;
 
 
     private static boolean putObject(AmazonS3 s3, PutObjectRequest req) {
