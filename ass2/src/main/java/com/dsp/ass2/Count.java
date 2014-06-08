@@ -36,10 +36,6 @@ public class Count {
             wordsDelim = " ",
             wordHeader = "*";
 
-    public static final String  outputFile = "steps/Count/output/output.txt";
-
-    private static final int minDecade = 199;
-
 
     // Sum all members in list.
     private static int sumValues(Iterable<IntWritable> values) {
@@ -51,6 +47,8 @@ public class Count {
     }
 
 
+    // For every word `w` in n-gram: emit { decade, w, * : c(w) }
+    // For every central word `w` in n-gram: emit { decade, w, wi : c(w,wi) } and { " : c(wi,w) } , i=1..4 (its neithbours)
     public static class MapClass extends Mapper<LongWritable, Text, Text, IntWritable> {
 
         private IntWritable num = new IntWritable();
@@ -86,8 +84,6 @@ public class Count {
         }
 
 
-        // For every word `w` in n-gram: emit { decade, w, * : c(w) }
-        // For every central word `w` in n-gram: emit { decade, w, wi : c(w,wi) } and { " : c(wi,w) } , i=1..4 (its neithbours)
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
@@ -99,7 +95,7 @@ public class Count {
             int decade = Integer.parseInt(ngram[1]) / 10,
                 occurences = Integer.parseInt(ngram[2]);
 
-            if (words.length > 0 && decade >= minDecade) {
+            if (words.length > 0 && decade >= Utils.minDecade) {
                 // Get central word in n-gram.
                 String centralWord = words[words.length / 2];
 
@@ -141,11 +137,11 @@ public class Count {
     }
 
 
-    public static class CombineClass extends Reducer<Text,IntWritable,Text,IntWritable> {
+    // Sum every identical count values before sending to reducer.
+    public static class CombineClass extends Reducer<Text, IntWritable, Text, IntWritable> {
 
         private IntWritable sumWrt = new IntWritable();
 
-        // Sum every identical count values before sending to reducer.
         @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context)
             throws IOException, InterruptedException {
@@ -168,7 +164,9 @@ public class Count {
     }
 
 
-    public static class ReduceClass extends Reducer<Text,IntWritable,Text,Text> {
+    // If key is 'decade, w, *' Write { decade, w, * : c(w) }
+    // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
+    public static class ReduceClass extends Reducer<Text, IntWritable, Text, Text> {
 
         // Corpus word counter by decade.
         public static enum N_COUNTER {
@@ -239,8 +237,6 @@ public class Count {
         }
 
 
-        // If key is 'decade, w, *' Write { decade, w, * : c(w) }
-        // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
         @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context)
             throws IOException, InterruptedException {
@@ -268,6 +264,7 @@ public class Count {
         Configuration conf = new Configuration();
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
+
         // conf.set("mapred.map.tasks", "10");
         // conf.set("mapred.reduce.tasks", "2");
 
@@ -310,20 +307,19 @@ public class Count {
                 counters.findCounter(ReduceClass.N_COUNTER.N_201).getValue()
             };
 
+            // Write counters to file.
             StringBuilder sb = new StringBuilder();
-
             sb.append("counters\t");
             for (int i = 0; i < decadeCounters.length; i++) {
                 sb.append(Long.toString(decadeCounters[i])).append("\t");
             }
             sb.append("\n");
 
-            // Set totalRecord from task counter, so we could pass it to Join step.
+            // Write totalRecord from task counter to file, so we could pass it to next steps.
             long totalRecords = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
             sb.append("totalrecords\t").append(Long.toString(totalRecords));
 
-            Utils.uploadToS3(sb.toString(), outputFile);
-
+            Utils.uploadToS3(sb.toString(), Utils.countOutput + Utils.countersFileName);
         }
 
         System.exit(result ? 0 : 1);

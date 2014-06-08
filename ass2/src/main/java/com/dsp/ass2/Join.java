@@ -17,9 +17,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class Join {
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
-
-    public static final String outputFile = "steps/Join/output/output.txt";
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(Join.class.getName()));
 
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
@@ -63,11 +61,11 @@ public class Join {
     }
 
 
+    // For every <w1,w2> - Write { <decade, w1 ,w2> : c(w1), c(w2), c(w1,w2) }
     public static class ReduceClass extends Reducer<Text,Text,Text,Text> {
 
         private Text newValue = new Text();
 
-        // For every <w1,w2> - Write { <decade, w1 ,w2> : c(w1), c(w2), c(w1,w2) }
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
@@ -101,6 +99,7 @@ public class Join {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+
         //conf.set("mapred.map.tasks", "10");
         //conf.set("mapred.reduce.tasks", "2");
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
@@ -126,7 +125,7 @@ public class Join {
             long totalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
             String info = "totalrecords\t" + Long.toString(totalRecords);
 
-            Utils.uploadToS3(info, outputFile);
+            Utils.uploadToS3(info, Utils.joinOutput + Utils.countersFileName);
         }
 
         System.exit(result ? 0 : 1);

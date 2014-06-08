@@ -11,8 +11,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Logger;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Logger;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -27,57 +27,20 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 public class Utils {
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
+    private static final Logger logger = setLogger(Logger.getLogger(Utils.class.getName()));
 
-    public static final String delim = "\t",
-            bucket = "ory-dsp-ass2";
-            //filePath = "steps/Records/totalRecord.txt";
-
-
-    // Use custom string format for logger.
-    public static Logger setLogger(Logger logger) {
-        ShortFormatter formatter = new ShortFormatter();
-        ConsoleHandler handler = new ConsoleHandler();
-
-        logger.setUseParentHandlers(false);
-        handler.setFormatter(formatter);
-        logger.addHandler(handler);
-
-        return logger;
-    }
-
-    // Creates an S3 connection with socket timeout = 0 (avoids exceptions).
-    public static AmazonS3 createS3(AWSCredentials creds) {
-        ClientConfiguration config = new ClientConfiguration();
-        config.setSocketTimeout(0);
-        return new AmazonS3Client(creds, config);
-    }
+    public static final String delim = "\t",  // Delimiter between data.
+            bucket = "ory-dsp-ass2",
+            s3Uri = "https://s3.amazonaws.com/" + bucket + "/",
+            countOutput =  "steps/Count/output/",
+            joinOutput =  "steps/Join/output/",
+            calculateOutput = "steps/Calculate/output/",
+            hadoopOutputFileName = "part-r-00000",
+            countersFileName = "counters.txt";
 
 
-    public static PropertiesCredentials loadCredentials() {
-        try {
-            return new PropertiesCredentials(
-                    Utils.class.getResourceAsStream("/AWSCredentials.properties"));
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-    }
+    public static final int minDecade = 190;
 
-
-    // Upload totalRecords result to "https://s3.amazonaws.com/ory-dsp-ass2/steps/Records/totalRecord.txt"
-    public static void uploadToS3(String info, String path) {
-        AWSCredentials creds = Utils.loadCredentials();
-
-        if (creds == null) {
-            logger.severe("Couldn't load credentials.");
-            return;
-        }
-
-        AmazonS3 s3 = Utils.createS3(creds);
-
-        Utils.uploadStringToS3(s3, info, path);
-    }
 
     private static boolean putObject(AmazonS3 s3, PutObjectRequest req) {
         // Set file as public.
@@ -98,8 +61,8 @@ public class Utils {
     }
 
 
-    public static String uploadToS3(AmazonS3 s3, PutObjectRequest req, String path) {
-        logger.info("Uploading to S3: " + path);
+    private static String uploadToS3(AmazonS3 s3, PutObjectRequest req, String path) {
+        logger.info("Uploading to S3: " + s3Uri + path);
 
         if (putObject(s3, req)) {
             return generateS3FileAddress(s3, path);
@@ -109,7 +72,7 @@ public class Utils {
     }
 
 
-    public static String generateS3FileAddress(AmazonS3 s3, String path) {
+    private static String generateS3FileAddress(AmazonS3 s3, String path) {
         String address;
 
         try {
@@ -126,7 +89,7 @@ public class Utils {
     }
 
 
-    public static String uploadStringToS3(AmazonS3 s3, String data, String path) {
+    private static String uploadStringToS3(AmazonS3 s3, String data, String path) {
         // Create temporary file and write to it.
         File file = null;
         try {
@@ -150,7 +113,54 @@ public class Utils {
         return uploadToS3(s3, req, path);
     }
 
-    // Reads a URL and returns result as string.
+
+    // Use custom string format for logger.
+    public static Logger setLogger(Logger logger) {
+        ShortFormatter formatter = new ShortFormatter();
+        ConsoleHandler handler = new ConsoleHandler();
+
+        logger.setUseParentHandlers(false);
+        handler.setFormatter(formatter);
+        logger.addHandler(handler);
+
+        return logger;
+    }
+
+
+    public static PropertiesCredentials loadCredentials() {
+        try {
+            return new PropertiesCredentials(
+                    Utils.class.getResourceAsStream("/AWSCredentials.properties"));
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+    }
+
+
+    // Creates an S3 connection with socket timeout = 0 (avoids exceptions).
+    public static AmazonS3 createS3(AWSCredentials creds) {
+        ClientConfiguration config = new ClientConfiguration();
+        config.setSocketTimeout(0);
+        return new AmazonS3Client(creds, config);
+    }
+
+
+    public static void uploadToS3(String info, String path) {
+        AWSCredentials creds = loadCredentials();
+
+        if (creds == null) {
+            logger.severe("Couldn't load credentials.");
+            return;
+        }
+
+        AmazonS3 s3 = createS3(creds);
+
+        uploadStringToS3(s3, info, path);
+    }
+
+
+    // Read URL and return result as string.
     public static String LinkToString(String link) {
         URL url;
         String line;

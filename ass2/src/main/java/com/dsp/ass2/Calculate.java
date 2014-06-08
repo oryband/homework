@@ -14,20 +14,15 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-
 
 public class Calculate {
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(Calculate.class.getName()));
 
-    private static final String joinOutput = Join.outputFile,
-                                countOutput = Count.outputFile,
-                                path = "https://s3.amazonaws.com/ory-dsp-ass2/",
-                                outputFile = "steps/Calculate/output/output.txt";
     private static long totalRecords = 0;
 
+
+    // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
     public static class MapClass extends Mapper<LongWritable, Text, DecadePmi, Text> {
 
         private DecadePmi decadePmi = new DecadePmi();
@@ -45,26 +40,25 @@ public class Calculate {
         @Override
         public void setup(Context context) {
             for (int i=0; i < cDecades.length; i++) {
-                cDecades[i] = context.getConfiguration().get("N_" + (i + 190), "-1");
+                cDecades[i] = context.getConfiguration().get("N_" + (i + Utils.minDecade), "-1");
             }
         }
 
 
-        // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
         @Override
         public void map(LongWritable key, Text value, Context context)
-                throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
 
             // Fetch words from value.
             String[] words = value.toString().split(Utils.delim);
             String decade = words[0],
-                    w1 = words[1],
-                    w2 = words[2],
-                    cW1 = words[3],
-                    cW2 = words[4],
-                    cW1W2 = words[5],
-                    cDecade = cDecades[Integer.parseInt(decade) - 190],
-                    pmi;
+                   w1 = words[1],
+                   w2 = words[2],
+                   cW1 = words[3],
+                   cW2 = words[4],
+                   cW1W2 = words[5],
+                   cDecade = cDecades[Integer.parseInt(decade) - Utils.minDecade],
+                   pmi;
 
             if (cDecade.equals("-1")) {
                 logger.severe("Unsupported decade: " + decade);
@@ -78,7 +72,7 @@ public class Calculate {
                     Double.parseDouble(cDecade));
 
             decadePmi.set(decade, pmi);
-            newValue.set(cDecade + Utils.delim + w1 + Utils.delim + w2);
+            newValue.set(w1 + Utils.delim + w2);
             context.write(decadePmi, newValue);
         }
     }
@@ -115,7 +109,7 @@ public class Calculate {
 
             String decade = key.decade;
 
-            int decadeIndex = Integer.parseInt(decade) - 190;
+            int decadeIndex = Integer.parseInt(decade) - Utils.minDecade;
             if (pairsPerDecade[decadeIndex] -- > 0) {
                 newKey.set(key.decade + Utils.delim + key.PMI);
                 context.write(newKey, values.iterator().next());
@@ -123,56 +117,63 @@ public class Calculate {
         }
     }
 
-    private static void updateConf(Configuration conf) {
+
+    // Updated decade and total-records counters, using data from previous steps.
+    private static void updateCounters(Configuration conf) {
         String[] splitFile, splitRow;
         String info;
 
-        //reading from Count output
-        info = Utils.LinkToString(path + countOutput);
+        // Read Count step output.
+        info = Utils.LinkToString(Utils.s3Uri + Utils.countOutput + Utils.countersFileName);
         if (info == null) {
-            logger.severe("Cant open Count output file");
+            logger.severe("Error opening Count output file: " + Utils.s3Uri + Utils.countOutput);
             return;
         }
 
+        // Read Count step decade and total-records counters.
         splitFile = info.split("\n");
 
-        for (int i = 0 ; i< splitFile.length ; i++) {
+        for (int i = 0; i < splitFile.length; i++) {
             splitRow = splitFile[i].split("\t");
+
             if (splitRow[0].equals("counters")) {
-                for (int j = 1 ; j < splitRow.length ; j++ ) {
-                    conf.set("N_" + (j + 189), splitRow[j]);
+                for (int j = 1; j < splitRow.length; j++ ) {
+                    conf.set("N_" + (j + Utils.minDecade - 1), splitRow[j]);
                 }
-            }
-            else if (splitRow[0].equals("totalrecords")) {
+            } else if (splitRow[0].equals("totalrecords")) {
                 totalRecords = Long.parseLong(splitRow[1]);
             }
         }
 
-        //reading from Join output
-        info = Utils.LinkToString(path + joinOutput);
+        // Read Join step output.
+        info = Utils.LinkToString(Utils.s3Uri + Utils.joinOutput + Utils.countersFileName);
         if (info == null) {
-            logger.severe("Cant open Join output file");
+            logger.severe("Error opening Count output file: " + Utils.s3Uri + Utils.joinOutput);
             return;
         }
 
+        // Read Join step total-records counters (no decades are being count at this step).
         splitFile = info.split("\n");
-        for (int i = 0 ; i< splitFile.length ; i++) {
-            splitRow = splitFile[i].split("\t");
 
+        for (int i = 0; i < splitFile.length; i++) {
+            splitRow = splitFile[i].split("\t");
             if (splitRow[0].equals("totalrecords")) {
                 totalRecords += Long.parseLong(splitRow[1]);
             }
         }
     }
 
+
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+
         //conf.set("mapred.map.tasks", "10");
         //conf.set("mapred.reduce.tasks", "2");
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
         conf.set("pairsPerDecade", args[2]);
-        updateConf(conf);
+
+        updateCounters(conf);
 
         Job job = new Job(conf, "Join");
 
@@ -180,7 +181,6 @@ public class Calculate {
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
 
-        // job.setCombinerClass(CombineClass.class);
         job.setReducerClass(ReduceClass.class);
         job.setMapOutputKeyClass(DecadePmi.class);
         job.setMapOutputValueClass(Text.class);
@@ -192,11 +192,14 @@ public class Calculate {
 
         boolean result = job.waitForCompletion(true);
 
-        // Get totalRecords counter from Count & Join steps, and add this step (Calculate) records to it.
+        // Get totalRecords counter from Count & Join steps,
+        // add this step (Calculate) records to it,
+        // and upload final counters to S3.
         if (result) {
-                long calculateTotalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-                String info = "totalrecords\t" + Long.toString(totalRecords + calculateTotalRecords);
-                Utils.uploadToS3(info, outputFile);
+            long calculateTotalRecords = job.getCounters()
+                .findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+            String info = "totalrecords\t" + Long.toString(totalRecords + calculateTotalRecords);
+            Utils.uploadToS3(info, Utils.calculateOutput + Utils.countersFileName);
         }
 
         System.exit(result ? 0 : 1);

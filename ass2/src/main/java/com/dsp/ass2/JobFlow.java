@@ -31,26 +31,28 @@ public class JobFlow {
             hadoopVersion = "1.0.3",
             instanceType = InstanceType.M1Small.toString(),
 
-            logUri = "s3n://ory-dsp-ass2/logs/",
+            s3BaseUri = "s3n://" + Utils.bucket + "/",
 
-            updateLuceneUri = "s3n://ory-dsp-ass2/lucene/update-lucene.sh",
+            logUri = s3BaseUri + "/logs/",
 
-            // Steps constants.
-            countClass = "Count",
-            countJarUrl = "s3n://ory-dsp-ass2/jars/Count.jar",
-            countInput = "s3n://ory-dsp-ass2/steps/Count/input/eng.corp.10k",
-            countOutput = "s3n://ory-dsp-ass2/steps/Count/output/",
+            updateLuceneUri = s3BaseUri + "/lucene/update-lucene.sh",
 
             joinClass = "Join",
-            joinJarUrl = "s3n://ory-dsp-ass2/jars/Join.jar",
-            joinInput = "s3n://ory-dsp-ass2/steps/Count/output/part-r-00000",
-            joinOutput = "s3n://ory-dsp-ass2/steps/Join/output/",
-
+            countClass = "Count",
             calculateClass = "Calculate",
-            calculateJarUrl = "s3n://ory-dsp-ass2/jars/Calculate.jar",
-            calculateInput = "s3n://ory-dsp-ass2/steps/calculate/output/part-r-00000",
-            calculateOutput = "s3n://ory-dsp-ass2/steps/Calculate/output/",
-            calculateTopPmiPairs = "10";
+
+            countJarUrl = s3BaseUri + "jars/Count.jar",
+            joinJarUrl = s3BaseUri + "jars/Join.jar",
+            calculateJarUrl = s3BaseUri + "jars/Calculate.jar",
+
+            countOutput = s3BaseUri + Utils.countOutput,
+            joinOutput = s3BaseUri + Utils.joinOutput,
+            calculateOutput = s3BaseUri + Utils.calculateOutput,
+
+            countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",
+            joinInput = s3BaseUri + Utils.countOutput + Utils.hadoopOutputFileName,
+            calculateInput = s3BaseUri + Utils.joinOutput + Utils.hadoopOutputFileName;
+
 
     private static int instanceCount = 1;
 
@@ -112,7 +114,7 @@ public class JobFlow {
         HadoopJarStepConfig calculateJarConfig = new HadoopJarStepConfig()
             .withJar(calculateJarUrl)
             .withMainClass(calculateClass)
-            .withArgs(calculateInput, calculateOutput, calculateTopPmiPairs);
+            .withArgs(calculateInput, calculateOutput, args[2]);
 
         StepConfig calculateConfig = new StepConfig()
             .withName("Calculate")
