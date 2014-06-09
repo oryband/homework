@@ -88,6 +88,7 @@ public class Calculate {
     }
 
 
+    // Write top PMI pairs for each decade.
     public static class ReduceClass extends Reducer<DecadePmi, Text, Text, Text> {
 
         private Text newKey = new Text();
@@ -111,6 +112,22 @@ public class Calculate {
 
             int decadeIndex = Integer.parseInt(decade) - Utils.minDecade;
             if (pairsPerDecade[decadeIndex] -- > 0) {
+                newKey.set(key.decade + Utils.delim + key.PMI);
+                context.write(newKey, values.iterator().next());
+            }
+        }
+    }
+
+
+    // Write only pairs from decade == 200.
+    public static class LastDecadeReduceClass extends Reducer<DecadePmi, Text, Text, Text> {
+
+        private Text newKey = new Text();
+
+        public void reduce(DecadePmi key, Iterable<Text> values, Context context)
+                throws IOException, InterruptedException {
+
+            if (Integer.parseInt(key.decade) == 200) {
                 newKey.set(key.decade + Utils.delim + key.PMI);
                 context.write(newKey, values.iterator().next());
             }
@@ -175,13 +192,13 @@ public class Calculate {
 
         updateCounters(conf);
 
-        Job job = new Job(conf, "Join");
+        Job job = new Job(conf, "Calculate");
 
         job.setJarByClass(Calculate.class);
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
-
-        job.setReducerClass(ReduceClass.class);
+        // job.setReducerClass(ReduceClass.class);
+        job.setReducerClass(LastDecadeReduceClass.class);
         job.setMapOutputKeyClass(DecadePmi.class);
         job.setMapOutputValueClass(Text.class);
         job.setOutputKeyClass(Text.class);
@@ -195,12 +212,12 @@ public class Calculate {
         // Get totalRecords counter from Count & Join steps,
         // add this step (Calculate) records to it,
         // and upload final counters to S3.
-        if (result) {
-            long calculateTotalRecords = job.getCounters()
-                .findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-            String info = "totalrecords\t" + Long.toString(totalRecords + calculateTotalRecords);
-            Utils.uploadToS3(info, Utils.calculateOutput + Utils.countersFileName);
-        }
+        // if (result) {
+        //     long calculateTotalRecords = job.getCounters()
+        //         .findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+        //     String info = "totalrecords\t" + Long.toString(totalRecords + calculateTotalRecords);
+        //     Utils.uploadToS3(info, Utils.calculateOutput + Utils.countersFileName);
+        // }
 
         System.exit(result ? 0 : 1);
     }
