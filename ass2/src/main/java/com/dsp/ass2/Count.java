@@ -86,7 +86,7 @@ public class Count {
                 return;
             }
 
-            long decade = Integer.parseInt(ngram[1]) / 10,
+            int decade = Integer.parseInt(ngram[1]) / 10,
                 occurences = Integer.parseInt(ngram[2]);
 
             if (words.length > 0 && decade >= Utils.minDecade) {
@@ -100,7 +100,7 @@ public class Count {
 
                 if (words.length > 0) {
                     // Count pairs if central word in n-gram was not a stop word.
-                    long centralIndex = Arrays.asList(words).indexOf(centralWord);
+                    int centralIndex = Arrays.asList(words).indexOf(centralWord);
                     boolean countPairs = false;
                     if (centralIndex >= 0) {
                        countPairs = true;
