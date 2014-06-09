@@ -273,7 +273,7 @@ public class Count {
         // conf.set("mapred.map.tasks", Utils.mapTasks);
         // conf.set("mapred.reduce.tasks", Utils.reduceTasks);
 
-        Job job = new Job(conf, "Join");
+        Job job = new Job(conf, "Count");
 
         // Read from Google N-Gram.
         // TODO try to use original SequenceFileInputFormat.class.
