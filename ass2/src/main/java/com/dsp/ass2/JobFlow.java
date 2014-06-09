@@ -55,7 +55,8 @@ public class JobFlow {
 
             countOutput = s3BaseUri + Utils.countOutput,
             joinOutput = s3BaseUri + Utils.joinOutput,
-            calculateOutput = s3BaseUri + Utils.calculateOutput,
+            // calculateOutput = s3BaseUri + Utils.calculateOutput,
+            calculateOutput = s3BaseUri + "steps/LastDecade/output/",
 
             // countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
             countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data",
@@ -147,8 +148,8 @@ public class JobFlow {
             .withName(jobName)
             .withAmiVersion(amiVersion)
             .withInstances(instances)
-            .withSteps(countConfig, joinConfig, calculateConfig)
-            // .withSteps(calculateConfig)
+            // .withSteps(countConfig, joinConfig, calculateConfig)
+            .withSteps(calculateConfig)
             .withLogUri(logUri)
             .withBootstrapActions(bootstrapConfig);
 
