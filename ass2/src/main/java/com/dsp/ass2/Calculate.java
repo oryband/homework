@@ -88,7 +88,7 @@ public class Calculate {
     }
 
 
-    // Write top PMI pairs for each decade.
+    // Write top PMI pairs for each decade. That is, write { decade, pmi : w1, w2 }
     public static class ReduceClass extends Reducer<DecadePmi, Text, Text, Text> {
 
         private Text newKey = new Text();
@@ -119,7 +119,7 @@ public class Calculate {
     }
 
 
-    // Write only pairs from decade == 200.
+    // Write only pairs from decade == 200: That is, write { 200 pmi : w1, w2 }
     public static class LastDecadeReduceClass extends Reducer<DecadePmi, Text, Text, Text> {
 
         private Text newKey = new Text();
@@ -212,6 +212,7 @@ public class Calculate {
         // Get totalRecords counter from Count & Join steps,
         // add this step (Calculate) records to it,
         // and upload final counters to S3.
+        // NOTE This isn't necessary when using LastDecadeReduceClass.
         // if (result) {
         //     long calculateTotalRecords = job.getCounters()
         //         .findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
