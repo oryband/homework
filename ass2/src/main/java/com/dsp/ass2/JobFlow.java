@@ -18,6 +18,7 @@ import com.amazonaws.services.elasticmapreduce.model.RunJobFlowResult;
 import com.amazonaws.services.elasticmapreduce.model.ScriptBootstrapActionConfig;
 import com.amazonaws.services.elasticmapreduce.model.StepConfig;
 
+
 public class JobFlow {
 
     private static final Logger logger = setLogger(Logger.getLogger(JobFlow.class.getName()));
@@ -42,6 +43,8 @@ public class JobFlow {
 
             updateLuceneUri = s3BaseUri + "lucene/update-lucene.sh",
 
+            hadoopOutputFileName = "part-r-*",
+
             joinClass = "Join",
             countClass = "Count",
             calculateClass = "Calculate",
@@ -56,9 +59,8 @@ public class JobFlow {
 
             // countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
             countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data",
-            joinInput = s3BaseUri + Utils.countOutput + Utils.hadoopOutputFileName,
-            calculateInput = s3BaseUri + Utils.joinOutput + Utils.hadoopOutputFileName;
-
+            joinInput = s3BaseUri + Utils.countOutput + hadoopOutputFileName,
+            calculateInput = s3BaseUri + Utils.joinOutput + hadoopOutputFileName;
 
     private static int instanceCount = 12;
 
@@ -146,6 +148,7 @@ public class JobFlow {
             .withAmiVersion(amiVersion)
             .withInstances(instances)
             .withSteps(countConfig, joinConfig, calculateConfig)
+            // .withSteps(calculateConfig)
             .withLogUri(logUri)
             .withBootstrapActions(bootstrapConfig);
 
