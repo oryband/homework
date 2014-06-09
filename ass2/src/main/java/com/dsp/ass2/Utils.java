@@ -14,6 +14,8 @@ import java.net.URL;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
+import org.apache.hadoop.io.LongWritable;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
@@ -126,6 +128,16 @@ public class Utils {
         logger.addHandler(handler);
 
         return logger;
+    }
+
+
+    // Sum all members in list.
+    public static long sumValues(Iterable<LongWritable> values) {
+        long sum = 0;
+        for (LongWritable value : values) {
+            sum += value.get();
+        }
+        return sum;
     }
 
 

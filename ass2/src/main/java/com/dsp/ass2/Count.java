@@ -7,7 +7,6 @@ import java.util.Arrays;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
@@ -37,21 +36,11 @@ public class Count {
             wordHeader = "*";
 
 
-    // Sum all members in list.
-    private static int sumValues(Iterable<IntWritable> values) {
-        int sum = 0;
-        for (IntWritable value : values) {
-            sum += value.get();
-        }
-        return sum;
-    }
-
-
     // For every word `w` in n-gram: emit { decade, w, * : c(w) }
     // For every central word `w` in n-gram: emit { decade, w, wi : c(w,wi) } and { " : c(wi,w) } , i=1..4 (its neithbours)
-    public static class MapClass extends Mapper<LongWritable, Text, Text, IntWritable> {
+    public static class MapClass extends Mapper<LongWritable, Text, Text, LongWritable> {
 
-        private IntWritable num = new IntWritable();
+        private LongWritable num = new LongWritable();
         private Text word = new Text();
 
 
@@ -97,7 +86,7 @@ public class Count {
                 return;
             }
 
-            int decade = Integer.parseInt(ngram[1]) / 10,
+            long decade = Integer.parseInt(ngram[1]) / 10,
                 occurences = Integer.parseInt(ngram[2]);
 
             if (words.length > 0 && decade >= Utils.minDecade) {
@@ -111,7 +100,7 @@ public class Count {
 
                 if (words.length > 0) {
                     // Count pairs if central word in n-gram was not a stop word.
-                    int centralIndex = Arrays.asList(words).indexOf(centralWord);
+                    long centralIndex = Arrays.asList(words).indexOf(centralWord);
                     boolean countPairs = false;
                     if (centralIndex >= 0) {
                        countPairs = true;
@@ -143,23 +132,23 @@ public class Count {
 
 
     // Sum every identical count values before sending to reducer.
-    public static class CombineClass extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class CombineClass extends Reducer<Text, LongWritable, Text, LongWritable> {
 
-        private IntWritable sumWrt = new IntWritable();
+        private LongWritable sumWrt = new LongWritable();
 
         @Override
-        public void reduce(Text key, Iterable<IntWritable> values, Context context)
+        public void reduce(Text key, Iterable<LongWritable> values, Context context)
             throws IOException, InterruptedException {
-            sumWrt.set(sumValues(values));
+            sumWrt.set(Utils.sumValues(values));
             context.write(key, sumWrt);
         }
     }
 
 
     // Partition by 'decade + word' hash code.
-    public static class PartitionerClass extends Partitioner<Text, IntWritable> {
+    public static class PartitionerClass extends Partitioner<Text, LongWritable> {
         @Override
-        public int getPartition(Text key, IntWritable value, int numPartitions) {
+        public int getPartition(Text key, LongWritable value, int numPartitions) {
             String[] words = key.toString().split(Utils.delim);
             Text data = new Text(words[0] + Utils.delim + words[1]);
             // Calculate data's hash code, and bound by Integer maximum value,
@@ -171,7 +160,7 @@ public class Count {
 
     // If key is 'decade, w, *' Write { decade, w, * : c(w) }
     // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
-    public static class ReduceClass extends Reducer<Text, IntWritable, Text, Text> {
+    public static class ReduceClass extends Reducer<Text, LongWritable, Text, Text> {
 
         // Corpus word counter by decade.
         public static enum N_COUNTER {
@@ -189,7 +178,7 @@ public class Count {
             N_201;  // 2010
         };
 
-        private int cw;  // c(w)
+        private long cw;  // c(w)
 
 
         // Update decade counter.
@@ -243,19 +232,19 @@ public class Count {
 
 
         @Override
-        public void reduce(Text key, Iterable<IntWritable> values, Context context)
+        public void reduce(Text key, Iterable<LongWritable> values, Context context)
             throws IOException, InterruptedException {
 
             String[] words = key.toString().split(Utils.delim);
             String decade = words[0], wi = words[2];
-            int sum = sumValues(values);
+            long sum = Utils.sumValues(values);
 
             if (wi.equals(wordHeader)) {
                 // 'decade, w,*' case:
                 cw = sum;
                 updateCounter(decade, context);
             } else {
-                String val = Integer.toString(cw) + Utils.delim + Integer.toString(sum);
+                String val = Long.toString(cw) + Utils.delim + Long.toString(sum);
                 context.write(key, new Text(val));
             }
         }
@@ -286,7 +275,7 @@ public class Count {
         job.setReducerClass(ReduceClass.class);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
+        job.setOutputValueClass(LongWritable.class);
 
         // TODO change args to 1,2 when testing on amazon ecr.
         FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
