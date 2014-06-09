@@ -1,27 +1,31 @@
 var mongoose = require('mongoose'), 
     dbHelpers = require('./the_falling_star.js');
 
+function prettyLog(data) {
+  console.log(JSON.stringify(data, undefined, 2));
+}
+
 // q1
-dbHelpers.getParticipantsOfDay(4, console.log);
-dbHelpers.getParticipantsOfDay(7, console.log);
+dbHelpers.getParticipantsOfDay(4, prettyLog);
+dbHelpers.getParticipantsOfDay(7, prettyLog);
 
 // q2
-dbHelpers.getParticipantInformation('Mick Jagger', console.log);
+dbHelpers.getParticipantInformation('Mick Jagger', prettyLog);
 
 // q3
-dbHelpers.getParticipantsWhoLikePet('dogs', console.log);
+dbHelpers.getParticipantsWhoLikePet('dogs', prettyLog);
 
 // q4
-dbHelpers.getParticipantsFavoriteFoodStats(console.log);
+dbHelpers.getParticipantsFavoriteFoodStats(prettyLog);
 
 // q5
-dbHelpers.getTotalLengthOfShow({_id: mongoose.Types.ObjectId('53909decf955e31b4a6b5033')}, console.log);
+dbHelpers.getTotalLengthOfShow(2, prettyLog);
 
 // q6
-dbHelpers.getTop3PerShow(console.log);
+dbHelpers.getTop3PerShow(prettyLog);
 
 // q7
-dbHelpers.getListOfParticipantsForDays(function(result) { console.log(JSON.stringify(result)); });
+dbHelpers.getListOfParticipantsForDays(prettyLog);
 
 // q8
-dbHelpers.getTotalCountOfSMSPerShow(console.log);
+dbHelpers.getTotalCountOfSMSPerShow(prettyLog);

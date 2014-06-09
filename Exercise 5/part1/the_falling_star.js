@@ -1,40 +1,45 @@
 var mongoose = require('mongoose'),
     db = mongoose.connect('mongodb://localhost/db');
 
+// define the Participant schema. the reasoning is explained in the file 'modeling'
 var Participant = mongoose.model('Participant', new mongoose.Schema({
-  name: String,
+  name: String, // full name
   age: Number,
   city: String,
-  job: String,
-  pet: String,
-  food: String,
-  // TODO: fix after there's an answer for the issue with query 7
-  // if we are staying with embedded songs, just remove comments
-  //songs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Song'}],
-  songs: [{title: String, length: Number}],
-  singingDay: Number
+  job: String, // job title
+  pet: String, // favorite pet 
+  food: String, // favorite food
+
+  // a list of songs the participant will choose from
+  songs: [{title: String, length: Number}], 
+
+  // the day in the week the participant will go up singing at. 
+  // 4-Wednesday, 7-Saturday
+  singingDay: Number 
 }));
 
+// define the Show schema. the reasoning is explained in the file 'modeling'
 var Show = mongoose.model('Show', new mongoose.Schema({
+  num: Number, // the show index
+
+  // array of participants in the specific show, each
+  // having 3 fields of information.
   participants: [{
-    sms: Number,
+    // count of SMSes the participant received in the show
+    sms: Number, 
+
+    // a reference to the participant document
     participant: {type: mongoose.Schema.Types.ObjectId, ref: 'Participant'},
-    // TODO: fix after there's an answer for the issue with query 7
-    // if we are staying with embedded songs, just remove comments
-    //song: {type: mongoose.Schema.Types.ObjectId, ref: 'Song'}
+
+    // the song the participant will sing at this show
     song: {title: String, length: Number}
   }]
 }));
 
-// TODO: fix after there's an answer for the issue with query 7
-// if we are staying with embedded songs, just remove comments
-//var Song = mongoose.model('Song', new mongoose.Schema({
-  //title: String,
-  //length: Number
-//}));
-
 // q1 - A list of participants performing on day 'day' 
-//      4 for Wednesday, 7 for Saturday
+//      4 for Wednesday, 7 for Saturday.
+//      The result is a list of name, age and city for participants
+//      that go up to sing on day 'day'.
 exports.getParticipantsOfDay = function (day, callback) {
   Participant.find({singingDay: day}, 'name age city').exec(function (err, result) {
     if (err) {
@@ -48,7 +53,9 @@ exports.getParticipantsOfDay = function (day, callback) {
   });
 };
 
-// q2 - Get information for a specific participant by name
+// q2 - Get information for a specific participant by name.
+//      The result is a specific participant document that goes by
+//      the name 'name'.
 exports.getParticipantInformation = function (name, callback) {
   Participant.find({name: name}).exec(function (err, result) {
     if (err) {
@@ -63,6 +70,7 @@ exports.getParticipantInformation = function (name, callback) {
 };
 
 // q3 - Find all participants who like pets 'pet' and fetch their name and age.
+//      The result is a list of participants name and age who like the given pet.
 exports.getParticipantsWhoLikePet = function (pet, callback) {
   Participant.find({pet: pet}, 'name age').exec(function (err, result) {
     if (err) {
@@ -77,7 +85,8 @@ exports.getParticipantsWhoLikePet = function (pet, callback) {
 };
 
 // q4 - Get a list of all the favorite food and a count of how many people like 
-//      each kind of food
+//      each kind of food. the result is a list of food types and the count of
+//      participants liking that kind of food.
 exports.getParticipantsFavoriteFoodStats = function (callback) {
   Participant.aggregate(
     [
@@ -100,11 +109,13 @@ exports.getParticipantsFavoriteFoodStats = function (callback) {
   );
 };
 
-// q5 - Get the calculated time of all songs of a specific show
-exports.getTotalLengthOfShow = function (show, callback) {
+// q5 - Get the calculated time of all songs of a specific show.
+//      The result is one object with a 'length' field which is
+//      total amount of song lengths for a given show num.
+exports.getTotalLengthOfShow = function (showNum, callback) {
   Show.aggregate(
     [
-      {$match: {_id: show._id}},
+      {$match: {num: showNum}},
       {$unwind: '$participants'},
       {$group: {_id: '', length: {$sum: '$participants.song.length'}}}
     ],
@@ -121,13 +132,15 @@ exports.getTotalLengthOfShow = function (show, callback) {
   );
 };
 
-// q6 - Get top 3 participants for each show
+// q6 - Get top 3 participants for each show, sorted by amount of SMS they received.
+//      the result is a list of shows, and an array of 3 participants for each of them
+//      ordered by SMSes they received.
 exports.getTop3PerShow = function (callback) {
   Show.aggregate(
     [
       {$unwind: '$participants'},
       {$sort: {'participants.sms': -1}},
-      {$group: {_id: '$_id', participants: {$push: '$participants'}}}
+      {$group: {_id: '$num', participants: {$push: '$participants'}}}
     ],
     function (err, result) {
       if (err) {
@@ -148,15 +161,14 @@ exports.getTop3PerShow = function (callback) {
 };
 
 // q7 - Retrieve a list of participants for each day of singing, sorted alphabatically
-//      along with the song they will sing.
+//      along with the song they will sing, which will be a song off their chosen songs
+//      in the participant document.
 exports.getListOfParticipantsForDays = function (callback) {
   Participant.aggregate(
     [
       {$sort: {'name': 1}},
       {$group: {
         _id: '$singingDay', 
-        // TODO: fix after there's an answer for the issue with the query
-        // if we are staying with embedded songs, keep. else fix
         participants: {$push: {name: '$name', song: '$songs[0]'}}
       }},
       {$project: {
@@ -177,12 +189,13 @@ exports.getListOfParticipantsForDays = function (callback) {
   );
 };
 
-// q8 - Get total count of SMS per show 
+// q8 - Get total count of SMS per show document. the result is a list of show num's
+//      with a 'total_sms' field containing the amount of SMSes sent for that show.
 exports.getTotalCountOfSMSPerShow = function (callback) {
   Show.aggregate(
     [
       {$unwind: '$participants'},
-      {$group: {_id: '$_id', total_sms: {$sum: '$participants.sms'}}}
+      {$group: {_id: '$num', total_sms: {$sum: '$participants.sms'}}}
     ],
     function (err, result) {
       if (err) {
@@ -196,65 +209,3 @@ exports.getTotalCountOfSMSPerShow = function (callback) {
     }
   );
 };
-
-//Participant.remove();
-//Show.remove();
-
-//var participant = new Participant();
-//participant.name = 'Johnny Doe';
-//participant.singingDay = 4;
-//participant.age = 17;
-//participant.city = 'Tel Aviv';
-//participant.job = 'Software Engineer';
-//participant.pet = 'dogs';
-//participant.food = 'Mac n cheese';
-//participant.save(function (err) {
-  //if (err) {
-    //console.log(err);
-  //}
-//});
-
-//var participant2 = new Participant();
-//participant2.name = 'Mick Jagger';
-//participant2.singingDay = 4;
-//participant2.age = 67;
-//participant2.city = 'Tel Aviv';
-//participant2.job = 'Software Engineer';
-//participant2.pet = 'dogs';
-//participant2.food = 'Mac n cheese';
-//participant2.save(function (err) {
-  //if (err) {
-    //console.log(err);
-  //}
-//});
-
-//var participant2 = new Participant();
-//participant2.name = 'Donkey Kong';
-//participant2.singingDay = 7;
-//participant2.age = 45;
-//participant2.city = 'Haifa';
-//participant2.job = 'Singer';
-//participant2.pet = 'cats';
-//participant2.food = 'Pizza';
-//participant2.save(function (err) {
-  //if (err) {
-    //console.log(err);
-  //}
-//});
-//var show = new Show();
-//show.participants.push({sms: 35, participant: participant2, song: {title: 'Something Blue', length: 24}});
-//show.save(function (err) {
-  //if (err) {
-    //console.log(err);
-  //}
-//});
-
-//Participant.find().exec(function (err, result) {
-  //console.log('participants');
-  //console.log(result);
-//});
-
-//Show.find().exec(function (err, result) {
-  //console.log('shows');
-  //console.log(result);
-//});

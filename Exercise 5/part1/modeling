@@ -1,7 +1,6 @@
 We split our database into 3 collections:
   * Participant - holds information of a specific participant in the show.
   * Show - holds information of a specific show that took place on a specific day.
-  * Song - holds information of a specific song that one of the participants might sing.
 
 Participant is a different collection as multiple Shows might list the same participants, 
 so in order to not duplicate the information they are separate collections.
@@ -9,16 +8,11 @@ Songs are represented in an array of objects per participant, which corresponds 
 of chosen songs by the participant. Also, for each participant in a show (part of the array in Show)
 there is an object for the song he choose for that specific show.
 
-// TODO: fix after there's an answer for the issue with query 7
-/*Song is a different collection as it is associated with a list of chosen songs per Participant,*/
-/*but also as songs a participant has chosen for a specific Show. Otherwise, we would have to copy*/
-/*the song from the participant song list to a specific Show chosen songs.*/
-
 Every Participant has its private information and favorite pet and food, along with the singingDay
 it will perform at, which is a number - either 4 for Wednesday or 7 for Saturday.
 We also save a list of references to Song's that this participant chose for the competition.
 
 For each show that occurred, there is a Show document representing it, that contains an array of participants
 that performed on that show. Each such array element has an 'sms' field, which is the amount of SMSes that 
-the participant received for his performance on that show, a reference to the song ('song' field) he performed 
+the participant received for his performance on that show, the song he performed 
 and a reference to the participant object.
