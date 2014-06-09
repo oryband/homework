@@ -54,9 +54,10 @@ public class JobFlow {
 
             // countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
             countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data",
-            joinInput = s3BaseUri + Utils.countOutput + Utils.hadoopOutputFileName,
-            calculateInput = s3BaseUri + Utils.joinOutput + Utils.hadoopOutputFileName;
-
+            //joinInput = s3BaseUri + Utils.countOutput + Utils.hadoopOutputFileName,
+            joinInput = s3BaseUri + Utils.countOutput + "part-r-*",
+            //calculateInput = s3BaseUri + Utils.joinOutput + Utils.hadoopOutputFileName;
+            calculateInput = s3BaseUri + Utils.joinOutput + "part-r-*";
 
     private static int instanceCount = 12;
 
@@ -91,18 +92,18 @@ public class JobFlow {
         AmazonElasticMapReduce mapReduce = new AmazonElasticMapReduceClient(credentials);
 
         // Set Count job flow step.
-        HadoopJarStepConfig countJarConfig = new HadoopJarStepConfig()
-            .withJar(countJarUrl)
-            .withMainClass(countClass)
-            .withArgs(countInput, countOutput);
-
-        StepConfig countConfig = new StepConfig()
-            .withName("Count")
-            .withHadoopJarStep(countJarConfig)
-            .withActionOnFailure(actionOnFailure);
+//        HadoopJarStepConfig countJarConfig = new HadoopJarStepConfig()
+//            .withJar(countJarUrl)
+//            .withMainClass(countClass)
+//            .withArgs(countInput, countOutput);
+//
+//        StepConfig countConfig = new StepConfig()
+//            .withName("Count")
+//            .withHadoopJarStep(countJarConfig)
+//            .withActionOnFailure(actionOnFailure);
 
         // Set Join job flow step.
-        HadoopJarStepConfig joinJarConfig = new HadoopJarStepConfig()
+     /*   HadoopJarStepConfig joinJarConfig = new HadoopJarStepConfig()
             .withJar(joinJarUrl)
             .withMainClass(joinClass)
             .withArgs(joinInput, joinOutput);
@@ -110,7 +111,7 @@ public class JobFlow {
         StepConfig joinConfig = new StepConfig()
             .withName("Join")
             .withHadoopJarStep(joinJarConfig)
-            .withActionOnFailure(actionOnFailure);
+            .withActionOnFailure(actionOnFailure); */
 
         // Set Calculate job flow step.
         HadoopJarStepConfig calculateJarConfig = new HadoopJarStepConfig()
@@ -143,7 +144,7 @@ public class JobFlow {
             .withName(jobName)
             .withAmiVersion(amiVersion)
             .withInstances(instances)
-            .withSteps(countConfig, joinConfig, calculateConfig)
+            .withSteps(/*countConfig, joinConfig,*/ calculateConfig)
             .withLogUri(logUri)
             .withBootstrapActions(bootstrapConfig);
 
