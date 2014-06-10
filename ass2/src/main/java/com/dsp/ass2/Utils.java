@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 
 import com.amazonaws.AmazonClientException;
@@ -37,6 +38,7 @@ public class Utils {
             countOutput =  "steps/Count/output/",
             joinOutput =  "steps/Join/output/",
             calculateOutput = "steps/Calculate/output/",
+            lastDecadeOutput = "steps/LastDecade/output/",
             fmeasureOutput = "steps/FMeasure/output/",
             countersFileName = "counters.txt",
 
@@ -44,7 +46,7 @@ public class Utils {
             reduceTasks = "12";
 
     public static final int minDecade = 190,
-           argInIndex = 1;
+           argInIndex = 0;
 
 
     private static boolean putObject(AmazonS3 s3, PutObjectRequest req) {
@@ -119,40 +121,6 @@ public class Utils {
     }
 
 
-    // Use custom string format for logger.
-    public static Logger setLogger(Logger logger) {
-        ShortFormatter formatter = new ShortFormatter();
-        ConsoleHandler handler = new ConsoleHandler();
-
-        logger.setUseParentHandlers(false);
-        handler.setFormatter(formatter);
-        logger.addHandler(handler);
-
-        return logger;
-    }
-
-
-    // Sum all members in list.
-    public static long sumValues(Iterable<LongWritable> values) {
-        long sum = 0;
-        for (LongWritable value : values) {
-            sum += value.get();
-        }
-        return sum;
-    }
-
-
-    public static PropertiesCredentials loadCredentials() {
-        try {
-            return new PropertiesCredentials(
-                    Utils.class.getResourceAsStream("/AWSCredentials.properties"));
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-    }
-
-
     // Creates an S3 connection with socket timeout = 0 (avoids exceptions).
     public static AmazonS3 createS3(AWSCredentials creds) {
         ClientConfiguration config = new ClientConfiguration();
@@ -222,5 +190,89 @@ public class Utils {
         }
 
         return content.toString();
+    }
+
+
+    // Use custom string format for logger.
+    public static Logger setLogger(Logger logger) {
+        ShortFormatter formatter = new ShortFormatter();
+        ConsoleHandler handler = new ConsoleHandler();
+
+        logger.setUseParentHandlers(false);
+        handler.setFormatter(formatter);
+        logger.addHandler(handler);
+
+        return logger;
+    }
+
+
+    public static PropertiesCredentials loadCredentials() {
+        try {
+            return new PropertiesCredentials(
+                    Utils.class.getResourceAsStream("/AWSCredentials.properties"));
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+    }
+
+
+    // Sum all members in list.
+    public static long sumValues(Iterable<LongWritable> values) {
+        long sum = 0;
+        for (LongWritable value : values) {
+            sum += value.get();
+        }
+        return sum;
+    }
+
+
+    // Updated decade and total-records counters, using data from previous steps.
+    // Returns totalrecords counter.
+    public static long updateCounters(Configuration conf) {
+        String[] splitFile, splitRow;
+        String info;
+        long totalRecords = 0;
+
+        // Read Count step output.
+        info = Utils.LinkToString(Utils.s3Uri + Utils.countOutput + Utils.countersFileName);
+        if (info == null) {
+            logger.severe("Error opening Count output file: " + Utils.s3Uri + Utils.countOutput);
+            return totalRecords;
+        }
+
+        // Read Count step decade and total-records counters.
+        splitFile = info.split("\n");
+
+        for (int i=0; i < splitFile.length; i++) {
+            splitRow = splitFile[i].split(Utils.delim);
+
+            if (splitRow[0].equals("counters")) {
+                for (int j=1; j < splitRow.length; j++ ) {
+                    conf.set("N_" + (j + Utils.minDecade - 1), splitRow[j]);
+                }
+            } else if (splitRow[0].equals("totalrecords")) {
+                totalRecords = Long.parseLong(splitRow[1]);
+            }
+        }
+
+        // Read Join step output.
+        info = Utils.LinkToString(Utils.s3Uri + Utils.joinOutput + Utils.countersFileName);
+        if (info == null) {
+            logger.severe("Error opening Join output file: " + Utils.s3Uri + Utils.joinOutput);
+            return totalRecords;
+        }
+
+        // Read Join step total-records counters (no decades are being count at this step).
+        splitFile = info.split("\n");
+
+        for (int i=0; i < splitFile.length; i++) {
+            splitRow = splitFile[i].split(Utils.delim);
+            if (splitRow[0].equals("totalrecords")) {
+                totalRecords += Long.parseLong(splitRow[1]);
+            }
+        }
+
+        return totalRecords;
     }
 }

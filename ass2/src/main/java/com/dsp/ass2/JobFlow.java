@@ -1,11 +1,8 @@
 package com.dsp.ass2;
 
-import java.io.IOException;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClient;
@@ -21,11 +18,9 @@ import com.amazonaws.services.elasticmapreduce.model.StepConfig;
 
 public class JobFlow {
 
-    private static final Logger logger = setLogger(Logger.getLogger(JobFlow.class.getName()));
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(JobFlow.class.getName()));
 
-    private static String credentialsPath = "/AWSCredentials.properties",
-
-            actionOnFailure = "TERMINATE_JOB_FLOW",
+    private static String actionOnFailure = "TERMINATE_JOB_FLOW",
             jobName = "jobname",
 
             ec2KeyName = "ec2",
@@ -48,51 +43,34 @@ public class JobFlow {
             joinClass = "Join",
             countClass = "Count",
             calculateClass = "Calculate",
+            lastDecadeClass = "LastDecade",
+            fmeasureClass = "FMeasure",
 
             countJarUrl = s3BaseUri + "jars/Count.jar",
             joinJarUrl = s3BaseUri + "jars/Join.jar",
             calculateJarUrl = s3BaseUri + "jars/Calculate.jar",
+            lastDecadeJarUrl = s3BaseUri + "jars/LastDecade.jar",
+            fmeasureJarUrl = s3BaseUri + "jars/FMeasure.jar",
 
             countOutput = s3BaseUri + Utils.countOutput,
             joinOutput = s3BaseUri + Utils.joinOutput,
-            // calculateOutput = s3BaseUri + Utils.calculateOutput,
-            calculateOutput = s3BaseUri + "steps/LastDecade/output/",
+            calculateOutput = s3BaseUri + Utils.calculateOutput,
+            lastDecadeOutput = s3BaseUri + Utils.lastDecadeOutput,
+            fmeasureOutput = s3BaseUri + Utils.fmeasureOutput,
 
             // countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
             countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data",
             joinInput = s3BaseUri + Utils.countOutput + hadoopOutputFileName,
-            calculateInput = s3BaseUri + Utils.joinOutput + hadoopOutputFileName;
+            calculateInput = s3BaseUri + Utils.joinOutput + hadoopOutputFileName,
+            lastDecadeInput = s3BaseUri + Utils.joinOutput + hadoopOutputFileName,
+            fmeasureInput = s3BaseUri + Utils.lastDecadeOutput + hadoopOutputFileName;
 
     private static int instanceCount = 12;
 
 
-    // Use custom string format for logger.
-    public static Logger setLogger(Logger logger) {
-        ShortFormatter formatter = new ShortFormatter();
-        ConsoleHandler handler = new ConsoleHandler();
-
-        logger.setUseParentHandlers(false);
-        handler.setFormatter(formatter);
-        logger.addHandler(handler);
-
-        return logger;
-    }
-
-
-    public static PropertiesCredentials loadCredentials() {
-        try {
-            return new PropertiesCredentials(
-                    JobFlow.class.getResourceAsStream(credentialsPath));
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-    }
-
-
     public static void main(String[] args) throws Exception {
         // Load credentials.
-        AWSCredentials credentials = loadCredentials();
+        AWSCredentials credentials = Utils.loadCredentials();
         AmazonElasticMapReduce mapReduce = new AmazonElasticMapReduceClient(credentials);
 
         // Set Count job flow step.
@@ -102,7 +80,7 @@ public class JobFlow {
             .withArgs(countInput, countOutput);
 
         StepConfig countConfig = new StepConfig()
-            .withName("Count")
+            .withName(countClass)
             .withHadoopJarStep(countJarConfig)
             .withActionOnFailure(actionOnFailure);
 
@@ -113,7 +91,7 @@ public class JobFlow {
             .withArgs(joinInput, joinOutput);
 
         StepConfig joinConfig = new StepConfig()
-            .withName("Join")
+            .withName(joinClass)
             .withHadoopJarStep(joinJarConfig)
             .withActionOnFailure(actionOnFailure);
 
@@ -121,11 +99,35 @@ public class JobFlow {
         HadoopJarStepConfig calculateJarConfig = new HadoopJarStepConfig()
             .withJar(calculateJarUrl)
             .withMainClass(calculateClass)
-            .withArgs(calculateInput, calculateOutput, args[0]);  // args[0] is how many top PMI pairs to display.
+            // args[0] is how many top PMI pairs to display.
+            .withArgs(calculateInput, calculateOutput, args[0]);
 
         StepConfig calculateConfig = new StepConfig()
-            .withName("Calculate")
+            .withName(calculateClass)
             .withHadoopJarStep(calculateJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
+        // Set LastDecade job fow step
+        HadoopJarStepConfig lastDecadeJarConfig = new HadoopJarStepConfig()
+            .withJar(lastDecadeJarUrl)
+            .withMainClass(lastDecadeClass)
+            .withArgs(lastDecadeInput, lastDecadeOutput);
+
+        StepConfig lastDecadeConfig = new StepConfig()
+            .withName(lastDecadeClass)
+            .withHadoopJarStep(lastDecadeJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
+        // Set FMeasure job fow step
+        HadoopJarStepConfig fmeasureJarConfig = new HadoopJarStepConfig()
+            .withJar(fmeasureJarUrl)
+            .withMainClass(fmeasureClass)
+            // args[1] is threshold.
+            .withArgs(fmeasureInput, fmeasureOutput, args[1]);
+
+        StepConfig fmeasureConfig = new StepConfig()
+            .withName(fmeasureClass)
+            .withHadoopJarStep(fmeasureJarConfig)
             .withActionOnFailure(actionOnFailure);
 
         // Set instances.
@@ -148,14 +150,16 @@ public class JobFlow {
             .withName(jobName)
             .withAmiVersion(amiVersion)
             .withInstances(instances)
-            // .withSteps(countConfig, joinConfig, calculateConfig)
-            .withSteps(calculateConfig)
+            .withBootstrapActions(bootstrapConfig)
             .withLogUri(logUri)
-            .withBootstrapActions(bootstrapConfig);
+            // Both parts (A+B), all steps.
+            .withSteps(countConfig, joinConfig, calculateConfig, lastDecadeConfig, fmeasureConfig);
+            // Custom steps.
+            // .withSteps(calculateConfig, lastDecadeConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
         String jobFlowId = runJobFlowResult.getJobFlowId();
-        System.out.println("Ran job flow with id: " + jobFlowId);
+        System.out.println("ID: " + jobFlowId);
     }
 }

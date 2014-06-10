@@ -120,59 +120,13 @@ public class Calculate {
     }
 
 
-    // Updated decade and total-records counters, using data from previous steps.
-    private static void updateCounters(Configuration conf) {
-        String[] splitFile, splitRow;
-        String info;
-
-        // Read Count step output.
-        info = Utils.LinkToString(Utils.s3Uri + Utils.countOutput + Utils.countersFileName);
-        if (info == null) {
-            logger.severe("Error opening Count output file: " + Utils.s3Uri + Utils.countOutput);
-            return;
-        }
-
-        // Read Count step decade and total-records counters.
-        splitFile = info.split("\n");
-
-        for (int i=0; i < splitFile.length; i++) {
-            splitRow = splitFile[i].split(Utils.delim);
-
-            if (splitRow[0].equals("counters")) {
-                for (int j=1; j < splitRow.length; j++ ) {
-                    conf.set("N_" + (j + Utils.minDecade - 1), splitRow[j]);
-                }
-            } else if (splitRow[0].equals("totalrecords")) {
-                totalRecords = Long.parseLong(splitRow[1]);
-            }
-        }
-
-        // Read Join step output.
-        info = Utils.LinkToString(Utils.s3Uri + Utils.joinOutput + Utils.countersFileName);
-        if (info == null) {
-            logger.severe("Error opening Count output file: " + Utils.s3Uri + Utils.joinOutput);
-            return;
-        }
-
-        // Read Join step total-records counters (no decades are being count at this step).
-        splitFile = info.split("\n");
-
-        for (int i=0; i < splitFile.length; i++) {
-            splitRow = splitFile[i].split(Utils.delim);
-            if (splitRow[0].equals("totalrecords")) {
-                totalRecords += Long.parseLong(splitRow[1]);
-            }
-        }
-    }
-
-
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
         conf.set("mapred.reduce.tasks", Utils.reduceTasks);
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
         conf.set("pairsPerDecade", args[Utils.argInIndex + 2]);
 
-        updateCounters(conf);
+        totalRecords = Utils.updateCounters(conf);
 
         Job job = new Job(conf, "Calculate");
 

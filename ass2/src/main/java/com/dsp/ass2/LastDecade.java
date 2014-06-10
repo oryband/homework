@@ -18,6 +18,9 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class LastDecade {
 
+    private static int lastDecade = 200;
+    private static String cLastDecade;
+
     private static final Logger logger = Utils.setLogger(Logger.getLogger(LastDecade.class.getName()));
 
 
@@ -26,7 +29,6 @@ public class LastDecade {
 
         private DecadePmi decadePmi = new DecadePmi();
         private Text newValue = new Text();
-        private String[] cDecades = new String[12];
 
 
         private static String calculatePMI(double cW1, double cW2, double cW1W2, double N) {
@@ -37,9 +39,7 @@ public class LastDecade {
         // Set decade counters.
         @Override
         public void setup(Context context) {
-            for (int i=0; i < cDecades.length; i++) {
-                cDecades[i] = context.getConfiguration().get("N_" + (i + Utils.minDecade), "-1");
-            }
+            cLastDecade = context.getConfiguration().get("N_" + Integer.toString(lastDecade), "-1");
         }
 
 
@@ -49,25 +49,30 @@ public class LastDecade {
 
             // Fetch words from value.
             String[] words = value.toString().split(Utils.delim);
-            String decade = words[0],
-                   w1 = words[1],
+            String decade = words[0];
+
+            if (cLastDecade.equals("-1")) {
+                logger.severe("Unsupported decade: " + decade);
+                return;
+            }
+
+            // Skip all pairs from decade before lastDecade.
+            if (Integer.parseInt(decade) != lastDecade) {
+                return;
+            }
+
+            String w1 = words[1],
                    w2 = words[2],
                    cW1 = words[3],
                    cW2 = words[4],
                    cW1W2 = words[5],
-                   cDecade = cDecades[Integer.parseInt(decade) - Utils.minDecade],
                    pmi;
-
-            if (cDecade.equals("-1")) {
-                logger.severe("Unsupported decade: " + decade);
-                return;
-            }
 
             pmi = calculatePMI(
                     Double.parseDouble(cW1),
                     Double.parseDouble(cW2),
                     Double.parseDouble(cW1W2),
-                    Double.parseDouble(cDecade));
+                    Double.parseDouble(cLastDecade));
 
             decadePmi.set(decade, pmi);
             newValue.set(w1 + Utils.delim + w2);
@@ -88,7 +93,7 @@ public class LastDecade {
     }
 
 
-    // Write only pairs from decade == 200: That is, write { 200 pmi : w1, w2 }
+    // Write only pairs from decade == lastDecade: That is, write { lastDecade, pmi : w1, w2 }
     public static class ReduceClass extends Reducer<DecadePmi, Text, Text, Text> {
 
         private Text newKey = new Text();
@@ -98,7 +103,7 @@ public class LastDecade {
 
             Iterator<Text> it = values.iterator();
 
-            while (it.hasNext() && Integer.parseInt(key.decade) == 200) {
+            while (it.hasNext() && Integer.parseInt(key.decade) == lastDecade) {
                 newKey.set(key.decade + Utils.delim + key.PMI);
                 context.write(newKey, it.next());
             }
@@ -110,6 +115,8 @@ public class LastDecade {
         Configuration conf = new Configuration();
         conf.set("mapred.reduce.tasks", Utils.reduceTasks);
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
+
+        Utils.updateCounters(conf);
 
         Job job = new Job(conf, "LastDecade");
 
