@@ -242,7 +242,7 @@ public class FMeasure {
 
             // Upload test results, precision, recall, and f-measure to S3.
             StringBuilder sb = new StringBuilder();
-            sb.append("threshold" + Utils.delim).append(args[2]).append("\n");
+            sb.append("threshold" + Utils.delim).append(args[Utils.argInIndex +2]).append("\n");
             sb.append("fp" + Utils.delim).append(Long.toString(fpNum)).append("\n");
             sb.append("fn" + Utils.delim).append(Long.toString(fnNum)).append("\n");
             sb.append("tp" + Utils.delim).append(Long.toString(tpNum)).append("\n");
