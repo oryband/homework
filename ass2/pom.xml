@@ -92,6 +92,25 @@
             </configuration>
           </execution>
 
+          <execution>
+            <id>FMeasure</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>com.dsp.ass2.FMeasure</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <finalName>FMeasure</finalName>
+            </configuration>
+          </execution>
+
         </executions>
       </plugin>
     </plugins>
