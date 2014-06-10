@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
@@ -14,23 +15,26 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
 public class FMeasure {
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Fmeasure.class.getName()));
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(FMeasure.class.getName()));
 
     // NOTE we don't need to count TN.
     private static final Text tp = new Text("tp"),
-            fp = new Text("tp"),
-            fn = new Text("fn");
+            fp = new Text("fp"),
+            fn = new Text("fn"),
+            tn = new Text("tn");
 
 
     // Recieves { decade, pmi : w1, w2 } and writes { tp/fp/fn : 1 }
     public static class MapClass extends Mapper<LongWritable, Text, Text, LongWritable> {
 
         private static final String unrelatedLink = Utils.s3Uri + "steps/FMeasure/input/wordsim-neg.txt",
-                relatedLink = Utils.s3Uri + "steps/FMeasure/wordsim-pos.txt";
+                relatedLink = Utils.s3Uri + "steps/FMeasure/input/wordsim-pos.txt";
 
         private static final LongWritable one = new LongWritable(1);
 
@@ -48,14 +52,14 @@ public class FMeasure {
                 words;
 
             for (int i=0; i < splitPairs.length; i++) {
-                words = splitInfo[i].split(Utils.delim);
+                words = splitPairs[i].split(Utils.delim);
 
                 if (words.length >= 2) {
                     // Arrange each pair lexicographically.
                     if (words[0].compareTo(words[1]) < 0) {
-                        wordPairs.put(words[0] + words[1], value);
+                        wordPairs.put(words[0] + Utils.delim + words[1], value);
                     } else {
-                        wordPairs.put(words[1] + words[0], value);
+                        wordPairs.put(words[1] + Utils.delim + words[0], value);
                     }
                 }
             }
@@ -97,7 +101,7 @@ public class FMeasure {
             }
 
             // we assume that w1 < w2
-            Boolean testResult = wordPairs.get(w1 + w2);
+            Boolean testResult = wordPairs.get(w1 + Utils.delim +  w2);
 
             // Do nothing if pair isn't a learning sample.
             if (testResult == null) {
@@ -108,6 +112,7 @@ public class FMeasure {
             double PMI = Double.parseDouble(words[1]);
 
             // Write pair test result (tp/fp/fn).
+
             if (testResult.booleanValue()) {
                 if (PMI >= threshold) {
                     context.write(tp, one);  // TP
@@ -117,6 +122,8 @@ public class FMeasure {
             } else {
                 if (PMI >= threshold) {
                     context.write(fp, one);  // FP
+                } else {
+                    context.write(tn, one);  // TN
                 }
             }
         }
@@ -155,7 +162,7 @@ public class FMeasure {
     public static class ReduceClass extends Reducer<Text, LongWritable, Text, LongWritable> {
 
         public static enum COUNTER {
-            tp, fp , fn
+            tp, fp , fn , tn
         };
 
 
@@ -169,6 +176,8 @@ public class FMeasure {
                 counter = context.getCounter(COUNTER.fp);
             } else if (key.equals(fn)){
                 counter = context.getCounter(COUNTER.fn);
+            } else if (key.equals(tn)){
+                counter = context.getCounter(COUNTER.tn);
             }
 
             if (counter != null) {
@@ -195,11 +204,11 @@ public class FMeasure {
 
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
 
-        conf.set("threshold", args[0]);
+        conf.set("threshold", args[2]);
 
         Job job = new Job(conf, "Fmeasure");
 
-        job.setJarByClass(Calculate.class);
+        //job.setJarByClass(Calculate.class);
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
         job.setCombinerClass(CombineClass.class);
@@ -209,26 +218,45 @@ public class FMeasure {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
 
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
         boolean result = job.waitForCompletion(true);
 
         if (result) {
 
-            long fpNum, fnNum, tpNum , tnNum;
-            double  recall, precision, f;
+            long fpNum, fnNum, tpNum, tnNum;
+            double  recall = 0, precision = 0, f = 0;
             Counters counters = job.getCounters();
+            StringBuilder sb = new StringBuilder();
 
             fpNum = counters.findCounter(ReduceClass.COUNTER.fp).getValue();
             fnNum = counters.findCounter(ReduceClass.COUNTER.fn).getValue();
             tpNum = counters.findCounter(ReduceClass.COUNTER.tp).getValue();
             tnNum = counters.findCounter(ReduceClass.COUNTER.tn).getValue();
 
-            precision = tpNum / (tpNum + fpNum);
-            recall = tpNum / (tpNum + fnNum);
-            f = (2 * precision * recall) / (precision + recall);
+            if (tpNum + fpNum != 0) {
+                precision = (double)tpNum / (tpNum + fpNum);
+            }
 
-            String info = "precision\t" + Double.toString(precision) + "\trecall\t" +
-                Double.toString(recall) + "\tF\t" + Double.toString(f);
-            Utils.uploadToS3(info, Utils.fmeasureOutput + Utils.countersFileName);
+            if (tpNum + fnNum != 0) {
+                recall = (double)tpNum / (tpNum + fnNum);
+            }
+
+            if (precision + recall != 0) {
+                f = (2 * precision * recall) / (precision + recall);
+            }
+
+            sb.append("threshold\t").append(args[2]).append("\n");
+            sb.append("fp\t").append(Long.toString(fpNum)).append("\n");
+            sb.append("fn\t").append(Long.toString(fnNum)).append("\n");
+            sb.append("tp\t").append(Long.toString(tpNum)).append("\n");
+            sb.append("tn\t").append(Long.toString(tnNum)).append("\n");
+            sb.append("precision\t").append(Double.toString(precision)).append("\n");
+            sb.append("recall\t").append(Double.toString(recall)).append("\n");
+            sb.append("F\t").append(Double.toString(f)).append("\n");
+
+            Utils.uploadToS3(sb.toString(), Utils.fmeasureOutput + Utils.countersFileName);
         }
 
         System.exit(result ? 0 : 1);

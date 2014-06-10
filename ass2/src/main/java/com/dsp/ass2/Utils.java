@@ -37,6 +37,7 @@ public class Utils {
             countOutput =  "steps/Count/output/",
             joinOutput =  "steps/Join/output/",
             calculateOutput = "steps/Calculate/output/",
+            fmeasureOutput = "steps/FMeasure/output/",
             countersFileName = "counters.txt",
 
             mapTasks = "10",
