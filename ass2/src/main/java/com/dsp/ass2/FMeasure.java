@@ -251,7 +251,7 @@ public class FMeasure {
             sb.append("recall" + Utils.delim).append(Double.toString(recall)).append("\n");
             sb.append("f-measure" + Utils.delim).append(Double.toString(fmeasure)).append("\n");
 
-            Utils.uploadToS3(sb.toString(), Utils.fmeasureOutput + Utils.countersFileName);
+            Utils.uploadToS3(sb.toString(), args[Utils.argInIndex +1] + Utils.countersFileName);
         }
 
         System.exit(result ? 0 : 1);
