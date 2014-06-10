@@ -31,8 +31,7 @@ public class Calculate {
 
 
         private static String calculatePMI(double cW1, double cW2, double cW1W2, double N) {
-            double answer = Math.log(cW1W2) + Math.log(N) - Math.log(cW1) - Math.log(cW2);
-            return String.valueOf(answer);
+            return String.valueOf(Math.log(cW1W2) + Math.log(N) - Math.log(cW1) - Math.log(cW2));
         }
 
 
@@ -106,7 +105,7 @@ public class Calculate {
 
 
         public void reduce(DecadePmi key, Iterable<Text> values, Context context)
-                throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
 
             String decade = key.decade;
 
@@ -125,7 +124,7 @@ public class Calculate {
         private Text newKey = new Text();
 
         public void reduce(DecadePmi key, Iterable<Text> values, Context context)
-                throws IOException, InterruptedException {
+            throws IOException, InterruptedException {
 
             if (Integer.parseInt(key.decade) == 200) {
                 newKey.set(key.decade + Utils.delim + key.PMI);
@@ -150,11 +149,11 @@ public class Calculate {
         // Read Count step decade and total-records counters.
         splitFile = info.split("\n");
 
-        for (int i = 0; i < splitFile.length; i++) {
+        for (int i=0; i < splitFile.length; i++) {
             splitRow = splitFile[i].split("\t");
 
             if (splitRow[0].equals("counters")) {
-                for (int j = 1; j < splitRow.length; j++ ) {
+                for (int j=1; j < splitRow.length; j++ ) {
                     conf.set("N_" + (j + Utils.minDecade - 1), splitRow[j]);
                 }
             } else if (splitRow[0].equals("totalrecords")) {
@@ -183,10 +182,7 @@ public class Calculate {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-
-        // conf.set("mapred.map.tasks", Utils.mapTasks);
         conf.set("mapred.reduce.tasks", Utils.reduceTasks);
-
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
         conf.set("pairsPerDecade", args[Utils.argInIndex + 2]);
 
@@ -197,10 +193,11 @@ public class Calculate {
         job.setJarByClass(Calculate.class);
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
-        // job.setReducerClass(ReduceClass.class);
-        job.setReducerClass(LastDecadeReduceClass.class);
+        job.setReducerClass(ReduceClass.class);
+        // job.setReducerClass(LastDecadeReduceClass.class);
         job.setMapOutputKeyClass(DecadePmi.class);
         job.setMapOutputValueClass(Text.class);
+
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
@@ -213,12 +210,12 @@ public class Calculate {
         // add this step (Calculate) records to it,
         // and upload final counters to S3.
         // NOTE This isn't necessary when using LastDecadeReduceClass.
-        // if (result) {
-        //     long calculateTotalRecords = job.getCounters()
-        //         .findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-        //     String info = "totalrecords\t" + Long.toString(totalRecords + calculateTotalRecords);
-        //     Utils.uploadToS3(info, Utils.calculateOutput + Utils.countersFileName);
-        // }
+        if (result) {
+            long calculateTotalRecords = job.getCounters()
+                .findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+            String info = "totalrecords" + Utils.delim + Long.toString(totalRecords + calculateTotalRecords);
+            Utils.uploadToS3(info, Utils.calculateOutput + Utils.countersFileName);
+        }
 
         System.exit(result ? 0 : 1);
     }

@@ -21,8 +21,8 @@ public class Join {
 
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
-        private Text newKey = new Text();
-        private Text newValue = new Text();
+        private Text newKey = new Text(),
+                newValue = new Text();
 
         // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
         @Override
@@ -62,7 +62,7 @@ public class Join {
 
 
     // For every <w1,w2> - Write { <decade, w1 ,w2> : c(w1), c(w2), c(w1,w2) }
-    public static class ReduceClass extends Reducer<Text,Text,Text,Text> {
+    public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
 
         private Text newValue = new Text();
 
@@ -82,7 +82,7 @@ public class Join {
 
                 if (counters[0].equals(w1)) {
                     cW1 = counters[1];
-                    cW1W2 = counters[2];  // TODO Should we sum cW1W2 + cW2W1 ? Does the order of words matter?
+                    cW1W2 = counters[2];
                 }
 
                 // If w1 = w2, prevent cases where c(w2) = 0.
@@ -99,10 +99,6 @@ public class Join {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-
-        // conf.set("mapred.map.tasks", Utils.mapTasks);
-        // conf.set("mapred.reduce.tasks", Utils.reduceTasks);
-
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
 
         Job job = new Job(conf, "Join");
@@ -110,9 +106,8 @@ public class Join {
         job.setJarByClass(Join.class);
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
-
-       // job.setCombinerClass(CombineClass.class);
         job.setReducerClass(ReduceClass.class);
+
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
@@ -124,8 +119,7 @@ public class Join {
         // Get totalRecords parameter of Count step, and add this (Join) step total records.
         if (result) {
             long totalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-            String info = "totalrecords\t" + Long.toString(totalRecords);
-
+            String info = "totalrecords" + Utils.delim + Long.toString(totalRecords);
             Utils.uploadToS3(info, Utils.joinOutput + Utils.countersFileName);
         }
 

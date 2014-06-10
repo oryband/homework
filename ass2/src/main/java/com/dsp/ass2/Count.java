@@ -2,8 +2,8 @@ package com.dsp.ass2;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.logging.Logger;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -31,6 +31,9 @@ public class Count {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
 
+    // Google N-Gram reader.
+    public static class MySequenceFileInputFormat extends SequenceFileInputFormat<LongWritable,Text> {}
+
     private static final String ngramDelim = "\t",
             wordsDelim = " ",
             wordHeader = "*";
@@ -40,8 +43,8 @@ public class Count {
     // For every central word `w` in n-gram: emit { decade, w, wi : c(w,wi) } and { " : c(wi,w) } , i=1..4 (its neithbours)
     public static class MapClass extends Mapper<LongWritable, Text, Text, LongWritable> {
 
-        private LongWritable num = new LongWritable();
-        private Text word = new Text();
+        private LongWritable num = new LongWritable();  // Holds c(w,wi).
+        private Text newKey = new Text();  // Holds w.
 
 
         // Returns the same string with stop words & punctuation removed. removed.
@@ -79,15 +82,19 @@ public class Count {
 
             // Convert n-gram to lowercase, Split into words, and handle <w,wi> pairs.
             String[] ngram = value.toString().split(ngramDelim),
-                words = ngram[0].toLowerCase().split(wordsDelim);
+                words;
+
+            String ngramWords = ngram[0].toLowerCase();
+
+            words = ngramWords.split(wordsDelim);
 
             if (ngram.length < 3) {
                 logger.severe("ngram too short: " + ngram.toString());
                 return;
             }
 
-            int decade = Integer.parseInt(ngram[1]) / 10,
-                occurences = Integer.parseInt(ngram[2]);
+            int decade = Integer.parseInt(ngram[1]) / 10;
+            long occurences = Long.parseLong(ngram[2]);
 
             if (words.length > 0 && decade >= Utils.minDecade) {
                 // Get central word in n-gram.
@@ -96,33 +103,28 @@ public class Count {
                 // Remove stop words, count c(w) for every word in pair,
                 // and count pairs only if central word wasn't filtered.
                 // That is - it wasn't a stop word.
-                words = removeStopWords(ngram[0]).split(wordsDelim);
+                words = removeStopWords(ngramWords).split(wordsDelim);
 
                 if (words.length > 0) {
                     // Count pairs if central word in n-gram was not a stop word.
                     int centralIndex = Arrays.asList(words).indexOf(centralWord);
-                    boolean countPairs = false;
-                    if (centralIndex >= 0) {
-                       countPairs = true;
-                    }
+                    boolean countPairs = centralIndex >= 0 ? true : false;
 
-                    // TODO What about if n-gram = 'a a a a a'?
-                    // Do we emit the same occurence 4 more times than necessary?
                     for (int i=0; i < words.length; i++) {
                         // Emit for every word in n-gram.
                         num.set(occurences);
 
                         // Emit c(w) for every word.
-                        word.set(decade + Utils.delim + words[i] + Utils.delim + wordHeader);
-                        context.write(word, num);
+                        newKey.set(decade + Utils.delim + words[i] + Utils.delim + wordHeader);
+                        context.write(newKey, num);
 
                         // Emit c(w,wi), c(wi,w) for central word, if central word wasn't a stop word.
                         if (countPairs && i != centralIndex) {
-                            word.set(decade + Utils.delim + centralWord + Utils.delim + words[i]);
-                            context.write(word, num);
+                            newKey.set(decade + Utils.delim + centralWord + Utils.delim + words[i]);
+                            context.write(newKey, num);
 
-                            word.set(decade + Utils.delim + words[i] + Utils.delim + centralWord);
-                            context.write(word, num);
+                            newKey.set(decade + Utils.delim + words[i] + Utils.delim + centralWord);
+                            context.write(newKey, num);
                         }
                     }
                 }
@@ -236,7 +238,8 @@ public class Count {
             throws IOException, InterruptedException {
 
             String[] words = key.toString().split(Utils.delim);
-            String decade = words[0], wi = words[2];
+            String decade = words[0],
+                   wi = words[2];
             long sum = Utils.sumValues(values);
 
             if (wi.equals(wordHeader)) {
@@ -251,33 +254,24 @@ public class Count {
     }
 
 
-    // Google N-Gram reader.
-    public static class MySequenceFileInputFormat extends SequenceFileInputFormat<LongWritable,Text> {}
-
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-
-        // conf.set("mapred.map.tasks", Utils.mapTasks);
-        // conf.set("mapred.reduce.tasks", Utils.reduceTasks);
 
         Job job = new Job(conf, "Count");
 
         // Read from Google N-Gram.
-        // TODO try to use original SequenceFileInputFormat.class.
         job.setInputFormatClass(MySequenceFileInputFormat.class);
 
         job.setJarByClass(Count.class);
         job.setMapperClass(MapClass.class);
-        job.setPartitionerClass(PartitionerClass.class);
         job.setCombinerClass(CombineClass.class);
+        job.setPartitionerClass(PartitionerClass.class);
         job.setReducerClass(ReduceClass.class);
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
 
-        // TODO change args to 1,2 when testing on amazon ecr.
         FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
         FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 1]));
 
@@ -303,16 +297,15 @@ public class Count {
 
             // Write counters to file.
             StringBuilder sb = new StringBuilder();
-            sb.append("counters\t");
+            sb.append("counters" + Utils.delim);
             for (int i = 0; i < decadeCounters.length; i++) {
-                sb.append(Long.toString(decadeCounters[i])).append("\t");
+                sb.append(Long.toString(decadeCounters[i])).append(Utils.delim);
             }
             sb.append("\n");
 
             // Write totalRecord from task counter to file, so we could pass it to next steps.
             long totalRecords = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-            sb.append("totalrecords\t").append(Long.toString(totalRecords));
-
+            sb.append("totalrecords" + Utils.delim + Long.toString(totalRecords));
             Utils.uploadToS3(sb.toString(), Utils.countOutput + Utils.countersFileName);
         }
 
