@@ -155,7 +155,7 @@ public class JobFlow {
             // Both parts (A+B), all steps.
             .withSteps(countConfig, joinConfig, calculateConfig, lastDecadeConfig, fmeasureConfig);
             // Custom steps.
-            // .withSteps(calculateConfig, lastDecadeConfig);
+            // .withSteps(fmeasureConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
