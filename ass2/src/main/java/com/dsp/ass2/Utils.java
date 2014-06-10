@@ -14,6 +14,8 @@ import java.net.URL;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
+import org.apache.hadoop.io.LongWritable;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
@@ -35,12 +37,11 @@ public class Utils {
             countOutput =  "steps/Count/output/",
             joinOutput =  "steps/Join/output/",
             calculateOutput = "steps/Calculate/output/",
-            hadoopOutputFileName = "part-r-00000",
+            fmeasureOutput = "steps/FMeasure/output/",
             countersFileName = "counters.txt",
 
             mapTasks = "10",
-            reduceTasks = "10";
-
+            reduceTasks = "12";
 
     public static final int minDecade = 190,
            argInIndex = 1;
@@ -128,6 +129,16 @@ public class Utils {
         logger.addHandler(handler);
 
         return logger;
+    }
+
+
+    // Sum all members in list.
+    public static long sumValues(Iterable<LongWritable> values) {
+        long sum = 0;
+        for (LongWritable value : values) {
+            sum += value.get();
+        }
+        return sum;
     }
 
 
