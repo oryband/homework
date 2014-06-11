@@ -187,7 +187,7 @@ public class FMeasure {
 
 
         // Update tp/fp/fn global variables (will be uploaded to S3 in main()):
-        // Write { tp/fp/tn/fn : num of tp/fp/tn/fn accoridngly. }
+        // Write { tp/fp/tn/fn : num of tp/fp/tn/fn accordinly }
         public void reduce(Text key, Iterable<LongWritable> values, Context context)
             throws IOException, InterruptedException {
 

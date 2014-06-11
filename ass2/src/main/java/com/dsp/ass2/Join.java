@@ -19,12 +19,12 @@ public class Join {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Join.class.getName()));
 
+    // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
         private Text newKey = new Text(),
                 newValue = new Text();
 
-        // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
