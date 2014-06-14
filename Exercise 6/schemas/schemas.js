@@ -1,7 +1,6 @@
 'use strict';
 
-var mg = require('mongoose'),
-    db = mg.connect('mongodb://localhost/db');
+var mg = require('mongoose');
 
 // Shorthand variables.
 var oId = mg.Schema.Types.ObjectId;
@@ -33,7 +32,7 @@ exports.Mail = mg.model('Mail', new mg.Schema({
 
 
 exports.getMailsByUser = function (user, callback) {
-    Mail.find({to: user}).exec(function (err, result) {
+    exports.Mail.find({to: user}).exec(function (err, result) {
         if (err) {
             console.error(err);
             return;
