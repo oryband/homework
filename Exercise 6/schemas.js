@@ -21,7 +21,8 @@ exports.Mail = mg.model('Mail', new mg.Schema({
     to: { type: oId, ref: 'User' },
     date: { type: Date, default: Date.now },
     subject: String,
-    body: String
+    body: String,
+    read: Boolean
 }));
 
 
