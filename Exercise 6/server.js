@@ -7,7 +7,7 @@ var socket = require('socket.io'),  // TODO add listen.
 // User created modules.
 var http = require('./http'),
     settings = require('./settings'),
-    schemas = require('./schemas');
+    schemas = require('./schemas/schemas');
 
 // Module objects' instances.
 var rc = redis.createClient(),
