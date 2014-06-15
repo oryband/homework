@@ -214,10 +214,8 @@ server.post('/mails', function(request, response) {
             }
         });
     }
-
     response.end();
 });
-
 
 // Fetch user's mail list.
 server.get('/mails', function(request, response) {
