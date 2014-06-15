@@ -1,14 +1,18 @@
+'use strict';
+
+// 3rd-party modules.
 var events = require('events'),
     fs = require('fs'),
     net = require('net'),
     util = require('util'),
-    settings = require('./settings');
+    _ = require('underscore')._;
+
+// User created modules.
+var settings = require('./settings');
 
 
 // Immutable HTTP Request object.
 var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPath, reqHeaders, reqBody) {
-    'use strict';
-
     var _version = reqVersion,
         _method = reqMethod,
         _uri = reqUri,
@@ -46,8 +50,6 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
 
 // HTTP Response object.
 var HttpResponse = function (resSocket, resVersion, resStatus, resHeaders, resBody) {
-    'use strict';
-
     var _version = resVersion || '1.1',
         _status = resStatus,
         _body = resBody || '',
@@ -105,8 +107,6 @@ var HttpResponse = function (resSocket, resVersion, resStatus, resHeaders, resBo
 
 // Parses a HTTP request string, and returns an HttpRequest object on success or {} otherwise.
 function parseRequest(req) {
-    'use strict';
-
     if (!req) {
         console.error('request is null.');
         return {};
@@ -184,7 +184,6 @@ function parseRequest(req) {
 
 // Server class to be instantiated and returned upon calling createHTTPServer().
 var Server = function (rootFolder) {
-    'use strict';
     var server = this;  // Reference for use in inner closures.
 
     var _serverStarted = false,
@@ -510,6 +509,12 @@ util.inherits(Server, events.EventEmitter);
 
 // Module exports: Function returns a new Server object (defined above).
 exports.createHTTPServer = function (rootFolder) {
-    'use strict';
     return new Server(rootFolder);
+};
+
+
+// Parse request body as POST, and return an object of { key: value }.
+// NOTE we assume here that request.body is POST.
+exports.parsePostBody = function (request) {
+    return _.object(request.body.split('&').map(function(el) {return el.split('=');}));
 };
