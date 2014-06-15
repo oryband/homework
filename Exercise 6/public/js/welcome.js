@@ -1,29 +1,104 @@
-document.addEventListener('DOMContentLoaded', function (e) {
-  var loginContainer = document.getElementById('login');
-  var loginInsteadLink = document.querySelector('#register > form > a');
-
-  loginInsteadLink.addEventListener('click', function (e) {
-    loginContainer.style.display = 'block'; 
-    registerContainer.style.display = 'none'; 
-  });
-
-  var registerContainer = document.getElementById('register');
-  var registerInsteadLink = document.querySelector('#login > form > a');
-
-  registerInsteadLink.addEventListener('click', function (e) {
-    registerContainer.style.display = 'block'; 
-    loginContainer.style.display = 'none'; 
-  });
-
-  var registerPassword = document.getElementById('password');
-  var registerPasswordConfirm = document.getElementById('password_confirm');
-  var validatePassword = function (e) {
-    if (registerPassword.value == registerPasswordConfirm.value) {
-      registerPasswordConfirm.setCustomValidity('');
+$.fn.serializeObject = function() {
+  'use strict';
+  var o = {};
+  var a = this.serializeArray();
+  $.each(a, function() {
+    if (o[this.name] !== undefined) {
+      if (!o[this.name].push) {
+        o[this.name] = [o[this.name]];
+      }
+      o[this.name].push(this.value || '');
     } else {
-      registerPasswordConfirm.setCustomValidity('Passwords doesn\'t match');
+      o[this.name] = this.value || '';
+    }
+  });
+  return o;
+};
+
+$(document).ready(function () {
+  'use strict'; 
+
+  var $loginContainer = $('#login');
+  var $loginInsteadLink = $('#register > form > a');
+  var $loginUsername = $('#login_username');
+
+  var $registerContainer = $('#register');
+  var $registerInsteadLink = $('#login > form > a');
+
+  var $error = $('#error');
+
+  $.fn.submitForm = function(callback) {
+    resetError();
+
+    $.post(
+      this.attr('action'), 
+      this.serializeObject(),
+      function (result) {
+        if (result.error) {
+          var $error = $('#error');
+          $error.html(result.error);
+          $error.show();
+          return;
+        }
+
+        if (callback) {
+          callback(result);
+        }
+      },
+      'json'
+    );
+  };
+
+  function resetError() {
+    $error.hide();
+    $error.html('');
+  }
+
+  $loginInsteadLink.on('click', function () {
+    resetError();
+    $loginContainer.show();
+    $registerContainer.hide();
+    $loginUsername.focus();
+  });
+
+  $registerInsteadLink.on('click', function () {
+    resetError();
+    $registerContainer.show();
+    $loginContainer.hide();
+  });
+
+  var $registerPassword = $('#password');
+  var $registerPasswordConfirm = $('#password_confirm');
+  var validatePassword = function () {
+    if ($registerPassword.val() === $registerPasswordConfirm.val()) {
+      $registerPasswordConfirm.setCustomValidity('');
+    } else {
+      $registerPasswordConfirm.setCustomValidity('Passwords doesn\'t match');
     }
   };
-  registerPassword.addEventListener('change', validatePassword);
-  registerPasswordConfirm.addEventListener('change', validatePassword);
+
+  $registerPassword.on('change', validatePassword);
+  $registerPasswordConfirm.on('change', validatePassword);
+
+  $loginContainer.find('form').on('submit', function (e) {
+    var $form = $(e.target);
+    $form.submitForm(function (result) {
+      // success submitting form!
+      if (result.success) {
+        location.href = '/mail.html';
+      }
+    });
+    return false;
+  });
+
+  $registerContainer.find('form').on('submit', function () {
+    var $form = $(e.target);
+    $form.submitForm(function (result) {
+      // success submitting form!
+      if (result.success) {
+        location.href = '/mail.html';
+      }
+    });
+    return false;
+  });
 });
