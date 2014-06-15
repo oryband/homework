@@ -2,6 +2,5 @@
 
 # Import fixtures from josn files to mongo.
 
-mongoimport -d db -c contacts contacts.json
-mongoimport -d db -c users users.json
-mongoimport -d db -c mails mails.json
+mongoimport -d db -c users ./fixtures/users.json
+mongoimport -d db -c mails ./fixtures/mails.json
