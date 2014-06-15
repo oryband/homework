@@ -1,3 +1,3 @@
 #!/bin/sh
 
-mongod --config /usr/local/etc/mongod.conf --rest
+mongod --config ./conf/mongod.conf --rest

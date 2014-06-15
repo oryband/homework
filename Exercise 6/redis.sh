@@ -1,3 +1,3 @@
 #!/bin/sh
 
-redis-server /usr/local/etc/redis.conf
+redis-server ./conf/redis.conf
