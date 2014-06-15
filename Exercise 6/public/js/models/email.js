@@ -18,11 +18,9 @@ var app = app || {};
             date: (new Date()).toLocaleString()
         },
 
-        // Toggle the `read` state of this email
+        // Set the `read` state of this email
         read: function () {
-            this.save({
-                read: !this.get('read')
-            });
+            this.save({read: true});
         }
     });
 })();

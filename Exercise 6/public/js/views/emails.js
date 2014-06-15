@@ -17,35 +17,31 @@ var app = app || {};
 
         // The DOM events specific to an item.
         events: {
-            'click .toggle': 'toggleCompleted',
-            'dblclick #title': 'editTitle',
-            'dblclick #owner': 'editOwner',
-            'click .destroy': 'clear',
-            'click .show': 'info',
-            'click .priority_up': 'increasePriority',
-            'click .priority_down': 'decreasePriority',
-            'keypress .edit': 'updateOnEnter',
-            'blur .edit': 'close'
+            'click .delete': 'clear',
+            'click tr.email': 'toggleContent'
         },
 
         // The EmailView listens for changes to its model, re-rendering. Since there's
         // a one-to-one correspondence between a **Email** and a **EmailView** in this
         // app, we set a direct reference on the model for convenience.
         initialize: function () {
-            this.listenTo(this.model, 'change', this.render);
-            this.listenTo(this.model, 'destroy', this.remove);
+          this.listenTo(this.model, 'change', this.render);
+          this.listenTo(this.model, 'destroy', this.remove);
         },
 
         // Re-render the titles of the email item.
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
-            this.$el.toggleClass('read', this.model.get('read'));
+            this.$content = this.$('tr.mail_content');
             return this;
         },
 
-        // Toggle the `read` state of the model.
-        read: function () {
+        toggleContent: function () {
+          this.$el.toggleClass('content_shown');
+
+          if (!this.model.get('read')) {
             this.model.read();
+          }
         },
 
         // Remove the item, destroy the model from *localStorage* and delete its view.
