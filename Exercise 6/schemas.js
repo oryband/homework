@@ -19,6 +19,7 @@ exports.User = mg.model('User', new mg.Schema({
 exports.Mail = mg.model('Mail', new mg.Schema({
     from: { type: oId, ref: 'User' },
     to: { type: oId, ref: 'User' },
+    read: { type: Boolean, default: false },
     date: { type: Date, default: Date.now },
     subject: String,
     body: String
@@ -36,7 +37,7 @@ function execCallback(callback) {
         if (callback) {
             callback(result);
         }
-    }
+    };
 }
 
 
