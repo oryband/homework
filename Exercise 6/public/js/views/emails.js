@@ -18,7 +18,8 @@ var app = app || {};
         // The DOM events specific to an item.
         events: {
             'click .delete': 'clear',
-            'click tr.email': 'toggleContent'
+            'click tr.email': 'toggleContent',
+            'click tr.mail_content .close': 'toggleContent'
         },
 
         // The EmailView listens for changes to its model, re-rendering. Since there's
