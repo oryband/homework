@@ -93,6 +93,7 @@ server.post('/register', function(request, response) {
 });
 
 
+// Login user.
 server.post('/login', function(request, response) {
     var params = request.params;
 
