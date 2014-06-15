@@ -5,253 +5,83 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="css/default.css">
-    <script type="text/javascript" src="js/mail.js"></script>
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/backbone.localStorage/backbone.localStorage.js"></script>
+    <!--<script type="text/javascript" src="js/mail.js"></script>-->
   </head>
   <body>
-    <div class="mailContainer">
+    <div class="mailContainer" id="emailapp">
       <h1>Awesome Email App <small>by <b>Ory Band</b> and <b>Dvir Azulay</b></small></h1>
-      <button type="button" class="btn btn-primary compose">Compose</button>
-      <div id="compose">
-        <button type="button" class="close close_dialog" aria-hidden="true">&times;</button>
-        <h3>Compose a new email</h3>
-        <form role="form" action="email">
-          <div class="form-group">
-            <label for="recipient">Recipient</label>
-            <input required="required" type="text" class="form-control" id="recipient" placeholder="Enter one recipient for your email">
-          </div>
-          <div class="form-group">
-            <label for="subject">Subject</label>
-            <input required="required" type="text" class="form-control" id="subject" placeholder="Enter the subject for your email">
-          </div>
-          <div class="form-group">
-            <label for="body">Email</label>
-            <textarea class="form-control" id="body" rows="3" placeholder="Enter your email"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-          <a class="close_dialog" href="#">Cancel</a>
-        </form> 
-      </div>
-      <table class="table table-hover">
+      <button type="button" class="btn btn-primary compose">Compose a new mail</button>
+      <div id="compose"></div>
+      <table class="table table-hover" id="email-list">
         <thead>
           <tr>
-            <th><input type="checkbox" /></th>
+            <th><input type="checkbox" id="toggle-all" /></th>
             <th>Sender</th>
             <th>Subject</th>
             <th>Time</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>Mark Otto</td>
-            <td>What's up doc? How are you doing?</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="6">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email">
-            <td><input type="checkbox" /></td>
-            <td>Jacob Thornton</td>
-            <td>Please respond immediatly!</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-          <tr class="email unread">
-            <td><input type="checkbox" /></td>
-            <td>John Doe</td>
-            <td>Check this email out</td>
-            <td>July 4th, 12:45</td>
-            <td>
-              <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
-              <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-            </td>
-          </tr>
-          <tr class="mail_content">
-            <td colspan="5">
-              <button type="button" class="close" aria-hidden="true">&times;</button>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-            </td>
-          </tr>
-        </tbody>
       </table>
     </div>
+
+    <script type="text/template" id="email-template">
+      <tr class="email read_<%- read %>">
+        <td><input type="checkbox" /></td>
+        <td><%- from %></td>
+        <td><%- subject %></td>
+        <td><%- date %></td>
+        <td>
+          <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
+          <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+        </td>
+      </tr>
+      <tr class="mail_content">
+        <td colspan="5">
+          <button type="button" class="close" aria-hidden="true">&times;</button>
+          <p><%- body %></p>
+        </td>
+      </tr>
+    </script>
+
+    <script type="text/template" id="compose_dialog-template">
+      <button type="button" class="close close_dialog" aria-hidden="true">&times;</button>
+      <h3>Compose a new email</h3>
+      <form role="form">
+        <div class="form-group">
+          <label for="recipient">Recipient</label>
+          <input required="required" type="text" class="form-control" id="recipient" placeholder="Enter one recipient for your email" value="<% if (from) { print(from); } %>">
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input required="required" type="text" class="form-control" id="subject" placeholder="Enter the subject for your email" value="<% if (subject) { print('RE: '); print(subject); } %>">
+        </div>
+        <div class="form-group">
+          <label for="body">Email</label>
+          <textarea class="form-control" id="body" rows="8" placeholder="Enter your email"><%
+            if (body) {
+              print('\n\n');
+              print('-----------------------');
+              print('\n');
+              print(body);
+            }
+          %></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" id="create_email">Submit</button>
+        <a class="close_dialog" href="#">Cancel</a>
+      </form> 
+    </script>
+
+    <script src="js/models/email.js"></script>
+    <script src="js/collections/emails.js"></script>
+    <script src="js/views/email-compose.js"></script>
+    <script src="js/views/emails.js"></script>
+    <script src="js/views/app.js"></script>
+    <script src="js/routers/router.js"></script>
+    <script src="js/app.js"></script>
   </body>
 </html>

@@ -120,7 +120,7 @@ div.mailContainer table tbody a {
   margin-right: 10px;
 }
 
-div.mailContainer table tbody tr.unread td {
+div.mailContainer table tbody tr.read_false td {
   font-weight: bold;
 }
 
@@ -128,8 +128,12 @@ div.mailContainer table td > p {
   margin: 10px;
 }
 
-div.mailContainer table tr.mail_content {
+div.mailContainer table tbody tr.mail_content {
   display: none;
+}
+
+div.mailContainer table tbody.content_shown tr.mail_content {
+  display: table-row;
 }
 
 div.mailContainer > h1 {
