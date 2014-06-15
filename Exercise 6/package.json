@@ -22,6 +22,7 @@
   "dependencies": {
     "backbone": "^1.1.2",
     "mongoose": "^3.8.12",
+    "redis": "^0.10.3",
     "socket.io": "^1.0.4",
     "underscore": "^1.6.0"
   }
