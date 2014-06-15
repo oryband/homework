@@ -18,18 +18,17 @@ var rc = redis.createClient(),
 
 // Register user.
 server.post('/register', function(request, response) {
+    response.status = 200;
+    response.headers['Content-Type'] = 'application/json';
+
     var params = request.params;
 
     // Return error if username/password are missing,
     // or if username is already taken.
     if (!params.username) {
-        response.status = 400;  // Bad request.
-        response.headers['Content-Type'] = 'application/json';
         response.end(JSON.stringify( { 'error': 'Missing user name.' } ));
         return;
     } else if (!params.password) {
-        response.status = 400;
-        response.headers['Content-Type'] = 'application/json';
         response.end(JSON.stringify( { 'error': 'Missing password.' } ));
         return;
     }
@@ -37,8 +36,6 @@ server.post('/register', function(request, response) {
     schemas.getUserByUsername(params.username, function (user) {
         // Return error if username is already taken.
         if (!user) {
-            response.status = 400;
-            response.headers['Content-Type'] = 'application/json';
             response.end(JSON.stringify( { 'error': 'User name already taken.' } ));
             return;
         }
@@ -85,8 +82,6 @@ server.post('/register', function(request, response) {
         }).save();
 
         // Redirect to mail.html page.
-        response.status = 200;
-        response.headers['Content-Type'] = 'application/json';
         response.end(JSON.stringify({
             'success': true,
             'location': 'mail.html'
@@ -101,13 +96,9 @@ server.post('/login', function(request, response) {
 
     // Checks for username and password errors.
     if (!params.username) {
-        response.status = 400;  // Bad request.
-        response.headers['Content-Type'] = 'application/json';
         response.end(JSON.stringify( { 'error': 'Missing user name.' } ));
         return;
     } else if (!params.password) {
-        response.status = 400;
-        response.headers['Content-Type'] = 'application/json';
         response.end(JSON.stringify( { 'error': 'Missing password.' } ));
         return;
     }
@@ -115,21 +106,15 @@ server.post('/login', function(request, response) {
     schemas.getUserByUsername(request.params.username, function(user) {
         // Return error if username doesn't exist.
         if (!user) {
-            response.status = 404;  // Not found.
-            response.headers['Content-Type'] = 'application/json';
             response.end(JSON.stringify( { 'error': 'User name doesn\'t exist.' } ));
             return;
         } else if (user.password !== params.password) {
             // Return error if password doesn't match.
-            response.status = 403;  // Unauthorized.
-            response.headers['Content-Type'] = 'application/json';
             response.end(JSON.stringify( { 'error': 'Wrong password.' } ));
             return;
         }
 
         // If username and password match, redirect to 'mail.html' page.
-        response.status = 200;
-        response.headers['Content-Type'] = 'application/json';
         response.end(JSON.stringify({
             'success': true,
             'location': 'mail.html'
