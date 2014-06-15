@@ -36,7 +36,7 @@ server.post('/register', function(request, response) {
 
     schemas.getUserByUsername(params.username, function (user) {
         // Return error if username is already taken.
-        if (!user) {
+        if (user) {
             response.end(JSON.stringify( { 'error': 'User name \'' + params.username + '\' already taken.' } ));
             return;
         }
@@ -81,6 +81,8 @@ server.post('/register', function(request, response) {
                 'Yours,\n' +
                 'The Bitsplease Team.'
         }).save();
+
+        // FIXME Why mails are missing 'from' field?!?
 
         // Redirect to mail.html page.
         response.end(JSON.stringify({
@@ -127,6 +129,7 @@ server.post('/login', function(request, response) {
 });
 
 
+// Fetch user's mail list.
 server.post('/mails', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
@@ -157,6 +160,8 @@ server.get('/mails', function(request, response) {
     });
 });
 
+
+// Send mail from user.
 server.post('/sendmail', function (request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
