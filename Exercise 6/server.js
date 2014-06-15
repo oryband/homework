@@ -6,12 +6,12 @@ var socket = require('socket.io'),  // TODO add listen.
 
 // User created modules.
 var http = require('./http'),
+    settings = require('./settings'),
     schemas = require('./schemas/schemas');
 
 // Module objects' instances.
 var rc = redis.createClient(),
     server = http.createHTTPServer('./public');
-
 
 
 // Register URI events:
@@ -131,3 +131,6 @@ server.post('/login', function(request, response) {
         response.end(JSON.stringify( { 'success': 'Login successful.' } ));
     });
 });
+
+
+server.start(settings.TEST_PORT);
