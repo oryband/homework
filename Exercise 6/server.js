@@ -85,10 +85,12 @@ server.post('/register', function(request, response) {
         }).save();
 
         // Redirect to mail.html page.
-        response.status = 302;  // Found.
+        response.status = 200;
         response.headers['Content-Type'] = 'application/json';
-        response.headers['Location'] = 'mail.html';
-        response.end(JSON.stringify( { 'success': 'User created.' } ));
+        response.end(JSON.stringify({
+            'success': true,
+            'location': 'mail.html'
+        }));
     });
 });
 
@@ -126,10 +128,12 @@ server.post('/login', function(request, response) {
         }
 
         // If username and password match, redirect to 'mail.html' page.
-        response.status = 302;  // Found.
+        response.status = 200;
         response.headers['Content-Type'] = 'application/json';
-        response.headers['Location'] = 'mail.html';
-        response.end(JSON.stringify( { 'success': 'Login successful.' } ));
+        response.end(JSON.stringify({
+            'success': true,
+            'location': 'mail.html'
+        }));
     });
 });
 
