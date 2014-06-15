@@ -92,7 +92,6 @@ var app = app || {};
         // If you hit return in the body field, create new **Email** model,
         // persisting it to *localStorage*.
         sendOnEnter: function (e) {
-          console.log(e);
             if (e.which !== ENTER_KEY ||
                 ! this.$subject.val().trim() || 
                 ! this.$recipient.val().trim() || 
@@ -101,6 +100,8 @@ var app = app || {};
             }
 
             this.createEmail();
+            this.stopComposing();
+            return false;
         },
 
         createEmail: function () {
@@ -113,6 +114,14 @@ var app = app || {};
         startComposing: function () {
           this.$composeDialog.show();
           this.$composeButton.hide();
+
+          // put focus on the recipient field
+          this.$recipient.focus();
+        },
+
+        stopComposing: function () {
+          this.$composeButton.show();
+          this.$composeDialog.hide(500);
         },
 
         toggleAllRead: function () {
