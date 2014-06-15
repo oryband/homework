@@ -18,6 +18,7 @@ var app = app || {};
         // The DOM events specific to an item.
         events: {
             'click .delete': 'clear',
+            'click .reply': 'composeReply',
             'click tr.email': 'toggleContent',
             'click tr.mail_content .close': 'toggleContent'
         },
@@ -26,6 +27,8 @@ var app = app || {};
         // a one-to-one correspondence between a **Email** and a **EmailView** in this
         // app, we set a direct reference on the model for convenience.
         initialize: function () {
+          this.$composeDialog = $('#compose');
+            
           this.listenTo(this.model, 'change', this.render);
           this.listenTo(this.model, 'destroy', this.remove);
         },
@@ -43,6 +46,15 @@ var app = app || {};
           if (!this.model.get('read')) {
             this.model.read();
           }
+        },
+
+        composeReply: function () {
+          var view = new app.EmailComposeView({ model: this.model });
+          this.$composeDialog.html(view.render().el);
+          this.$composeDialog.trigger('open');
+
+          // stop bubbling up of click event to the tr.email element
+          return false;
         },
 
         // Remove the item, destroy the model from *localStorage* and delete its view.

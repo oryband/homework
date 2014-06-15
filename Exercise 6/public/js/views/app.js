@@ -40,6 +40,9 @@ var app = app || {};
             this.listenTo(app.Emails, 'change:completed', this.filterOne);
             this.listenTo(app.Emails, 'all', this.render);
 
+            this.$composeDialog.on('open', this.showComposeDialog.bind(this));
+            this.$composeDialog.on('close', this.stopComposing.bind(this));
+
             app.Emails.fetch();
         },
 
@@ -65,6 +68,8 @@ var app = app || {};
         // Generate the attributes for a new Email item.
         newAttributes: function () {
             return {
+                from: '********',
+                to: this.$recipient.val().trim(),
                 subject: this.$subject.val().trim(),
                 body: this.$body.val().trim(),
                 read: false
@@ -112,6 +117,12 @@ var app = app || {};
         },
 
         startComposing: function () {
+          var view = new app.EmailComposeView({ model: null });
+          this.$composeDialog.html(view.render().el);
+          this.showComposeDialog();
+        },
+
+        showComposeDialog: function () {
           this.$composeDialog.show();
           this.$composeButton.hide();
 
