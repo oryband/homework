@@ -1,4 +1,0 @@
-{ "_id" : { "$oid" : "539c81fdea3511492de2fa64" }, "address" : "johndoe@mail.com", "age" : null, "lastName" : "Doe", "firstName" : "John", "__v" : 0 }
-{ "_id" : { "$oid" : "539c824dea3511492de2fa65" }, "address" : "janeblack@blackcorp.com", "age" : 36, "lastName" : "Black", "firstName" : "Jane", "__v" : 0 }
-{ "_id" : { "$oid" : "539c848bea3511492de2fa68" }, "address" : "gbush@whitehouse.gov", "age" : 10, "lastName" : "Bush", "firstName" : "George", "__v" : 0 }
-{ "_id" : { "$oid" : "539c8529ea3511492de2fa69" }, "address" : "obamab@whitehouse.gov", "age" : 54, "lastName" : "Obama", "firstName" : "", "__v" : 0 }
