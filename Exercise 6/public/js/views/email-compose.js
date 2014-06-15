@@ -25,7 +25,7 @@ var app = app || {};
         initialize: function () {
           if (this.model) {
             this.listenTo(this.model, 'change', this.render);
-            this.listenTo(this.model, 'destroy', this.remove);
+            this.listenTo(this.model, 'destroy', this.clear);
           }
         },
 
@@ -49,6 +49,19 @@ var app = app || {};
 
         render: function () {
             this.$el.html(this.template(this.getJSON()));
+
+            this.$recipient = this.$('#recipient');
+            this.$subject = this.$('#subject');
+            this.$body = this.$('#body');
+
+            // if the model exists, it means it's a reply dialog.
+            // we should focus on the body textarea, as the rest is pre-filled.
+            if (this.model) {
+              setTimeout(this.$body.focus.bind(this.$body), 1);
+            } else {
+              // otherwise, we should focus on the recipient field
+              setTimeout(this.$recipient.focus.bind(this.$recipient), 1);
+            }
             return this;
         }
     });
