@@ -16,12 +16,13 @@ var rc = redis.createClient(),
 
 // Register URI events:
 
+
 // Register user.
 server.post('/register', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
-    var params = request.params;
+    var params = http.parsePostBody(request);
 
     // Return error if username/password are missing,
     // or if username is already taken.
@@ -36,7 +37,7 @@ server.post('/register', function(request, response) {
     schemas.getUserByUsername(params.username, function (user) {
         // Return error if username is already taken.
         if (!user) {
-            response.end(JSON.stringify( { 'error': 'User name already taken.' } ));
+            response.end(JSON.stringify( { 'error': 'User name \'' + params.username + '\' already taken.' } ));
             return;
         }
 
@@ -92,9 +93,12 @@ server.post('/register', function(request, response) {
 
 // Login user.
 server.post('/login', function(request, response) {
-    var params = request.params;
+    response.status = 200;
+    response.headers['Content-Type'] = 'application/json';
 
-    // Checks for username and password errors.
+    var params = http.parsePostBody(request);
+
+    // Check for username and password errors.
     if (!params.username) {
         response.end(JSON.stringify( { 'error': 'Missing user name.' } ));
         return;
@@ -103,10 +107,10 @@ server.post('/login', function(request, response) {
         return;
     }
 
-    schemas.getUserByUsername(request.params.username, function(user) {
+    schemas.getUserByUsername(params.username, function(user) {
         // Return error if username doesn't exist.
         if (!user) {
-            response.end(JSON.stringify( { 'error': 'User name doesn\'t exist.' } ));
+            response.end(JSON.stringify( { 'error': 'User name \'' + params.username + '\' doesn\'t exist.' } ));
             return;
         } else if (user.password !== params.password) {
             // Return error if password doesn't match.
@@ -119,6 +123,85 @@ server.post('/login', function(request, response) {
             'success': true,
             'location': 'mail.html'
         }));
+    });
+});
+
+
+server.post('/mails', function(request, response) {
+    response.status = 200;
+    response.headers['Content-Type'] = 'application/json';
+
+    var params = http.parsePostBody(request);
+
+    if (!params.userId) {
+        response.end(JSON.stringify( { 'error': 'Missing user ID.' } ));
+        return;
+    }
+
+    schemas.getMailsToUser(params.userId, function (mails) {
+        response.end(JSON.stringify(mails));
+    });
+});
+
+
+server.post('/sendmail', function (request, response) {
+    response.status = 200;
+    response.headers['Content-Type'] = 'application/json';
+
+    var params = http.parsePostBody(request);
+
+    // Check for missing parameters.
+    if (!params.to) {
+        response.end(JSON.stringify( { 'error': 'Missing \'to\' field.' } ));
+        return;
+    } else if (!params.from) {
+        response.end(JSON.stringify( { 'error': 'Missing \'from\' field.' } ));
+        return;
+    } else if (!params.subject) {
+        response.end(JSON.stringify( { 'error': 'Missing \'subject\' field.' } ));
+        return;
+    } else if (!params.body) {
+        response.end(JSON.stringify( { 'error': 'Missing \'body\' field.' } ));
+        return;
+    }
+
+    var to = params.to,
+        from = params.from,
+        subject = params.subject,
+        body = params.body;
+
+    var toUser, fromUser;
+
+    // Fetch sender and recipient users.
+    schemas.getUserByUsername(to, function (user) {
+        // Return error if sender user doesn't exist.
+        if (!user) {
+            response.end(JSON.stringify( { 'error': 'User ' + to + ' doesn\'t exist.' } ));
+            return;
+        }
+
+        toUser = user;
+
+        schemas.getUserByUsername(from, function (user) {
+            // Return error if recipient user doesn't exist.
+            if (!user) {
+                response.end(JSON.stringify( { 'error': 'User ' + to + ' doesn\'t exist.' } ));
+                return;
+            }
+
+            fromUser = user;
+
+            var mail = new schemas.Mail({
+                from: fromUser,
+                to: toUser,
+                subject: subject,
+                body: body
+            });
+
+            mail.save();
+
+            // TODO notify user of mail.id.
+        });
     });
 });
 
