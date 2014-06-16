@@ -214,7 +214,11 @@ server.post('/mails', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
-    var mails = JSON.parse(request.body);  // why JSON.parse
+    var mails = JSON.parse(request.body);
+    if (Object.prototype.toString.call(mails) !== '[object Array]') {
+        mails = [mails];
+    }
+
     // Update each mail.
     for (var i=0; i < mails.length; i++) {
         var mail = mails[i],
@@ -246,10 +250,7 @@ server.get('/mails', function(request, response) {
             return;
         }
 
-        console.log(uuid);
-        console.log(userId);
         schemas.getMailsToUser(userId, function (mails) {
-            console.log(mails);
             response.end(JSON.stringify(mails));
         });
     });
