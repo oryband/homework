@@ -9,12 +9,13 @@
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/backbone/backbone.js"></script>
     <script src="bower_components/backbone.localStorage/backbone.localStorage.js"></script>
-    <!--<script type="text/javascript" src="js/mail.js"></script>-->
+    <script type="text/javascript" src="js/default.js"></script>
   </head>
   <body>
     <div class="mailContainer" id="emailapp">
       <h1>Awesome Email App <small>by <b>Ory Band</b> and <b>Dvir Azulay</b></small></h1>
       <button type="button" class="btn btn-primary compose">Compose a new mail</button>
+      <p class="bg-success" id="success"></p>
       <div id="compose"></div>
       <table class="table table-hover" id="email-list">
         <thead>
@@ -51,18 +52,19 @@
     <script type="text/template" id="compose_dialog-template">
       <button type="button" class="close close_dialog" aria-hidden="true">&times;</button>
       <h3>Compose a new email</h3>
-      <form role="form">
+      <p class="bg-warning" id="error"></p>
+      <form role="form" action="/sendmail" method="POST">
         <div class="form-group">
           <label for="recipient">Recipient</label>
-          <input required="required" type="text" class="form-control" id="recipient" placeholder="Enter one recipient for your email" value="<% if (from) { print(from); } %>">
+          <input required="required" type="text" class="form-control" id="recipient" name="to" placeholder="Enter one recipient for your email" value="<% if (from) { print(from); } %>">
         </div>
         <div class="form-group">
           <label for="subject">Subject</label>
-          <input required="required" type="text" class="form-control" id="subject" placeholder="Enter the subject for your email" value="<% if (subject) { print('RE: '); print(subject); } %>">
+          <input required="required" type="text" class="form-control" id="subject" name="subject" placeholder="Enter the subject for your email" value="<% if (subject) { print('RE: '); print(subject); } %>">
         </div>
         <div class="form-group">
           <label for="body">Email</label>
-          <textarea class="form-control" id="body" rows="8" placeholder="Enter your email"><%
+          <textarea class="form-control" id="body" name="body" rows="8" placeholder="Enter your email"><%
             if (body) {
               print('\n\n');
               print('-----------------------');

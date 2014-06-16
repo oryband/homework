@@ -19,30 +19,30 @@ var app = app || {};
             'keypress #subject': 'switchToBody',
             'keypress #body': 'sendOnEnter',
             'click .close_dialog': 'clear',
-            'click #createEmail': 'createEmail'
+            'click #create_email': 'createEmail'
         },
 
         // The EmailView listens for changes to its model, re-rendering. Since there's
         // a one-to-one correspondence between a **Email** and a **EmailView** in this
         // app, we set a direct reference on the model for convenience.
         initialize: function () {
-          if (this.model) {
-            this.listenTo(this.model, 'change', this.render);
-            this.listenTo(this.model, 'destroy', this.clear);
-          }
+            if (this.model) {
+                this.listenTo(this.model, 'change', this.render);
+                this.listenTo(this.model, 'destroy', this.clear);
+            }
         },
 
         getJSON: function () {
-          if (this.model !== null) {
-            return this.model.toJSON();
-          }
+            if (this.model !== null) {
+                return this.model.toJSON();
+            }
 
-          return {
-            from: '',
-            recipient: '',
-            subject: '',
-            body: ''
-          };
+            return {
+                from: '',
+                recipient: '',
+                subject: '',
+                body: ''
+            };
         },
 
         // If you hit return in the body field, create new **Email** model,
@@ -50,32 +50,34 @@ var app = app || {};
         sendOnEnter: function (e) {
             if (e.which !== ENTER_KEY ||
                 ! this.$subject.val().trim() || 
-                ! this.$recipient.val().trim() || 
-                ! this.$body.val().trim()) {
+                    ! this.$recipient.val().trim() || 
+                        ! this.$body.val().trim()) {
                 return;
             }
 
             this.createEmail();
-            this.$el.parent().trigger('close');
             return false;
         },
 
-        // Generate the attributes for a new Email item.
-        newAttributes: function () {
-            return {
-                from: '********',
-                to: this.$recipient.val().trim(),
-                subject: this.$subject.val().trim(),
-                body: this.$body.val().trim(),
-                read: false
-            };
-        },
-
         createEmail: function () {
-            app.Emails.create(this.newAttributes());
-            this.$recipient.val('');
-            this.$subject.val('');
-            this.$body.val('');
+            // submit the form
+            this.$form.submitForm(function () {
+                var $success = $('#success');
+                $success.html('Mail was sent successfully to ' + this.$recipient.val() + '!');
+                $success.show();
+                setTimeout(function () {
+                    // close the dialog
+                    this.$el.parent().trigger('close');
+
+                    // reset the form
+                    this.$recipient.val('');
+                    this.$subject.val('');
+                    this.$body.val('');
+
+                    // hide success message
+                    $success.hide();
+                }.bind(this), 2000);
+            }.bind(this));
         },
 
         // If you hit return in the recipient field, switch focus to subject input.
@@ -95,15 +97,16 @@ var app = app || {};
 
             this.$body.focus();
         },
-        
+
         clear: function () {
-          this.$el.parent().trigger('close');
-          this.$el.remove();
+            this.$el.parent().trigger('close');
+            this.$el.remove();
         },
 
         render: function () {
             this.$el.html(this.template(this.getJSON()));
 
+            this.$form = this.$('form');
             this.$recipient = this.$('#recipient');
             this.$subject = this.$('#subject');
             this.$body = this.$('#body');
@@ -111,10 +114,10 @@ var app = app || {};
             // if the model exists, it means it's a reply dialog.
             // we should focus on the body textarea, as the rest is pre-filled.
             if (this.model) {
-              setTimeout(this.$body.focus.bind(this.$body), 1);
+                setTimeout(this.$body.focus.bind(this.$body), 1);
             } else {
-              // otherwise, we should focus on the recipient field
-              setTimeout(this.$recipient.focus.bind(this.$recipient), 1);
+                // otherwise, we should focus on the recipient field
+                setTimeout(this.$recipient.focus.bind(this.$recipient), 1);
             }
             return this;
         }

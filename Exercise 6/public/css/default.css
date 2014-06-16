@@ -154,7 +154,8 @@ div#compose > form > a {
   margin-left: 10px;
 }
 
-#error {
+#error, 
+#success {
   display: none;
   padding: 20px;
 }
