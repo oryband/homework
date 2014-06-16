@@ -8,6 +8,9 @@ var app = app || {};
     // ----------
 
     app.Email = Backbone.Model.extend({
+
+        url: '/mails',
+
         // Default attributes for an email
         defaults: {
             to: '',

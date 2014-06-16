@@ -36,8 +36,12 @@ var app = app || {};
 
             this.$composeDialog.on('open', this.showComposeDialog.bind(this));
             this.$composeDialog.on('close', this.stopComposing.bind(this));
+    
+            // fetch emails from the server into the local storage
+            app.Emails.fetchFromServer(function () {
+            });
 
-            app.Emails.fetchFromServer();
+            // fetch emails from local storage
             app.Emails.fetch();
         },
 
