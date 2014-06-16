@@ -52,23 +52,15 @@ server.post('/register', function(request, response) {
 
         newUser.save();
 
-        // Get or create the 'Welcome' user, which will send a 'Welcome!' mail to new user.
-        var welcome;
-        schemas.getUserByUsername('welcome', function(user) {
-            if (user) {
-                welcome = user;
-            } else {
-                // Create 'welcome' user if not yet created.
-                welcome = new schemas.User({
-                    username: 'welcome',
-                    password: 'welcome',
-                    firstName: 'Welcome',
-                    lastName: 'Bitsplease'
-                });
+        // Get or create the 'welcome' user, which will send a 'Welcome!' mail to new user.
+        var welcome = schemas.User.update(
+            { username: 'welcome' },
+            { username: 'welcome', password: 'welcome', firstName: 'Welcome', lastName: 'Bitsplease' },
+            { upsert: true },
+            function (err) { if (err) { console.error('Failed saving mail on POST /mails:' + err); } }
+        );
 
-                welcome.save();
-            }
-        });
+        console.log(welcome);
 
         // Send 'Welcome!' mail to new user.
         new schemas.Mail({
@@ -129,39 +121,43 @@ server.post('/login', function(request, response) {
 });
 
 
-// Fetch user's mail list.
+// Update mail data, usually for setting 'read' field to false.
 server.post('/mails', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
-    var results = JSON.parse(request.body);
-    for (var i = 0; i < results.length; ++i) {
-      var obj = results[i];
-      var id = obj._id;
-      delete obj._id;
-      
-      schemas.Mail.update({_id: id}, obj, {upsert: true}, function (err) {
-        if (err) {
-          console.error('Failed saving mail on post/mails:' + err);
-          return;
-        }
-      });
+    var mails = JSON.parse(request.body);
+    for (var i=0; i < mails.length; i++) {
+        var mail = mails[i],
+            id = mail._id;
+
+        // Update or create mail.
+        delete mail._id;
+        schemas.Mail.update({ _id: id }, mail, { upsert: true }, function (err) {
+            if (err) {
+                console.error('Failed saving mail on POST /mails:' + err);
+            }
+        });
     }
+
     response.end();
 });
 
+
+// Fetch user's mail list.
 server.get('/mails', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
-    // TODO: read user id from redis
-    schemas.getMailsToUser('539d90e8e76cbd7d4bd748ac' /*params.userId*/, function (mails) {
+    var userId = params.userId;  // TODO: read user id from redis
+    schemas.getMailsToUser(userId, function (mails) {
         response.end(JSON.stringify(mails));
     });
 });
 
 
 // Send mail from user.
+// TODO this seems unnecessary now that we have /mails callback.
 server.post('/sendmail', function (request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
