@@ -99,7 +99,7 @@ function sendWelcomeMail(user) {
 function setUUIDasCookie(response, user) {
     var uuid = guid();
     rc.setex(uuid, settings.REQUESTS_TIME_THRESHOLD_IN_SEC, user._id);
-    response.headers['Set-Cookie'] = 'uuid=' + uuid;
+    response.headers['Set-Cookie'] = 'uuid=' + uuid + '; Expires=Thu, 01-Jan-2015 00:00:01 GMT';
 }
 
 // retrieve UUID from cookie. 
@@ -246,7 +246,10 @@ server.get('/mails', function(request, response) {
             return;
         }
 
+        console.log(uuid);
+        console.log(userId);
         schemas.getMailsToUser(userId, function (mails) {
+            console.log(mails);
             response.end(JSON.stringify(mails));
         });
     });
@@ -264,9 +267,6 @@ server.post('/sendmail', function (request, response) {
     if (!params.to) {
         response.end(JSON.stringify( { 'error': 'Missing \'to\' field.' } ));
         return;
-    } else if (!params.from) {
-        response.end(JSON.stringify( { 'error': 'Missing \'from\' field.' } ));
-        return;
     } else if (!params.subject) {
         response.end(JSON.stringify( { 'error': 'Missing \'subject\' field.' } ));
         return;
@@ -276,7 +276,6 @@ server.post('/sendmail', function (request, response) {
     }
 
     var to = params.to,
-        from = params.from,
         subject = params.subject,
         body = params.body;
 
@@ -292,34 +291,45 @@ server.post('/sendmail', function (request, response) {
 
         toUser = user;
 
-        schemas.getUserByUsername(from, function (user) {
-            // Return error if recipient user doesn't exist.
-            if (!user) {
-                response.end(JSON.stringify( { 'error': 'User ' + to + ' doesn\'t exist.' } ));
+        // Fetch UUID from cookie.
+        var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
+
+        // Get user ID and fetch user object
+        rc.get(uuid, function (err, userId) {
+            if (err) {
+                console.error('Error GETting Redis UUID: ' + err);
                 return;
             }
 
-            fromUser = user;
-
-            // Send mail.
-            new schemas.Mail({ from: fromUser, to: toUser, subject: subject, body: body })
-            .save(function (err, mail) {
-                if (err) {
-                    console.error('Error sending mail from user \'' + fromUser.username + '\' to user \'' + toUser.username + '\': ' + err);
+            schemas.getUserById(userId, function (user) {
+                // Return error if user isn't logged in
+                if (!user) {
+                    response.end(JSON.stringify( { 'error': 'Must be logged in to send an email.' } ));
                     return;
                 }
 
-                // Notify recipient user of new mail.
-                // FIXME THIS IS WRONG. The cookie holds the sender, not the
-                // reciever. We need to search REDIS entry VALUES for user ids.
-                var uuid = request.headers['Cookie'] || '';
-                console.log('request cookie: ' + uuid);
-                if (!sockets[uuid]) {
-                    console.error('Missing UUID from sockets: \'' + uuid + '\'.');
-                    return;
-                }
+                fromUser = user;
 
-                sockets[uuid].emit('mail', mail._id);
+                // Send mail.
+                new schemas.Mail({ from: fromUser, to: toUser, subject: subject, body: body })
+                .save(function (err, mail) {
+                    if (err) {
+                        console.error('Error sending mail from user \'' + fromUser.username + '\' to user \'' + toUser.username + '\': ' + err);
+                        return;
+                    }
+
+                    // Notify recipient user of new mail.
+                    // FIXME THIS IS WRONG. The cookie holds the sender, not the
+                    // reciever. We need to search REDIS entry VALUES for user ids.
+                    var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
+                    console.log('request cookie: ' + uuid);
+                    if (!sockets[uuid]) {
+                        console.error('Missing UUID from sockets: \'' + uuid + '\'.');
+                        return;
+                    }
+
+                    sockets[uuid].emit('mail', mail._id);
+                });
             });
         });
     });
