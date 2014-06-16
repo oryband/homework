@@ -33,7 +33,7 @@
     <script type="text/template" id="email-template">
       <tr class="email read_<%- read %>">
         <td><input type="checkbox" /></td>
-        <td><%- from %></td>
+        <td><%- from.firstName + ' ' + from.lastName %></td>
         <td><%- subject %></td>
         <td><%- date %></td>
         <td>

@@ -58,5 +58,5 @@ exports.getMailById = function (id, callback) {
 
 // TODO populate to/from object refs to be real objects.
 exports.getMailsToUser = function (user, callback) {
-    exports.Mail.find({to: user}).exec(execCallback(callback));
+    exports.Mail.find({to: user}).populate('from').exec(execCallback(callback));
 };

@@ -221,12 +221,13 @@ server.post('/mails', function(request, response) {
 
     // Update each mail.
     for (var i=0; i < mails.length; i++) {
-        var mail = mails[i],
-            id = mail._id;
+        var mail = mails[i];
 
-        delete mail._id;  // Avoid duplicating model.
+        // we are only going to ever update the 'read' field of mails.
+        // the reset of the fields should never change.
+        var obj = {read: mail.read};
 
-        schemas.Mail.update({ _id: id }, mail, function (err) {
+        schemas.Mail.update({ _id: mail._id }, obj, function (err) {
             if (err) {
                 console.error('Failed saving mail on POST /mails:' + err);
             }
