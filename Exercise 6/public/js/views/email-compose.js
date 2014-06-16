@@ -62,18 +62,21 @@ var app = app || {};
         createEmail: function () {
             // submit the form
             this.$form.submitForm(function () {
+                // close the dialog
+                this.$el.parent().trigger('close');
+
+                // save recipient to show in success message
+                var recipient = this.$recipient.val();
+
+                // reset the form
+                this.$recipient.val('');
+                this.$subject.val('');
+                this.$body.val('');
+
                 var $success = $('#success');
-                $success.html('Mail was sent successfully to ' + this.$recipient.val() + '!');
+                $success.html('Mail was sent successfully to ' + recipient + '!');
                 $success.show();
                 setTimeout(function () {
-                    // close the dialog
-                    this.$el.parent().trigger('close');
-
-                    // reset the form
-                    this.$recipient.val('');
-                    this.$subject.val('');
-                    this.$body.val('');
-
                     // hide success message
                     $success.hide();
                 }.bind(this), 2000);
