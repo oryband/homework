@@ -16,6 +16,34 @@ var rc = redis.createClient(),
 
 // Register URI events:
 
+// Sends a 'Welcome to Bitsplease!' mail to a new user.
+function sendWelcomeMail(user) {
+    // Get/create the 'welcome' user, which will send a 'Welcome!' mail to new user.
+    var welcome = schemas.User.update(
+        { username: 'welcome' },
+        { username: 'welcome', password: 'welcome', firstName: 'Welcome', lastName: 'Bitsplease' },
+        { upsert: true },
+        function (err) { if (err) { console.error('Error get/create \'welcome\' user: ' + err); } }
+    );
+
+    console.log(welcome);  // TODO remove this after testing.
+
+        // Send 'Welcome!' mail to new user.
+    new schemas.Mail({
+    from: welcome,
+    to: user,
+    subject: 'Welcome to Bitsplease Mail!',
+    body: 'Dear ' + user.firstName + ',\n' +
+        'Welcome to Bitsplease Mail!\n\n' +
+        'Hope you will enjoy using our service as much as we did building it.\n\n' +
+        'Yours,\n' +
+        'The Bitsplease Team.'
+    }).save(function (err) {
+        console.error('Error sending welcome mail to user \'' + user.username + '\': ' + err);
+    });
+
+    // FIXME Why mails are missing 'from' field?!?
+}
 
 // Register user.
 server.post('/register', function(request, response) {
@@ -42,44 +70,26 @@ server.post('/register', function(request, response) {
         }
 
         // Add new user to db.
-        var newUser = schemas.User({
+        schemas.User({
             username: params.username,
             password: params.password,
             firstName: params.firstName || '',
             lastName: params.lastName || '',
             age: params.age || null
-        });
+        }.save(function (err, newUser) {
+            if (err) {
+                console.error('Error saving new user \'' + params.username + '\': ' + err);
+                return;
+            }
 
-        newUser.save();
+            // Send welcome mail to newly created user.
+            sendWelcomeMail(newUser);
 
-        // Get or create the 'welcome' user, which will send a 'Welcome!' mail to new user.
-        var welcome = schemas.User.update(
-            { username: 'welcome' },
-            { username: 'welcome', password: 'welcome', firstName: 'Welcome', lastName: 'Bitsplease' },
-            { upsert: true },
-            function (err) { if (err) { console.error('Failed saving mail on POST /mails:' + err); } }
-        );
-
-        console.log(welcome);
-
-        // Send 'Welcome!' mail to new user.
-        new schemas.Mail({
-            from: welcome,
-            to: newUser,
-            subject: 'Welcome to Bitsplease Mail!',
-            body: 'Dear ' + newUser.firstName + ',\n' +
-                'Welcome to Bitsplease Mail!\n\n' +
-                'Hope you will enjoy using our service as much as we did building it.\n\n' +
-                'Yours,\n' +
-                'The Bitsplease Team.'
-        }).save();
-
-        // FIXME Why mails are missing 'from' field?!?
-
-        // Redirect to mail.html page.
-        response.end(JSON.stringify({
-            'success': true,
-            'location': 'mail.html'
+            // 'Redirect' to mail.html page.
+            response.end(JSON.stringify({
+                'success': true,
+                'location': 'mail.html'
+            }));
         }));
     });
 });
@@ -126,14 +136,15 @@ server.post('/mails', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
-    var mails = JSON.parse(request.body);
+    var mails = JSON.parse(request.body);  // why JSON.parse
+    // Update each mail.
     for (var i=0; i < mails.length; i++) {
         var mail = mails[i],
             id = mail._id;
 
-        // Update or create mail.
-        delete mail._id;
-        schemas.Mail.update({ _id: id }, mail, { upsert: true }, function (err) {
+        delete mail._id;  // Avoid duplicating model.
+
+        schemas.Mail.update({ _id: id }, mail, function (err) {
             if (err) {
                 console.error('Failed saving mail on POST /mails:' + err);
             }
@@ -149,7 +160,7 @@ server.get('/mails', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
-    var userId = params.userId;  // TODO: read user id from redis
+    var userId = '0';  // TODO: read user id from redis
     schemas.getMailsToUser(userId, function (mails) {
         response.end(JSON.stringify(mails));
     });
@@ -157,7 +168,6 @@ server.get('/mails', function(request, response) {
 
 
 // Send mail from user.
-// TODO this seems unnecessary now that we have /mails callback.
 server.post('/sendmail', function (request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
@@ -205,16 +215,14 @@ server.post('/sendmail', function (request, response) {
 
             fromUser = user;
 
-            var mail = new schemas.Mail({
-                from: fromUser,
-                to: toUser,
-                subject: subject,
-                body: body
+            new schemas.Mail({ from: fromUser, to: toUser, subject: subject, body: body })
+            .save(function (err, mail) {
+                if (err) {
+                    console.error('Error sending mail from user \'' + fromUser.username + '\' to user \'' + toUser.username + '\': ' + err);
+                }
+
+                // TODO notify user of mail.id.
             });
-
-            mail.save();
-
-            // TODO notify user of mail.id.
         });
     });
 });
