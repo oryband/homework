@@ -318,6 +318,11 @@ server.post('/sendmail', function (request, response) {
                         return;
                     }
 
+                    // after mail has been sent, we should respond to the client that it succeeded.
+                    // success or failure of socket.io notifying shouldn't slow down the client who
+                    // sent the mail.
+                    response.end(JSON.stringify({}));
+
                     // Notify recipient user of new mail.
                     // FIXME THIS IS WRONG. The cookie holds the sender, not the
                     // reciever. We need to search REDIS entry VALUES for user ids.
