@@ -1,7 +1,7 @@
 'use strict';
 
 // 3rd-party modules.
-var io = require('socket.io')(),
+var io = require('socket.io')(4000),
     redis = require('redis');
 
 // User created modules.
@@ -38,7 +38,7 @@ rc.on('error', function (err) {
 // Socket.IO callbacks:
 
 io.on('connection', function(socket) {
-    var uuid = socket.request.headers.cookie || '';
+    var uuid = getUUIDFromCookie(socket.request.headers.cookie) || '';
 
     console.log('cookie: ' + uuid);
 
@@ -49,12 +49,15 @@ io.on('connection', function(socket) {
             return;
         }
 
-        sockets[userId] = socket;
-    });
+        socket.on('disconnect', function() {
+            delete sockets[userId];
+            console.log('User disconnected: ' + userId);
+        });
 
-    socket.on('disconnect', function() {
-        delete sockets[uuid];
-        console.log('User disconnected: ' + uuid);
+        sockets[userId] = socket;
+
+        console.log('User connected: ' + userId);
+        socket.emit('welcome');
     });
 });
 
@@ -326,17 +329,44 @@ server.post('/sendmail', function (request, response) {
                     response.end(JSON.stringify({}));
 
                     // Notify recipient user of new mail.
-                    // FIXME THIS IS WRONG. The cookie holds the sender, not the
-                    // reciever. We need to search REDIS entry VALUES for user ids.
-                    var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
-                    console.log('request cookie: ' + uuid);
-                    if (!sockets[uuid]) {
+                    if (!sockets[toUser._id]) {
                         console.error('Missing UUID from sockets: \'' + uuid + '\'.');
                         return;
                     }
 
-                    sockets[uuid].emit('mail', mail._id);
+                    sockets[userId].emit('mail', mail._id);
                 });
+            });
+        });
+    });
+});
+
+server.get('/mail/:id', function (request, response) {
+    var mailId = request.params.id;
+
+    // Fetch the current user (the recipient of the mail). This will make sure
+    // no one is requesting someone else's mail.
+
+    // Fetch UUID from cookie.
+    var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
+
+    // Get user ID and fetch user object
+    rc.get(uuid, function (err, userId) {
+        if (err) {
+            console.error('Error GETting Redis UUID: ' + err);
+            response.end(JSON.stringify( { 'error': 'Must be logged in to receive an email.' } ));
+            return;
+        }
+
+        schemas.getUserById(userId, function (user) {
+            // Return error if user isn't logged in
+            if (!user) {
+                response.end(JSON.stringify( { 'error': 'Must be logged in to receive an email.' } ));
+                return;
+            }
+
+            schemas.getSpecificMailToUser(user, mailId, function (mail) {
+                response.end(JSON.stringify({success: true, mail: mail}));
             });
         });
     });

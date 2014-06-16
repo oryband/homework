@@ -31,11 +31,32 @@ var app = app || {};
 
             this.listenTo(app.Emails, 'add', this.addOne);
             this.listenTo(app.Emails, 'reset', this.addAll);
-            this.listenTo(app.Emails, 'change:completed', this.filterOne);
             this.listenTo(app.Emails, 'all', this.render);
 
             this.$composeDialog.on('open', this.showComposeDialog.bind(this));
             this.$composeDialog.on('close', this.stopComposing.bind(this));
+
+            var socket = io.connect('http://localhost:4000');
+            socket.on('error', function() { console.error(arguments) });
+            socket.on('message', function() { console.log(arguments) });
+            socket.on('welcome', function() { 
+                // handshake with the server is done!
+                console.log('Connected through socket.io');
+            });
+            socket.on('mail', function(mailId) {
+                // got a new mail from server. fetch it by id and add to the collection
+                $.get('/mail/' + mailId, function (result) {
+                    if (result.error) {
+                        console.error('Failed fetching new mail ' + mailId + 
+                                      ' from the server. Error: ' + result.error);
+                        return;
+                    }
+
+                    // add new mail to the collection
+                    var mail = new app.Email(result.mail);
+                    app.Emails.create(mail);
+                }.bind(this), 'json');
+            }.bind(this));
     
             // fetch emails from the server into the local storage
             app.Emails.fetchFromServer(function () {
@@ -55,13 +76,13 @@ var app = app || {};
         addOne: function (email) {
             var view = new app.EmailView({ model: email });
 
-            $('#email-list').append(view.render().el);
+            $('#email-list').prepend(view.render().el);
         },
 
         // Add all items in the **Emails** collection at once.
         addAll: function () {
             this.$('#email-list tbody').remove();
-            app.Emails.each(this.addOne, this);
+            app.Emails.fetch();
         },
 
         startComposing: function () {
