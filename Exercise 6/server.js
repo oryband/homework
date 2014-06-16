@@ -99,9 +99,23 @@ function sendWelcomeMail(user) {
 function setUUIDasCookie(response, user) {
     var uuid = guid();
     rc.setex(uuid, settings.REQUESTS_TIME_THRESHOLD_IN_SEC, user._id);
-    response.headers['Set-Cookie'] = uuid;
+    response.headers['Set-Cookie'] = 'uuid=' + uuid;
 }
 
+// retrieve UUID from cookie. 
+function getUUIDFromCookie(cookie) {
+    var parts = cookie.split('; ');
+    for (var i = 0; i < parts.length; ++i) {
+        var keyval = parts[i].split('=');
+        if (keyval[0] === 'uuid') {
+            // found the uuid! return it immediatly.
+            return keyval[1];
+        }
+    }
+
+    // couldn't find the uuid in the cookie.
+    return null;
+}
 
 // Register user.
 server.post('/register', function(request, response) {
@@ -223,7 +237,7 @@ server.get('/mails', function(request, response) {
     response.headers['Content-Type'] = 'application/json';
 
     // Fetch UUID from cookie.
-    var uuid = request.headers['Cookie'] || '';
+    var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
 
     // Get user ID and fetch all mails that user as recipient ('to' field).
     rc.get(uuid, function (err, userId) {
