@@ -1,7 +1,7 @@
 'use strict';
 
 // 3rd-party modules.
-var socket = require('socket.io'),  // TODO add listen.
+var io = require('socket.io')(),
     redis = require('redis');
 
 // User created modules.
@@ -11,39 +11,97 @@ var http = require('./http'),
 
 // Module objects' instances.
 var rc = redis.createClient(),
-    server = http.createHTTPServer('./public');
+    server = http.createHTTPServer('./public'),
+    sockets = {};
 
 
-// Register URI events:
+// Redis callbacks:
 
-// Sends a 'Welcome to Bitsplease!' mail to a new user.
+// Create UUID.
+var guid = (function() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
+
+    return function() {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+            s4() + '-' + s4() + s4() + s4();
+    };
+})();
+
+
+rc.on('error', function (err) {
+    console.log('Redis error: ' + err);
+});
+
+
+// Socket.IO callbacks:
+
+io.on('connection', function(socket) {
+    var uuid = socket.request.headers.cookie || '';
+
+    console.log('cookie: ' + uuid);
+
+    // Remember socket conection.
+    rc.get(uuid, function (err, userId) {
+        if (err) {
+            console.error('Error GETting Redis UUID: ' + err);
+            return;
+        }
+
+        sockets[userId] = socket;
+    });
+
+    socket.on('disconnect', function() {
+        delete sockets[uuid];
+        console.log('User disconnected: ' + uuid);
+    });
+});
+
+
+// URI callbacks:
+
+// Send a 'Welcome to Bitsplease!' mail to a new user.
 function sendWelcomeMail(user) {
     // Get/create the 'welcome' user, which will send a 'Welcome!' mail to new user.
-    var welcome = schemas.User.update(
+    schemas.User.findOneAndUpdate(
         { username: 'welcome' },
         { username: 'welcome', password: 'welcome', firstName: 'Welcome', lastName: 'Bitsplease' },
         { upsert: true },
-        function (err) { if (err) { console.error('Error get/create \'welcome\' user: ' + err); } }
+        function (err, welcome) {
+            if (err) {
+                console.error('Error get/create \'welcome\' user: ' + err);
+                return;
+            }
+
+            // Send 'Welcome!' mail to new user.
+            new schemas.Mail({
+            from: welcome,
+            to: user,
+            subject: 'Welcome to Bitsplease Mail!',
+            body: 'Dear ' + user.firstName + ',\n' +
+                'Welcome to Bitsplease Mail!\n\n' +
+                'Hope you will enjoy using our service as much as we did building it.\n\n' +
+                'Yours,\n' +
+                'The Bitsplease Team.'
+            }).save(function (err) {
+                if (err) {
+                    console.error('Error sending welcome mail to user \'' + user.username + '\': ' + err);
+                }
+            });
+        }
     );
-
-    console.log(welcome);  // TODO remove this after testing.
-
-        // Send 'Welcome!' mail to new user.
-    new schemas.Mail({
-    from: welcome,
-    to: user,
-    subject: 'Welcome to Bitsplease Mail!',
-    body: 'Dear ' + user.firstName + ',\n' +
-        'Welcome to Bitsplease Mail!\n\n' +
-        'Hope you will enjoy using our service as much as we did building it.\n\n' +
-        'Yours,\n' +
-        'The Bitsplease Team.'
-    }).save(function (err) {
-        console.error('Error sending welcome mail to user \'' + user.username + '\': ' + err);
-    });
-
-    // FIXME Why mails are missing 'from' field?!?
 }
+
+
+// Generate a new UUID,save in redis (with expiration time),
+// and set uuid to be replied as a cookie.
+function setUUIDasCookie(response, user) {
+    var uuid = guid();
+    rc.setex(uuid, settings.REQUESTS_TIME_THRESHOLD_IN_SEC, user._id);
+    response.headers['Set-Cookie'] = uuid;
+}
+
 
 // Register user.
 server.post('/register', function(request, response) {
@@ -76,7 +134,7 @@ server.post('/register', function(request, response) {
             firstName: params.firstName || '',
             lastName: params.lastName || '',
             age: params.age || null
-        }.save(function (err, newUser) {
+        }).save(function (err, newUser) {
             if (err) {
                 console.error('Error saving new user \'' + params.username + '\': ' + err);
                 return;
@@ -85,12 +143,15 @@ server.post('/register', function(request, response) {
             // Send welcome mail to newly created user.
             sendWelcomeMail(newUser);
 
+            // Generate a new UUID and set as response cookie.
+            setUUIDasCookie(response, newUser);
+
             // 'Redirect' to mail.html page.
             response.end(JSON.stringify({
                 'success': true,
                 'location': 'mail.html'
             }));
-        }));
+        });
     });
 });
 
@@ -121,6 +182,9 @@ server.post('/login', function(request, response) {
             response.end(JSON.stringify( { 'error': 'Wrong password.' } ));
             return;
         }
+
+        // Generate a new UUID and set as repsonse cookie.
+        setUUIDasCookie(response, user);
 
         // If username and password match, redirect to 'mail.html' page.
         response.end(JSON.stringify({
@@ -160,9 +224,19 @@ server.get('/mails', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
-    var userId = '0';  // TODO: read user id from redis
-    schemas.getMailsToUser(userId, function (mails) {
-        response.end(JSON.stringify(mails));
+    // Fetch UUID from cookie.
+    var uuid = request.headers['Cookie'] || '';
+
+    // Get user ID and fetch all mails that user as recipient ('to' field).
+    rc.get(uuid, function (err, userId) {
+        if (err) {
+            console.error('Error GETting Redis UUID: ' + err);
+            return;
+        }
+
+        schemas.getMailsToUser(userId, function (mails) {
+            response.end(JSON.stringify(mails));
+        });
     });
 });
 
@@ -215,13 +289,25 @@ server.post('/sendmail', function (request, response) {
 
             fromUser = user;
 
+            // Send mail.
             new schemas.Mail({ from: fromUser, to: toUser, subject: subject, body: body })
             .save(function (err, mail) {
                 if (err) {
                     console.error('Error sending mail from user \'' + fromUser.username + '\' to user \'' + toUser.username + '\': ' + err);
+                    return;
                 }
 
-                // TODO notify user of mail.id.
+                // Notify recipient user of new mail.
+                // FIXME THIS IS WRONG. The cookie holds the sender, not the
+                // reciever. We need to search REDIS entry VALUES for user ids.
+                var uuid = request.headers['Cookie'] || '';
+                console.log('request cookie: ' + uuid);
+                if (!sockets[uuid]) {
+                    console.error('Missing UUID from sockets: \'' + uuid + '\'.');
+                    return;
+                }
+
+                sockets[uuid].emit('mail', mail._id);
             });
         });
     });
