@@ -45,6 +45,7 @@ var app = app || {};
 
           if (!this.model.get('read')) {
             this.model.read();
+            app.Emails.syncWithServer();
           }
         },
 

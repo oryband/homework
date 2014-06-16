@@ -17,9 +17,6 @@ var app = app || {};
         // Delegated events for creating new items, and clearing completed ones.
         events: {
             'click button.compose': 'startComposing',
-            'keypress #recipient': 'switchToSubject',
-            'keypress #subject': 'switchToBody',
-            'keypress #body': 'sendOnEnter',
             'click #create_email': 'createEmail',
             'click #toggle-all': 'toggleAllRead'
         },
@@ -31,9 +28,6 @@ var app = app || {};
             this.allCheckbox = this.$('#toggle-all')[0];
             this.$composeDialog = this.$('#compose');
             this.$composeButton = this.$('button.compose');
-            this.$recipient = this.$('#recipient');
-            this.$subject = this.$('#subject');
-            this.$body = this.$('#body');
 
             this.listenTo(app.Emails, 'add', this.addOne);
             this.listenTo(app.Emails, 'reset', this.addAll);
@@ -43,6 +37,7 @@ var app = app || {};
             this.$composeDialog.on('open', this.showComposeDialog.bind(this));
             this.$composeDialog.on('close', this.stopComposing.bind(this));
 
+            app.Emails.fetchFromServer();
             app.Emails.fetch();
         },
 
@@ -65,57 +60,6 @@ var app = app || {};
             app.Emails.each(this.addOne, this);
         },
 
-        // Generate the attributes for a new Email item.
-        newAttributes: function () {
-            return {
-                from: '********',
-                to: this.$recipient.val().trim(),
-                subject: this.$subject.val().trim(),
-                body: this.$body.val().trim(),
-                read: false
-            };
-        },
-
-        // If you hit return in the recipient field, switch focus to subject input.
-        switchToSubject: function (e) {
-            if (e.which !== ENTER_KEY || ! this.$recipient.val().trim()) {
-                return;
-            }
-
-            this.$subject.focus();
-        },
-
-        // If you hit return in the subject field, switch focus to body input.
-        switchToBody: function (e) {
-            if (e.which !== ENTER_KEY || ! this.$subject.val().trim()) {
-                return;
-            }
-
-            this.$body.focus();
-        },
-
-        // If you hit return in the body field, create new **Email** model,
-        // persisting it to *localStorage*.
-        sendOnEnter: function (e) {
-            if (e.which !== ENTER_KEY ||
-                ! this.$subject.val().trim() || 
-                ! this.$recipient.val().trim() || 
-                ! this.$body.val().trim()) {
-                return;
-            }
-
-            this.createEmail();
-            this.stopComposing();
-            return false;
-        },
-
-        createEmail: function () {
-            app.Emails.create(this.newAttributes());
-            this.$recipient.val('');
-            this.$subject.val('');
-            this.$body.val('');
-        },
-
         startComposing: function () {
           var view = new app.EmailComposeView({ model: null });
           this.$composeDialog.html(view.render().el);
@@ -125,9 +69,6 @@ var app = app || {};
         showComposeDialog: function () {
           this.$composeDialog.show();
           this.$composeButton.hide();
-
-          // put focus on the recipient field
-          this.$recipient.focus();
         },
 
         stopComposing: function () {

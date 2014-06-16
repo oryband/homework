@@ -134,14 +134,28 @@ server.post('/mails', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
-    var params = http.parsePostBody(request);
-
-    if (!params.userId) {
-        response.end(JSON.stringify( { 'error': 'Missing user ID.' } ));
-        return;
+    var results = JSON.parse(request.body);
+    for (var i = 0; i < results.length; ++i) {
+      var obj = results[i];
+      var id = obj._id;
+      delete obj._id;
+      
+      schemas.Mail.update({_id: id}, obj, {upsert: true}, function (err) {
+        if (err) {
+          console.error('Failed saving mail on post/mails:' + err);
+          return;
+        }
+      });
     }
+    response.end();
+});
 
-    schemas.getMailsToUser(params.userId, function (mails) {
+server.get('/mails', function(request, response) {
+    response.status = 200;
+    response.headers['Content-Type'] = 'application/json';
+
+    // TODO: read user id from redis
+    schemas.getMailsToUser('539d90e8e76cbd7d4bd748ac' /*params.userId*/, function (mails) {
         response.end(JSON.stringify(mails));
     });
 });

@@ -22,7 +22,8 @@ exports.Mail = mg.model('Mail', new mg.Schema({
     read: { type: Boolean, default: false },
     date: { type: Date, default: Date.now },
     subject: String,
-    body: String
+    body: String,
+    read: Boolean
 }));
 
 

@@ -15,6 +15,9 @@ var app = app || {};
 
         // The DOM events specific to an item.
         events: {
+            'keypress #recipient': 'switchToSubject',
+            'keypress #subject': 'switchToBody',
+            'keypress #body': 'sendOnEnter',
             'click .close_dialog': 'clear',
             'click #createEmail': 'createEmail'
         },
@@ -40,6 +43,57 @@ var app = app || {};
             subject: '',
             body: ''
           };
+        },
+
+        // If you hit return in the body field, create new **Email** model,
+        // persisting it to *localStorage*.
+        sendOnEnter: function (e) {
+            if (e.which !== ENTER_KEY ||
+                ! this.$subject.val().trim() || 
+                ! this.$recipient.val().trim() || 
+                ! this.$body.val().trim()) {
+                return;
+            }
+
+            this.createEmail();
+            this.$el.parent().trigger('close');
+            return false;
+        },
+
+        // Generate the attributes for a new Email item.
+        newAttributes: function () {
+            return {
+                from: '********',
+                to: this.$recipient.val().trim(),
+                subject: this.$subject.val().trim(),
+                body: this.$body.val().trim(),
+                read: false
+            };
+        },
+
+        createEmail: function () {
+            app.Emails.create(this.newAttributes());
+            this.$recipient.val('');
+            this.$subject.val('');
+            this.$body.val('');
+        },
+
+        // If you hit return in the recipient field, switch focus to subject input.
+        switchToSubject: function (e) {
+            if (e.which !== ENTER_KEY || ! this.$recipient.val().trim()) {
+                return;
+            }
+
+            this.$subject.focus();
+        },
+
+        // If you hit return in the subject field, switch focus to body input.
+        switchToBody: function (e) {
+            if (e.which !== ENTER_KEY || ! this.$subject.val().trim()) {
+                return;
+            }
+
+            this.$body.focus();
         },
         
         clear: function () {
