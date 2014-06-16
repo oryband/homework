@@ -88,8 +88,8 @@ div#register {
   -o-animation: fadeandrotatein 1s; /* Opera */
 }
 
-/* initially, login form is hidden */
-div#login {
+/* initially, register form is hidden */
+div#register {
   display: none;
 }
 

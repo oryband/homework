@@ -138,5 +138,5 @@ $(document).ready(function () {
     });
 
     // we should focus on the username field when the page loads
-    $registerUsername.focus();
+    $loginUsername.focus();
 });
