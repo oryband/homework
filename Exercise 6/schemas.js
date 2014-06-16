@@ -62,3 +62,13 @@ exports.getMailsToUser = function (user, callback) {
 exports.getSpecificMailToUser = function (user, mailId, callback) {
     exports.Mail.findOne({_id: mailId, to: user}).populate('from').exec(execCallback(callback));
 };
+
+exports.deleteSpecificMailOfUser = function (user, mailId, callback) {
+    exports.Mail.findOne({_id: mailId, to: user}).exec(execCallback(function (mail) {
+        mail.remove();
+    }));
+
+    if (callback) {
+        callback();
+    }
+};

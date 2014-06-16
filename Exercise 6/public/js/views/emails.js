@@ -59,6 +59,7 @@ var app = app || {};
 
         // Remove the item, destroy the model from *localStorage* and delete its view.
         clear: function () {
+            this.model.id = this.model.get('_id');
             this.model.destroy();
         }
     });

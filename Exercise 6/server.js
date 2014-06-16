@@ -211,6 +211,36 @@ server.post('/login', function(request, response) {
     });
 });
 
+server.post('/mails/:id', function(request, response) {
+    var mailId = request.params.id;
+
+    // Fetch the current user (the recipient of the mail). This will make sure
+    // no one is deleting someone else's mail.
+
+    // Fetch UUID from cookie.
+    var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
+
+    // Get user ID and fetch user object
+    rc.get(uuid, function (err, userId) {
+        if (err) {
+            console.error('Error GETting Redis UUID: ' + err);
+            response.end(JSON.stringify( { 'error': 'Must be logged in to delete an email.' } ));
+            return;
+        }
+
+        schemas.getUserById(userId, function (user) {
+            // Return error if user isn't logged in
+            if (!user) {
+                response.end(JSON.stringify( { 'error': 'Must be logged in to delete an email.' } ));
+                return;
+            }
+
+            schemas.deleteSpecificMailOfUser(user, mailId, function () {
+                response.end(JSON.stringify({success: true}));
+            });
+        });
+    });
+});
 
 // Update mail data, usually for setting 'read' field to false.
 server.post('/mails', function(request, response) {
