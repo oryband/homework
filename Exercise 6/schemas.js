@@ -47,7 +47,7 @@ exports.getUserById = function (id, callback) {
 
 
 exports.getUserByUsername = function (username, callback) {
-    exports.User.findOne({username: username}).exec(execCallback(callback));
+    exports.User.findOne({ username: username }).exec(execCallback(callback));
 };
 
 
@@ -55,20 +55,24 @@ exports.getMailById = function (id, callback) {
     exports.Mail.findById(id).exec(execCallback(callback));
 };
 
+
 exports.getMailsToUser = function (user, callback) {
-    exports.Mail.find({to: user}).populate('from').exec(execCallback(callback));
+    exports.Mail.find({ to: user }).populate('from').exec(execCallback(callback));
 };
+
 
 exports.getSpecificMailToUser = function (user, mailId, callback) {
-    exports.Mail.findOne({_id: mailId, to: user}).populate('from').exec(execCallback(callback));
+    // NOTE we're populating the 'from' object ref to become a real object, instead of a reference.
+    exports.Mail.findOne({ _id: mailId, to: user }).populate('from').exec(execCallback(callback));
 };
 
-exports.deleteSpecificMailOfUser = function (user, mailId, callback) {
-    exports.Mail.findOne({_id: mailId, to: user}).exec(execCallback(function (mail) {
-        mail.remove();
-    }));
 
-    if (callback) {
-        callback();
-    }
+exports.deleteSpecificMailOfUser = function (user, mailId, callback) {
+    exports.Mail.findOne({ _id: mailId, to: user }).exec(execCallback(function (mail) {
+        mail.remove();
+
+        if (callback) {  // TODO Should this be outside of this closure?
+            callback();
+        }
+    }));
 };

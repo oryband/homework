@@ -2,7 +2,8 @@
 
 // 3rd-party modules.
 var io = require('socket.io')(4000),
-    redis = require('redis');
+    redis = require('redis'),
+    _ = require('underscore')._;
 
 // User created modules.
 var http = require('./http'),
@@ -31,16 +32,32 @@ var guid = (function() {
 
 
 rc.on('error', function (err) {
-    console.log('Redis error: ' + err);
+    console.error('Redis error: ' + err);
 });
 
 
 // Socket.IO callbacks:
 
+// Retrieve UUID from cookie.
+function getUUIDFromCookie(cookie) {
+    var parts = cookie.split('; '),
+        keyval;
+
+    // Search cookie keys/values for UUID.
+    for (var i=0; i < parts.length; i++) {
+        keyval = parts[i].split('=');
+        if (keyval[0] === 'uuid') {  // Return UUID when found.
+            return keyval[1];
+        }
+    }
+
+    // Return null if UUID wasn't in cookie.
+    return null;
+}
+
+
 io.on('connection', function(socket) {
     var uuid = getUUIDFromCookie(socket.request.headers.cookie) || '';
-
-    console.log('cookie: ' + uuid);
 
     // Remember socket conection.
     rc.get(uuid, function (err, userId) {
@@ -49,14 +66,13 @@ io.on('connection', function(socket) {
             return;
         }
 
+        // Delete socket on disconnect.
         socket.on('disconnect', function() {
             delete sockets[userId];
-            console.log('User disconnected: ' + userId);
         });
 
         sockets[userId] = socket;
 
-        console.log('User connected: ' + userId);
         socket.emit('welcome');
     });
 });
@@ -79,14 +95,14 @@ function sendWelcomeMail(user) {
 
             // Send 'Welcome!' mail to new user.
             new schemas.Mail({
-            from: welcome,
-            to: user,
-            subject: 'Welcome to Bitsplease Mail!',
-            body: 'Dear ' + user.firstName + ',\n' +
-                'Welcome to Bitsplease Mail!\n\n' +
-                'Hope you will enjoy using our service as much as we did building it.\n\n' +
-                'Yours,\n' +
-                'The Bitsplease Team.'
+                from: welcome,
+                to: user,
+                subject: 'Welcome to Bitsplease Mail!',
+                body: 'Dear ' + user.firstName + ',\n' +
+                    'Welcome to Bitsplease Mail!\n\n' +
+                    'Hope you will enjoy using our service as much as we did building it.\n\n' +
+                    'Yours,\n' +
+                    'The Bitsplease Team.'
             }).save(function (err) {
                 if (err) {
                     console.error('Error sending welcome mail to user \'' + user.username + '\': ' + err);
@@ -97,38 +113,29 @@ function sendWelcomeMail(user) {
 }
 
 
-// Generate a new UUID,save in redis (with expiration time),
-// and set uuid to be replied as a cookie.
+// Generate a new UUID, save in redis (with expiration time),
+// and set UUID to be replied as a cookie.
 function setUUIDasCookie(response, user) {
-    var uuid = guid();
+    var uuid = guid(),
+        now = new Date();
+
     rc.setex(uuid, settings.REQUESTS_TIME_THRESHOLD_IN_SEC, user._id);
-    response.headers['Set-Cookie'] = 'uuid=' + uuid + '; Expires=Thu, 01-Jan-2015 00:00:01 GMT';
+
+    // Set cookie expiration time.
+    now.setTime(now.getTime() + 1000 * settings.REQUESTS_TIME_THRESHOLD_IN_SEC);
+    response.headers['Set-Cookie'] = 'uuid=' + uuid + '; ' + now.toUTCString();
 }
 
-// retrieve UUID from cookie. 
-function getUUIDFromCookie(cookie) {
-    var parts = cookie.split('; ');
-    for (var i = 0; i < parts.length; ++i) {
-        var keyval = parts[i].split('=');
-        if (keyval[0] === 'uuid') {
-            // found the uuid! return it immediatly.
-            return keyval[1];
-        }
-    }
-
-    // couldn't find the uuid in the cookie.
-    return null;
-}
 
 // Register user.
 server.post('/register', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
+    // Fetch POST body parameters.
     var params = http.parsePostBody(request);
 
-    // Return error if username/password are missing,
-    // or if username is already taken.
+    // Return error if username/password are missing, or if username is already taken.
     if (!params.username) {
         response.end(JSON.stringify( { 'error': 'Missing user name.' } ));
         return;
@@ -178,6 +185,7 @@ server.post('/login', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
+    // Parse POST body parameters.
     var params = http.parsePostBody(request);
 
     // Check for username and password errors.
@@ -211,63 +219,70 @@ server.post('/login', function(request, response) {
     });
 });
 
+
+// Delete mail by mail-ID, given as parameter.
 server.post('/mails/:id', function(request, response) {
     var mailId = request.params.id;
 
-    // Fetch the current user (the recipient of the mail). This will make sure
-    // no one is deleting someone else's mail.
+    // Fetch the current user (the recipient of the mail).
+    // This will make sure no one is deleting someone else's mail.
 
     // Fetch UUID from cookie.
     var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
 
-    // Get user ID and fetch user object
+    // Get user ID and fetch user object.
     rc.get(uuid, function (err, userId) {
         if (err) {
+            // Error probably means user didn't log in,
+            // so now UUID was generated for him.
             console.error('Error GETting Redis UUID: ' + err);
-            response.end(JSON.stringify( { 'error': 'Must be logged in to delete an email.' } ));
+            response.end(JSON.stringify( { 'error': 'Must be logged in to delete mail.' } ));
             return;
         }
 
         schemas.getUserById(userId, function (user) {
-            // Return error if user isn't logged in
+            // Return error if user isn't logged in.
             if (!user) {
                 response.end(JSON.stringify( { 'error': 'Must be logged in to delete an email.' } ));
                 return;
             }
 
             schemas.deleteSpecificMailOfUser(user, mailId, function () {
-                response.end(JSON.stringify({success: true}));
+                response.end(JSON.stringify({ success: true }));
             });
         });
     });
 });
+
 
 // Update mail data, usually for setting 'read' field to false.
 server.post('/mails', function(request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
+    // Fetch mails and make sure it's an array.
     var mails = JSON.parse(request.body);
-    if (Object.prototype.toString.call(mails) !== '[object Array]') {
-        mails = [mails];
-    }
+    mails = _.isArray(mails) ? mails : [mails];
 
     // Update each mail.
+    var mail, obj;
     for (var i=0; i < mails.length; i++) {
-        var mail = mails[i];
+        mail = mails[i];
 
-        // we are only going to ever update the 'read' field of mails.
-        // the reset of the fields should never change.
-        var obj = {read: mail.read};
+        // We're only going to ever update the 'read' field of mails.
+        // The reset of the fields should never change.
+        obj = { read: mail.read };
 
         schemas.Mail.update({ _id: mail._id }, obj, function (err) {
             if (err) {
-                console.error('Failed saving mail on POST /mails:' + err);
+                console.error('Failed saving mail on POST /mails: ' + err);
             }
         });
     }
+
     response.end();
 });
+
 
 // Fetch user's mail list.
 server.get('/mails', function(request, response) {
@@ -277,13 +292,14 @@ server.get('/mails', function(request, response) {
     // Fetch UUID from cookie.
     var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
 
-    // Get user ID and fetch all mails that user as recipient ('to' field).
+    // Get user ID and fetch all mails whose this user is the recipient (is the 'to' field).
     rc.get(uuid, function (err, userId) {
         if (err) {
             console.error('Error GETting Redis UUID: ' + err);
             return;
         }
 
+        // Get mails sent to user, and return them as json object.
         schemas.getMailsToUser(userId, function (mails) {
             response.end(JSON.stringify(mails));
         });
@@ -296,6 +312,7 @@ server.post('/sendmail', function (request, response) {
     response.status = 200;
     response.headers['Content-Type'] = 'application/json';
 
+    // Fetch POST body parameters.
     var params = http.parsePostBody(request);
 
     // Check for missing parameters.
@@ -329,7 +346,7 @@ server.post('/sendmail', function (request, response) {
         // Fetch UUID from cookie.
         var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
 
-        // Get user ID and fetch user object
+        // Get user ID and fetch user object.
         rc.get(uuid, function (err, userId) {
             if (err) {
                 console.error('Error GETting Redis UUID: ' + err);
@@ -337,9 +354,9 @@ server.post('/sendmail', function (request, response) {
             }
 
             schemas.getUserById(userId, function (user) {
-                // Return error if user isn't logged in
+                // Return error if user isn't logged in.
                 if (!user) {
-                    response.end(JSON.stringify( { 'error': 'Must be logged in to send an email.' } ));
+                    response.end(JSON.stringify( { 'error': 'Must be logged in to send mail.' } ));
                     return;
                 }
 
@@ -353,9 +370,8 @@ server.post('/sendmail', function (request, response) {
                         return;
                     }
 
-                    // after mail has been sent, we should respond to the client that it succeeded.
-                    // success or failure of socket.io notifying shouldn't slow down the client who
-                    // sent the mail.
+                    // After mail has been sent, we reply with success to the client.
+                    // Socket.IO notfications shouldn't slow down the client who sent the mail.
                     response.end(JSON.stringify({}));
 
                     // Notify recipient user of new mail.
@@ -371,6 +387,8 @@ server.post('/sendmail', function (request, response) {
     });
 });
 
+
+// Get a specific mail by mail-ID.
 server.get('/mail/:id', function (request, response) {
     var mailId = request.params.id;
 
@@ -384,14 +402,16 @@ server.get('/mail/:id', function (request, response) {
     rc.get(uuid, function (err, userId) {
         if (err) {
             console.error('Error GETting Redis UUID: ' + err);
-            response.end(JSON.stringify( { 'error': 'Must be logged in to receive an email.' } ));
+
+            // Error fetching Redis UUID key probably means user isn't logged in.
+            response.end(JSON.stringify( { 'error': 'Must be logged in to receive mail.' } ));
             return;
         }
 
         schemas.getUserById(userId, function (user) {
-            // Return error if user isn't logged in
+            // Return error if user isn't logged in.
             if (!user) {
-                response.end(JSON.stringify( { 'error': 'Must be logged in to receive an email.' } ));
+                response.end(JSON.stringify( { 'error': 'Must be logged in to receive mail.' } ));
                 return;
             }
 

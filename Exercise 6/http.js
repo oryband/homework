@@ -516,5 +516,7 @@ exports.createHTTPServer = function (rootFolder) {
 // Parse request body as POST, and return an object of { key: value }.
 // NOTE we assume here that request.body is POST.
 exports.parsePostBody = function (request) {
-    return _.object(decodeURIComponent(request.body.replace(/\+/g, ' ')).split('&').map(function(el) {return el.split('=');}));
+    return _.object(decodeURIComponent(request.body.replace(/\+/g, ' '))
+                    .split('&')
+                    .map(function(el) { return el.split('='); }));
 };
