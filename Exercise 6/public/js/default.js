@@ -1,7 +1,12 @@
+'use strict';
+
+// Custom jQuery object functions:
+
+// Serialize array to object.
 $.fn.serializeObject = function() {
-    'use strict';
-    var o = {};
-    var a = this.serializeArray();
+    var o = {},
+    a = this.serializeArray();
+
     $.each(a, function() {
         if (o[this.name] !== undefined) {
             if (!o[this.name].push) {
@@ -12,17 +17,19 @@ $.fn.serializeObject = function() {
             o[this.name] = this.value || '';
         }
     });
+
     return o;
 };
 
+
+// Submit this object the ajax way.
 $.fn.submitForm = function(callback) {
-    'use strict';
     var $error = $('#error');
     $error.hide();
     $error.html('');
 
     $.post(
-        this.attr('action'), 
+        this.attr('action'),
         this.serializeObject(),
         function (result) {
             if (result.error) {

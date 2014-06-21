@@ -1,17 +1,14 @@
-/*global Backbone, jQuery, _, ENTER_KEY */
+'use strict';
+
 var app = app || {};
 
 (function ($) {
-    'use strict';
 
-    // The Application
-    // ---------------
-
-    // Our overall **AppView** is the top-level piece of UI.
+    // Overall app view.
     app.AppView = Backbone.View.extend({
 
-        // Instead of generating a new element, bind to the existing skeleton of
-        // the App already present in the HTML.
+        // Instead of generating a new element,
+        // bind to the existing skeleton of the App already present in the HTML.
         el: '#emailapp',
 
         // Delegated events for creating new items, and clearing completed ones.
@@ -37,9 +34,9 @@ var app = app || {};
             this.$composeDialog.on('close', this.stopComposing.bind(this));
 
             var socket = io.connect('http://localhost:4000');
-            socket.on('error', function() { console.error(arguments) });
-            socket.on('message', function() { console.log(arguments) });
-            socket.on('welcome', function() { 
+            socket.on('error', function() { console.error(arguments); });
+            socket.on('message', function() { console.log(arguments); });
+            socket.on('welcome', function() {
                 // handshake with the server is done!
                 console.log('Connected through socket.io');
             });
@@ -47,7 +44,7 @@ var app = app || {};
                 // got a new mail from server. fetch it by id and add to the collection
                 $.get('/mail/' + mailId, function (result) {
                     if (result.error) {
-                        console.error('Failed fetching new mail ' + mailId + 
+                        console.error('Failed fetching new mail ' + mailId +
                                       ' from the server. Error: ' + result.error);
                         return;
                     }
@@ -57,7 +54,7 @@ var app = app || {};
                     app.Emails.create(mail);
                 }.bind(this), 'json');
             }.bind(this));
-    
+
             // fetch emails from the server into the local storage
             app.Emails.fetchFromServer(function () {
             });
@@ -104,7 +101,7 @@ var app = app || {};
         toggleAllRead: function () {
             app.Emails.each(function (email) {
                 email.save({
-                    'read': true 
+                    'read': true
                 });
             });
         }

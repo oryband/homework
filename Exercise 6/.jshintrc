@@ -81,6 +81,7 @@
     // Custom Globals
     "globals"       : {       // additional predefined global variables
         "_": true,
-        "Backbone": true
+        "Backbone": true,
+        "io": true
     }
 }

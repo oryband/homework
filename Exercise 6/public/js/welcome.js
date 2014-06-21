@@ -1,14 +1,14 @@
+'use strict';
+
 $(document).ready(function () {
-    'use strict'; 
+    var $loginContainer = $('#login'),
+        $loginInsteadLink = $('#register > form > a'),
+        $loginUsername = $('#login_username'),
 
-    var $loginContainer = $('#login');
-    var $loginInsteadLink = $('#register > form > a');
-    var $loginUsername = $('#login_username');
+        $registerContainer = $('#register'),
+        $registerInsteadLink = $('#login > form > a'),
 
-    var $registerContainer = $('#register');
-    var $registerInsteadLink = $('#login > form > a');
-
-    var $error = $('#error');
+        $error = $('#error');
 
     function resetError() {
         $error.hide();
@@ -20,6 +20,7 @@ $(document).ready(function () {
         $error.show();
     }
 
+    // Show login page when clicking on 'login' button.
     $loginInsteadLink.on('click', function () {
         resetError();
         $loginContainer.show();
@@ -27,20 +28,21 @@ $(document).ready(function () {
         $loginUsername.focus();
     });
 
+    // Show register page when clicking on 'register' button.
     $registerInsteadLink.on('click', function () {
         resetError();
         $registerContainer.show();
         $loginContainer.hide();
     });
 
-    var $registerUsername = $('#username');
-    var $registerPassword = $('#password');
-    var $registerPasswordConfirm = $('#password_confirm');
-    var $registerFirstName = $('#first_name');
-    var $registerLastName = $('#last_name');
-    var $registerAge = $('#age');
+    var $registerUsername = $('#username'),
+        $registerPassword = $('#password'),
+        $registerPasswordConfirm = $('#password_confirm'),
+        $registerFirstName = $('#first_name'),
+        $registerLastName = $('#last_name'),
+        $registerAge = $('#age');
 
-    // validate register form fields on blur.
+    // Validate register form fields on blur.
     // if the input doesn't match the predicate we will bring back the focus
     // to that specific field.
     $registerUsername.blur(function() {
@@ -50,7 +52,7 @@ $(document).ready(function () {
             return;
         }
 
-        // if there was no error, reset the error container
+        // Reset the error container if there was no error.
         resetError();
     });
 
@@ -61,7 +63,6 @@ $(document).ready(function () {
             return;
         }
 
-        // if there was no error, reset the error container
         resetError();
     });
 
@@ -70,15 +71,13 @@ $(document).ready(function () {
             $registerPasswordConfirm.get(0).setCustomValidity('');
         } else {
             $registerPasswordConfirm.get(0).setCustomValidity('Passwords doesn\'t match');
-            setError('Passwords doesn\'t match');            
+            setError('Passwords doesn\'t match');
             $registerPasswordConfirm.focus();
             return;
         }
 
-        // if there was no error, reset the error container
         resetError();
     });
-
 
     $registerFirstName.blur(function() {
         if ($registerFirstName.val().length < 2 || $registerFirstName.val().length > 50) {
@@ -87,7 +86,6 @@ $(document).ready(function () {
             return;
         }
 
-        // if there was no error, reset the error container
         resetError();
     });
 
@@ -98,7 +96,6 @@ $(document).ready(function () {
             return;
         }
 
-        // if there was no error, reset the error container
         resetError();
     });
 
@@ -109,34 +106,33 @@ $(document).ready(function () {
             return;
         }
 
-        // if there was no error, reset the error container
         resetError();
     });
 
-    // handle submitting the forms with AJAX.
-    // upon a successful submit, redirect to the new location
+    // Handle submitting the forms the ajax way,
+    // and redirect to new location upon a successful submit.
     $loginContainer.find('form').on('submit', function (e) {
         var $form = $(e.target);
         $form.submitForm(function (result) {
-            // success submitting form!
             if (result.success) {
                 location.href = result.location;
             }
         });
+
         return false;
     });
 
-    $registerContainer.find('form').on('submit', function () {
+    $registerContainer.find('form').on('submit', function (e) {
         var $form = $(e.target);
         $form.submitForm(function (result) {
-            // success submitting form!
             if (result.success) {
                 location.href = result.location;
             }
         });
+
         return false;
     });
 
-    // we should focus on the username field when the page loads
+    // Focus on username field on page load.
     $loginUsername.focus();
 });
