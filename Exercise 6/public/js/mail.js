@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var composeButton = document.querySelector('button.compose'),
         composeDialog = document.querySelector('div#compose');
 
+
     function openComposeDialog () {
         composeDialog.style.display = 'block';
         composeButton.style.display = 'none';
@@ -18,10 +19,12 @@ document.addEventListener('DOMContentLoaded', function () {
         composeButton.style.display = 'block';
     }
 
+
     var closeButtons = composeDialog.querySelectorAll('.close_dialog');
     for (var i=0; i < closeButtons.length; i++) {
         closeButtons[i].addEventListener('click', closeComposeDialog);
     }
+
 
     // Add event triggers for each mail element.
     function forEachEmailElement(element) {
@@ -58,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         element.querySelector('a.delete').addEventListener('click', hideElement);
         element.querySelector('a.reply').addEventListener('click', replyToElement);
     }
+
 
     // Attach event listeners to all mail elements.
     var emails = document.querySelectorAll('tr.email');

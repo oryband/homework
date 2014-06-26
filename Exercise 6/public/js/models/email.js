@@ -1,17 +1,12 @@
-/*global Backbone */
+'use strict';
+
 var app = app || {};
 
 (function () {
-    'use strict';
-
-    // Email Model
-    // ----------
-
     app.Email = Backbone.Model.extend({
-
         urlRoot: '/mails',
 
-        // Default attributes for an email
+        // Default email attributes.
         defaults: {
             to: '',
             from: '',
@@ -21,9 +16,10 @@ var app = app || {};
             date: (new Date()).toLocaleString()
         },
 
+
         // Set the `read` state of this email
         read: function () {
-            this.save({read: true});
+            this.save({ read: true });
         }
     });
 })();

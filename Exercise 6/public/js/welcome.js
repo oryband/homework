@@ -10,15 +10,18 @@ $(document).ready(function () {
 
         $error = $('#error');
 
+
     function resetError() {
         $error.hide();
         $error.html('');
     }
 
+
     function setError(message) {
         $error.html(message);
         $error.show();
     }
+
 
     // Show login page when clicking on 'login' button.
     $loginInsteadLink.on('click', function () {
@@ -28,12 +31,14 @@ $(document).ready(function () {
         $loginUsername.focus();
     });
 
+
     // Show register page when clicking on 'register' button.
     $registerInsteadLink.on('click', function () {
         resetError();
         $registerContainer.show();
         $loginContainer.hide();
     });
+
 
     var $registerUsername = $('#username'),
         $registerPassword = $('#password'),
@@ -109,7 +114,8 @@ $(document).ready(function () {
         resetError();
     });
 
-    // Handle submitting the forms the ajax way,
+
+    // Handle submitting register & login forms the ajax way,
     // and redirect to new location upon a successful submit.
     $loginContainer.find('form').on('submit', function (e) {
         var $form = $(e.target);
@@ -132,6 +138,7 @@ $(document).ready(function () {
 
         return false;
     });
+
 
     // Focus on username field on page load.
     $loginUsername.focus();

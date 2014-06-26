@@ -1,15 +1,13 @@
-/*global Backbone, jQuery, _, ENTER_KEY */
+'use strict';
+
 var app = app || {};
 
+
+// Email Compose View
 (function ($) {
-    'use strict';
-
-    // Email Compose View
-    // --------------
-
-    // The DOM element for a email item...
+    // The DOM element for an email item.
     app.EmailComposeView = Backbone.View.extend({
-        tagName:  'div',
+        tagName: 'div',
 
         template: _.template($('#compose_dialog-template').html()),
 
@@ -22,15 +20,17 @@ var app = app || {};
             'click #create_email': 'createEmail'
         },
 
-        // The EmailView listens for changes to its model, re-rendering. Since there's
-        // a one-to-one correspondence between a **Email** and a **EmailView** in this
-        // app, we set a direct reference on the model for convenience.
+
+        // The EmailView listens for changes to its model, re-rendering.
+        // Since there's a one-to-one correspondence between a **Email** and a **EmailView** in this app,
+        // we set a direct reference on the model for convenience.
         initialize: function () {
             if (this.model) {
                 this.listenTo(this.model, 'change', this.render);
                 this.listenTo(this.model, 'destroy', this.clear);
             }
         },
+
 
         getJSON: function () {
             if (this.model !== null) {
@@ -45,19 +45,22 @@ var app = app || {};
             };
         },
 
+
         // If you hit return in the body field, create new **Email** model,
         // persisting it to *localStorage*.
         sendOnEnter: function (e) {
             if (e.which !== ENTER_KEY ||
-                ! this.$subject.val().trim() || 
-                    ! this.$recipient.val().trim() || 
-                        ! this.$body.val().trim()) {
+                ! this.$subject.val().trim() ||
+                ! this.$recipient.val().trim() ||
+                ! this.$body.val().trim()) {
+
                 return;
             }
 
             this.createEmail();
             return false;
         },
+
 
         createEmail: function () {
             // submit the form
@@ -83,7 +86,8 @@ var app = app || {};
             }.bind(this));
         },
 
-        // If you hit return in the recipient field, switch focus to subject input.
+
+        // Switch focus to subject input if you hit return in the recipient field.
         switchToSubject: function (e) {
             if (e.which !== ENTER_KEY || ! this.$recipient.val().trim()) {
                 return;
@@ -92,7 +96,8 @@ var app = app || {};
             this.$subject.focus();
         },
 
-        // If you hit return in the subject field, switch focus to body input.
+
+        // Switch focus to body input if you hit return in the subject field.
         switchToBody: function (e) {
             if (e.which !== ENTER_KEY || ! this.$subject.val().trim()) {
                 return;
@@ -101,10 +106,12 @@ var app = app || {};
             this.$body.focus();
         },
 
+
         clear: function () {
             this.$el.parent().trigger('close');
             this.$el.remove();
         },
+
 
         render: function () {
             this.$el.html(this.template(this.getJSON()));
@@ -114,12 +121,12 @@ var app = app || {};
             this.$subject = this.$('#subject');
             this.$body = this.$('#body');
 
-            // if the model exists, it means it's a reply dialog.
-            // we should focus on the body textarea, as the rest is pre-filled.
+            // If the model exists, it means it's a reply dialog.
+            // We should focus on the body textarea, as the rest is pre-filled.
             if (this.model) {
                 setTimeout(this.$body.focus.bind(this.$body), 1);
             } else {
-                // otherwise, we should focus on the recipient field
+                // Otherwise, we should focus on the recipient field.
                 setTimeout(this.$recipient.focus.bind(this.$recipient), 1);
             }
             return this;
