@@ -1,14 +1,14 @@
 'use strict';
 
-// 3rd-party modules.
-var io = require('socket.io')(4000),
-    redis = require('redis'),
-    _ = require('underscore')._;
-
 // User created modules.
 var http = require('./http'),
     settings = require('./settings'),
     schemas = require('./schemas');
+
+// 3rd-party modules.
+var io = require('socket.io')(settings.SOCKETIO_PORT),
+    redis = require('redis'),
+    _ = require('underscore')._;
 
 // Module objects' instances.
 var rc = redis.createClient(),
