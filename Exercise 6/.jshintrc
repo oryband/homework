@@ -83,6 +83,7 @@
         "_": true,
         "Backbone": true,
         "io": true,
+        "ENTER_KEY": true,
         "SOCKETIO_ADDRESS": true
     }
 }
