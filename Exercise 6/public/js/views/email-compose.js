@@ -15,7 +15,6 @@ var app = app || {};
         events: {
             'keypress #recipient': 'switchToSubject',
             'keypress #subject': 'switchToBody',
-            'keypress #body': 'sendOnEnter',
             'click .close_dialog': 'clear',
             'click #create_email': 'createEmail'
         },
@@ -43,22 +42,6 @@ var app = app || {};
                 subject: '',
                 body: ''
             };
-        },
-
-
-        // If you hit return in the body field, create new **Email** model,
-        // persisting it to *localStorage*.
-        sendOnEnter: function (e) {
-            if (e.which !== ENTER_KEY ||
-                ! this.$subject.val().trim() ||
-                ! this.$recipient.val().trim() ||
-                ! this.$body.val().trim()) {
-
-                return;
-            }
-
-            this.createEmail();
-            return false;
         },
 
 
