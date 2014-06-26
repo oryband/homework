@@ -82,6 +82,8 @@
     "globals"       : {       // additional predefined global variables
         "_": true,
         "Backbone": true,
-        "io": true
+        "io": true,
+        "ENTER_KEY": true,
+        "SOCKETIO_ADDRESS": true
     }
 }
