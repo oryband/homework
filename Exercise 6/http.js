@@ -36,6 +36,7 @@ var HttpRequest = function (reqVersion, reqMethod, reqUri, reqResource, reqResPa
                 case 'js': return 'application/javascript';
                 case 'json': return 'application/json';
                 case 'jpg': return 'image/jpeg';
+                case 'mf': return 'text/cache-manifest';
                 default: return 'text/plain';
             }
         },
