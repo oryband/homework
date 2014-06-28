@@ -1,7 +1,7 @@
 'use strict';
 
 // User created modules.
-var http = require('./http'),
+var http = require('./http'),  // **Our own** custom http module (BONUS!).
     settings = require('./settings'),
     schemas = require('./schemas');
 
@@ -40,14 +40,16 @@ rc.on('error', function (err) {
 
 // Retrieve UUID from cookie.
 function getUUIDFromCookie(cookie) {
-    var parts = cookie.split('; '),
-        keyval;
+    if (cookie) {
+        var parts = cookie.split('; '),
+            keyval;
 
-    // Search cookie keys/values for UUID.
-    for (var i=0; i < parts.length; i++) {
-        keyval = parts[i].split('=');
-        if (keyval[0] === 'uuid') {  // Return UUID when found.
-            return keyval[1];
+        // Search cookie keys/values for UUID.
+        for (var i=0; i < parts.length; i++) {
+            keyval = parts[i].split('=');
+            if (keyval[0] === 'uuid') {  // Return UUID when found.
+                return keyval[1];
+            }
         }
     }
 
@@ -56,13 +58,17 @@ function getUUIDFromCookie(cookie) {
 }
 
 
+// Remember socket conection.
 io.on('connection', function(socket) {
+    // Get/create UUID for current connection.
     var uuid = getUUIDFromCookie(socket.request.headers.cookie) || '';
 
-    // Remember socket conection.
     rc.get(uuid, function (err, userId) {
         if (err) {
             console.error('Error GETting Redis UUID: ' + err);
+            return;
+        } else if (!userId) {
+            console.error('User-id does\'t exist for cookie: \'' + socket.request.headers.cookie + '\'');
             return;
         }
 
@@ -71,6 +77,7 @@ io.on('connection', function(socket) {
             delete sockets[userId];
         });
 
+        // Remember socket for current user-id.
         sockets[userId] = socket;
 
         socket.emit('welcome');
@@ -119,6 +126,7 @@ function setUUIDasCookie(response, user) {
     var uuid = guid(),
         now = new Date();
 
+    // Add the following key/value to redis, with expiration time: { uuid: user._id }
     rc.setex(uuid, settings.REQUESTS_TIME_THRESHOLD_IN_SEC, user._id);
 
     // Set cookie expiration time.
@@ -230,8 +238,8 @@ server.post('/mails/:id', function(request, response) {
     // Fetch UUID from cookie.
     var uuid = getUUIDFromCookie(request.headers['Cookie']) || '';
 
-    // Get user ID and fetch user object.
-    rc.get(uuid, function (err, userId) {
+    // Get user cookie and delete mail.
+    rc.get(uuid, function (err) {
         if (err) {
             // Error probably means user didn't log in,
             // so now UUID was generated for him.
@@ -240,16 +248,9 @@ server.post('/mails/:id', function(request, response) {
             return;
         }
 
-        schemas.getUserById(userId, function (user) {
-            // Return error if user isn't logged in.
-            if (!user) {
-                response.end(JSON.stringify( { 'error': 'Must be logged in to delete an email.' } ));
-                return;
-            }
-
-            schemas.deleteSpecificMailOfUser(user, mailId, function () {
-                response.end(JSON.stringify({ success: true }));
-            });
+        // Delete mail.
+        schemas.deleteSpecificMailOfUser(mailId, function () {
+            response.end(JSON.stringify({ success: true }));
         });
     });
 });
@@ -370,17 +371,18 @@ server.post('/sendmail', function (request, response) {
                         return;
                     }
 
-                    // After mail has been sent, we reply with success to the client.
+                    // Reply with success to sender, after mail was succesfully sent.
                     // Socket.IO notfications shouldn't slow down the client who sent the mail.
                     response.end(JSON.stringify({}));
 
-                    // Notify recipient user of new mail.
+                    // Notify recipient user of new mail, if recipient is logged in.
+                    // That is, if it has an active socket.io connection.
                     if (!sockets[toUser._id]) {
-                        console.error('Missing UUID from sockets: \'' + uuid + '\'.');
+                        console.log('Missing socket by user-id: \'' + toUser._id + '\'. No socketIO notification was sent.');
                         return;
                     }
 
-                    sockets[userId].emit('mail', mail._id);
+                    sockets[toUser._id].emit('mail', mail._id);
                 });
             });
         });

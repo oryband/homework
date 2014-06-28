@@ -8,7 +8,7 @@ var oId = mg.Schema.Types.ObjectId;
 
 
 exports.User = mg.model('User', new mg.Schema({
-    username: String,  // User's email address is 'username@bitsplease.com'
+    username: String,
     password: String,
     firstName: { type: String, default: '' },
     lastName: { type: String, default: '' },
@@ -67,12 +67,6 @@ exports.getSpecificMailToUser = function (user, mailId, callback) {
 };
 
 
-exports.deleteSpecificMailOfUser = function (user, mailId, callback) {
-    exports.Mail.findOne({ _id: mailId, to: user }).exec(execCallback(function (mail) {
-        mail.remove();
-
-        if (callback) {  // TODO Should this be outside of this closure?
-            callback();
-        }
-    }));
+exports.deleteSpecificMailOfUser = function (mailId, callback) {
+    exports.Mail.findOneAndRemove({ _id: mailId }).exec(execCallback(callback));
 };

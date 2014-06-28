@@ -60,8 +60,7 @@ var app = app || {};
             }.bind(this));
 
             // Fetch emails from server into the local storage
-            app.Emails.fetchFromServer(function () {
-            });
+            app.Emails.fetchFromServer(function () {});
 
             // Fetch emails from local storage
             app.Emails.fetch();
@@ -70,8 +69,7 @@ var app = app || {};
 
         // Re-rendering the App just means refreshing the statistics,
         // the rest of the app doesn't change.
-        render: function () {
-        },
+        render: function () {},
 
 
         // Add a single email item to the list by creating a view for it,
