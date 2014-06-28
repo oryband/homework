@@ -67,11 +67,6 @@ var app = app || {};
         },
 
 
-        // Re-rendering the App just means refreshing the statistics,
-        // the rest of the app doesn't change.
-        render: function () {},
-
-
         // Add a single email item to the list by creating a view for it,
         // and appending its element to the `<ul>`.
         addOne: function (email) {
