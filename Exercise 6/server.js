@@ -373,7 +373,7 @@ server.post('/sendmail', function (request, response) {
 
                     // Reply with success to sender, after mail was succesfully sent.
                     // Socket.IO notfications shouldn't slow down the client who sent the mail.
-                    response.end(JSON.stringify({}));
+                    response.end(JSON.stringify({ success: true }));
 
                     // Notify recipient user of new mail, if recipient is logged in.
                     // That is, if it has an active socket.io connection.
