@@ -182,6 +182,15 @@ function parseRequest(req) {
 }
 
 
+// Parse request body as POST, and return an object of { key: value }.
+// NOTE we assume here that request.body is POST.
+exports.parsePostBody = function (request) {
+    return _.object(decodeURIComponent(request.body.replace(/\+/g, ' '))
+                    .split('&')
+                    .map(function(el) { return el.split('='); }));
+};
+
+
 // Server class to be instantiated and returned upon calling createHTTPServer().
 var Server = function (rootFolder) {
     var server = this;  // Reference for use in inner closures.
@@ -510,13 +519,4 @@ util.inherits(Server, events.EventEmitter);
 // Module exports: Function returns a new Server object (defined above).
 exports.createHTTPServer = function (rootFolder) {
     return new Server(rootFolder);
-};
-
-
-// Parse request body as POST, and return an object of { key: value }.
-// NOTE we assume here that request.body is POST.
-exports.parsePostBody = function (request) {
-    return _.object(decodeURIComponent(request.body.replace(/\+/g, ' '))
-                    .split('&')
-                    .map(function(el) { return el.split('='); }));
 };
