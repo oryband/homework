@@ -28,7 +28,7 @@ var app = app || {};
                 }
 
                 // Cache emails to local storage
-                for (var i = 0; i < results.length; ++i) {
+                for (var i=0; i < results.length; i++) {
                     this.localStorage.create(new app.Email(results[i]));
                 }
 
