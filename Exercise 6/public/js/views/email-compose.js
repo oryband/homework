@@ -3,7 +3,7 @@
 var app = app || {};
 
 
-// Email Compose View
+// Email Compose View.
 (function ($) {
     // The DOM element for an email item.
     app.EmailComposeView = Backbone.View.extend({
