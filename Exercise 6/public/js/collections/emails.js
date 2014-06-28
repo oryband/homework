@@ -41,7 +41,7 @@ var app = app || {};
 
         syncWithServer: function (options) {
             Backbone.emulateHTTP = true;
-            Backbone.ajaxSync('update', app.Emails, {success: console.log});
+            Backbone.ajaxSync('update', app.Emails, { success: console.log });
         },
 
 
