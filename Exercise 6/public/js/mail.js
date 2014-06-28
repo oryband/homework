@@ -68,4 +68,22 @@ document.addEventListener('DOMContentLoaded', function () {
     for (i=0; i < emails.length; i++) {
         forEachEmailElement(emails[i]);
     }
+
+
+    // Retry sending unsent (unsuccesful) mails.
+    (function retrySendMails () {
+        // Fetch and clear unsent mails data structure from localStorage.
+        var unsentMails = JSON.parse(localStorage.getItem('unsentMails'));
+        localStorage.setItem('unsentMails', JSON.stringify({}));
+
+        // Iterate all mails and retry sending.
+        if (!_.isEmpty(unsentMails)) {
+            _.each(unsentMails, function (mail, url) {
+                $().sendPost(url, mail);
+            });
+        }
+
+        // Retry sending unsent mails every minute.
+        _.delay(retrySendMails, RETRY_DELAY);
+    })();
 });

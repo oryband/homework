@@ -46,21 +46,37 @@ var app = app || {};
 
 
         createEmail: function () {
-            // submit the form
-            this.$form.submitForm(function () {
-                // close the dialog
-                this.$el.parent().trigger('close');
+            var that = this;
+            function clearDialog () {  // Clear compose dialog.
+                // Close compose dialog.
+                that.$el.parent().trigger('close');
 
-                // save recipient to show in success message
+                // Reset dialog inputs.
+                that.$recipient.val('');
+                that.$subject.val('');
+                that.$body.val('');
+            }
+
+            // Submit the form
+            this.$form.submitForm(function () {
+                // Save recipient to show in success message
                 var recipient = this.$recipient.val();
 
-                // reset the form
-                this.$recipient.val('');
-                this.$subject.val('');
-                this.$body.val('');
+                clearDialog();
 
                 var $success = $('#success');
                 $success.html('Mail was sent successfully to ' + recipient + '!');
+                $success.show();
+                setTimeout(function () {
+                    // hide success message
+                    $success.hide();
+                }.bind(this), 2000);
+            }.bind(this),
+            function () {  // Close compose-mail window also on error (i.e. no internet connection).
+                clearDialog();
+
+                var $success = $('#success');
+                $success.html('Error sending mail. Will retry every minute, and will send once you go online again.');
                 $success.show();
                 setTimeout(function () {
                     // hide success message

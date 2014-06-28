@@ -36,14 +36,8 @@ var app = app || {};
             this.$composeDialog.on('close', this.stopComposing.bind(this));
 
             var socket = io.connect(SOCKETIO_ADDRESS);
-            socket.on('error', function() { console.error(arguments); });
 
-            // Debug messages.
-            // socket.on('message', function() { console.log(arguments); });
-            // socket.on('welcome', function() {
-            //     // Server handhsake is complete.
-            //     console.log('Connected through socket.io');
-            // });
+            socket.on('error', function() { console.error(arguments); });
 
             // Fetch mail id and add collection when receiving new mail.
             socket.on('mail', function(mailId) {
