@@ -418,6 +418,13 @@ server.get('/mail/:id', function (request, response) {
             }
 
             schemas.getSpecificMailToUser(user, mailId, function (mail) {
+                if (!mail) {
+                    var err = 'Mail-id not found: \'' + mailId + '\'';
+                    console.error(err);
+                    response.end(JSON.stringify({ error: err }));
+                    return;
+                }
+
                 response.end(JSON.stringify({success: true, mail: mail}));
             });
         });
