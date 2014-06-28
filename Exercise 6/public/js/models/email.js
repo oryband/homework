@@ -17,7 +17,7 @@ var app = app || {};
         },
 
 
-        // Set the `read` state of this email
+        // Set the `read` state of this email.
         read: function () {
             this.save({ read: true });
         }
