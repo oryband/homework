@@ -1,0 +1,112 @@
+<html manifest="manifest.mf">
+  <head>
+    <title>Readme</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="css/default.css">
+    <style>body { margin: 0 100px; }</style>
+  </head>
+  <body>
+    <h1>Awesome Email App</h1>
+
+    <h2>Functionality</h2>
+
+    <h3>Tester Percpective</h3>
+    <h4>welcome.html</h4>
+    <p>
+      Please surf to <code>http://address:3008/welcome.html</code> and register.
+      Upon registering you'll be redirected to <code>/mail.html</code>.
+      You can now also login using the username and password submitted on registration.
+    </p>
+    <h4>mail.html</h4>
+    <p>
+      Usage is pretty much straighforward, and works as expected.
+      Mail addresses are used without the <code>@bitsplease.com</code> postfix.
+      Just use the username without it when addressing:
+      i.e. try to send to <code>username</code> and not to <code>username@bitsplease.com</code>
+    </p>
+    <p>
+      You can also send yourself an email (or to another user, logged in another computer),
+      and you'll see the email received in the inbox pretty instantly.
+    </p>
+    <p>
+      You're also welcome to disconnect your network connection and try sending mail.
+      It will be actually sent when you reconnect.
+    </p>
+
+    <h3>Developer Percpective</h3>
+
+    <h4>Server-side</h4>
+    <h5>Custom <code>http</code> module</h5>
+    <p>
+      The server is using a custom <code>http</code> module,
+      which was originally used in the previous exercise.
+      It was modified and extended to suit this exercise's needs.
+    </p>
+    <h5>MongoDB Schema Structure</h5>
+    <p>
+      Schemas used are <code>user</code> and <code>mail</code>.
+      Each user document has the expected fields of username, password, first/last name, age, etc.,
+      where the email address is just the <code>username</code> field of the <code>user</code> schema.
+      Mail also has its expected fields of to/from (user document reference),
+      subject, body, and date.
+    </p>
+    <h5>Data Types</h5>
+    <p>Information sent from/to the server uses only JSON objects
+      (except for the HTML responses, of course).</p>
+
+    <h4>Client-side</h4>
+    <h5>Backbone Model Structure</h5>
+    <p>
+      The only model in use is <code>Email</code>,
+      which stores a single mail data.
+
+      An <code>EmailList</code> collection was implemented to store
+      a single user's collection of (inbox) mails.
+    </p>
+    <h5>Socket.IO</h5>
+    <p>
+      A Websocket connection is opened against the server upon a succesful login.
+      In addition, the server stores a user-id hashmap,
+      which is also used to identify Socket.IO connections,
+      and notify users upon receiving new mail.
+    </p>
+    <h5>Custom Serialization Function</h5>
+    <p>
+      A custom <code>serializeObject()</code> function was implemented in
+      <code>public/js/default.js</code>
+      in order to serialize complex objects,
+      so they could be sent properly to the server using JSON requests.
+    </p>
+    <h5>Manifest (AppCache) File</h5>
+    <p>
+      A manifest file is used to cache all <code>.html</code> pages,
+      in addition to all static files in use.
+    </p>
+
+    <h2>Course Remarks</h2>
+    <p>
+      The course was very useful for us, and we really learned a lot.
+    </p>
+
+    <p>
+      Some good stuff:
+      <ol>
+        <li>Refael and Avi were really helpful (and friendly!).</li>
+        <li>Assignment instructions were very thorough and understandable. The links in the assignment were also nice.</li>
+        <li>It was very nice to submit using GitHub and receive remarks using GitHub Issues.</li>
+      </ol>
+    </p>
+
+    <p>
+      Some stuff for improvement <code>:)</code>
+      <ol>
+        <li>The GitHub Issues remarks could probably be a bit more detailed.
+          Some we couldn't understand because no example was given.
+          Perhaps links to specific code lines should be used when opening issues
+          (it's really easy to do with GitHub Issues).</li>
+        <li>There was no exam-mock to prepare for the exam!</li>
+      </ol>
+    </p>
+    </body>
+  </html>

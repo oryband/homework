@@ -2,6 +2,7 @@ CACHE MANIFEST
 
 /welcome.html
 /mail.html
+/readme.html
 
 /js/app.js
 /js/default.js
