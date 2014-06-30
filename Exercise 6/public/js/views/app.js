@@ -52,12 +52,6 @@ var app = app || {};
                     app.Emails.create(mail);
                 }.bind(this), 'json');
             }.bind(this));
-
-            // Fetch emails from server into the local storage
-            app.Emails.fetchFromServer(function () {});
-
-            // Fetch emails from local storage
-            app.Emails.fetch();
         },
 
 

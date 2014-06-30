@@ -12,39 +12,6 @@ var app = app || {};
 
         url: '/mails',
 
-        // Save all of the email items under the `emails` namespace.
-        localStorage: new Backbone.LocalStorage('emails-backbone'),
-
-
-        fetchFromServer: function (callback) {
-            Backbone.emulateHTTP = true;
-
-            // Fetch emails from server.
-            Backbone.ajaxSync('read', app.Emails, {success: function (results) {
-                // When we receive a response, clean the local storage.
-                var model;
-                while ((model = this.shift())) {
-                    this.localStorage.destroy(model);
-                }
-
-                // Cache emails to local storage
-                for (var i=0; i < results.length; i++) {
-                    this.localStorage.create(new app.Email(results[i]));
-                }
-
-                if (callback) {
-                    callback();
-                }
-            }.bind(this)});
-        },
-
-
-        syncWithServer: function (options) {
-            Backbone.emulateHTTP = true;
-            Backbone.ajaxSync('update', app.Emails, { success: console.log });
-        },
-
-
         // Emails are sorted by their original insertion order.
         // We are also sorting by priorities - the higher the better.
         comparator: function (email) {
@@ -56,4 +23,27 @@ var app = app || {};
 
     // Create our global collection of **Emails**.
     app.Emails = new EmailList();
+
+    // in case we are offline, fire a callback that will load emails from
+    // the localStorage, which we update every time we successfully fetch.
+    var offlineTimeout = setTimeout(function () {
+        var emails = JSON.parse(window.localStorage.cachedEmails);
+
+        app.Emails.reset();
+        app.Emails.add(emails);
+    }, 1000);
+
+    // try to fetch emails from server, and save emails to localstorage when
+    // succeeds. also clears the offline load from localstorage method timeout.
+    app.Emails.fetch({success: function(collection, results, options) {
+        // clear offline timeout so we won't fire it if we are online
+        clearTimeout(offlineTimeout);
+
+        // save retrieved emails to local storage
+        window.localStorage.cachedEmails = JSON.stringify(results);
+
+        // reset the emails collection in case the offline timeout fired 
+        // while we are actually offline.
+        app.Emails.reset();
+    }});
 })();
