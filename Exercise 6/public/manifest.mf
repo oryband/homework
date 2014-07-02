@@ -22,7 +22,6 @@ CACHE MANIFEST
 /bower_components/jquery/jquery.js
 /bower_components/underscore/underscore.js
 /bower_components/backbone/backbone.js
-/bower_components/backbone.localStorage/backbone.localStorage.js
 /bower_components/socket.io-client/socket.io.js
 
 /bootstrap/css/bootstrap-theme.css
