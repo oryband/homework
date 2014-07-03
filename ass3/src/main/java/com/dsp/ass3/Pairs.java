@@ -1,255 +1,98 @@
-package com.dsp.ass3;
+package com.dsp.ass2;
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counter;
-import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.core.StopFilter;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.util.CharArraySet;
-import org.apache.lucene.util.Version;
 
 
-public class Count {
+public class Join {
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Count.class.getName()));
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(Join.class.getName()));
 
-    // Google N-Gram reader.
-    public static class MySequenceFileInputFormat extends SequenceFileInputFormat<LongWritable,Text> {}
+    // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
+    public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
-    private static final String ngramDelim = "\t",
-            wordsDelim = " ",
-            wordHeader = "*";
-
-
-    // For every word `w` in n-gram: emit { decade, w, * : c(w) }
-    // For every central word `w` in n-gram: emit { decade, w, wi : c(w,wi) } and { " : c(wi,w) } , i=1..4 (its neithbours)
-    public static class MapClass extends Mapper<LongWritable, Text, Text, LongWritable> {
-
-        private LongWritable num = new LongWritable();  // Holds c(w,wi).
-        private Text newKey = new Text();  // Holds w.
-
-
-        // Returns the same string with stop words & punctuation removed. removed.
-        public String removeStopWords(String words) {
-            CharArraySet stopWords = EnglishAnalyzer.getDefaultStopSet();
-            TokenStream tokenStream = new StandardTokenizer(Version.LUCENE_48, new StringReader(words.trim()));
-            tokenStream = new StopFilter(Version.LUCENE_48, tokenStream, stopWords);
-            CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
-            StringBuilder sb = new StringBuilder();
-            String output;
-
-            try {
-                // Append only non stop words.
-                tokenStream.reset();
-                while (tokenStream.incrementToken()) {
-                    String term = charTermAttribute.toString();
-                    sb.append(term + " ");
-                }
-
-                output = sb.toString().trim();  // Clean trailing whitespace.
-                tokenStream.close();
-            } catch (IOException e) {
-                // On any error, return the original n-gram (and notify user).
-                logger.severe("Error filtering stop words from n-gram: " + words);
-                return words;
-            }
-
-            return output;
-        }
-
+        private Text newKey = new Text(),
+                newValue = new Text();
 
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
-            // Convert n-gram to lowercase, Split into words, and handle <w,wi> pairs.
-            String[] ngram = value.toString().split(ngramDelim),
-                words;
+            // Fetch words from value.
+            String[] words = value.toString().split(Utils.delim);
+            String decade = words[0],
+                   w1 = words[1],
+                   w2 = words[2],
+                   cW1 = words[3],
+                   cW1W2 = words[4];
 
-            String ngramWords = ngram[0].toLowerCase();
+            newValue.set(w1 + Utils.delim + cW1 + Utils.delim + cW1W2);
 
-            words = ngramWords.split(wordsDelim);
-
-            if (ngram.length < 3) {
-                logger.severe("ngram too short: " + ngram.toString());
-                return;
+            // Emit key by lexicographical order.
+            if (w1.compareTo(w2) < 0) {
+                newKey.set(decade + Utils.delim + w1 + Utils.delim + w2);
+            } else {
+                newKey.set(decade + Utils.delim + w2 + Utils.delim + w1);
             }
 
-            int decade = Integer.parseInt(ngram[1]) / 10;
-            long occurences = Long.parseLong(ngram[2]);
+            context.write(newKey, newValue);
+        }
+    }
 
-            if (words.length > 0 && decade >= Utils.minDecade) {
-                // Get central word in n-gram.
-                String centralWord = words[words.length / 2];
 
-                // Remove stop words, count c(w) for every word in pair,
-                // and count pairs only if central word wasn't filtered.
-                // That is - it wasn't a stop word.
-                words = removeStopWords(ngramWords).split(wordsDelim);
+    // Partition by 'decade + w1 + w2' hash code.
+    public static class PartitionerClass extends Partitioner<Text, Text> {
+        @Override
+        public int getPartition(Text key, Text value, int numPartitions) {
+            return (key.hashCode() & Integer.MAX_VALUE) % numPartitions;
+        }
 
-                if (words.length > 0) {
-                    // Count pairs if central word in n-gram was not a stop word.
-                    int centralIndex = Arrays.asList(words).indexOf(centralWord);
-                    boolean countPairs = centralIndex >= 0 ? true : false;
+    }
 
-                    for (int i=0; i < words.length; i++) {
-                        // Emit for every word in n-gram.
-                        num.set(occurences);
 
-                        // Emit c(w) for every word.
-                        newKey.set(decade + Utils.delim + words[i] + Utils.delim + wordHeader);
-                        context.write(newKey, num);
+    // For every <w1,w2> - Write { <decade, w1 ,w2> : c(w1), c(w2), c(w1,w2) }
+    public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
 
-                        // Emit c(w,wi), c(wi,w) for central word, if central word wasn't a stop word.
-                        if (countPairs && i != centralIndex) {
-                            newKey.set(decade + Utils.delim + centralWord + Utils.delim + words[i]);
-                            context.write(newKey, num);
+        private Text newValue = new Text();
 
-                            newKey.set(decade + Utils.delim + words[i] + Utils.delim + centralWord);
-                            context.write(newKey, num);
-                        }
-                    }
+        @Override
+        public void reduce(Text key, Iterable<Text> values, Context context)
+            throws IOException, InterruptedException {
+            String cW1 = "0", cW2 = "0", cW1W2 = "0";
+
+            // Fetch w1, w2, c(w1), c(w2), c(w1,w2).
+            String[] parseKey = key.toString().split(Utils.delim);
+            String w1 = parseKey[1],
+                   w2 = parseKey[2];
+
+            String[] counters;
+            for (Text value : values) {
+                counters = value.toString().split(Utils.delim);
+
+                if (counters[0].equals(w1)) {
+                    cW1 = counters[1];
+                    cW1W2 = counters[2];
+                }
+
+                // If w1 = w2, prevent cases where c(w2) = 0.
+                if (counters[0].equals(w2)) {
+                    cW2 = counters[1];
                 }
             }
-        }
-    }
 
-
-    // Sum every identical count values before sending to reducer.
-    public static class CombineClass extends Reducer<Text, LongWritable, Text, LongWritable> {
-
-        private LongWritable sumWrt = new LongWritable();
-
-        @Override
-        public void reduce(Text key, Iterable<LongWritable> values, Context context)
-            throws IOException, InterruptedException {
-            sumWrt.set(Utils.sumValues(values));
-            context.write(key, sumWrt);
-        }
-    }
-
-
-    // Partition by 'decade + word' hash code.
-    public static class PartitionerClass extends Partitioner<Text, LongWritable> {
-        @Override
-        public int getPartition(Text key, LongWritable value, int numPartitions) {
-            String[] words = key.toString().split(Utils.delim);
-            Text data = new Text(words[0] + Utils.delim + words[1]);
-            // Calculate data's hash code, and bound by Integer maximum value,
-            // then calculate the result(mod numPartition).
-            return (data.hashCode() & Integer.MAX_VALUE) % numPartitions;
-        }
-    }
-
-
-    // If key is 'decade, w, *' Write { decade, w, * : c(w) }
-    // Else key is <w,wi>: Write { <w,wi> : c(w), c(w,wi) }
-    public static class ReduceClass extends Reducer<Text, LongWritable, Text, Text> {
-
-        // Corpus word counter by decade.
-        public static enum N_COUNTER {
-            N_190,  // 1900
-            N_191,  // 1910
-            N_192,
-            N_193,
-            N_194,
-            N_195,
-            N_196,
-            N_197,
-            N_198,
-            N_199,
-            N_200,
-            N_201;  // 2010
-        };
-
-        private long cw;  // c(w)
-
-
-        // Update decade counter.
-        private void updateCounter(String decade, Context context) {
-            N_COUNTER currentDecade = N_COUNTER.valueOf("N_" + decade);
-            Counter counter = null;
-
-            switch (currentDecade) {
-                case N_190:
-                    counter = context.getCounter(N_COUNTER.N_190);
-                    break;
-                case N_191:
-                    counter = context.getCounter(N_COUNTER.N_191);
-                    break;
-                case N_192:
-                    counter = context.getCounter(N_COUNTER.N_192);
-                    break;
-                case N_193:
-                    counter = context.getCounter(N_COUNTER.N_193);
-                    break;
-                case N_194:
-                    counter = context.getCounter(N_COUNTER.N_194);
-                    break;
-                case N_195:
-                    counter = context.getCounter(N_COUNTER.N_195);
-                    break;
-                case N_196:
-                    counter = context.getCounter(N_COUNTER.N_196);
-                    break;
-                case N_197:
-                    counter = context.getCounter(N_COUNTER.N_197);
-                    break;
-                case N_198:
-                    counter = context.getCounter(N_COUNTER.N_198);
-                    break;
-                case N_199:
-                    counter = context.getCounter(N_COUNTER.N_199);
-                    break;
-                case N_200:
-                    counter = context.getCounter(N_COUNTER.N_200);
-                    break;
-                case N_201:
-                    counter = context.getCounter(N_COUNTER.N_201);
-                    break;
-            }
-
-            if (counter != null) {
-                counter.increment(cw);
-            }
-        }
-
-
-        @Override
-        public void reduce(Text key, Iterable<LongWritable> values, Context context)
-            throws IOException, InterruptedException {
-
-            String[] words = key.toString().split(Utils.delim);
-            String decade = words[0],
-                   wi = words[2];
-            long sum = Utils.sumValues(values);
-
-            if (wi.equals(wordHeader)) {
-                // 'decade, w,*' case:
-                cw = sum;
-                updateCounter(decade, context);
-            } else {
-                String val = Long.toString(cw) + Utils.delim + Long.toString(sum);
-                context.write(key, new Text(val));
-            }
+            newValue.set(cW1 + Utils.delim + cW2 + Utils.delim + cW1W2);
+            context.write(key, newValue);
         }
     }
 
@@ -258,55 +101,26 @@ public class Count {
         Configuration conf = new Configuration();
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
 
-        Job job = new Job(conf, "Count");
+        Job job = new Job(conf, "Join");
 
-        // Read from Google N-Gram.
-        job.setInputFormatClass(MySequenceFileInputFormat.class);
-
-        job.setJarByClass(Count.class);
+        job.setJarByClass(Join.class);
         job.setMapperClass(MapClass.class);
-        job.setCombinerClass(CombineClass.class);
         job.setPartitionerClass(PartitionerClass.class);
         job.setReducerClass(ReduceClass.class);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(LongWritable.class);
+        job.setOutputValueClass(Text.class);
 
         FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
         FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 1]));
 
         boolean result = job.waitForCompletion(true);
 
-        // Set decade counters for next job.
+        // Get totalRecords parameter of Count step, and add this (Join) step total records.
         if (result) {
-            Counters counters = job.getCounters();
-            long[] decadeCounters = {
-                counters.findCounter(ReduceClass.N_COUNTER.N_190).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_191).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_192).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_193).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_194).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_195).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_196).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_197).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_198).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_199).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_200).getValue(),
-                counters.findCounter(ReduceClass.N_COUNTER.N_201).getValue()
-            };
-
-            // Write counters to file.
-            StringBuilder sb = new StringBuilder();
-            sb.append("counters" + Utils.delim);
-            for (int i = 0; i < decadeCounters.length; i++) {
-                sb.append(Long.toString(decadeCounters[i])).append(Utils.delim);
-            }
-            sb.append("\n");
-
-            // Write totalRecord from task counter to file, so we could pass it to next steps.
-            long totalRecords = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-            sb.append("totalrecords" + Utils.delim + Long.toString(totalRecords));
-            Utils.uploadToS3(sb.toString(), Utils.countOutput + Utils.countersFileName);
+            long totalRecords = job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+            String info = "totalrecords" + Utils.delim + Long.toString(totalRecords);
+            Utils.uploadToS3(info, Utils.joinOutput + Utils.countersFileName);
         }
 
         System.exit(result ? 0 : 1);
