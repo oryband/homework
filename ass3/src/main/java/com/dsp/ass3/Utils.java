@@ -1,21 +1,13 @@
 package com.dsp.ass3;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.LongWritable;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -32,14 +24,11 @@ public class Utils {
 
     private static final Logger logger = setLogger(Logger.getLogger(Utils.class.getName()));
 
-    public static final String delim = "\t",  // Data delimeter.
-            bucket = "ory-dsp-ass3",
-            s3Uri = "https://s3.amazonaws.com/" + bucket + "/",
-            countOutput =  "steps/Count/output/",
-            countersFileName = "counters.txt",
-
-            mapTasks = "10",
-            reduceTasks = "12";
+    public static final String
+        delim = "\t",  // Data delimeter.
+        joinStart = "*",  // Join start reducer char.
+        bucket = "ory-dsp-ass3",
+        s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
 
     public static final int argInIndex = 1;
 
