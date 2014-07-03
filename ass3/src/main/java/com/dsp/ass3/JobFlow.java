@@ -1,4 +1,4 @@
-package com.dsp.ass2;
+package com.dsp.ass3;
 
 import java.util.logging.Logger;
 
@@ -40,32 +40,16 @@ public class JobFlow {
 
             hadoopOutputFileName = "part-r-*",
 
-            joinClass = "Join",
             countClass = "Count",
-            calculateClass = "Calculate",
-            lastDecadeClass = "LastDecade",
-            fmeasureClass = "FMeasure",
 
             countJarUrl = s3BaseUri + "jars/Count.jar",
-            joinJarUrl = s3BaseUri + "jars/Join.jar",
-            calculateJarUrl = s3BaseUri + "jars/Calculate.jar",
-            lastDecadeJarUrl = s3BaseUri + "jars/LastDecade.jar",
-            fmeasureJarUrl = s3BaseUri + "jars/FMeasure.jar",
 
             countOutput = s3BaseUri + Utils.countOutput,
-            joinOutput = s3BaseUri + Utils.joinOutput,
-            calculateOutput = s3BaseUri + Utils.calculateOutput,
-            lastDecadeOutput = s3BaseUri + Utils.lastDecadeOutput,
-            fmeasureOutput = s3BaseUri + Utils.fmeasureOutput,
 
             // countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
-            countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data",
-            joinInput = s3BaseUri + Utils.countOutput + hadoopOutputFileName,
-            calculateInput = s3BaseUri + Utils.joinOutput + hadoopOutputFileName,
-            lastDecadeInput = s3BaseUri + Utils.joinOutput + hadoopOutputFileName,
-            fmeasureInput = s3BaseUri + Utils.lastDecadeOutput + hadoopOutputFileName;
+            countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data";
 
-    private static int instanceCount = 12;
+    private static int instanceCount = 1;
 
 
     public static void main(String[] args) throws Exception {
@@ -82,52 +66,6 @@ public class JobFlow {
         StepConfig countConfig = new StepConfig()
             .withName(countClass)
             .withHadoopJarStep(countJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set Join job flow step.
-        HadoopJarStepConfig joinJarConfig = new HadoopJarStepConfig()
-            .withJar(joinJarUrl)
-            .withMainClass(joinClass)
-            .withArgs(joinInput, joinOutput);
-
-        StepConfig joinConfig = new StepConfig()
-            .withName(joinClass)
-            .withHadoopJarStep(joinJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set Calculate job flow step.
-        HadoopJarStepConfig calculateJarConfig = new HadoopJarStepConfig()
-            .withJar(calculateJarUrl)
-            .withMainClass(calculateClass)
-            // args[0] is how many top PMI pairs to display.
-            .withArgs(calculateInput, calculateOutput, args[0]);
-
-        StepConfig calculateConfig = new StepConfig()
-            .withName(calculateClass)
-            .withHadoopJarStep(calculateJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set LastDecade job fow step
-        HadoopJarStepConfig lastDecadeJarConfig = new HadoopJarStepConfig()
-            .withJar(lastDecadeJarUrl)
-            .withMainClass(lastDecadeClass)
-            .withArgs(lastDecadeInput, lastDecadeOutput);
-
-        StepConfig lastDecadeConfig = new StepConfig()
-            .withName(lastDecadeClass)
-            .withHadoopJarStep(lastDecadeJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set FMeasure job fow step
-        HadoopJarStepConfig fmeasureJarConfig = new HadoopJarStepConfig()
-            .withJar(fmeasureJarUrl)
-            .withMainClass(fmeasureClass)
-            // args[1] is threshold.
-            .withArgs(fmeasureInput, fmeasureOutput, args[1]);
-
-        StepConfig fmeasureConfig = new StepConfig()
-            .withName(fmeasureClass)
-            .withHadoopJarStep(fmeasureJarConfig)
             .withActionOnFailure(actionOnFailure);
 
         // Set instances.
@@ -153,7 +91,7 @@ public class JobFlow {
             .withBootstrapActions(bootstrapConfig)
             .withLogUri(logUri)
             // Both parts (A+B), all steps.
-            .withSteps(countConfig, joinConfig, calculateConfig, lastDecadeConfig, fmeasureConfig);
+            .withSteps(countConfig);
             // Custom steps.
             // .withSteps(fmeasureConfig);
 

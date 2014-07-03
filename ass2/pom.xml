@@ -93,6 +93,25 @@
           </execution>
 
           <execution>
+            <id>LastDecade</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>com.dsp.ass2.LastDecade</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <finalName>LastDecade</finalName>
+            </configuration>
+          </execution>
+
+          <execution>
             <id>FMeasure</id>
             <phase>package</phase>
             <goals>

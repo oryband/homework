@@ -16,11 +16,12 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
-public class Calculate {
+public class LastDecade {
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Calculate.class.getName()));
+    private static int lastDecade = 200;
+    private static String cLastDecade;
 
-    private static long totalRecords = 0;
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(LastDecade.class.getName()));
 
 
     // Write { <w1,w2> : decade, w1, c(w1), c(w1,w2) }
@@ -28,7 +29,6 @@ public class Calculate {
 
         private DecadePmi decadePmi = new DecadePmi();
         private Text newValue = new Text();
-        private String[] cDecades = new String[12];
 
 
         private static String calculatePMI(double cW1, double cW2, double cW1W2, double N) {
@@ -39,9 +39,7 @@ public class Calculate {
         // Set decade counters.
         @Override
         public void setup(Context context) {
-            for (int i=0; i < cDecades.length; i++) {
-                cDecades[i] = context.getConfiguration().get("N_" + (i + Utils.minDecade), "-1");
-            }
+            cLastDecade = context.getConfiguration().get("N_" + Integer.toString(lastDecade), "-1");
         }
 
 
@@ -51,25 +49,30 @@ public class Calculate {
 
             // Fetch words from value.
             String[] words = value.toString().split(Utils.delim);
-            String decade = words[0],
-                   w1 = words[1],
+            String decade = words[0];
+
+            if (cLastDecade.equals("-1")) {
+                logger.severe("Unsupported decade: " + decade);
+                return;
+            }
+
+            // Skip all pairs from decade before lastDecade.
+            if (Integer.parseInt(decade) != lastDecade) {
+                return;
+            }
+
+            String w1 = words[1],
                    w2 = words[2],
                    cW1 = words[3],
                    cW2 = words[4],
                    cW1W2 = words[5],
-                   cDecade = cDecades[Integer.parseInt(decade) - Utils.minDecade],
                    pmi;
-
-            if (cDecade.equals("-1")) {
-                logger.severe("Unsupported decade: " + decade);
-                return;
-            }
 
             pmi = calculatePMI(
                     Double.parseDouble(cW1),
                     Double.parseDouble(cW2),
                     Double.parseDouble(cW1W2),
-                    Double.parseDouble(cDecade));
+                    Double.parseDouble(cLastDecade));
 
             decadePmi.set(decade, pmi);
             newValue.set(w1 + Utils.delim + w2);
@@ -78,41 +81,29 @@ public class Calculate {
     }
 
 
-    // Partition by decade. That is, each reducer receives keys from a single decade.
-    // If there are more reducers then decades, then these are unused.
+    // Partition by 'decade + pmi + value' hash code.
     public static class PartitionerClass extends Partitioner<DecadePmi, Text> {
         @Override
         public int getPartition(DecadePmi key, Text value, int numPartitions) {
-            return Integer.parseInt(key.decade) % numPartitions;
+            // Calculate data's hash code, and bound by Integer maximum value,
+            // then calculate the result(mod numPartition).
+            Text data = new Text(key.decade + Utils.delim + key.PMI + Utils.delim + value.toString());
+            return (data.hashCode() & Integer.MAX_VALUE) % numPartitions;
         }
     }
 
 
-    // Write top PMI pairs for each decade. That is, write { decade, pmi : w1, w2 }
+    // Write only pairs from decade == lastDecade: That is, write { lastDecade, pmi : w1, w2 }
     public static class ReduceClass extends Reducer<DecadePmi, Text, Text, Text> {
 
         private Text newKey = new Text();
-        private int[] pairsPerDecade = new int[12];  // Counter for remaining pairs for each decade to write.
-
-
-        // Init counter for remaining pairs for each decade.
-        @Override
-        public void setup(Context context) {
-            int pairsNum = Integer.parseInt(context.getConfiguration().get("pairsPerDecade", "-1"));
-            for (int i=0; i < 12; i++) {
-                pairsPerDecade[i] = pairsNum;
-            }
-        }
-
 
         public void reduce(DecadePmi key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
 
-            String decade = key.decade;
             Iterator<Text> it = values.iterator();
 
-            int decadeIndex = Integer.parseInt(decade) - Utils.minDecade;
-            while (pairsPerDecade[decadeIndex] -- > 0 && it.hasNext()) {
+            while (it.hasNext() && Integer.parseInt(key.decade) == lastDecade) {
                 newKey.set(key.decade + Utils.delim + key.PMI);
                 context.write(newKey, it.next());
             }
@@ -124,13 +115,12 @@ public class Calculate {
         Configuration conf = new Configuration();
         conf.set("mapred.reduce.tasks", Utils.reduceTasks);
         conf.set("mapred.reduce.slowstart.completed.maps", "1");
-        conf.set("pairsPerDecade", args[Utils.argInIndex + 2]);
 
-        totalRecords = Utils.updateCounters(conf);
+        Utils.updateCounters(conf);
 
-        Job job = new Job(conf, "Calculate");
+        Job job = new Job(conf, "LastDecade");
 
-        job.setJarByClass(Calculate.class);
+        job.setJarByClass(LastDecade.class);
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
         job.setReducerClass(ReduceClass.class);
@@ -143,19 +133,6 @@ public class Calculate {
         FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
         FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 1]));
 
-        boolean result = job.waitForCompletion(true);
-
-        // Get totalRecords counter from Count & Join steps,
-        // add this step (Calculate) records to it,
-        // and upload final counters to S3.
-        // NOTE This isn't necessary when using LastDecadeReduceClass.
-        if (result) {
-            long calculateTotalRecords = job.getCounters()
-                .findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
-            String info = "totalrecords" + Utils.delim + Long.toString(totalRecords + calculateTotalRecords);
-            Utils.uploadToS3(info, Utils.calculateOutput + Utils.countersFileName);
-        }
-
-        System.exit(result ? 0 : 1);
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 }
