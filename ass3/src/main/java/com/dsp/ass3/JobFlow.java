@@ -47,7 +47,7 @@ public class JobFlow {
             countOutput = s3BaseUri + Utils.countOutput,
 
             // countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
-            countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data",
+            countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data";
 
     private static int instanceCount = 1;
 
