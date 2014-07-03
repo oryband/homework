@@ -40,14 +40,14 @@ public class JobFlow {
 
             hadoopOutputFileName = "part-r-*",
 
-            countClass = "Count",
+            pairsClass = "Pairs",
 
-            countJarUrl = s3BaseUri + "jars/Count.jar",
+            pairsJarUrl = s3BaseUri + "jars/Pairs.jar",
 
-            countOutput = s3BaseUri + Utils.countOutput,
+            // pairsInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
+            pairsInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data",
 
-            // countInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
-            countInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data";
+            pairsOutput = s3BaseUri + "steps/pairs/output/";
 
     private static int instanceCount = 1;
 
@@ -57,15 +57,15 @@ public class JobFlow {
         AWSCredentials credentials = Utils.loadCredentials();
         AmazonElasticMapReduce mapReduce = new AmazonElasticMapReduceClient(credentials);
 
-        // Set Count job flow step.
-        HadoopJarStepConfig countJarConfig = new HadoopJarStepConfig()
-            .withJar(countJarUrl)
-            .withMainClass(countClass)
-            .withArgs(countInput, countOutput);
+        // Set Pairs job flow step.
+        HadoopJarStepConfig pairsJarConfig = new HadoopJarStepConfig()
+            .withJar(pairsJarUrl)
+            .withMainClass(pairsClass)
+            .withArgs(pairsInput, pairsOutput);
 
-        StepConfig countConfig = new StepConfig()
-            .withName(countClass)
-            .withHadoopJarStep(countJarConfig)
+        StepConfig pairsConfig = new StepConfig()
+            .withName(pairsClass)
+            .withHadoopJarStep(pairsJarConfig)
             .withActionOnFailure(actionOnFailure);
 
         // Set instances.
@@ -91,7 +91,7 @@ public class JobFlow {
             .withBootstrapActions(bootstrapConfig)
             .withLogUri(logUri)
             // Both parts (A+B), all steps.
-            .withSteps(countConfig);
+            .withSteps(pairsConfig);
             // Custom steps.
             // .withSteps(fmeasureConfig);
 
