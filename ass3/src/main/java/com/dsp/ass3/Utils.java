@@ -30,7 +30,7 @@ public class Utils {
         bucket = "ory-dsp-ass3",
         s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
 
-    public static final int argInIndex = 1;
+    public static final int argInIndex = 0;  // Use =0 for local testing, =1 for AWS.
 
 
     // Makes a putObjectRequest to make file public, and sends request.
