@@ -17,11 +17,10 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class Pairs {
 
+    private static String inputDelim = "\t";  // Input delimeter.
+
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Pairs.class.getName()));
 
-    private static String
-        delim = "\t",
-        joinStart = "*";  // Join start reducer char.
 
     // Write { (N1, N2), * : True/False, HypernymIndex }  -- (Hypernym Index in pair array).
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
@@ -34,7 +33,7 @@ public class Pairs {
             throws IOException, InterruptedException {
 
             // Fetch pairs and tag from value.
-            String[] words = value.toString().split(delim);
+            String[] words = value.toString().split(inputDelim);
             String hyponym = words[0],
                    hypernym = words[1],
                    related = words[2];  // True/False
@@ -42,13 +41,13 @@ public class Pairs {
 
             // Emit key by lexicographical order.
             if (hyponym.compareTo(hypernym) < 0) {
-                newKey.set(hyponym + delim + hypernym + delim + joinStart);
+                newKey.set(hyponym + Utils.delim + hypernym + Utils.delim + Utils.joinStart);
                 // 1 is the hypernym index in the pair. That is, the second word when sorted lexi.
-                newValue.set(related + delim + 1);
+                newValue.set(related + Utils.delim + 1);
             } else {
-                newKey.set(hypernym + delim + hyponym + delim + joinStart);
+                newKey.set(hypernym + Utils.delim + hyponym + Utils.delim + Utils.joinStart);
                 // 1 is the hypernym index in the pair. That is, the first word when sorted lexi.
-                newValue.set(related + delim + 0);
+                newValue.set(related + Utils.delim + 0);
             }
 
             context.write(newKey, newValue);
@@ -73,6 +72,7 @@ public class Pairs {
         public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
 
+            // We assume each pair has only one instance in input, we filter duplicates otherwise.
             context.write(key, values.iterator().next());
         }
     }

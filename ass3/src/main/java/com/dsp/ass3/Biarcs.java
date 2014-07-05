@@ -18,8 +18,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class Biarcs {
     private static final String
-        delim = " ",
-        biarcDelim = "\t",
         tokenDelim = " ",
         splitTokenDelim = "/",
         nounWildcard = "*";
@@ -29,6 +27,8 @@ public class Biarcs {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Biarcs.class.getName()));
 
+
+    // Write { (N1, N2), i1, i2 : dep-tree, total-count }
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
         private Text newKey = new Text(),
@@ -39,7 +39,7 @@ public class Biarcs {
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
-            String[] ngram = value.toString().split(biarcDelim),
+            String[] ngram = value.toString().split(Utils.biarcDelim),
                 tokens;
 
             String syntacticNgram = ngram[1];
@@ -76,12 +76,12 @@ public class Biarcs {
                 }
 
                 if (i != tokens.length -1) {
-                    sb.append(biarcDelim);
+                    sb.append(Utils.delim);
                 }
             }
 
             // Append ngram total count.
-            sb.append(biarcDelim + ngram[2]);
+            sb.append(Utils.biarcDelim + ngram[2]);
 
             // Do nothing if this biarc has less than 2 nouns.
             if (nc < 2) {
@@ -98,9 +98,9 @@ public class Biarcs {
                     for (j = i+1; j < nouns.length; j++) {
                         if (nouns[j] != null) {
                             if (nouns[i].compareTo(nouns[j]) < 0) {
-                                newKey.set(nouns[i] + delim + nouns[j] + i + delim + j);
+                                newKey.set(nouns[i] + Utils.delim + nouns[j] + Utils.delim + i + Utils.delim + j);
                             } else {
-                                newKey.set(nouns[j] + delim + nouns[i] + j + delim + i);
+                                newKey.set(nouns[j] + Utils.delim + nouns[i] + Utils.delim + j + Utils.delim + i);
                             }
 
                             context.write(newKey, newValue);
@@ -129,6 +129,7 @@ public class Biarcs {
         public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
 
+            // Each (N1, N2) can have multiple dep-trees.
             for (Text value : values) {
                 context.write(key, value);
             }
