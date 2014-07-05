@@ -20,6 +20,7 @@ public class Pairs {
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Pairs.class.getName()));
 
     private static String
+        pairsDelim = "\t",
         joinStart = "*";  // Join start reducer char.
 
     // Write { (N1, N2), * : True/False, HypernymIndex }  -- (Hypernym Index in pair array).
@@ -33,7 +34,7 @@ public class Pairs {
             throws IOException, InterruptedException {
 
             // Fetch pairs and tag from value.
-            String[] words = value.toString().split(Utils.delim);
+            String[] words = value.toString().split(pairsDelim);
             String hyponym = words[0],
                    hypernym = words[1],
                    related = words[2];  // True/False
