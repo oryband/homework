@@ -12,6 +12,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
@@ -22,6 +23,9 @@ public class Biarcs {
         tokenDelim = " ",
         splitTokenDelim = "/",
         nounWildcard = "*";
+
+    // Ngram reader.
+    public static class MySequenceFileInputFormat extends SequenceFileInputFormat<LongWritable, Text> {}
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Biarcs.class.getName()));
 
@@ -136,6 +140,8 @@ public class Biarcs {
         Configuration conf = new Configuration();
 
         Job job = new Job(conf, "Biarcs");
+
+        job.setInputFormatClass(MySequenceFileInputFormat.class);
 
         job.setJarByClass(Biarcs.class);
         job.setMapperClass(MapClass.class);
