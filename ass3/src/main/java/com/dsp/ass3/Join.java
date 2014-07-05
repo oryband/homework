@@ -56,14 +56,15 @@ public class Join {
     }
 
 
-    // Reducer just passes on data.
-    public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
+    // Write { dep-tree, current-hypernym-index, current-hyponym-index : score }
+                        // Key := .
+    public static class ReduceClass extends Reducer<Text, Text, Text, LongWritable> {
         private String nounPair = null;
         private short hypernymIndex;
         private boolean related;
 
-        private Text newKey = new Text(),
-             newValue = new Text();
+        private Text newKey = new Text();
+        private LongWritable newValue = new LongWritable();
 
 
         @Override
@@ -95,9 +96,6 @@ public class Join {
                         // because they have the same key: (N1, N2).
                         v = value.toString().split(Utils.biarcDelim);
 
-                        // Key := dep-tree.
-                        newKey.set(v[0]);
-
                         // Init dep-tree count score (for trainig algorithm).
                         // Note we give a negative score for unrelated pairs.
                         depTreeScore = (related ? 1 : -1) * Long.parseLong((v[1]));
@@ -111,9 +109,11 @@ public class Join {
                             curHyponymIndex = k[2];
                         }
 
-                        // Value := score, hypernym-index, hyponym-index.
-                        newValue.set(String.valueOf(depTreeScore) + Utils.delim
-                                + curHypernymIndex + Utils.delim + curHyponymIndex);
+                        // Key := dep-tree, current-hypernym-index, current-hyponym-index.
+                        newKey.set(v[0] + Utils.biarcDelim + curHypernymIndex + Utils.delim + curHyponymIndex);
+
+                        // Value := score.
+                        newValue.set(depTreeScore);
 
                         context.write(newKey, newValue);
                     }

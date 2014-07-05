@@ -14,26 +14,28 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-import com.dsp.ass2.Utils;
+
+public class SumScore {
+
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(SumScore.class.getName()));
 
 
-public class Sum {
+    // Mapper just passes on data.
+    public static class MapClass extends Mapper<LongWritable, Text, Text, LongWritable> {
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Sum.class.getName()));
-
-    public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
-
-        private Text newKey = new Text(),
-                newValue = new Text();
+        private Text newKey = new Text();
+        private LongWritable newValue = new LongWritable();
 
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
-            // Fetch pairs and tag from value.
-            String[] words = value.toString().split(Utils.keyValueDelim);
-            newKey.set(words[0]);
-            newValue.set(words[1]);
+            // Fetch key/value and emit them.
+            String v = value.toString();
+            int i = v.lastIndexOf(Utils.keyValueDelim);
+
+            newKey.set(v.substring(0, i));
+            newValue.set(Long.parseLong(v.substring(i+1)));
 
             context.write(newKey, newValue);
         }
@@ -41,31 +43,52 @@ public class Sum {
 
 
     // Partition by key hash code.
-    public static class PartitionerClass extends Partitioner<Text, Text> {
+    public static class PartitionerClass extends Partitioner<Text, LongWritable> {
         @Override
-        public int getPartition(Text key, Text value, int numPartitions) {
+        public int getPartition(Text key, LongWritable value, int numPartitions) {
             return (key.hashCode() & Integer.MAX_VALUE) % numPartitions;
         }
-
     }
 
 
-    // Reducer just passes on data.
-    public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
+    // Sum score for each dep-tree and write { dep-tree, hypernym-index, hyponym-index : score }
+    public static class ReduceClass extends Reducer<Text, LongWritable, Text, LongWritable> {
 
-        private Text newValue = new Text();
-        private int DPMin = 0;
+        private LongWritable newValue = new LongWritable();
+        private int DpMin;
 
+        // Init DPMin argument.
         @Override
         public void setup(Context context) {
-            context.getConfiguration().get("DPMin", "-1");
+            DpMin = Integer.parseInt(context.getConfiguration().get(Utils.DpMinArg, "-1"));
+            if (DpMin == -1) {
+                logger.severe("Failed fetching DPMin argument.");
+                return;
+            }
         }
 
+
         @Override
-        public void reduce(Text key, Iterable<Text> values, Context context)
+        public void reduce(Text key, Iterable<LongWritable> values, Context context)
             throws IOException, InterruptedException {
 
-            context.write(key, values.iterator().next());
+            // Calculate values length.
+            long l = 0,
+                 sum = 0;
+            for (LongWritable value : values) {
+                l++;
+                sum += value.get();
+            }
+
+            // Ignore dep-tree if it doesn't match to enough distinct noun-pairs.
+            if (l < DpMin) {
+                return;
+            }
+
+            // Set value to sum of values.
+            newValue.set(sum);
+
+            context.write(key, newValue);
         }
     }
 
@@ -73,7 +96,9 @@ public class Sum {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
-        Job job = new Job(conf, "Sum");
+        conf.set(Utils.DpMinArg, args[Utils.argInIndex + 2]);
+
+        Job job = new Job(conf, "SumScore");
 
         job.setJarByClass(Pairs.class);
         job.setMapperClass(MapClass.class);
@@ -81,7 +106,7 @@ public class Sum {
         job.setReducerClass(ReduceClass.class);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+        job.setOutputValueClass(LongWritable.class);
 
         FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
         FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 1]));

@@ -9,6 +9,8 @@ import java.io.Writer;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
+import org.apache.hadoop.io.LongWritable;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
@@ -26,6 +28,8 @@ public class Utils {
         keyValueDelim = "\t",
         joinStart = "*",  // Join start reducer char.
         biarcDelim = "\t",
+
+        DpMinArg = "DPMin",
 
         bucket = "ory-dsp-ass3",
         s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
@@ -152,5 +156,15 @@ public class Utils {
             logger.severe(e.getMessage());
             return null;
         }
+    }
+
+
+    // Sum all members in list.
+    public static long sumValues(Iterable<LongWritable> values) {
+        long sum = 0;
+        for (LongWritable value : values) {
+            sum += value.get();
+        }
+        return sum;
     }
 }
