@@ -38,7 +38,7 @@ public class Join {
             int i = v.indexOf(Utils.keyValueDelim);
 
             newKey.set(v.substring(0, i));
-            newValue.set(v.substring(i));
+            newValue.set(v.substring(i+1));  // +1 to exclude the prefix '\t' char.
 
             context.write(newKey, newValue);
         }
@@ -136,6 +136,8 @@ public class Join {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
+        // Add all but last argument as input path.
+        // TODO Can this cause bugs when running on AWS?
         for (int i=0; i < args.length -1; i++) {
             FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
         }
