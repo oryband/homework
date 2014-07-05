@@ -28,6 +28,8 @@ public class Biarcs {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Biarcs.class.getName()));
 
+
+    // Write { (N1, N2), i1, i2 : dep-tree, total-count }
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
         private Text newKey = new Text(),
@@ -128,6 +130,7 @@ public class Biarcs {
         public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
 
+            // Each (N1, N2) can have multiple dep-trees.
             for (Text value : values) {
                 context.write(key, value);
             }

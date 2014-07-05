@@ -73,6 +73,7 @@ public class Pairs {
         public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
 
+            // We assume each pair has only one instance in input, we filter duplicates otherwise.
             context.write(key, values.iterator().next());
         }
     }
