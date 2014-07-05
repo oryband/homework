@@ -19,6 +19,10 @@ public class Pairs {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Pairs.class.getName()));
 
+    private static String
+        delim = "\t",
+        joinStart = "*";  // Join start reducer char.
+
     // Write { (N1, N2), * : True/False, HypernymIndex }  -- (Hypernym Index in pair array).
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
@@ -30,7 +34,7 @@ public class Pairs {
             throws IOException, InterruptedException {
 
             // Fetch pairs and tag from value.
-            String[] words = value.toString().split(Utils.delim);
+            String[] words = value.toString().split(delim);
             String hyponym = words[0],
                    hypernym = words[1],
                    related = words[2];  // True/False
@@ -38,13 +42,13 @@ public class Pairs {
 
             // Emit key by lexicographical order.
             if (hyponym.compareTo(hypernym) < 0) {
-                newKey.set(hyponym + Utils.delim + hypernym + Utils.delim + Utils.joinStart);
+                newKey.set(hyponym + delim + hypernym + delim + joinStart);
                 // 1 is the hypernym index in the pair. That is, the second word when sorted lexi.
-                newValue.set(related + Utils.delim + 1);
+                newValue.set(related + delim + 1);
             } else {
-                newKey.set(hypernym + Utils.delim + hyponym + Utils.delim + Utils.joinStart);
+                newKey.set(hypernym + delim + hyponym + delim + joinStart);
                 // 1 is the hypernym index in the pair. That is, the first word when sorted lexi.
-                newValue.set(related + Utils.delim + 0);
+                newValue.set(related + delim + 0);
             }
 
             context.write(newKey, newValue);

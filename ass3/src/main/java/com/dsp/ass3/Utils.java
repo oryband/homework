@@ -25,8 +25,6 @@ public class Utils {
     private static final Logger logger = setLogger(Logger.getLogger(Utils.class.getName()));
 
     public static final String
-        delim = "\t",  // Data delimeter.
-        joinStart = "*",  // Join start reducer char.
         bucket = "ory-dsp-ass3",
         s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
 
