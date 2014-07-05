@@ -18,7 +18,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class Biarcs {
     private static final String
-        biarcDelim = "\t",
         tokenDelim = " ",
         splitTokenDelim = "/",
         nounWildcard = "*";
@@ -40,7 +39,7 @@ public class Biarcs {
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
-            String[] ngram = value.toString().split(biarcDelim),
+            String[] ngram = value.toString().split(Utils.biarcDelim),
                 tokens;
 
             String syntacticNgram = ngram[1];
@@ -82,7 +81,7 @@ public class Biarcs {
             }
 
             // Append ngram total count.
-            sb.append(biarcDelim + ngram[2]);
+            sb.append(Utils.biarcDelim + ngram[2]);
 
             // Do nothing if this biarc has less than 2 nouns.
             if (nc < 2) {
