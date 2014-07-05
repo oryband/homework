@@ -25,6 +25,7 @@ public class Utils {
     private static final Logger logger = setLogger(Logger.getLogger(Utils.class.getName()));
 
     public static final String
+        delim = " ",  // Data delimeter.
         bucket = "ory-dsp-ass3",
         s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
 

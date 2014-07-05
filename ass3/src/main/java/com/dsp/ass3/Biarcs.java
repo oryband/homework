@@ -18,7 +18,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class Biarcs {
     private static final String
-        delim = " ",
         biarcDelim = "\t",
         tokenDelim = " ",
         splitTokenDelim = "/",
@@ -76,7 +75,7 @@ public class Biarcs {
                 }
 
                 if (i != tokens.length -1) {
-                    sb.append(biarcDelim);
+                    sb.append(Utils.delim);
                 }
             }
 
@@ -98,9 +97,9 @@ public class Biarcs {
                     for (j = i+1; j < nouns.length; j++) {
                         if (nouns[j] != null) {
                             if (nouns[i].compareTo(nouns[j]) < 0) {
-                                newKey.set(nouns[i] + delim + nouns[j] + i + delim + j);
+                                newKey.set(nouns[i] + Utils.delim + nouns[j] + Utils.delim + i + Utils.delim + j);
                             } else {
-                                newKey.set(nouns[j] + delim + nouns[i] + j + delim + i);
+                                newKey.set(nouns[j] + Utils.delim + nouns[i] + Utils.delim + j + Utils.delim + i);
                             }
 
                             context.write(newKey, newValue);
