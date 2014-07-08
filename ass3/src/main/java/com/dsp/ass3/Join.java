@@ -56,15 +56,16 @@ public class Join {
     }
 
 
-    // Write { dep-tree, current-hypernym-index, current-hyponym-index : score }
-                        // Key := .
-    public static class ReduceClass extends Reducer<Text, Text, Text, LongWritable> {
+    // Write { (N1, N2), hypernym-index, un/related, dep-tree, d-t-hypernym-index, d-t-hyponym-index : hits }
+    // Where: hypernym-index stands for which of the two nouns is the hypernym.
+    //        'd-t' stands for 'dep-tree'.
+    public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
         private String nounPair = null;
         private short hypernymIndex;
         private boolean related;
 
-        private Text newKey = new Text();
-        private LongWritable newValue = new LongWritable();
+        private Text newKey = new Text(),
+                newValue = new Text();
 
 
         @Override
@@ -87,9 +88,10 @@ public class Join {
                 // or an untagged one, which we can't learn from.
 
                 // Fetch dep-tree and calculate score if this belongs to a tagged noun-pair.
+                // Else (untagged pair) ignore this pair and do nothing.
                 if ((k[0] + Utils.delim + k[1]).equals(nounPair)) {
-                    long depTreeScore;
-                    String curHypernymIndex, curHyponymIndex;  // CURRENT *nym index.
+                    long hits;
+                    String dtHypernymIndex, dtHyponymIndex;  // CURRENT *nym index.
 
                     for (Text value : values) {
                         // Join current dep-tree with noun-pair,
@@ -98,22 +100,25 @@ public class Join {
 
                         // Init dep-tree count score (for trainig algorithm).
                         // Note we give a negative score for unrelated pairs.
-                        depTreeScore = (related ? 1 : -1) * Long.parseLong((v[1]));
+                        hits = Long.parseLong(v[1]);
 
                         // Init *nym index.
                         if (hypernymIndex == 0) {
-                            curHypernymIndex = k[2];
-                            curHyponymIndex = k[3];
+                            dtHypernymIndex = k[2];
+                            dtHyponymIndex = k[3];
                         } else {
-                            curHypernymIndex = k[3];
-                            curHyponymIndex = k[2];
+                            dtHypernymIndex = k[3];
+                            dtHyponymIndex = k[2];
                         }
 
-                        // Key := dep-tree, current-hypernym-index, current-hyponym-index.
-                        newKey.set(v[0] + Utils.biarcDelim + curHypernymIndex + Utils.delim + curHyponymIndex);
+                        // Key := noun-pair, hypernym-index.
+                        newKey.set(nounPair + Utils.delim + hypernymIndex);
 
-                        // Value := score.
-                        newValue.set(depTreeScore);
+                        // Value := un/related, dep-tree, d-t-hypernym-index, d-t-hyponym-index, hits.
+                        newValue.set(related
+                                + Utils.biarcDelim + v[0]
+                                + Utils.biarcDelim + dtHypernymIndex + Utils.delim + dtHyponymIndex
+                                + Utils.delim + hits);
 
                         context.write(newKey, newValue);
                     }
@@ -125,6 +130,12 @@ public class Join {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
+
+        // Set key/value seperator from '\t' to ' '.
+        // TODO This might not be the correct value to set.
+        // I've starred a question regarding this on stackoverflow.com. Check it out.
+        // conf.set("mapred.textoutputformat.separator", " ");
+        // conf.set("mapreduce.textoutputformat.separator", " ");
 
         Job job = new Job(conf, "Join");
 
