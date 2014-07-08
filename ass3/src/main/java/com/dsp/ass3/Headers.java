@@ -57,6 +57,7 @@ public class Headers {
     // ONLY for tagged noun-pairs.
     public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
         private String nounPair = null;
+        private short hypernymIndex;  // Hypernym noun index in noun-pair.
 
         private Text newKey = new Text(),
                 empty = new Text("");
@@ -73,6 +74,9 @@ public class Headers {
             // Init new tagged noun pair (N1, N2).
             if (k[2].equals(Utils.joinStart)) {
                 nounPair = k[0] + Utils.delim + k[1];
+
+                v = values.iterator().next().toString().split(Utils.delim);
+                hypernymIndex = Short.parseShort(v[1]);
             } else {
                 // This is not a new noun-pair,
                 // or an untagged one, which we can't learn from.
@@ -80,13 +84,25 @@ public class Headers {
                 // Fetch dep-tree and calculate score if this belongs to a tagged noun-pair.
                 // Else (untagged pair) ignore this pair and do nothing.
                 if ((k[0] + Utils.delim + k[1]).equals(nounPair)) {
+                    String dtHypernymIndex, dtHyponymIndex;  // CURRENT *nym index.
+
                     for (Text value : values) {
+                        // Init *nym index.
+                        if (hypernymIndex == 0) {
+                            dtHypernymIndex = k[2];
+                            dtHyponymIndex = k[3];
+                        } else {
+                            dtHypernymIndex = k[3];
+                            dtHyponymIndex = k[2];
+                        }
+
                         // Join current dep-tree with noun-pair,
                         // because they have the same key: (N1, N2).
                         v = value.toString().split(Utils.biarcDelim);
 
-                        // Key := dep-tree.
-                        newKey.set(v[0]);
+                        // Key := dep-tree --- wrapped in quotes with special chars escaping.
+                        newKey.set(weka.core.Utils.quote(
+                                    v[0] + Utils.delim + dtHypernymIndex + Utils.delim + dtHyponymIndex));
 
                         // Value := ""
                         context.write(newKey, empty);
@@ -99,12 +115,6 @@ public class Headers {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-
-        // Set key/value seperator from '\t' to ' '.
-        // TODO This might not be the correct value to set.
-        // I've starred a question regarding this on stackoverflow.com. Check it out.
-        // conf.set("mapred.textoutputformat.separator", " ");
-        // conf.set("mapreduce.textoutputformat.separator", " ");
 
         Job job = new Job(conf, "Headers");
 
