@@ -16,8 +16,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
 public class Headers {
-    private static String attributeHeader = "@ATTRIBUTE",
-            attributeType = "INTEGER";
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Headers.class.getName()));
 
@@ -67,8 +65,7 @@ public class Headers {
     }
 
 
-    // Write @ATTRIBUTE 'dep-tree' IINTEGER for every dep-tree.
-    // FILTER by DpMin.
+    // Write { dep-tree, i1, i2 : <nothing> } and FILTER by DpMin.
     public static class ReduceClass extends Reducer<Text, LongWritable, Text, Text> {
         private int DpMin;
 
