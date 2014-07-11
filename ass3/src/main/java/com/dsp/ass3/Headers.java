@@ -44,13 +44,11 @@ public class Headers {
     }
 
 
-    // Partition by NOUNS-in-key hash code.
-    public static class PartitionerClass extends Partitioner<Text, Text> {
+    // Partition by key hash code.
+    public static class PartitionerClass extends Partitioner<Text, LongWritable> {
         @Override
-        public int getPartition(Text key, Text value, int numPartitions) {
-            String[] words = key.toString().split(Utils.delim);
-            Text data = new Text(words[0] + Utils.delim + words[1]);
-            return (data.hashCode() & Integer.MAX_VALUE) % numPartitions;
+        public int getPartition(Text key, LongWritable value, int numPartitions) {
+            return (key.hashCode() & Integer.MAX_VALUE) % numPartitions;
         }
     }
 
@@ -121,6 +119,9 @@ public class Headers {
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(LongWritable.class);
 
         FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
         FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +1]));
