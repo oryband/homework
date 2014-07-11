@@ -105,9 +105,7 @@ public class Headers {
 
         // Read DpMin argument.
         // Use this for local testing.
-        conf.set(Utils.DpMinArg, args[args.length -1]);
-
-        // Use this for AWS.
+        // TODO Need another argument for AWS.
         conf.set(Utils.DpMinArg, args[args.length -1]);
 
         Job job = new Job(conf, "Headers");
