@@ -49,9 +49,9 @@ public class JobFlow {
             joinOutput = s3BaseUri + "steps/join/output/",
 
             pairsInput = s3BaseUri + "steps/pairs/input/hypernym.txt",
-            biarcsInputPrefix = "s3n://bgudsp142/syntactic-ngram/biarcs/biarcs.",
-            joinInput1 = s3BaseUri + pairsOutput + hadoopOutputFileName,
-            joinInput2 = s3BaseUri + biarcsOutput + hadoopOutputFileName;
+            biarcsInputPrefix = "https://s3.amazonaws.com/bgudsp142/syntactic-ngram/biarcs/biarcs.",
+            joinInput1 = pairsOutput + hadoopOutputFileName,
+            joinInput2 = biarcsOutput + hadoopOutputFileName;
 
     private static int instanceCount = 12;
 
@@ -112,10 +112,9 @@ public class JobFlow {
             .withAmiVersion(amiVersion)
             .withInstances(instances)
             .withLogUri(logUri)
-            // Both parts (A+B), all steps.
-            .withSteps(pairsConfig, biarcsConfig, joinConfig);
+            // .withSteps(pairsConfig, biarcsConfig, joinConfig);
             // Custom steps.
-            // .withSteps(biarcsConfig, joinConfig);
+            .withSteps(biarcsConfig, joinConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
