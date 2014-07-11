@@ -109,7 +109,11 @@ public class Headers {
         Configuration conf = new Configuration();
 
         // Read DpMin argument.
-        conf.set(Utils.DpMinArg, args[Utils.argInIndex +2]);
+        // Use this for local testing.
+        conf.set(Utils.DpMinArg, args[args.length -1]);
+
+        // Use this for AWS.
+        conf.set(Utils.DpMinArg, args[args.length -1]);
 
         Job job = new Job(conf, "Headers");
 
@@ -125,8 +129,17 @@ public class Headers {
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(LongWritable.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
-        FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +1]));
+        // Use this for local testing.
+        // Add all but last argument as input path.
+        for (int i=0; i < args.length -2; i++) {
+            FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
+        }
+        FileOutputFormat.setOutputPath(job, new Path(args[args.length -2]));
+
+        // Use this for AWS.
+        // NOTE we use two different input paths in here.
+        // FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
+        // FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +1]));
 
         boolean result = job.waitForCompletion(true);
 
