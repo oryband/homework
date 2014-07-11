@@ -148,7 +148,6 @@ public class Join {
         job.setOutputValueClass(Text.class);
 
         // Add all but last argument as input path.
-        // TODO Can this cause bugs when running on AWS?
         for (int i=0; i < args.length -1; i++) {
             FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
         }
