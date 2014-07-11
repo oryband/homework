@@ -16,6 +16,9 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
 public class Headers {
+    private static String attributeHeader = "@ATTRIBUTE",
+            attributeType = "INTEGER";
+
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Headers.class.getName()));
 
 
@@ -101,8 +104,10 @@ public class Headers {
                         v = value.toString().split(Utils.biarcDelim);
 
                         // Key := dep-tree --- wrapped in quotes with special chars escaping.
-                        newKey.set(weka.core.Utils.quote(
-                                    v[0] + Utils.delim + dtHypernymIndex + Utils.delim + dtHyponymIndex));
+                        newKey.set(attributeHeader
+                                + Utils.delim + weka.core.Utils.quote(
+                                    v[0] + Utils.delim + dtHypernymIndex + Utils.delim + dtHyponymIndex)
+                                + Utils.delim + attributeType);
 
                         // Value := ""
                         context.write(newKey, empty);
