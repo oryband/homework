@@ -155,7 +155,7 @@ public class Biarcs {
         // Add all but last argument as input path,
         // and append biarcs file postfix.
         String biarc;
-        for (int i=0; i < 100; i++) {
+        for (int i=0; i < 99; i++) {
             biarc = i <= 9 ? "0" + i : String.valueOf(i);
             FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex] + biarc + "-of-99"));
         }
