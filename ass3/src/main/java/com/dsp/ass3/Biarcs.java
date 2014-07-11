@@ -152,7 +152,14 @@ public class Biarcs {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
+        // Add all but last argument as input path,
+        // and append biarcs file postfix.
+        String biarc;
+        for (int i=0; i < 100; i++) {
+            biarc = i <= 9 ? "0" + i : String.valueOf(i);
+            FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex] + biarc + "-of-99"));
+        }
+
         FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 1]));
 
         boolean result = job.waitForCompletion(true);
