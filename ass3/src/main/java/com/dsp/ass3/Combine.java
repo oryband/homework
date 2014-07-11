@@ -31,8 +31,7 @@ public class Combine {
 
             // Fetch key/value and emit them.
             String v = value.toString();
-            int i = v.indexOf(Utils.keyValueDelim);
-
+            int i = v.indexOf(Utils.keyValueDelim, v.indexOf(Utils.keyValueDelim) + 1);
             newKey.set(v.substring(0, i));
             newValue.set(v.substring(i+1));
 

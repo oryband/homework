@@ -1,11 +1,16 @@
 package com.dsp.ass3;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 
@@ -166,5 +171,54 @@ public class Utils {
             sum += value.get();
         }
         return sum;
+    }
+
+    // Read URL and return result as string.
+    public static String LinkToString(String link) {
+        URL url;
+        String line;
+        StringBuilder content = new StringBuilder();
+        InputStream is;
+        BufferedReader br;
+
+        try {
+            url = new URL(link);
+        } catch (MalformedURLException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        try {
+            is = url.openStream();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        br = new BufferedReader(new InputStreamReader(is));
+
+        try {
+            while ( (line = br.readLine()) != null) {
+                content.append(line);
+                content.append("\n");
+            }
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+            return null;
+        }
+
+        try {
+            br.close();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+        }
+
+        try {
+            is.close();
+        } catch (IOException e) {
+            logger.severe(e.getMessage());
+        }
+
+        return content.toString();
     }
 }
