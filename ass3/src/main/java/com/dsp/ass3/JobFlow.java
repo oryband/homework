@@ -18,7 +18,7 @@ public class JobFlow {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(JobFlow.class.getName()));
 
-    private static int instanceCount = 12;
+    private static int instanceCount = 3;
 
     private static String actionOnFailure = "TERMINATE_JOB_FLOW",
             jobName = "jobname",
@@ -29,8 +29,8 @@ public class JobFlow {
             // amiVersion = "3.1.0",
             hadoopVersion = "1.0.3",
             // hadoopVersion = "2.4.0",
-            // instanceType = InstanceType.M1Small.toString(),
-            instanceType = InstanceType.M1Xlarge.toString(),
+            instanceType = InstanceType.M1Small.toString(),
+            // instanceType = InstanceType.M1Xlarge.toString(),
 
             s3BaseUri = "s3://" + Utils.bucket + "/",
 
@@ -41,19 +41,31 @@ public class JobFlow {
             pairsClass = "Pairs",
             biarcsClass = "Biarcs",
             joinClass = "Join",
+            headersClass = "Headers",
+            arffClass = "ARFF",
+            singleLineClass = "SingleLine",
 
             pairsJarUrl = s3BaseUri + "jars/Pairs.jar",
             biarcsJarUrl = s3BaseUri + "jars/Biarcs.jar",
             joinJarUrl = s3BaseUri + "jars/Join.jar",
+            headersJarUrl = s3BaseUri + "jars/Headers.jar",
+            arffJarUrl = s3BaseUri + "jars/ARFF.jar",
+            singleLineJarUrl = s3BaseUri + "jars/SingleLine.jar",
 
             pairsOutput =  s3BaseUri + "steps/pairs/output/",
             biarcsOutput = s3BaseUri +  "steps/biarcs/output/",
             joinOutput = s3BaseUri + "steps/join/output/",
+            headersOutput = s3BaseUri + "steps/headers/output/",
+            arffOutput = s3BaseUri + "steps/arff/output/",
+            singleLineOutput = s3BaseUri + "steps/singleLine/output/",
 
             pairsInput = s3BaseUri + "steps/pairs/input/hypernym.txt",
             biarcsInputPrefix = "s3://bgudsp142/syntactic-ngram/biarcs/biarcs.",
             joinInput1 = pairsOutput + hadoopOutputFileName,
-            joinInput2 = biarcsOutput + hadoopOutputFileName;
+            joinInput2 = biarcsOutput + hadoopOutputFileName,
+            headersInput = joinOutput + hadoopOutputFileName,
+            arffInput = headersOutput + hadoopOutputFileName,
+            singleLineInput = joinOutput + hadoopOutputFileName;
 
 
     public static void main(String[] args) throws Exception {
@@ -95,6 +107,39 @@ public class JobFlow {
             .withHadoopJarStep(joinJarConfig)
             .withActionOnFailure(actionOnFailure);
 
+        // Set Headers job flow step.
+        HadoopJarStepConfig headersJarConfig = new HadoopJarStepConfig()
+            .withJar(headersJarUrl)
+            .withMainClass(headersClass)
+            .withArgs(headersInput, headersOutput);
+
+        StepConfig headersConfig = new StepConfig()
+            .withName(headersClass)
+            .withHadoopJarStep(headersJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
+        // Set ARFF job flow step.
+        HadoopJarStepConfig arffJarConfig = new HadoopJarStepConfig()
+            .withJar(arffJarUrl)
+            .withMainClass(arffClass)
+            .withArgs(arffInput, arffOutput);
+
+        StepConfig arffConfig = new StepConfig()
+            .withName(arffClass)
+            .withHadoopJarStep(arffJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
+        // Set SingleLine job flow step.
+        HadoopJarStepConfig singleLineJarConfig = new HadoopJarStepConfig()
+            .withJar(singleLineJarUrl)
+            .withMainClass(singleLineClass)
+            .withArgs(singleLineInput, singleLineOutput);
+
+        StepConfig singleLineConfig = new StepConfig()
+            .withName(singleLineClass)
+            .withHadoopJarStep(singleLineJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
         // Set instances.
         JobFlowInstancesConfig instances = new JobFlowInstancesConfig()
             .withInstanceCount(instanceCount)
@@ -112,7 +157,7 @@ public class JobFlow {
             .withAmiVersion(amiVersion)
             .withInstances(instances)
             .withLogUri(logUri)
-            // .withSteps(pairsConfig, biarcsConfig, joinConfig);
+            // .withSteps(pairsConfig, biarcsConfig, joinConfig, headersConfig, arffClass, singleLineConfig);
             // Custom steps.
             .withSteps(joinConfig);
 
