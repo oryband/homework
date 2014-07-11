@@ -18,6 +18,8 @@ public class JobFlow {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(JobFlow.class.getName()));
 
+    private static int instanceCount = 12;
+
     private static String actionOnFailure = "TERMINATE_JOB_FLOW",
             jobName = "jobname",
 
@@ -30,7 +32,7 @@ public class JobFlow {
             // instanceType = InstanceType.M1Small.toString(),
             instanceType = InstanceType.M1Xlarge.toString(),
 
-            s3BaseUri = "s3n://" + Utils.bucket + "/",
+            s3BaseUri = "s3://" + Utils.bucket + "/",
 
             logUri = s3BaseUri + "logs/",
 
@@ -49,11 +51,9 @@ public class JobFlow {
             joinOutput = s3BaseUri + "steps/join/output/",
 
             pairsInput = s3BaseUri + "steps/pairs/input/hypernym.txt",
-            biarcsInputPrefix = "https://s3.amazonaws.com/bgudsp142/syntactic-ngram/biarcs/biarcs.",
+            biarcsInputPrefix = "s3://bgudsp142/syntactic-ngram/biarcs/biarcs.",
             joinInput1 = pairsOutput + hadoopOutputFileName,
             joinInput2 = biarcsOutput + hadoopOutputFileName;
-
-    private static int instanceCount = 12;
 
 
     public static void main(String[] args) throws Exception {
@@ -114,7 +114,7 @@ public class JobFlow {
             .withLogUri(logUri)
             // .withSteps(pairsConfig, biarcsConfig, joinConfig);
             // Custom steps.
-            .withSteps(biarcsConfig, joinConfig);
+            .withSteps(joinConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);

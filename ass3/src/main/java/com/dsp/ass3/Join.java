@@ -131,12 +131,6 @@ public class Join {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
-        // Set key/value seperator from '\t' to ' '.
-        // TODO This might not be the correct value to set.
-        // I've starred a question regarding this on stackoverflow.com. Check it out.
-        // conf.set("mapred.textoutputformat.separator", " ");
-        // conf.set("mapreduce.textoutputformat.separator", " ");
-
         Job job = new Job(conf, "Join");
 
         job.setJarByClass(Join.class);
@@ -147,12 +141,11 @@ public class Join {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        // Add all but last argument as input path.
-        for (int i=0; i < args.length -1; i++) {
-            FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
-        }
+        // NOTE we use two different input paths in here.
+        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
+        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +1]));
 
-        FileOutputFormat.setOutputPath(job, new Path(args[args.length -1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +2]));
 
         boolean result = job.waitForCompletion(true);
 
