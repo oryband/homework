@@ -97,7 +97,9 @@ public class Headers {
                 return;
             }
 
-            newKey.set(weka.core.Utils.quote(attributeHeader) + Utils.delim + key.toString() + Utils.delim + attributeType);
+            newKey.set(attributeHeader
+                    + Utils.delim + weka.core.Utils.quote(key.toString())
+                    + Utils.delim + attributeType);
             context.write(newKey, empty);
         }
     }
