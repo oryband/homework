@@ -15,9 +15,9 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
-public class Combine {
+public class SingleLine {
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Combine.class.getName()));
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(SingleLine.class.getName()));
 
     // Mapper just passes on data.
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
@@ -50,29 +50,29 @@ public class Combine {
     }
 
 
+    // For every noun-pair, write: { N1, N2, hypernym-index : un/related, [dep-tree, i1, i2, hits] ... }
     public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
 
         private Text newValue = new Text();
+
 
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
 
+            // Append coordinates to string.
             StringBuilder sb = new StringBuilder();
-
             boolean firstItem = true;
             for (Text value : values) {
                 if (firstItem) {
                     sb.append(value.toString());
                     firstItem = false;
-                }
-                else {
-                    sb.append("\t\t").append(value.toString());
+                } else {
+                    sb.append(Utils.coordinateDelim).append(value.toString());
                 }
             }
 
             newValue.set(sb.toString());
-
             context.write(key, newValue);
         }
     }
@@ -81,9 +81,9 @@ public class Combine {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
-        Job job = new Job(conf, "Combine");
+        Job job = new Job(conf, "SingleLine");
 
-        job.setJarByClass(Pairs.class);
+        job.setJarByClass(SingleLine.class);
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
         job.setReducerClass(ReduceClass.class);
