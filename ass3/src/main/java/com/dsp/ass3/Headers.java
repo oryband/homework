@@ -22,25 +22,24 @@ public class Headers {
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Headers.class.getName()));
 
 
-    // Mapper just passes on data.
-    public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
+    // Write { dep-tree, i1, i2 : 1 }
+    public static class MapClass extends Mapper<LongWritable, Text, Text, LongWritable> {
 
-        private Text newKey = new Text(),
-             newValue = new Text();
+        private Text newKey = new Text();
+        private LongWritable one = new LongWritable(1);
 
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
-            // Split data by key-value delimeter, and just pass on the data.
-            // There are multiple delimeters here, so we just take the first one.
-            String v = value.toString();
-            int i = v.indexOf(Utils.keyValueDelim);
+            // Split data by tabs.
+            String[] data = value.toString().split(Utils.biarcDelim);
 
-            newKey.set(v.substring(0, i));
-            newValue.set(v.substring(i+1));  // +1 to exclude the prefix '\t' char.
+            // Fetch dep-tree indexes.
+            String indexes = data[3].substring(0, data[3].lastIndexOf(Utils.delim));
 
-            context.write(newKey, newValue);
+            newKey.set(data[2] + Utils.biarcDelim + indexes);
+            context.write(newKey, one);
         }
     }
 
@@ -56,64 +55,52 @@ public class Headers {
     }
 
 
-    // Write { dep-tree : <nothing> }
-    // ONLY for tagged noun-pairs.
-    public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
-        private String nounPair = null;
-        private short hypernymIndex;  // Hypernym noun index in noun-pair.
+    // Sum value longs.
+    public static class CombineClass extends Reducer<Text, LongWritable, Text, LongWritable> {
+        private LongWritable newValue = new LongWritable();
+
+        @Override
+        public void reduce(Text key, Iterable<LongWritable> values, Context context)
+            throws IOException, InterruptedException {
+
+            newValue.set(Utils.sumValues(values));
+            context.write(key, newValue);
+        }
+    }
+
+
+    // Write @ATTRIBUTE 'dep-tree' IINTEGER for every dep-tree.
+    // FILTER by DpMin.
+    public static class ReduceClass extends Reducer<Text, LongWritable, Text, Text> {
+        private int DpMin;
 
         private Text newKey = new Text(),
                 empty = new Text("");
 
 
+        // Init DPMin argument.
         @Override
-        public void reduce(Text key, Iterable<Text> values, Context context)
+        public void setup(Context context) {
+            DpMin = Integer.parseInt(context.getConfiguration().get(Utils.DpMinArg, "-1"));
+
+            if (DpMin == -1) {
+                logger.severe("Failed fetching DPMin argument.");
+                return;
+            }
+        }
+
+
+        @Override
+        public void reduce(Text key, Iterable<LongWritable> values, Context context)
             throws IOException, InterruptedException {
 
-            String[]
-                k = key.toString().split(Utils.delim),  // Split key data.
-                v;  // Will be used for split value data.
-
-            // Init new tagged noun pair (N1, N2).
-            if (k[2].equals(Utils.joinStart)) {
-                nounPair = k[0] + Utils.delim + k[1];
-
-                v = values.iterator().next().toString().split(Utils.delim);
-                hypernymIndex = Short.parseShort(v[1]);
-            } else {
-                // This is not a new noun-pair,
-                // or an untagged one, which we can't learn from.
-
-                // Fetch dep-tree and calculate score if this belongs to a tagged noun-pair.
-                // Else (untagged pair) ignore this pair and do nothing.
-                if ((k[0] + Utils.delim + k[1]).equals(nounPair)) {
-                    String dtHypernymIndex, dtHyponymIndex;  // CURRENT *nym index.
-
-                    for (Text value : values) {
-                        // Init *nym index.
-                        if (hypernymIndex == 0) {
-                            dtHypernymIndex = k[2];
-                            dtHyponymIndex = k[3];
-                        } else {
-                            dtHypernymIndex = k[3];
-                            dtHyponymIndex = k[2];
-                        }
-
-                        // Join current dep-tree with noun-pair,
-                        // because they have the same key: (N1, N2).
-                        v = value.toString().split(Utils.biarcDelim);
-
-                        // Key := dep-tree --- wrapped in quotes with special chars escaping.
-                        newKey.set(attributeHeader
-                                + Utils.delim + weka.core.Utils.quote(
-                                    v[0] + Utils.delim + dtHypernymIndex + Utils.delim + dtHyponymIndex)
-                                + Utils.delim + attributeType);
-
-                        // Value := ""
-                        context.write(newKey, empty);
-                    }
-                }
+            // Filter (don't write) dep-trees with not enough instances in corpus.
+            if (Utils.sumValues(values) < DpMin) {
+                return;
             }
+
+            newKey.set(attributeHeader + Utils.delim + key.toString() + Utils.delim + attributeType);
+            context.write(newKey, empty);
         }
     }
 
@@ -121,23 +108,22 @@ public class Headers {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
+        // Read DpMin argument.
+        conf.set(Utils.DpMinArg, args[Utils.argInIndex +2]);
+
         Job job = new Job(conf, "Headers");
 
         job.setJarByClass(Headers.class);
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
+        job.setCombinerClass(CombineClass.class);
         job.setReducerClass(ReduceClass.class);
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        // Add all but last argument as input path.
-        // TODO Can this cause bugs when running on AWS?
-        for (int i=0; i < args.length -1; i++) {
-            FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
-        }
-
-        FileOutputFormat.setOutputPath(job, new Path(args[args.length -1]));
+        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
+        FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +1]));
 
         boolean result = job.waitForCompletion(true);
 
