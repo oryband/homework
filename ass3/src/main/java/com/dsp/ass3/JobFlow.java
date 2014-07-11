@@ -6,13 +6,11 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClient;
-import com.amazonaws.services.elasticmapreduce.model.BootstrapActionConfig;
 import com.amazonaws.services.elasticmapreduce.model.HadoopJarStepConfig;
 import com.amazonaws.services.elasticmapreduce.model.JobFlowInstancesConfig;
 import com.amazonaws.services.elasticmapreduce.model.PlacementType;
 import com.amazonaws.services.elasticmapreduce.model.RunJobFlowRequest;
 import com.amazonaws.services.elasticmapreduce.model.RunJobFlowResult;
-import com.amazonaws.services.elasticmapreduce.model.ScriptBootstrapActionConfig;
 import com.amazonaws.services.elasticmapreduce.model.StepConfig;
 
 
@@ -36,20 +34,26 @@ public class JobFlow {
 
             logUri = s3BaseUri + "logs/",
 
-            updateLuceneUri = s3BaseUri + "lucene/update-lucene.sh",
-
             hadoopOutputFileName = "part-r-*",
 
             pairsClass = "Pairs",
+            biarcsClass = "Biarcs",
+            joinClass = "Join",
 
             pairsJarUrl = s3BaseUri + "jars/Pairs.jar",
+            biarcsJarUrl = s3BaseUri + "jars/Biarcs.jar",
+            joinJarUrl = s3BaseUri + "jars/Join.jar",
 
-            // pairsInput = s3BaseUri + "steps/Count/input/eng.corp.10k",  // For Testing.
-            pairsInput = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data",
+            pairsOutput =  s3BaseUri + "steps/pairs/output/",
+            biarcsOutput = s3BaseUri +  "steps/biarcs/output/",
+            joinOutput = s3BaseUri + "steps/join/output/",
 
-            pairsOutput = s3BaseUri + "steps/pairs/output/";
+            pairsInput = s3BaseUri + "steps/pairs/input/hypernym.txt",
+            biarcsInputPrefix = "s3n://bgudsp142/syntactic-ngram/biarcs/biarcs.",
+            joinInput1 = s3BaseUri + pairsOutput + hadoopOutputFileName,
+            joinInput2 = s3BaseUri + biarcsOutput + hadoopOutputFileName;
 
-    private static int instanceCount = 1;
+    private static int instanceCount = 12;
 
 
     public static void main(String[] args) throws Exception {
@@ -68,6 +72,29 @@ public class JobFlow {
             .withHadoopJarStep(pairsJarConfig)
             .withActionOnFailure(actionOnFailure);
 
+        // Set Biarcs job flow step.
+        HadoopJarStepConfig biarcsJarConfig = new HadoopJarStepConfig()
+            .withJar(biarcsJarUrl)
+            .withMainClass(biarcsClass)
+            .withArgs(biarcsInputPrefix, biarcsOutput);
+
+        StepConfig biarcsConfig = new StepConfig()
+            .withName(biarcsClass)
+            .withHadoopJarStep(biarcsJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
+        // Set Join job flow step.
+        HadoopJarStepConfig joinJarConfig = new HadoopJarStepConfig()
+            .withJar(joinJarUrl)
+            .withMainClass(joinClass)
+            // NOTE we JOIN the output of the two previous steps.
+            .withArgs(joinInput1, joinInput2, joinOutput);
+
+        StepConfig joinConfig = new StepConfig()
+            .withName(joinClass)
+            .withHadoopJarStep(joinJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
         // Set instances.
         JobFlowInstancesConfig instances = new JobFlowInstancesConfig()
             .withInstanceCount(instanceCount)
@@ -78,22 +105,17 @@ public class JobFlow {
             .withKeepJobFlowAliveWhenNoSteps(false)
             .withPlacement(new PlacementType(placementType));
 
-        // Set bootstrap action to update lucene version to the one stated in pom.xml.
-        BootstrapActionConfig bootstrapConfig = new BootstrapActionConfig()
-            .withName("Update Lucene")
-            .withScriptBootstrapAction(new ScriptBootstrapActionConfig().withPath(updateLuceneUri));
 
         // Set job flow request.
         RunJobFlowRequest runFlowRequest = new RunJobFlowRequest()
             .withName(jobName)
             .withAmiVersion(amiVersion)
             .withInstances(instances)
-            .withBootstrapActions(bootstrapConfig)
             .withLogUri(logUri)
             // Both parts (A+B), all steps.
-            .withSteps(pairsConfig);
+            .withSteps(pairsConfig, biarcsConfig, joinConfig);
             // Custom steps.
-            // .withSteps(fmeasureConfig);
+            // .withSteps(biarcsConfig, joinConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
