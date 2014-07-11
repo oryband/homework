@@ -1,0 +1,24 @@
+'s/VBZ/ROOT/0 */NN/attr/1 */NN/appos/2	1 2	
+'s/VBZ/ROOT/0 */NN/attr/1 */NN/appos/2	2 1	
+'s/VBZ/ROOT/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3	
+'s/VBZ/ROOT/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1	
+'s/VBZ/ROOT/0 */NN/nn/3 */NN/attr/1	1 2	
+'s/VBZ/ROOT/0 */NN/nn/3 */NN/attr/1	2 1	
+'s/VBZ/ROOT/0 */NN/nn/3 */NN/nsubj/1	2 1	
+'s/VBZ/ROOT/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	1 3	
+'s/VBZ/ROOT/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	3 1	
+'s/VBZ/ROOT/0 */NNP/nn/3 */NNP/attr/1	2 1	
+'s/VBZ/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3	
+'s/VBZ/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1	
+'s/VBZ/ccomp/0 */NN/nn/3 */NN/attr/1	2 1	
+*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2	
+*/NN/nsubj/2 's/VBZ/ROOT/0 */NN/attr/2	0 2	
+*/NN/nsubj/2 's/VBZ/ROOT/0 */NN/attr/2	2 0	
+*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	0 1	
+*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	0 3	
+*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2	
+*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0	1 2	
+*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0	1 2	
+*/NNP/nn/3 */NNP/nn/3 */NNP/nsubj/0	1 2	
+*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0	1 2	
+*/NNP/nsubj/2 's/VBZ/ROOT/0 */NN/attr/2	2 0	
