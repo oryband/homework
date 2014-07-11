@@ -28,6 +28,7 @@ public class Vector {
         private Map<String, Integer> headers = new HashMap <String, Integer>();
 
         private String HeadersLink = "";
+        private String depTree;
 
         private Text newKey = new Text(),
                 newValue = new Text();
@@ -40,20 +41,43 @@ public class Vector {
         private void initHeader(String data) {
             String[] splitData = data.split("\n");
             for (int i = 0 ; i < splitData.length ; i++){
-                headers.put(splitData[i], Integer.valueOf(i));
+                depTree = splitData[i].substring(0, splitData[i].lastIndexOf(Utils.keyValueDelim));
+                headers.put(depTree, Integer.valueOf(i));
             }
+        }
+
+        private String getOccrences(String dep) {
+            return dep.split("\t")[1].split(" ")[2];
         }
 
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
+            StringBuilder sb = new StringBuilder();
+
             // Fetch key/value and emit them.
             String v = value.toString();
-            int i = v.indexOf(Utils.keyValueDelim);
+            Integer depTreeIndex;
+            int index = v.indexOf(Utils.keyValueDelim, v.indexOf(Utils.keyValueDelim) + 1);
 
-            newKey.set(v.substring(0, i));
-            newValue.set(v.substring(i+1));
+            String[] depTrees = v.substring(index + 1).split("\t\t");
+
+            sb.append("{ ");
+            for (int i = 0 ; i < depTrees.length ; i++) {
+                depTreeIndex = headers.get(depTrees[i]);
+                if (depTreeIndex != null) {
+                    //TODO should we print depTrees[i] ? or weka.blabla(depTrees[i])
+                    sb.append(depTreeIndex.toString()).append(Utils.delim).append(getOccrences(depTrees[i]));
+                    if (i != depTrees.length -1){
+                        sb.append(",");
+                    }
+                }
+            }
+            sb.append("}");
+
+            newValue.set(sb.toString());
+            newKey.set(v.substring(0, index));
 
             context.write(newKey, newValue);
         }
