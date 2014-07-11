@@ -32,6 +32,70 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+
+          <execution> <!-- Duplicate this for every jar or main-class you want. -->
+            <id>Pairs</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>com.dsp.ass3.Pairs</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <finalName>Pairs</finalName>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>Biarcs</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>com.dsp.ass3.Biarcs</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <finalName>Biarcs</finalName>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>Join</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>com.dsp.ass3.Join</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <finalName>Join</finalName>
+            </configuration>
+          </execution>
+
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
