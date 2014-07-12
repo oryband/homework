@@ -26,8 +26,8 @@ import com.amazonaws.services.s3.AmazonS3;
 
 public class Vectors {
 
-    private static String labelsPath = "steps/labels/output/test-labels",
-    // private static String labelsPath = "steps/labels/output/labels",
+    // private static String labelsPath = "steps/labels/output/test-labels",
+    private static String labelsPath = "steps/labels/output/labels",
             startOfVectors = "{",
             endOfVectors = "}",
             arffCoordinateDelim = ",",
