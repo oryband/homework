@@ -410,17 +410,13 @@
 @ATTRIBUTE '\'ve/VBP/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '\'ve/VBP/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/conj/1 */NN/conj/1\t0 1' INTEGER
-@ATTRIBUTE '*/NN/ROOT/0 */NN/conj/1 */NN/conj/1\t0 2' INTEGER
-@ATTRIBUTE '*/NN/ROOT/0 */NN/conj/1 */NN/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/conj/1 */NN/conj/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/dep/1 and/CC/cc/2 */NN/conj/2\t1 3' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/dep/1 in/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
-@ATTRIBUTE '*/NN/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3\t1 0' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
-@ATTRIBUTE '*/NN/ROOT/0 */NN/nn/3 */NN/appos/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/nn/3 */NN/dep/1\t1 2' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NN/nn/3 */NN/dep/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 */NNP/dep/1 and/CC/cc/2 */NNP/conj/2\t1 3' INTEGER
@@ -434,13 +430,11 @@
 @ATTRIBUTE '*/NN/ROOT/0 develop/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 maintain/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 make/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/ROOT/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t2 3' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/ROOT/0 use/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/advmod/2 \'s/VBZ/ROOT/0 */NN/attr/2\t2 0' INTEGER
-@ATTRIBUTE '*/NN/appos/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t0 1' INTEGER
 @ATTRIBUTE '*/NN/appos/0 */NN/dep/1 */NN/dep/2\t2 1' INTEGER
 @ATTRIBUTE '*/NN/appos/0 */NN/dep/1 in/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NN/appos/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
@@ -452,10 +446,8 @@
 @ATTRIBUTE '*/NN/appos/0 */NNP/nn/3 */NNP/appos/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/appos/0 */NNP/nn/3 */NNP/dep/1\t1 2' INTEGER
 @ATTRIBUTE '*/NN/appos/0 */NNP/nn/3 */NNP/dep/1\t2 1' INTEGER
-@ATTRIBUTE '*/NN/appos/0 in/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/appos/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/appos/0 use/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/attr/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/attr/0 */NN/nn/3 */NN/appos/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/attr/0 apply/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/attr/0 control/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
@@ -465,8 +457,6 @@
 @ATTRIBUTE '*/NN/attr/0 have/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/attr/0 maintain/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/attr/0 make/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/attr/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/attr/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t2 0' INTEGER
 @ATTRIBUTE '*/NN/attr/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t2 3' INTEGER
 @ATTRIBUTE '*/NN/attr/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/attr/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t2 4' INTEGER
@@ -478,7 +468,6 @@
 @ATTRIBUTE '*/NN/attr/0 provide/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/attr/0 understand/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/attr/0 use/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/conj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t0 3' INTEGER
 @ATTRIBUTE '*/NN/conj/0 acquire/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/conj/0 apply/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/conj/0 carry/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
@@ -498,11 +487,8 @@
 @ATTRIBUTE '*/NN/conj/0 maintain/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/conj/0 make/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/conj/0 manage/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/conj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/conj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t2 3' INTEGER
-@ATTRIBUTE '*/NN/conj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NN/conj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
-@ATTRIBUTE '*/NN/conj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/conj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
 @ATTRIBUTE '*/NN/conj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t4 2' INTEGER
 @ATTRIBUTE '*/NN/conj/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2\t0 3' INTEGER
@@ -514,12 +500,9 @@
 @ATTRIBUTE '*/NN/conj/0 understand/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/conj/0 use/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/conj/0 utilize/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dep/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dep/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t0 1' INTEGER
 @ATTRIBUTE '*/NN/dep/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t0 3' INTEGER
-@ATTRIBUTE '*/NN/dep/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t1 0' INTEGER
 @ATTRIBUTE '*/NN/dep/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t1 3' INTEGER
-@ATTRIBUTE '*/NN/dep/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t3 0' INTEGER
 @ATTRIBUTE '*/NN/dep/0 */NN/nn/3 */NN/dep/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/dep/0 */NNP/dep/1 of/IN/prep/2 */NNP/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NN/dep/0 */NNP/nn/3 */NN/dep/1\t2 1' INTEGER
@@ -558,13 +541,10 @@
 @ATTRIBUTE '*/NN/dep/2 */NN/dep/3 ]/SYM/dep/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/dep/2 the/DT/dep/3 */NN/dobj/0\t2 0' INTEGER
 @ATTRIBUTE '*/NN/dep/2 the/DT/dep/3 */NN/pobj/0\t2 0' INTEGER
-@ATTRIBUTE '*/NN/dep/3 */NN/dep/3 */NNP/nsubj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/dep/3 */NN/dep/3 */NNP/nsubj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dep/3 */NN/dep/3 ]/SYM/ROOT/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/dep/3 */NN/dep/3 ]/SYM/dep/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/dep/3 */NN/dep/3 ]/SYM/dep/0\t1 0' INTEGER
-@ATTRIBUTE '*/NN/dep/3 */NNP/dep/3 */NNP/nsubj/0\t0 1' INTEGER
-@ATTRIBUTE '*/NN/dep/3 */NNP/dep/3 */NNP/nsubj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dep/3 */NNP/dep/3 ]/SYM/dep/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/dep/3 */NNP/nn/3 1/LS/ROOT/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/dep/3 */NNP/nn/3 ]/SYM/dep/0\t0 1' INTEGER
@@ -574,21 +554,16 @@
 @ATTRIBUTE '*/NN/dep/4 of/IN/prep/1 */NN/pobj/2 ]/SYM/dep/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dep/4 of/IN/prep/1 */NN/pobj/2 ]/SYM/dep/0\t2 0' INTEGER
 @ATTRIBUTE '*/NN/dep/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/dep/0\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 */NN/appos/1 for/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t0 1' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t1 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t2 1' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 */NN/conj/1 or/CC/cc/1\t2 0' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t0 1' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t0 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t1 0' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t1 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t3 0' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t3 1' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 */NN/conj/1 or/CC/cc/1 */NN/conj/1\t0 3' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 */NN/infmod/1 */NNS/dobj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 */NN/infmod/1 about/IN/prep/2 */NNS/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 */NN/nn/3 */NN/conj/1 and/CC/cc/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 accept/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 access/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
@@ -599,15 +574,12 @@
 @ATTRIBUTE '*/NN/dobj/0 affect/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 alter/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 do/VB/infmod/1\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/1 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/3 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 in/IN/prep/1 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t2 0' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t4 0' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t4 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NNS/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 perform/VB/infmod/1\t0 2' INTEGER
@@ -624,7 +596,6 @@
 @ATTRIBUTE '*/NN/dobj/0 articulate/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 assess/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 assess/VB/infmod/1 */NN/dobj/2\t2 0' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 at/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 be/VB/infmod/1 in/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 bring/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 build/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
@@ -681,12 +652,7 @@
 @ATTRIBUTE '*/NN/dobj/0 implement/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 impose/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 improve/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 in/IN/prep/1 */NN/nn/4 */NNS/pobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 in/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 in/IN/prep/1 */NNS/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 increase/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 influence/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
@@ -708,15 +674,12 @@
 @ATTRIBUTE '*/NN/dobj/0 obtain/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t2 0' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t2 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NNP/pobj/2\t2 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 achieve/VB/infmod/1\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/1 */NN/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t2 4' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t4 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 as/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
@@ -728,8 +691,6 @@
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NNP/pobj/4\t2 4' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 maintain/VB/infmod/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 make/VB/infmod/1\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 0' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t4 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NNP/pobj/4\t2 4' INTEGER
@@ -737,13 +698,9 @@
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 perceive/VB/infmod/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 provide/VB/infmod/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 respond/VB/infmod/1\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 to/TO/prep/1 */NN/pobj/4\t0 2' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NNP/nn/4 */NN/pobj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t2 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NNP/pobj/2 of/IN/prep/3 */NNP/pobj/4\t2 4' INTEGER
-@ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 */NNS/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 offer/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 or/CC/cc/1 */NN/conj/1 do/VB/infmod/1\t0 2' INTEGER
@@ -793,48 +750,27 @@
 @ATTRIBUTE '*/NN/dobj/0 work/VB/infmod/1 with/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
 @ATTRIBUTE '*/NN/dobj/0 write/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 */NN/appos/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 */NN/dep/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 */NN/dep/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 */NN/dep/2\t1 2' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 */NNP/dep/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 */NNP/dep/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 */NNS/dep/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 for/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 for/IN/prep/2 */NN/pobj/3\t3 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 in/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/ROOT/0 of/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/conj/0 in/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/conj/0 on/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/dep/0 in/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dep/3 \'s/POS/pobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dep/3 \'s/POS/pobj/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dep/3 ]/SYM/ROOT/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dep/3 ]/SYM/ROOT/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dep/3 ]/SYM/dep/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dep/3 ]/SYM/dep/0\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 */NN/conj/2 and/CC/cc/2\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 */NN/conj/2 and/CC/cc/2\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2\t1 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2\t3 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 in/IN/prep/2 */NN/pobj/3\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 in/IN/prep/2 */NNS/pobj/3\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 of/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 of/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 of/IN/prep/2 */NN/pobj/3\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 of/IN/prep/2 */NNS/pobj/3\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/dobj/0 than/IN/prep/2 */NNS/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/nsubj/0 and/CC/cc/2 */NN/conj/2\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/0 and/CC/cc/2 */NN/conj/2\t1 3' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/nsubj/0 in/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/nsubj/0 in/IN/prep/2 */NNS/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/nsubj/0 of/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/0 of/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/0 of/IN/prep/2 */NN/pobj/3\t3 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/0 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/nsubj/0 of/IN/prep/2 */NNP/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/3 \'s/POS/ROOT/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/3 \'s/VBZ/ROOT/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/3 \'s/VBZ/ROOT/0\t1 0' INTEGER
@@ -845,122 +781,62 @@
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/3 3/CD/ROOT/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/3 3/CD/ROOT/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubj/3 ]/SYM/dep/0\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/nsubjpass/0 in/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/nsubjpass/0 of/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubjpass/3 abandoned/VBN/ROOT/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubjpass/3 abandoned/VBN/ccomp/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubjpass/3 abolished/VBN/ROOT/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubjpass/3 abolished/VBN/ROOT/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/nsubjpass/3 abolished/VBN/ccomp/0\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2\t2 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2\t2 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 */NN/dep/2\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2\t1 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2\t3 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2\t3 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NNS/conj/2\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 as/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 for/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 for/IN/prep/2 */NNS/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 from/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3\t3 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NNP/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NNS/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NNS/pobj/3\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3\t3 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NNP/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NNS/pobj/3\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 on/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 on/IN/prep/2 */NN/pobj/3\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 on/IN/prep/2 */NNS/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 or/CC/cc/2 */NN/conj/2\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 or/CC/cc/2 */NN/conj/2\t1 3' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 per/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NN/pobj/0 to/TO/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/ROOT/0 */NN/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/ROOT/0 */NN/appos/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/ROOT/0 */NN/appos/2\t2 0' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/ROOT/0 */NNP/appos/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/ROOT/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/ROOT/0 and/CC/cc/2 */NNS/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/appos/0 */NN/appos/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/appos/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/appos/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/attr/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 */NN/appos/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 */NN/conj/2 and/CC/cc/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 */NN/dep/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 */NNP/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 */NNP/appos/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 */NNP/dep/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 and/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dep/0 and/CC/cc/2 */NNS/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dobj/0 */NN/appos/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dobj/0 */NN/conj/2 and/CC/cc/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dobj/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/dobj/0 and/CC/cc/2 */NN/conj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/dobj/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/dobj/0 and/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dobj/0 and/CC/cc/2 */NNS/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/dobj/0 or/CC/cc/2 */NN/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/nsubj/0 */NN/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/nsubj/0 */NN/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNS/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/nsubjpass/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/nsubjpass/0 and/CC/cc/2 */NNS/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NN/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NN/appos/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NN/appos/2\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NN/appos/2\t2 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NN/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NN/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NN/conj/2 and/CC/cc/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NN/dep/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NNP/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NNP/appos/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NNP/conj/2 and/CC/cc/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NNP/conj/2 and/CC/cc/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NNS/appos/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 */NNS/conj/2 and/CC/cc/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NN/conj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NN/conj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNS/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 is/VBZ/rcmod/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 of/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 or/CC/cc/2 */NN/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 or/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 or/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNP/pobj/0 or/CC/cc/2 */NNS/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNS/dep/3 */NN/dep/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNS/dep/3 */NN/nsubj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNS/dep/3 */NN/nsubj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNS/dep/3 */NNP/dep/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/2 */NNS/dep/3 */NNP/nsubj/0\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/2 */NNS/dep/3 */NNP/nsubj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/2 //NN/dobj/0 and/CC/cc/2 */NN/conj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 //NN/pobj/0 and/CC/cc/2 */NN/conj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NN/nn/2 //NN/pobj/0 in/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
@@ -968,12 +844,8 @@
 @ATTRIBUTE '*/NN/nn/2 //NN/pobj/0 of/IN/prep/2 */NN/pobj/3\t3 0' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/dep/3 \'s/POS/pobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/dep/3 \'s/POS/pobj/0\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/ROOT/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/ROOT/0\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/ROOT/0\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/ROOT/0\t2 0' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/conj/0\t1 2' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/conj/0\t2 0' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/conj/0\t2 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/dobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/dobj/0\t0 2' INTEGER
@@ -982,31 +854,19 @@
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/dobj/0\t2 0' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/dobj/0\t2 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/nsubj/0\t0 1' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/nsubj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/nsubj/0\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/nsubj/0\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/nsubj/0\t2 0' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/nsubj/0\t2 1' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/nsubjpass/0\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/nsubjpass/0\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/pobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/pobj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/pobj/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/pobj/0\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/pobj/0\t2 0' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NN/pobj/0\t2 1' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/ROOT/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/ROOT/0\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/ROOT/0\t1 2' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/attr/0\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/conj/0\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/conj/0\t1 2' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/dep/0\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/dep/0\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/dobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/dobj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/dobj/0\t1 0' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/dobj/0\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/nsubj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/nsubj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/nsubj/0\t1 0' INTEGER
@@ -1018,7 +878,6 @@
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/pobj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/pobj/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/pobj/0\t1 2' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNP/pobj/0\t2 0' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNS/conj/0\t1 0' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNS/dobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NN/nn/3 */NNS/dobj/0\t1 0' INTEGER
@@ -1040,7 +899,6 @@
 @ATTRIBUTE '*/NN/nn/3 */NNP/nn/3 */NNP/nsubj/0\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NNP/nn/3 */NNP/pobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NNP/nn/3 */NNP/pobj/0\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nn/3 */NNP/nn/3 */NNP/pobj/0\t1 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NNP/nn/3 //NNP/pobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NN/nn/3 */NNS/nn/3 */NNP/pobj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/3 s/POS/dep/1 */NN/dobj/0\t2 0' INTEGER
@@ -1050,17 +908,13 @@
 @ATTRIBUTE '*/NN/nn/4 and/CC/cc/1 */NNP/conj/1 2/LS/ROOT/0\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nn/4 and/CC/cc/1 */NNP/conj/1 2/LS/ROOT/0\t2 0' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t0 3' INTEGER
-@ATTRIBUTE '*/NN/nsubj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t3 0' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t3 1' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 */NNP/nn/3 */NNP/dep/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 achieve/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 acquire/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nsubj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/3 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
-@ATTRIBUTE '*/NN/nsubj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t2 0' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
-@ATTRIBUTE '*/NN/nsubj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t4 0' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 apply/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 change/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 combined/VBN/partmod/1 with/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
@@ -1087,9 +941,7 @@
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t2 3' INTEGER
-@ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
-@ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NNP/pobj/2\t2 3' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t2 4' INTEGER
@@ -1102,7 +954,6 @@
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t4 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 provide/VB/infmod/1\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t2 3' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 */NNS/pobj/2 in/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
 @ATTRIBUTE '*/NN/nsubj/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2\t0 3' INTEGER
@@ -1153,7 +1004,6 @@
 @ATTRIBUTE '*/NN/nsubj/4 and/CC/cc/1 */NN/conj/1 abated/VBN/ROOT/0\t2 0' INTEGER
 @ATTRIBUTE '*/NN/nsubjpass/0 develop/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/nsubjpass/0 maintain/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/nsubjpass/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/nsubjpass/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t2 3' INTEGER
 @ATTRIBUTE '*/NN/nsubjpass/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/nsubjpass/0 of/IN/prep/1 */NN/nn/4 */NNP/pobj/2\t2 3' INTEGER
@@ -1185,13 +1035,10 @@
 @ATTRIBUTE '*/NN/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3\t1 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NN/conj/1\t0 1' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NN/conj/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t0 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t1 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t1 2' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t2 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NN/conj/1 or/CC/cc/1\t0 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 */NNS/conj/1 and/CC/cc/1\t0 1' INTEGER
@@ -1202,14 +1049,10 @@
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t3 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1\t3 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NNS/conj/1\t0 1' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NNS/conj/1\t1 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 and/CC/cc/2 */NN/conj/2\t1 3' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 of/IN/prep/2 */NN/pobj/3 and/CC/cc/1\t0 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 of/IN/prep/2 */NN/pobj/3 and/CC/cc/1\t0 3' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 or/CC/cc/1 */NN/conj/1\t0 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 or/CC/cc/1 */NN/conj/1\t0 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 or/CC/cc/1 */NN/conj/1\t1 3' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 or/CC/cc/1 */NN/conj/1\t3 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/conj/1 or/CC/cc/1 */NN/conj/1\t3 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/nn/3 */NN/appos/1\t2 1' INTEGER
@@ -1218,7 +1061,6 @@
 @ATTRIBUTE '*/NN/pobj/0 */NN/nn/3 */NN/conj/1 and/CC/cc/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/nn/3 */NN/dep/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NN/nn/3 */NNS/conj/1 and/CC/cc/1\t0 1' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 */NNP/nn/3 */NNP/appos/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 */NNP/nn/3 */NNP/dep/1\t2 1' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 access/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 achieve/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
@@ -1227,16 +1069,11 @@
 @ATTRIBUTE '*/NN/pobj/0 adjust/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 affect/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 alter/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/1 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/3 */NN/pobj/4\t0 2' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 in/IN/prep/1 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 in/IN/prep/1 */NN/pobj/4\t0 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 in/IN/prep/1 */NNS/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/1 */NN/pobj/4\t0 2' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/1 */NN/pobj/4\t0 4' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/1 */NN/pobj/4\t2 0' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/1 */NN/pobj/4\t4 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/1 */NNS/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
@@ -1247,14 +1084,12 @@
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NNP/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NNS/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NNS/pobj/4\t2 0' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 to/TO/prep/3 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1\t0 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1\t2 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1\t3 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1\t3 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NNS/conj/1\t0 2' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NNS/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 creative/JJ/amod/4 */NN/conj/1\t0 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 good/JJ/amod/4 */NN/conj/1\t0 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 and/CC/cc/1 great/JJ/amod/4 */NN/conj/1\t0 3' INTEGER
@@ -1331,11 +1166,9 @@
 @ATTRIBUTE '*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t4 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t4 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NNP/pobj/4\t2 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 in/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 2' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 in/IN/prep/1 */NNP/pobj/2 of/IN/prep/3 */NNP/pobj/4\t2 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 increase/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 induce/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 influence/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
@@ -1370,7 +1203,6 @@
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/1 */NN/conj/1\t2 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/1 */NN/conj/1\t4 2' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t0 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t2 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t4 2' INTEGER
@@ -1387,11 +1219,9 @@
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 make/VB/infmod/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t4 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NNP/pobj/4\t2 4' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 or/CC/cc/3 */NN/conj/3\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 or/CC/cc/3 */NN/conj/3\t2 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 or/CC/cc/3 */NN/conj/3\t4 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 perceive/VB/infmod/1\t0 2' INTEGER
@@ -1399,8 +1229,6 @@
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 provide/VB/infmod/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 respond/VB/infmod/1\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 solve/VB/infmod/1\t0 2' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NN/pobj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NN/pobj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t2 3' INTEGER
@@ -1409,8 +1237,6 @@
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNP/pobj/2 */NN/appos/3\t2 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNP/pobj/2 */NN/appos/3\t3 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNP/pobj/2 of/IN/prep/3 */NNP/pobj/4\t2 4' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNS/pobj/2 of/IN/prep/3 */NN/pobj/4\t0 4' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 */NNS/pobj/2 to/TO/prep/1 */NN/pobj/4\t0 4' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 offer/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 on/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
@@ -1455,9 +1281,7 @@
 @ATTRIBUTE '*/NN/pobj/0 take/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 teach/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 to/TO/prep/1 */NN/nn/4 */NN/pobj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 to/TO/prep/1 */NN/nn/4 */NN/pobj/2\t2 3' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 to/TO/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
-@ATTRIBUTE '*/NN/pobj/0 to/TO/prep/1 */NN/pobj/2 about/IN/prep/3 */NNS/pobj/4\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 translate/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 turn/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NN/pobj/0 understand/VB/infmod/1 */NN/dobj/2\t0 2' INTEGER
@@ -1473,22 +1297,14 @@
 @ATTRIBUTE '*/NNP/ROOT/0 */NN/dep/1 in/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NN/nn/3 */NN/appos/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NN/nn/3 */NN/appos/1\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NN/nn/3 */NN/dep/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NN/nn/3 */NN/dep/1\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/appos/1 */NNP/appos/2\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/appos/1 */NNP/appos/2\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/appos/1 */NNP/appos/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/appos/1 */NNP/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NN/dep/1\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NN/dep/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NN/dep/1\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NNP/appos/1\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NNP/appos/2\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1\t2 1' INTEGER
@@ -1496,13 +1312,10 @@
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1\t1 3' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1\t3 1' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/dep/1 */NNP/dep/1\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/dep/1 in/IN/prep/2 */NNP/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/dep/1 of/IN/prep/2 */NNP/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NN/appos/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NN/appos/1\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NN/dep/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NN/dep/1\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NNP/appos/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NNP/appos/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NNP/appos/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NNP/appos/1\t2 1' INTEGER
@@ -1516,17 +1329,10 @@
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NNP/dep/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 */NNP/nn/3 */NNP/dep/1\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/ROOT/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t2 3' INTEGER
-@ATTRIBUTE '*/NNP/ROOT/0 to/TO/prep/1 */NNP/pobj/2 */NNP/appos/3\t3 0' INTEGER
-@ATTRIBUTE '*/NNP/appos/0 */NNP/nn/3 */NNP/appos/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/appos/0 */NNP/nn/3 */NNP/appos/1\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/dep/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
-@ATTRIBUTE '*/NNP/dep/0 */NN/dep/1 of/IN/prep/2 */NNP/pobj/3\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/dep/0 */NN/nn/3 */NN/appos/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NN/nn/3 */NN/appos/1\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/dep/0 */NN/nn/3 */NNP/appos/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NN/nn/3 */NNP/appos/1\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/dep/0 */NN/nn/3 */NNP/dep/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/appos/1 */NNP/appos/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/appos/1 */NNP/appos/1\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/appos/1 */NNP/appos/2\t1 2' INTEGER
@@ -1539,13 +1345,11 @@
 @ATTRIBUTE '*/NNP/dep/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1\t3 1' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/dep/1 */NNP/appos/2\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/dep/1 */NNP/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/appos/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/appos/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/appos/1\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/conj/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/conj/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/conj/1\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/conj/1 and/CC/cc/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/conj/1 and/CC/cc/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/dep/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 */NNP/nn/3 */NNP/dep/1\t1 2' INTEGER
@@ -1553,9 +1357,7 @@
 @ATTRIBUTE '*/NNP/dep/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1\t2 3' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 and/CC/cc/1 */NNP/conj/1 of/IN/prep/3 */NN/pobj/4\t4 0' INTEGER
-@ATTRIBUTE '*/NNP/dep/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t2 3' INTEGER
-@ATTRIBUTE '*/NNP/dep/2 */NNP/dep/0 */NN/dep/2\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/dep/2 */NNP/dep/3 \'s/POS/pobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/dep/2 */NNP/dep/3 ]/SYM/dep/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/dep/3 */NNP/dep/1 ]/SYM/dep/0\t1 0' INTEGER
@@ -1575,8 +1377,6 @@
 @ATTRIBUTE '*/NNP/dep/3 */NNP/dep/3 9/CD/dep/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/dep/3 */NNP/dep/3 ]/SYM/ROOT/0\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/3 */NNP/dep/3 ]/SYM/dep/0\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/dep/3 */NNP/nn/3 */NNP/ROOT/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/dep/3 */NNP/nn/3 */NNP/dep/0\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/dep/3 */NNP/nn/3 ]/SYM/dep/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/dep/3 */NNP/nn/3 ]/SYM/dep/0\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/3 */NNP/nn/3 ]/SYM/nsubj/0\t0 1' INTEGER
@@ -1589,12 +1389,6 @@
 @ATTRIBUTE '*/NNP/dep/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/ROOT/0\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/dep/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/dep/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/dep/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/dep/0\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/dobj/0 */NNP/nn/3 */NNP/appos/1\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/dobj/0 */NNP/nn/3 */NNP/appos/1\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/dobj/0 */NNP/nn/3 */NNP/appos/1\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/dobj/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/dobj/0 and/CC/cc/1 */NN/nn/4 */NNS/conj/1\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/dobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/dobj/0 from/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 \'s/POS/pobj/0 */NN/appos/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NN/appos/0 */NNP/appos/2\t2 0' INTEGER
@@ -1603,92 +1397,55 @@
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NN/appos/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NN/appos/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NN/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NN/dep/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NN/dep/2\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NN/dep/2\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NN/dep/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NN/dep/2\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/appos/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/appos/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2 and/CC/cc/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2 and/CC/cc/2\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/dep/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/dep/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/dep/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNP/dep/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 */NNS/dep/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 1/CD/dep/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 and/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 and/CC/cc/2 */NNP/conj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 for/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 for/IN/prep/2 */NN/pobj/3\t3 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/ROOT/0 for/IN/prep/2 */NNP/pobj/3\t3 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/appos/0 */NN/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/appos/0 */NN/appos/2\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/appos/0 */NNP/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/appos/0 */NNP/appos/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/appos/0 */NNP/appos/2\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/appos/0 */NNP/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/appos/0 of/IN/prep/2 */NNP/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/conj/0 */NN/appos/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/conj/0 */NNP/appos/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/conj/0 */NNP/dep/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NN/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NN/appos/2\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NN/dep/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NN/dep/2\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NN/dep/2\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/appos/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/appos/2\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/conj/2\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/conj/2 and/CC/cc/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/conj/2 and/CC/cc/2\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/dep/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/dep/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/dep/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNP/dep/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNPS/dep/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 */NNS/dep/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 and/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 and/CC/cc/2 */NNP/conj/2\t3 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 and/CC/cc/2 */NNPS/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dep/0 in/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/3 \'/POS/pobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/3 \'/POS/pobj/0\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/3 ]/SYM/ROOT/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/3 ]/SYM/ROOT/0\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/3 ]/SYM/dep/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dep/3 ]/SYM/dep/0\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 */NN/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 */NN/appos/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 */NN/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 */NNP/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 */NNP/appos/2\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 and/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 and/CC/cc/2 */NNS/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 of/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/dobj/0 of/IN/prep/2 */NNP/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 */NN/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 */NN/appos/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 */NN/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 */NNP/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 */NNP/appos/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 */NNP/appos/2\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 */NNP/appos/2\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2\t3 0' INTEGER
@@ -1730,46 +1487,21 @@
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NN/appos/2\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NNP/appos/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NNP/appos/2\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NNP/appos/2\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NNP/appos/2\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NNP/appos/2\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NNP/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NNP/conj/2 and/CC/cc/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NNP/conj/2 and/CC/cc/2\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 */NNP/dep/2\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NN/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2\t0 3' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2\t1 3' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2\t3 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2\t3 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNS/conj/2\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 in/IN/prep/2 */NNP/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NN/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NN/pobj/3\t0 3' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NN/pobj/3\t3 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NNP/pobj/3\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NNP/pobj/3\t0 3' INTEGER
 @ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NNP/pobj/3\t3 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NNP/pobj/3\t3 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NNPS/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NNS/pobj/3\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/2 */NNP/pobj/0 or/CC/cc/2 */NNP/conj/2\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NN/dep/3 \'s/POS/pobj/0\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NN/ROOT/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NN/appos/0\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NN/dobj/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NN/nsubj/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NN/nsubjpass/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NN/pobj/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NNP/ROOT/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NNP/conj/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NNP/dep/0\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NNP/nsubj/0\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NN/nn/3 */NNP/pobj/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NNP/dep/3 */NN/ROOT/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/dep/3 */NN/nsubj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 \'s/POS/pobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 \'s/POS/pobj/0\t1 0' INTEGER
@@ -1789,10 +1521,8 @@
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/appos/0\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/appos/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/appos/0\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/appos/0\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/attr/0\t1 0' INTEGER
@@ -1804,7 +1534,6 @@
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/dobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/dobj/0\t0 2' INTEGER
@@ -1819,7 +1548,6 @@
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/nsubjpass/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/nsubjpass/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/nsubjpass/0\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/nsubjpass/0\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0\t1 0' INTEGER
@@ -1845,21 +1573,15 @@
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 9/CD/dep/0\t0 1' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 9/CD/dep/0\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/nn/3 */NNP/nn/3 ]/SYM/dep/0\t0 1' INTEGER
-@ATTRIBUTE '*/NNP/nn/3 */NNPS/nn/3 */NNP/pobj/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 */NNP/appos/1 */NNP/appos/2\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 */NNP/conj/1 */NNP/conj/1\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nsubj/0 */NNP/conj/1 */NNP/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 */NNP/conj/1 */NNP/conj/1\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1\t2 1' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1\t1 3' INTEGER
-@ATTRIBUTE '*/NNP/nsubj/0 */NNP/nn/3 */NNP/appos/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 */NNP/nn/3 */NNP/appos/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 */NNP/nn/3 */NNP/conj/1 and/CC/cc/1\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/nsubj/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1\t2 3' INTEGER
-@ATTRIBUTE '*/NNP/nsubj/0 and/CC/cc/1 */NN/nn/4 */NNS/conj/1\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/nsubj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t2 3' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/2 \'re/VBP/ROOT/0 */NN/attr/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/2 \'s/POS/ROOT/0 */NN/attr/2\t2 0' INTEGER
@@ -1875,26 +1597,19 @@
 @ATTRIBUTE '*/NNP/nsubj/2 abolished/VBD/ROOT/0 */NN/dobj/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/nsubj/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/dep/0\t0 2' INTEGER
 @ATTRIBUTE '*/NNP/nsubjpass/4 of/IN/prep/1 */NNP/pobj/2 abolished/VBN/ROOT/0\t0 2' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 */NN/appos/1 in/IN/prep/2 */NNP/pobj/3\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NN/appos/1 of/IN/prep/2 */NNP/pobj/3\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 */NN/nn/3 */NN/appos/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NN/nn/3 */NN/appos/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NN/nn/3 */NN/appos/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NN/nn/3 */NN/appos/1\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 */NN/nn/3 */NNP/appos/1\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 */NN/nn/3 */NNP/conj/1 and/CC/cc/1\t1 0' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 */NNP/appos/1 of/IN/prep/2 */NNP/pobj/3\t1 3' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NNP/conj/1 */NNP/conj/1\t1 2' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1\t1 3' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1\t3 1' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NNP/nn/3 */NNP/appos/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NNP/nn/3 */NNP/appos/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NNP/nn/3 */NNP/appos/1\t2 1' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 */NNP/nn/3 */NNP/conj/1 and/CC/cc/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NNP/nn/3 */NNP/conj/1 and/CC/cc/1\t1 2' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NNP/nn/3 */NNP/dep/1\t1 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 */NNP/nn/3 */NNP/dep/1\t1 2' INTEGER
@@ -1908,25 +1623,16 @@
 @ATTRIBUTE '*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t2 3' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t3 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t3 2' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNS/conj/1\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 first/JJ/amod/3 */NN/appos/1\t2 0' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 in/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t0 3' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 is/VBZ/rcmod/1 */NN/attr/2\t2 0' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNP/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t2 3' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 0' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 2' INTEGER
-@ATTRIBUTE '*/NNP/pobj/0 or/CC/cc/1 */NNP/nn/4 */NNP/conj/1\t3 0' INTEGER
-@ATTRIBUTE '*/NNPS/nn/3 */NNP/nn/3 */NNP/ROOT/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNPS/nn/3 */NNP/nn/3 */NNP/dep/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNPS/nn/3 */NNP/nn/3 */NNP/nsubj/0\t1 2' INTEGER
 @ATTRIBUTE '*/NNS/ROOT/0 */NNP/dep/1 */NN/appos/2\t2 1' INTEGER
 @ATTRIBUTE '*/NNS/ROOT/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/ROOT/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/conj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/nn/3 */NNP/nn/3 */NNP/ROOT/0\t1 2' INTEGER
-@ATTRIBUTE '*/NNS/nn/3 */NNP/nn/3 */NNP/nsubj/0\t1 2' INTEGER
 @ATTRIBUTE '*/NNS/nsubj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/nsubj/2 //VBP/ROOT/0 */NN/dobj/2\t2 0' INTEGER
@@ -1937,11 +1643,9 @@
 @ATTRIBUTE '*/NNS/pobj/0 and/CC/cc/1 early/JJ/amod/4 */NN/conj/1\t3 0' INTEGER
 @ATTRIBUTE '*/NNS/pobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4\t2 4' INTEGER
-@ATTRIBUTE '*/NNS/pobj/0 in/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t2 4' INTEGER
 @ATTRIBUTE '*/NNS/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3\t4 2' INTEGER
-@ATTRIBUTE '*/NNS/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2\t3 2' INTEGER
 @ATTRIBUTE '*/NNS/pobj/0 was/VBD/rcmod/1 */NN/attr/2\t2 0' INTEGER
 @ATTRIBUTE '//VBP/ROOT/0 */NN/nn/3 */NN/dobj/1\t1 2' INTEGER
 @ATTRIBUTE '//VBP/ROOT/0 */NN/nn/3 */NN/dobj/1\t2 1' INTEGER
