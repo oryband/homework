@@ -41,30 +41,30 @@ public class JobFlow {
             pairsClass = "Pairs",
             biarcsClass = "Biarcs",
             joinClass = "Join",
+            labelsClass = "Labels",
             headersClass = "Headers",
-            arffClass = "ARFF",
             singleLineClass = "SingleLine",
 
             pairsJarUrl = s3BaseUri + "jars/Pairs.jar",
             biarcsJarUrl = s3BaseUri + "jars/Biarcs.jar",
             joinJarUrl = s3BaseUri + "jars/Join.jar",
-            headersJarUrl = s3BaseUri + "jars/Headers.jar",
-            arffJarUrl = s3BaseUri + "jars/ARFF.jar",
+            labelsJarUrl = s3BaseUri + "jars/labels.jar",
+            headersJarUrl = s3BaseUri + "jars/headers.jar",
             singleLineJarUrl = s3BaseUri + "jars/SingleLine.jar",
 
             pairsOutput =  s3BaseUri + "steps/pairs/output/",
             biarcsOutput = s3BaseUri +  "steps/biarcs/output/",
             joinOutput = s3BaseUri + "steps/join/output/",
+            labelsOutput = s3BaseUri + "steps/labels/output/",
             headersOutput = s3BaseUri + "steps/headers/output/",
-            arffOutput = s3BaseUri + "steps/arff/output/",
             singleLineOutput = s3BaseUri + "steps/singleLine/output/",
 
             pairsInput = s3BaseUri + "steps/pairs/input/hypernym.txt",
             biarcsInputPrefix = "s3://bgudsp142/syntactic-ngram/biarcs/biarcs.",
             joinInput1 = pairsOutput + hadoopOutputFileName,
             joinInput2 = biarcsOutput + hadoopOutputFileName,
-            headersInput = joinOutput + hadoopOutputFileName,
-            arffInput = headersOutput + hadoopOutputFileName,
+            labelsInput = joinOutput + hadoopOutputFileName,
+            headersInput = labelsOutput + hadoopOutputFileName,
             singleLineInput = joinOutput + hadoopOutputFileName;
 
 
@@ -107,6 +107,17 @@ public class JobFlow {
             .withHadoopJarStep(joinJarConfig)
             .withActionOnFailure(actionOnFailure);
 
+        // Set Labels job flow step.
+        HadoopJarStepConfig labelsJarConfig = new HadoopJarStepConfig()
+            .withJar(labelsJarUrl)
+            .withMainClass(labelsClass)
+            .withArgs(labelsInput, labelsOutput);
+
+        StepConfig labelsConfig = new StepConfig()
+            .withName(labelsClass)
+            .withHadoopJarStep(labelsJarConfig)
+            .withActionOnFailure(actionOnFailure);
+
         // Set Headers job flow step.
         HadoopJarStepConfig headersJarConfig = new HadoopJarStepConfig()
             .withJar(headersJarUrl)
@@ -116,17 +127,6 @@ public class JobFlow {
         StepConfig headersConfig = new StepConfig()
             .withName(headersClass)
             .withHadoopJarStep(headersJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set ARFF job flow step.
-        HadoopJarStepConfig arffJarConfig = new HadoopJarStepConfig()
-            .withJar(arffJarUrl)
-            .withMainClass(arffClass)
-            .withArgs(arffInput, arffOutput);
-
-        StepConfig arffConfig = new StepConfig()
-            .withName(arffClass)
-            .withHadoopJarStep(arffJarConfig)
             .withActionOnFailure(actionOnFailure);
 
         // Set SingleLine job flow step.
@@ -157,7 +157,7 @@ public class JobFlow {
             .withAmiVersion(amiVersion)
             .withInstances(instances)
             .withLogUri(logUri)
-            // .withSteps(pairsConfig, biarcsConfig, joinConfig, headersConfig, arffClass, singleLineConfig);
+            // .withSteps(pairsConfig, biarcsConfig, joinConfig, labelsConfig, headersClass, singleLineConfig);
             // Custom steps.
             .withSteps(joinConfig);
 
