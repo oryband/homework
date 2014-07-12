@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -33,7 +34,7 @@ public class Labels {
             // Split data by tabs.
             String[] data = value.toString().split(Utils.biarcDelim);
 
-            newKey.set(data[2] + Utils.biarcDelim + data[3]);
+            newKey.set(data[2] + Utils.biarcDelim + data[3].substring(0, data[3].lastIndexOf(Utils.delim)));
             context.write(newKey, one);
         }
     }
@@ -63,11 +64,10 @@ public class Labels {
 
 
     // Write { dep-tree, i1, i2 : <nothing> } and FILTER by DpMin.
-    public static class ReduceClass extends Reducer<Text, LongWritable, Text, Text> {
+    public static class ReduceClass extends Reducer<Text, LongWritable, Text, NullWritable> {
         private int DpMin;
 
-        private Text newKey = new Text(),
-                empty = new Text("");
+        private Text newKey = new Text();
 
 
         // Init DPMin argument.
@@ -92,7 +92,7 @@ public class Labels {
             }
 
             newKey.set(key.toString());
-            context.write(newKey, empty);
+            context.write(newKey, NullWritable.get());
         }
     }
 

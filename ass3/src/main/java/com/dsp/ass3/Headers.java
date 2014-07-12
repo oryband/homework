@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -23,45 +24,42 @@ public class Headers {
 
 
     // Mapper just passes on data.
-    public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
-
-        private Text empty = new Text("");
+    public static class MapClass extends Mapper<LongWritable, Text, Text, NullWritable> {
 
 
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
 
-            context.write(value, empty);
+            context.write(value, NullWritable.get());
         }
     }
 
 
     // Partition by key hash code.
-    public static class PartitionerClass extends Partitioner<Text, Text> {
+    public static class PartitionerClass extends Partitioner<Text, NullWritable> {
         @Override
-        public int getPartition(Text key, Text value, int numPartitions) {
+        public int getPartition(Text key, NullWritable value, int numPartitions) {
             return (key.hashCode() & Integer.MAX_VALUE) % numPartitions;
         }
     }
 
 
     // Write: @ATTRIBUTE 'dep-tree', i1, i2 INTEGER for every vector.
-    public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
+    public static class ReduceClass extends Reducer<Text, NullWritable, Text, NullWritable> {
 
-        private Text newKey = new Text(),
-                empty = new Text("");
+        private Text newKey = new Text();
 
 
         @Override
-        public void reduce(Text key, Iterable<Text> values, Context context)
+        public void reduce(Text key, Iterable<NullWritable> values, Context context)
             throws IOException, InterruptedException {
 
             newKey.set(attributeHeader
                     + Utils.delim + weka.core.Utils.quote(key.toString())
                     + Utils.delim + attributeType);
 
-            context.write(newKey, empty);
+            context.write(newKey, NullWritable.get());
         }
     }
 
@@ -77,10 +75,10 @@ public class Headers {
         job.setReducerClass(ReduceClass.class);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+        job.setOutputValueClass(NullWritable.class);
 
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(Text.class);
+        job.setMapOutputValueClass(NullWritable.class);
 
         // NOTE we use two different input paths in here.
         FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));

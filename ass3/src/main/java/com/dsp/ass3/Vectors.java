@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -72,13 +73,10 @@ public class Vectors {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int i=1;
-            String depTree, line;
+            String depTree;
             try {
                 // Read dep-trees and set labels in map.
-                while ( (line = br.readLine()) != null) {
-                    // Read dep-tree, and filter postfixed '\t' char at the end.
-                    depTree = line.substring(0, line.lastIndexOf(Utils.biarcDelim));
-
+                while ( (depTree = br.readLine()) != null) {
                     // Set coordinate label in labels map.
                     labels.put(depTree, Integer.valueOf(i));
 
@@ -182,7 +180,7 @@ public class Vectors {
 
 
     // Reducer just passes on data.
-    public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
+    public static class ReduceClass extends Reducer<Text, Text, Text, NullWritable> {
 
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context)
@@ -190,7 +188,7 @@ public class Vectors {
 
             // Emit for each value element (in case for some reason we have more).
             for (Text value : values) {
-                context.write(key, value);
+                context.write(value, NullWritable.get());
             }
         }
     }
