@@ -1,5 +1,6 @@
 package com.dsp.ass3;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,36 +20,66 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class Vector {
 
+    private static String headersUrl = "s3://ory-dsp-ass3/steps/headers/output/headers",
+            startOfVector = "{",
+            endOfVector = "}",
+            arffCoordinateDelim = ",";
+
+
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Vector.class.getName()));
 
-    // Mapper just passes on data.
+
+    // Write { N1, N2, hypernym-index : { i1:h1, i2:h2, i3:h3,...} }
+    // Where [..] is the pair's SPARSE dep-tree vector.
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
 
-        // intwritable ??
-        private Map<String, Integer> headers = new HashMap <String, Integer>();
-
-        private String HeadersLink = "";
+        // ARFF header label map.
+        private Map<String, Integer> labels = new HashMap <String, Integer>();
         private String depTree;
 
         private Text newKey = new Text(),
                 newValue = new Text();
 
+
+        // Init headers labels map.
         @Override
         public void setup(Context context) {
-            initHeader(Utils.LinkToString(HeadersLink));
-        }
+            // Fetch label data from url.
+            BufferedReader br = Utils.linkToBufferedReader(headersUrl);
 
-        private void initHeader(String data) {
-            String[] splitData = data.split("\n");
-            for (int i = 0 ; i < splitData.length ; i++){
-                depTree = splitData[i].substring(0, splitData[i].lastIndexOf(Utils.keyValueDelim));
-                headers.put(depTree, Integer.valueOf(i));
+            int i=0;
+            String line;
+            try {
+                // Read dep-trees and set labels in map.
+                while ( (line = br.readLine()) != null) {
+                    // Read dep-tree.
+                    depTree = line.substring(0, line.lastIndexOf(Utils.biarcDelim));
+
+                    // Set coordinate label in labels map.
+                    labels.put(depTree, Integer.valueOf(i));
+
+                    // Set label coordinate index in vector.
+                    i++;
+                }
+            } catch (IOException e) {
+                logger.severe(e.getMessage());
+                return;
+            }
+
+            // Close buffer.
+            try {
+                br.close();
+            } catch (IOException e) {
+                logger.severe(e.getMessage());
+                return;
             }
         }
 
-        private String getOccrences(String dep) {
-            return dep.split("\t")[1].split(" ")[2];
+
+        private String getHits(String dep) {
+            return dep.split(Utils.biarcDelim)[1].split(Utils.delim)[2];
         }
+
 
         @Override
         public void map(LongWritable key, Text value, Context context)
@@ -56,28 +87,44 @@ public class Vector {
 
             StringBuilder sb = new StringBuilder();
 
-            // Fetch key/value and emit them.
+            // Fetch key/value and emit.
             String v = value.toString();
             Integer depTreeIndex;
-            int index = v.indexOf(Utils.keyValueDelim, v.indexOf(Utils.keyValueDelim) + 1);
 
-            String[] depTrees = v.substring(index + 1).split("\t\t");
+            // Fetch the index of the '\t' before the first biarc label.
+            int index = v.indexOf(Utils.biarcDelim, v.indexOf(Utils.biarcDelim) + 1);
 
-            sb.append("{ ");
-            for (int i = 0 ; i < depTrees.length ; i++) {
-                depTreeIndex = headers.get(depTrees[i]);
+            // Write SPARSE vector with coordinate indexes.
+            // We use the labels map (init in setup() ) to fetch each cooridnate label's index.
+            String[] depTrees = v.substring(index + 1).split(Utils.coordinateDelim);
+            for (int i=0; i < depTrees.length; i++) {
+                // Fetch dep-tree index from labels map.
+                depTreeIndex = labels.get(depTrees[i]);
+
+                // Write only non-zero coordinates (this is a SPARSE vector).
                 if (depTreeIndex != null) {
-                    //TODO should we print depTrees[i] ? or weka.blabla(depTrees[i])
-                    sb.append(depTreeIndex.toString()).append(Utils.delim).append(getOccrences(depTrees[i]));
-                    if (i != depTrees.length -1){
-                        sb.append(",");
+                    // Prepend beginning of vector char.
+                    sb.append(startOfVector);
+
+                    // Append coordinate index and value.
+                    sb.append(depTreeIndex.toString()).append(Utils.delim).append(getHits(depTrees[i]));
+
+                    // Append coordinate delimeter if this isn't the last
+                    // cooridnate.
+                    if (i != depTrees.length -1) {
+                        sb.append(arffCoordinateDelim);
                     }
+
+                    // Append end of vector char.
+                    sb.append(endOfVector).append(Utils.lineDelim);
                 }
             }
-            sb.append("}");
 
-            newValue.set(sb.toString());
+            // Fetch noun-pair key and set as key.
             newKey.set(v.substring(0, index));
+
+            // Set vector as value.
+            newValue.set(sb.toString());
 
             context.write(newKey, newValue);
         }

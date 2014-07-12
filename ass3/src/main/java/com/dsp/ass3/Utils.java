@@ -29,18 +29,19 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 
 public class Utils {
     public static final String
+        joinStart = "*",  // Join start reducer char.
         delim = " ",  // Data delimeter.
         keyValueDelim = "\t",
-        joinStart = "*",  // Join start reducer char.
         biarcDelim = "\t",
         coordinateDelim = "\t\t",
+        lineDelim = "\n",
 
         DpMinArg = "DPMin",
 
         bucket = "ory-dsp-ass3",
         s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
 
-    public static final int argInIndex = 1;  // Use =0 for local testing, =1 for AWS.
+    public static final int argInIndex = 0;  // Use =0 for local testing, =1 for AWS.
 
     private static final Logger logger = setLogger(Logger.getLogger(Utils.class.getName()));
 
@@ -174,14 +175,15 @@ public class Utils {
         return sum;
     }
 
-    // Read URL and return result as string.
-    public static String LinkToString(String link) {
+
+
+    // Read URL and return result as BufferedReader (for incremental reading).
+    public static BufferedReader linkToBufferedReader(String link) {
         URL url;
-        String line;
-        StringBuilder content = new StringBuilder();
         InputStream is;
         BufferedReader br;
 
+        // Fetch data from url.
         try {
             url = new URL(link);
         } catch (MalformedURLException e) {
@@ -189,6 +191,7 @@ public class Utils {
             return null;
         }
 
+        // Open input stream.
         try {
             is = url.openStream();
         } catch (IOException e) {
@@ -196,30 +199,17 @@ public class Utils {
             return null;
         }
 
+        // Read input.
         br = new BufferedReader(new InputStreamReader(is));
 
-        try {
-            while ( (line = br.readLine()) != null) {
-                content.append(line);
-                content.append("\n");
-            }
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-            return null;
-        }
-
-        try {
-            br.close();
-        } catch (IOException e) {
-            logger.severe(e.getMessage());
-        }
-
+        // Close input stream.
         try {
             is.close();
         } catch (IOException e) {
             logger.severe(e.getMessage());
         }
 
-        return content.toString();
+        // Return read buffer.
+        return br;
     }
 }
