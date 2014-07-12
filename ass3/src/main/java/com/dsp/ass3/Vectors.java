@@ -76,7 +76,7 @@ public class Vectors {
             try {
                 // Read dep-trees and set labels in map.
                 while ( (line = br.readLine()) != null) {
-                    // Read dep-tree.
+                    // Read dep-tree, and filter postfixed '\t' char at the end.
                     depTree = line.substring(0, line.lastIndexOf(Utils.biarcDelim));
 
                     // Set coordinate label in labels map.
@@ -128,8 +128,8 @@ public class Vectors {
             // Append un/related as index 0.
             sb.append(classCoordinateIndex).append(Utils.delim).append(related);
 
-            String[] depTrees = v.substring(dataIndex + 1).split(Utils.coordinateDelim);
             // Skip noun-pairs with no hits.
+            String[] depTrees = v.substring(dataIndex + 1).split(Utils.coordinateDelim);
             if (depTrees.length == 0) {
                 return;
             }
@@ -144,7 +144,7 @@ public class Vectors {
                 // Fetch dep-tree, coordinate index, and hits.
                 depTree = depTrees[i];
 
-                hitsIndex = depTree.lastIndexOf(Utils.delim);
+                hitsIndex = depTree.lastIndexOf(Utils.keyValueDelim);
                 hits = depTree.substring(hitsIndex +1);
 
                 depTree = depTree.substring(0, hitsIndex);

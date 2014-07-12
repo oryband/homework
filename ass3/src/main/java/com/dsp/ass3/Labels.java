@@ -33,10 +33,7 @@ public class Labels {
             // Split data by tabs.
             String[] data = value.toString().split(Utils.biarcDelim);
 
-            // Fetch dep-tree indexes.
-            String indexes = data[3].substring(0, data[3].lastIndexOf(Utils.delim));
-
-            newKey.set(data[2] + Utils.biarcDelim + indexes);
+            newKey.set(data[2] + Utils.biarcDelim + data[3]);
             context.write(newKey, one);
         }
     }
