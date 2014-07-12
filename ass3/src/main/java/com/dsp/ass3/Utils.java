@@ -24,7 +24,9 @@ import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 
 
 public class Utils {
@@ -74,6 +76,13 @@ public class Utils {
         } else {
             return null;
         }
+    }
+
+
+    // Read file from S3 and returned input stream object with read data.
+    public static InputStream readFromS3(AmazonS3 s3, String path) {
+        S3Object object = s3.getObject(new GetObjectRequest(bucket, path));
+        return object.getObjectContent();
     }
 
 
@@ -174,7 +183,6 @@ public class Utils {
         }
         return sum;
     }
-
 
 
     // Read URL and return result as BufferedReader (for incremental reading).
