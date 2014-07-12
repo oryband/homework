@@ -23,7 +23,7 @@ public class Vector {
     private static String headersUrl = "s3://ory-dsp-ass3/steps/headers/output/headers",
             startOfVector = "{",
             endOfVector = "}",
-            arffCoordinateDelim = ",";
+            arffCoordinateDelim = ", ";
 
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Vector.class.getName()));
@@ -47,7 +47,7 @@ public class Vector {
             // Fetch label data from url.
             BufferedReader br = Utils.linkToBufferedReader(headersUrl);
 
-            int i=0;
+            int i=1;
             String line;
             try {
                 // Read dep-trees and set labels in map.
@@ -92,36 +92,44 @@ public class Vector {
             Integer depTreeIndex;
 
             // Fetch the index of the '\t' before the first biarc label.
-            int index = v.indexOf(Utils.biarcDelim, v.indexOf(Utils.biarcDelim) + 1);
+            int firstIndex = v.indexOf(Utils.biarcDelim);
+            int secondIndex = v.indexOf(Utils.biarcDelim, firstIndex + 1);
+
+            boolean related = v.substring(firstIndex + 1, secondIndex).equals("true");
+
+            // Prepend beginning of vector char.
+            sb.append(startOfVector);
+
+            // Append related/unrelated as index 0.
+            sb.append("0 ");
+            sb.append(related ? "1" : "0");
+            sb.append(arffCoordinateDelim);
 
             // Write SPARSE vector with coordinate indexes.
             // We use the labels map (init in setup() ) to fetch each cooridnate label's index.
-            String[] depTrees = v.substring(index + 1).split(Utils.coordinateDelim);
+            String[] depTrees = v.substring(secondIndex + 1).split(Utils.coordinateDelim);
             for (int i=0; i < depTrees.length; i++) {
                 // Fetch dep-tree index from labels map.
                 depTreeIndex = labels.get(depTrees[i]);
 
                 // Write only non-zero coordinates (this is a SPARSE vector).
                 if (depTreeIndex != null) {
-                    // Prepend beginning of vector char.
-                    sb.append(startOfVector);
 
                     // Append coordinate index and value.
                     sb.append(depTreeIndex.toString()).append(Utils.delim).append(getHits(depTrees[i]));
 
-                    // Append coordinate delimeter if this isn't the last
-                    // cooridnate.
+                    // Append coordinate delimeter if this isn't the last cooridnate.
                     if (i != depTrees.length -1) {
                         sb.append(arffCoordinateDelim);
                     }
 
-                    // Append end of vector char.
-                    sb.append(endOfVector).append(Utils.lineDelim);
                 }
             }
+            // Append end of vector char.
+            sb.append(endOfVector);
 
             // Fetch noun-pair key and set as key.
-            newKey.set(v.substring(0, index));
+            newKey.set(v.substring(0, firstIndex));
 
             // Set vector as value.
             newValue.set(sb.toString());
