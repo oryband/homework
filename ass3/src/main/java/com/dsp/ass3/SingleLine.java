@@ -92,7 +92,7 @@ public class SingleLine {
 
         // Use this for local testing.
         // Add all but last argument as input path.
-        for (int i=0; i < args.length -2; i++) {
+        for (int i=0; i < args.length -1; i++) {
             FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
         }
         FileOutputFormat.setOutputPath(job, new Path(args[args.length -1]));
