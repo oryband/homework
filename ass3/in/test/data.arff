@@ -1,4 +1,5 @@
 @RELATION deptrees
+@ATTRIBUTE related {true,false}
 @ATTRIBUTE '$/$/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3\t3 1' INTEGER
 @ATTRIBUTE '$/$/ROOT/0 */NN/nn/3 */NN/dep/1\t1 2' INTEGER
 @ATTRIBUTE '$/$/ROOT/0 */NN/nn/3 */NN/dep/1\t2 1' INTEGER
