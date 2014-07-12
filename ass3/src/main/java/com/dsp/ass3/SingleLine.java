@@ -90,8 +90,17 @@ public class SingleLine {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
-        FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 1]));
+        // Use this for local testing.
+        // Add all but last argument as input path.
+        for (int i=0; i < args.length -2; i++) {
+            FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
+        }
+        FileOutputFormat.setOutputPath(job, new Path(args[args.length -1]));
+
+        // Use this for AWS.
+        // NOTE we use two different input paths in here.
+        // FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
+        // FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +1]));
 
         boolean result = job.waitForCompletion(true);
 
