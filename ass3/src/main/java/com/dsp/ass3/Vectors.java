@@ -4,14 +4,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -26,12 +28,11 @@ import com.amazonaws.services.s3.AmazonS3;
 
 public class Vectors {
 
-    // private static String labelsPath = "steps/labels/output/test-labels",
-    private static String labelsPath = "steps/labels/output/labels",
+    private static String labelsPath = "steps/labels/output/test-labels",
+    // private static String labelsPath = "steps/labels/output/labels",
             startOfVectors = "{",
             endOfVectors = "}",
-            arffCoordinateDelim = ",",
-            classCoordinateIndex = "0";
+            arffCoordinateDelim = ",";
 
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Vectors.class.getName()));
@@ -43,8 +44,8 @@ public class Vectors {
 
         // ARFF header label map.
         private Map<String, Integer> labels = new HashMap <String, Integer>();
+        private String depTree;
 
-        // For downloading labels from S3.
         private AWSCredentials creds;
         private AmazonS3 s3;
 
@@ -73,10 +74,13 @@ public class Vectors {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int i=1;
-            String depTree;
+            String line;
             try {
                 // Read dep-trees and set labels in map.
-                while ( (depTree = br.readLine()) != null) {
+                while ( (line = br.readLine()) != null) {
+                    // Read dep-tree.
+                    depTree = line.substring(0, line.lastIndexOf(Utils.biarcDelim));
+
                     // Set coordinate label in labels map.
                     labels.put(depTree, Integer.valueOf(i));
 
@@ -105,6 +109,11 @@ public class Vectors {
         }
 
 
+        private String getHits(String dep) {
+            return dep.split(Utils.biarcDelim)[1].split(Utils.delim)[2];
+        }
+
+
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
@@ -113,6 +122,7 @@ public class Vectors {
 
             // Fetch key/value and emit.
             String v = value.toString();
+            Integer depTreeIndex;
 
             // Fetch the index of the '\t' before the first biarc label.
             int classIndex = v.indexOf(Utils.biarcDelim),
@@ -124,38 +134,32 @@ public class Vectors {
             sb.append(startOfVectors);
 
             // Append un/related as index 0.
-            sb.append(classCoordinateIndex).append(Utils.delim).append(related);
-
-            // Skip noun-pairs with no hits.
-            String[] depTrees = v.substring(dataIndex + 1).split(Utils.coordinateDelim);
-            if (depTrees.length == 0) {
-                return;
-            }
-
-            String depTree, hits;
-            int hitsIndex;
-            Integer depTreeIndex;
+            sb.append("0 ").append(related);
 
             // Write SPARSE vector with coordinate indexes.
             // We use the labels map (init in setup() ) to fetch each cooridnate label's index.
+            String[] depTrees = v.substring(dataIndex + 1).split(Utils.coordinateDelim);
+            List<String> coordinates = new ArrayList<String>();
+
             for (int i=0; i < depTrees.length; i++) {
-                // Fetch dep-tree, coordinate index, and hits.
-                depTree = depTrees[i];
-
-                hitsIndex = depTree.lastIndexOf(Utils.keyValueDelim);
-                hits = depTree.substring(hitsIndex +1);
-
-                depTree = depTree.substring(0, hitsIndex);
-                depTreeIndex = labels.get(depTree);
+                // Fetch dep-tree index from labels map.
+                depTreeIndex = labels.get(depTrees[i]);
 
                 // Write only non-zero coordinates (this is a SPARSE vector).
                 if (depTreeIndex != null) {
                     // Append coordinate index and value.
-                    sb.append(arffCoordinateDelim).append(depTreeIndex.toString()).append(Utils.delim).append(hits);
-
-
+                    coordinates.add(depTreeIndex.toString() + Utils.delim + getHits(depTrees[i]));
                 }
             }
+
+            // Sort coordinates.
+            java.util.Collections.sort(coordinates);
+
+            Iterator<String> it = coordinates.iterator();
+            while (it.hasNext()) {
+                sb.append(arffCoordinateDelim).append(it.next());
+            }
+
             // Append end of vector char.
             sb.append(endOfVectors);
 
@@ -180,7 +184,7 @@ public class Vectors {
 
 
     // Reducer just passes on data.
-    public static class ReduceClass extends Reducer<Text, Text, Text, NullWritable> {
+    public static class ReduceClass extends Reducer<Text, Text, Text, Text> {
 
         @Override
         public void reduce(Text key, Iterable<Text> values, Context context)
@@ -188,7 +192,7 @@ public class Vectors {
 
             // Emit for each value element (in case for some reason we have more).
             for (Text value : values) {
-                context.write(value, NullWritable.get());
+                context.write(key, value);
             }
         }
     }
