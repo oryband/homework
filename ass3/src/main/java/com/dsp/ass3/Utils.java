@@ -39,6 +39,7 @@ public class Utils {
     lineDelim = "\n",
 
     DpMinArg = "DPMin",
+    labelsPath = "LabelsPath",
 
     txtEnding = ".txt",
     countersPath =  "counters/",
