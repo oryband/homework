@@ -74,12 +74,9 @@ public class Vectors {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
             int i=1;
-            String line;
             try {
                 // Read dep-trees and set labels in map.
-                while ( (line = br.readLine()) != null) {
-                    // Read dep-tree.
-                    depTree = line.substring(0, line.lastIndexOf(Utils.biarcDelim));
+                while ( (depTree = br.readLine()) != null) {
 
                     // Set coordinate label in labels map.
                     labels.put(depTree, Integer.valueOf(i));
@@ -109,11 +106,6 @@ public class Vectors {
         }
 
 
-        private String getHits(String dep) {
-            return dep.split(Utils.biarcDelim)[1].split(Utils.delim)[2];
-        }
-
-
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
@@ -139,23 +131,31 @@ public class Vectors {
             // Write SPARSE vector with coordinate indexes.
             // We use the labels map (init in setup() ) to fetch each cooridnate label's index.
             String[] depTrees = v.substring(dataIndex + 1).split(Utils.coordinateDelim);
-            List<String> coordinates = new ArrayList<String>();
+            String tree, line, hits;
+            int hitsIndex;
+            List<MyPair> coordinates = new ArrayList<MyPair>();
 
             for (int i=0; i < depTrees.length; i++) {
+
+                line = depTrees[i];
+                hitsIndex = line.lastIndexOf("\t");
+                tree= line.substring(0,hitsIndex);
+                hits = line.substring(hitsIndex + 1);
+
                 // Fetch dep-tree index from labels map.
-                depTreeIndex = labels.get(depTrees[i]);
+                depTreeIndex = labels.get(tree);
 
                 // Write only non-zero coordinates (this is a SPARSE vector).
                 if (depTreeIndex != null) {
                     // Append coordinate index and value.
-                    coordinates.add(depTreeIndex.toString() + Utils.delim + getHits(depTrees[i]));
+                    coordinates.add(new MyPair(depTreeIndex.intValue(), hits));
                 }
             }
 
             // Sort coordinates.
             java.util.Collections.sort(coordinates);
 
-            Iterator<String> it = coordinates.iterator();
+            Iterator<MyPair> it = coordinates.iterator();
             while (it.hasNext()) {
                 sb.append(arffCoordinateDelim).append(it.next());
             }
