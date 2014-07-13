@@ -81,7 +81,7 @@ public class Join {
                  v = values.iterator().next().toString().split(Utils.delim);
 
                 nounPair = k[0] + Utils.delim + k[1];
-                related = v[0].equals(isRelated) ? true : false ;
+                related = v[0].toLowerCase().equals(isRelated.toLowerCase()) ? true : false ;
                 hypernymIndex = Short.parseShort(v[1]);
             } else {
                 // This is not a new noun-pair,

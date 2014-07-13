@@ -127,8 +127,8 @@ public class JobFlow {
             biarcsConfig = createStepConfig(biarcsClass, createJarStepConfig(biarcsJarUrl, biarcsClass, biarcsInputPrefix, biarcsOutput)),
             joinConfig = createStepConfig(joinClass, createJarStepConfig(joinJarUrl, joinClass, joinInput1, joinInput2, joinOutput)),
             sumConfig = createStepConfig(sumClass, createJarStepConfig(sumJarUrl, sumClass, sumInput, sumOutput)),
-            labelsConfig = createStepConfig(labelsClass, createJarStepConfig(labelsJarUrl, labelsClass, labelsInput, labelsOutput)),
-            headersConfig = createStepConfig(headersClass, createJarStepConfig(headersJarUrl, headersClass, headersInput, headersOutput)),
+            // labelsConfig = createStepConfig(labelsClass, createJarStepConfig(labelsJarUrl, labelsClass, labelsInput, labelsOutput)),
+            // headersConfig = createStepConfig(headersClass, createJarStepConfig(headersJarUrl, headersClass, headersInput, headersOutput)),
             singleLineConfig = createStepConfig(singleLineClass, createJarStepConfig(singleLineJarUrl, singleLineClass, singleLineInput, singleLineOutput)),
             vectorsConfig = createStepConfig(vectorsClass, createJarStepConfig(vectorsJarUrl, vectorsClass, vectorsInput1, vectorsInput2, vectorsOutput));
 
@@ -137,7 +137,7 @@ public class JobFlow {
         // Set job flow request.
         RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
                 pairsConfig, biarcsConfig, joinConfig, sumConfig,
-                labelsConfig, headersConfig,
+                // labelsConfig, headersConfig,
                 singleLineConfig, vectorsConfig);
 
         // Custom steps.

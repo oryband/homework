@@ -101,9 +101,7 @@ public class Labels {
         Configuration conf = new Configuration();
 
         // Read DpMin argument.
-        // Use this for local testing.
-        // TODO Need another argument for AWS.
-        conf.set(Utils.DpMinArg, args[args.length -1]);
+        conf.set(Utils.DpMinArg, args[Utils.argInIndex]);
 
         Job job = new Job(conf, "Labels");
 
@@ -121,15 +119,15 @@ public class Labels {
 
         // Use this for local testing.
         // Add all but last argument as input path.
-        for (int i=0; i < args.length -2; i++) {
+        for (int i=1; i < args.length -1; i++) {
             FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
         }
-        FileOutputFormat.setOutputPath(job, new Path(args[args.length -2]));
+        FileOutputFormat.setOutputPath(job, new Path(args[args.length -1]));
 
         // Use this for AWS.
         // NOTE we use two different input paths in here.
-        // FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
-        // FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +1]));
+        // FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +1]));
+        // FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +2]));
 
         boolean result = job.waitForCompletion(true);
 
