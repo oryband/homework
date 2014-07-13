@@ -223,8 +223,8 @@ public class Utils {
         return br;
     }
 
-    public static void uploadCountersToS3(long totalRecords, long totalBytes, String fileName){
 
+    public static void uploadCountersToS3(long totalRecords, long totalBytes, String fileName) {
         StringBuilder sb = new StringBuilder();
         sb.append("totalRecords\t").append(totalRecords).append("\n");
         sb.append("totalBytes\t").append(totalBytes);

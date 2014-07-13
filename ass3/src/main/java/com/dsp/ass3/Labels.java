@@ -140,7 +140,6 @@ public class Labels {
             long totalBytes = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_BYTES").getValue();
 
             Utils.uploadCountersToS3(totalRecords, totalBytes, "Labels");
-
         }
 
         System.exit(result ? 0 : 1);

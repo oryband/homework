@@ -140,8 +140,9 @@ public class JobFlow {
                 // labelsConfig, headersConfig,
                 singleLineConfig, vectorsConfig);
 
-        // Custom steps.
-        // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances, joinConfig);
+        // After labels/arff has finished.
+        // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
+        //         singleLineConfig, vectorsConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);

@@ -27,6 +27,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 
+
 public class Vectors {
 
     private static String labelsPath,
@@ -228,7 +229,6 @@ public class Vectors {
             long totalBytes = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_BYTES").getValue();
 
             Utils.uploadCountersToS3(totalRecords, totalBytes, "Vectors");
-
         }
 
         System.exit(result ? 0 : 1);

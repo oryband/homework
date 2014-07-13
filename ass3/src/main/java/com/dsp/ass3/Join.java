@@ -158,7 +158,6 @@ public class Join {
             long totalBytes = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_BYTES").getValue();
 
             Utils.uploadCountersToS3(totalRecords, totalBytes, "Join");
-
         }
 
         System.exit(result ? 0 : 1);
