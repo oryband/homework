@@ -133,30 +133,32 @@ public class Vectors {
             // We use the labels map (init in setup() ) to fetch each cooridnate label's index.
             String[] depTrees = v.substring(dataIndex + 1).split(Utils.coordinateDelim);
             String tree, line, hits;
-            int hitsIndex;
-            List<MyPair> coordinates = new ArrayList<MyPair>();
+            long hitsIndex;
+            List<Coordinate> coordinates = new ArrayList<Coordinate>();
 
             for (int i=0; i < depTrees.length; i++) {
-
+                // Fetch dep-tree.
                 line = depTrees[i];
-                hitsIndex = line.lastIndexOf("\t");
-                tree= line.substring(0,hitsIndex);
-                hits = line.substring(hitsIndex + 1);
+
+                // Fetch hits.
+                hitsIndex = line.lastIndexOf(Utils.biarcDelim);
+                hits = line.substring((int)hitsIndex + 1);
 
                 // Fetch dep-tree index from labels map.
+                tree = line.substring(0, (int)hitsIndex);
                 depTreeIndex = labels.get(tree);
 
                 // Write only non-zero coordinates (this is a SPARSE vector).
                 if (depTreeIndex != null) {
                     // Append coordinate index and value.
-                    coordinates.add(new MyPair(depTreeIndex.intValue(), hits));
+                    coordinates.add(new Coordinate(depTreeIndex.longValue(), hits));
                 }
             }
 
             // Sort coordinates.
             java.util.Collections.sort(coordinates);
 
-            Iterator<MyPair> it = coordinates.iterator();
+            Iterator<Coordinate> it = coordinates.iterator();
             while (it.hasNext()) {
                 sb.append(arffCoordinateDelim).append(it.next());
             }
