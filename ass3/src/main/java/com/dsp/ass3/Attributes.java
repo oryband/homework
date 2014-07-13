@@ -17,11 +17,11 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 
-public class Headers {
+public class Attributes {
     private static String attributeHeader = "@ATTRIBUTE",
             attributeType = "INTEGER";
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Headers.class.getName()));
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(Attributes.class.getName()));
 
 
     // Mapper just passes on data.
@@ -68,9 +68,9 @@ public class Headers {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
-        Job job = new Job(conf, "Headers");
+        Job job = new Job(conf, "Attributes");
 
-        job.setJarByClass(Headers.class);
+        job.setJarByClass(Attributes.class);
         job.setMapperClass(MapClass.class);
         job.setPartitionerClass(PartitionerClass.class);
         job.setReducerClass(ReduceClass.class);
@@ -93,7 +93,7 @@ public class Headers {
             long totalRecords = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
             long totalBytes = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_BYTES").getValue();
 
-            Utils.uploadCountersToS3(totalRecords, totalBytes, "Headers");
+            Utils.uploadCountersToS3(totalRecords, totalBytes, "Attributes");
         }
 
         System.exit(result ? 0 : 1);

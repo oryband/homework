@@ -28,15 +28,15 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 
 
-public class Vectors {
+public class Data {
 
     private static String labelsPath,
-            startOfVectors = "{",
-            endOfVectors = "}",
+            startOfData = "{",
+            endOfData = "}",
             arffCoordinateDelim = ",";
 
 
-    private static final Logger logger = Utils.setLogger(Logger.getLogger(Vectors.class.getName()));
+    private static final Logger logger = Utils.setLogger(Logger.getLogger(Data.class.getName()));
 
 
     // Write { N1, N2, hypernym-index : { class, i1:h1, i2:h2, i3:h3,...} }
@@ -124,7 +124,7 @@ public class Vectors {
             boolean related = v.substring(classIndex + 1, dataIndex).equals("true");
 
             // Prepend beginning of vector char.
-            sb.append(startOfVectors);
+            sb.append(startOfData);
 
             // Append un/related as index 0.
             sb.append("0 ").append(related);
@@ -164,7 +164,7 @@ public class Vectors {
             }
 
             // Append end of vector char.
-            sb.append(endOfVectors);
+            sb.append(endOfData);
 
             // Fetch noun-pair key and set as key.
             newKey.set(v.substring(0, classIndex));
@@ -204,7 +204,7 @@ public class Vectors {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
-        Job job = new Job(conf, "Vectors");
+        Job job = new Job(conf, "Data");
 
         job.setJarByClass(Pairs.class);
         job.setMapperClass(MapClass.class);
@@ -228,7 +228,7 @@ public class Vectors {
             long totalRecords = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
             long totalBytes = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_BYTES").getValue();
 
-            Utils.uploadCountersToS3(totalRecords, totalBytes, "Vectors");
+            Utils.uploadCountersToS3(totalRecords, totalBytes, "Data");
         }
 
         System.exit(result ? 0 : 1);

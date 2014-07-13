@@ -43,27 +43,27 @@ public class JobFlow {
         joinClass = "Join",
         sumClass = "Sum",
         labelsClass = "Labels",
-        headersClass = "Headers",
+        attributesClass = "Attributes",
         singleLineClass = "SingleLine",
-        vectorsClass = "Vectors",
+        dataClass = "Data",
 
         pairsJarUrl = s3BaseUri + "jars/Pairs.jar",
         biarcsJarUrl = s3BaseUri + "jars/Biarcs.jar",
         joinJarUrl = s3BaseUri + "jars/Join.jar",
         sumJarUrl = s3BaseUri + "jars/sum.jar",
         labelsJarUrl = s3BaseUri + "jars/labels.jar",
-        headersJarUrl = s3BaseUri + "jars/headers.jar",
+        attributesJarUrl = s3BaseUri + "jars/Attributes.jar",
         singleLineJarUrl = s3BaseUri + "jars/SingleLine.jar",
-        vectorsJarUrl = s3BaseUri + "jars/Vectors.jar",
+        dataJarUrl = s3BaseUri + "jars/Data.jar",
 
         pairsOutput =  s3BaseUri + "steps/pairs/output/",
         biarcsOutput = s3BaseUri +  "steps/biarcs/output/",
         joinOutput = s3BaseUri + "steps/join/output/",
         sumOutput = s3BaseUri + "steps/sum/output/",
         labelsOutput = s3BaseUri + "steps/labels/output/",
-        headersOutput = s3BaseUri + "steps/headers/output/",
+        attributesOutput = s3BaseUri + "steps/attributes/output/",
         singleLineOutput = s3BaseUri + "steps/singleLine/output/",
-        vectorsOutput = s3BaseUri + "steps/vectors/output/",
+        dataOutput = s3BaseUri + "steps/data/output/",
 
         pairsInput = s3BaseUri + "steps/pairs/input/hypernym.txt",
         biarcsInputPrefix = "s3://bgudsp142/syntactic-ngram/biarcs/biarcs.",
@@ -71,10 +71,10 @@ public class JobFlow {
         joinInput2 = biarcsOutput + hadoopOutputFileName,
         sumInput = joinOutput + hadoopOutputFileName,
         labelsInput = sumOutput + hadoopOutputFileName,
-        headersInput = labelsOutput + hadoopOutputFileName,
+        attributesInput = labelsOutput + hadoopOutputFileName,
         singleLineInput = sumOutput + hadoopOutputFileName,
-        vectorsInput1 = "steps/labels/output/labels",
-        vectorsInput2 = singleLineOutput + hadoopOutputFileName;
+        dataInput1 = "steps/labels/output/labels",
+        dataInput2 = singleLineOutput + hadoopOutputFileName;
 
 
     private static HadoopJarStepConfig createJarStepConfig(String jar, String cls, String... args) {
@@ -128,21 +128,21 @@ public class JobFlow {
             joinConfig = createStepConfig(joinClass, createJarStepConfig(joinJarUrl, joinClass, joinInput1, joinInput2, joinOutput)),
             sumConfig = createStepConfig(sumClass, createJarStepConfig(sumJarUrl, sumClass, sumInput, sumOutput)),
             // labelsConfig = createStepConfig(labelsClass, createJarStepConfig(labelsJarUrl, labelsClass, labelsInput, labelsOutput)),
-            // headersConfig = createStepConfig(headersClass, createJarStepConfig(headersJarUrl, headersClass, headersInput, headersOutput)),
+            // attributesConfig = createStepConfig(attributesClass, createJarStepConfig(attributesJarUrl, attributesClass, attributesInput, attributesOutput)),
             singleLineConfig = createStepConfig(singleLineClass, createJarStepConfig(singleLineJarUrl, singleLineClass, singleLineInput, singleLineOutput)),
-            vectorsConfig = createStepConfig(vectorsClass, createJarStepConfig(vectorsJarUrl, vectorsClass, vectorsInput1, vectorsInput2, vectorsOutput));
+            dataConfig = createStepConfig(dataClass, createJarStepConfig(dataJarUrl, dataClass, dataInput1, dataInput2, dataOutput));
 
         JobFlowInstancesConfig instances = createJobFlowInstancesConfig();
 
         // Set job flow request.
         RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
                 pairsConfig, biarcsConfig, joinConfig, sumConfig,
-                // labelsConfig, headersConfig,
-                singleLineConfig, vectorsConfig);
+                // labelsConfig, attributesConfig,
+                singleLineConfig, dataConfig);
 
         // After labels/arff has finished.
         // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
-        //         singleLineConfig, vectorsConfig);
+        //         singleLineConfig, dataConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
