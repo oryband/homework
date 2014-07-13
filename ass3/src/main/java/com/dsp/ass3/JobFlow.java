@@ -48,7 +48,8 @@ public class JobFlow {
         dataClass = "Data",
 
         pairsJarUrl = s3BaseUri + "jars/Pairs.jar",
-        biarcsJarUrl = s3BaseUri + "jars/Biarcs.jar",
+        biarcsSmallJarUrl = s3BaseUri + "jars/BiarcsSmall.jar",
+        biarcsLargeJarUrl = s3BaseUri + "jars/BiarcsLarge.jar",
         joinJarUrl = s3BaseUri + "jars/Join.jar",
         sumJarUrl = s3BaseUri + "jars/sum.jar",
         labelsJarUrl = s3BaseUri + "jars/labels.jar",
@@ -116,7 +117,6 @@ public class JobFlow {
     }
 
 
-
     public static void main(String[] args) throws Exception {
         // Load credentials and init AWS EMR client.
         AWSCredentials credentials = Utils.loadCredentials();
@@ -124,7 +124,8 @@ public class JobFlow {
 
         StepConfig
             pairsConfig = createStepConfig(pairsClass, createJarStepConfig(pairsJarUrl, pairsClass, pairsInput, pairsOutput)),
-            biarcsConfig = createStepConfig(biarcsClass, createJarStepConfig(biarcsJarUrl, biarcsClass, biarcsInputPrefix, biarcsOutput)),
+            biarcsConfig = createStepConfig(biarcsClass, createJarStepConfig(biarcsSmallJarUrl, biarcsClass, biarcsInputPrefix, biarcsOutput)),
+            // biarcsConfig = createStepConfig(biarcsClass, createJarStepConfig(biarcsLargeJarUrl, biarcsClass, biarcsInputPrefix, biarcsOutput)),
             joinConfig = createStepConfig(joinClass, createJarStepConfig(joinJarUrl, joinClass, joinInput1, joinInput2, joinOutput)),
             sumConfig = createStepConfig(sumClass, createJarStepConfig(sumJarUrl, sumClass, sumInput, sumOutput)),
             // labelsConfig = createStepConfig(labelsClass, createJarStepConfig(labelsJarUrl, labelsClass, labelsInput, labelsOutput)),
