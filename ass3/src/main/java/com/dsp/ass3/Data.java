@@ -66,7 +66,13 @@ public class Data {
             s3 = Utils.createS3(creds);
 
             // Fetch label data from url.
-            InputStream is = Utils.readFromS3(s3, labelsPath);
+            String path = context.getConfiguration().get(Utils.labelsPath, null);
+            if (path == null) {
+                logger.severe("Error fetching labels path.");
+                return;
+            }
+
+            InputStream is = Utils.readFromS3(s3, path);
             if (is == null) {
                 return;
             }
@@ -204,6 +210,12 @@ public class Data {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
+        // Use this for local testing.
+        // labelsPath = args[Utils.argInIndex];
+
+        // Use this for AWS.
+        conf.set(Utils.labelsPath, args[Utils.argInIndex]);
+
         Job job = new Job(conf, "Data");
 
         job.setJarByClass(Pairs.class);
@@ -213,8 +225,6 @@ public class Data {
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
-
-        labelsPath = args[Utils.argInIndex];
 
         FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +1]));
         FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 2]));
