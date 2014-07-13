@@ -120,15 +120,15 @@ public class Labels {
 
         // Use this for local testing.
         // Add all but last argument as input path.
-        for (int i=1; i < args.length -1; i++) {
-            FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
-        }
-        FileOutputFormat.setOutputPath(job, new Path(args[args.length -1]));
+        // for (int i=1; i < args.length -1; i++) {
+        //     FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +i]));
+        // }
+        // FileOutputFormat.setOutputPath(job, new Path(args[args.length -1]));
 
         // Use this for AWS.
         // NOTE we use two different input paths in here.
-        // FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +1]));
-        // FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +2]));
+        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +2]));
 
         boolean result = job.waitForCompletion(true);
 
