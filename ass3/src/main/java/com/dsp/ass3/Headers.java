@@ -8,6 +8,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
@@ -84,6 +85,17 @@ public class Headers {
         FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex +1]));
 
         boolean result = job.waitForCompletion(true);
+
+        // Write totalRecord and totalBytes from task counter to file.
+        if (result) {
+            Counters counters = job.getCounters();
+
+            long totalRecords = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+            long totalBytes = counters.findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_BYTES").getValue();
+
+            Utils.uploadCountersToS3(totalRecords, totalBytes, "Headers");
+
+        }
 
         System.exit(result ? 0 : 1);
     }

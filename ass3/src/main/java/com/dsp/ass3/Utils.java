@@ -31,17 +31,19 @@ import com.amazonaws.services.s3.model.S3Object;
 
 public class Utils {
     public static final String
-        joinStart = "*",  // Join start reducer char.
-        delim = " ",  // Data delimeter.
-        keyValueDelim = "\t",
-        biarcDelim = "\t",
-        coordinateDelim = "\t\t",
-        lineDelim = "\n",
+    joinStart = "*",  // Join start reducer char.
+    delim = " ",  // Data delimeter.
+    keyValueDelim = "\t",
+    biarcDelim = "\t",
+    coordinateDelim = "\t\t",
+    lineDelim = "\n",
 
-        DpMinArg = "DPMin",
+    DpMinArg = "DPMin",
 
-        bucket = "ory-dsp-ass3",
-        s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
+    txtEnding = ".txt",
+    countersPath =  "counters/",
+    bucket = "ory-dsp-ass3",
+    s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
 
     public static final int argInIndex = 1;  // Use =0 for local testing, =1 for AWS.
 
@@ -219,5 +221,14 @@ public class Utils {
 
         // Return read buffer.
         return br;
+    }
+
+    public static void uploadCountersToS3(long totalRecords, long totalBytes, String fileName){
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("totalRecords\t").append(totalRecords).append("\n");
+        sb.append("totalBytes\t").append(totalBytes);
+
+        uploadToS3(sb.toString(), countersPath + fileName + txtEnding);
     }
 }
