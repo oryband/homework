@@ -73,7 +73,8 @@ public class JobFlow {
         labelsInput = sumOutput + hadoopOutputFileName,
         headersInput = labelsOutput + hadoopOutputFileName,
         singleLineInput = sumOutput + hadoopOutputFileName,
-        vectorsInput = singleLineOutput + hadoopOutputFileName;
+        vectorsInput1 = "steps/labels/output/labels",
+        vectorsInput2 = singleLineOutput + hadoopOutputFileName;
 
 
     private static HadoopJarStepConfig createJarStepConfig(String jar, String cls, String... args) {
@@ -129,7 +130,7 @@ public class JobFlow {
             labelsConfig = createStepConfig(labelsClass, createJarStepConfig(labelsJarUrl, labelsClass, labelsInput, labelsOutput)),
             headersConfig = createStepConfig(headersClass, createJarStepConfig(headersJarUrl, headersClass, headersInput, headersOutput)),
             singleLineConfig = createStepConfig(singleLineClass, createJarStepConfig(singleLineJarUrl, singleLineClass, singleLineInput, singleLineOutput)),
-            vectorsConfig = createStepConfig(vectorsClass, createJarStepConfig(vectorsJarUrl, vectorsClass, vectorsInput, vectorsOutput));
+            vectorsConfig = createStepConfig(vectorsClass, createJarStepConfig(vectorsJarUrl, vectorsClass, vectorsInput1, vectorsInput2, vectorsOutput));
 
         JobFlowInstancesConfig instances = createJobFlowInstancesConfig();
 

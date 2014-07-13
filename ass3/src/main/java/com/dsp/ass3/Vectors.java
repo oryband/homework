@@ -29,8 +29,7 @@ import com.amazonaws.services.s3.AmazonS3;
 
 public class Vectors {
 
-    private static String labelsPath = "steps/labels/output/test-labels",
-    // private static String labelsPath = "steps/labels/output/labels",
+    private static String labelsPath,
             startOfVectors = "{",
             endOfVectors = "}",
             arffCoordinateDelim = ",";
@@ -214,8 +213,10 @@ public class Vectors {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex]));
-        FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 1]));
+        labelsPath = args[Utils.argInIndex];
+
+        FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +1]));
+        FileOutputFormat.setOutputPath(job, new Path(args[Utils.argInIndex + 2]));
 
         boolean result = job.waitForCompletion(true);
 
