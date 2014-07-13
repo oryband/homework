@@ -29,8 +29,8 @@ public class JobFlow {
         placementType = "us-east-1a",
         amiVersion = "2.4.2",
         hadoopVersion = "1.0.3",
-        instanceType = InstanceType.M1Small.toString(),
-        // instanceType = InstanceType.M1Xlarge.toString(),
+        // instanceType = InstanceType.M1Small.toString(),
+        instanceType = InstanceType.M1Xlarge.toString(),
 
         s3BaseUri = "s3://" + Utils.bucket + "/",
 
@@ -51,8 +51,8 @@ public class JobFlow {
         biarcsSmallJarUrl = s3BaseUri + "jars/BiarcsSmall.jar",
         biarcsLargeJarUrl = s3BaseUri + "jars/BiarcsLarge.jar",
         joinJarUrl = s3BaseUri + "jars/Join.jar",
-        sumJarUrl = s3BaseUri + "jars/sum.jar",
-        labelsJarUrl = s3BaseUri + "jars/labels.jar",
+        sumJarUrl = s3BaseUri + "jars/Sum.jar",
+        labelsJarUrl = s3BaseUri + "jars/Labels.jar",
         attributesJarUrl = s3BaseUri + "jars/Attributes.jar",
         singleLineJarUrl = s3BaseUri + "jars/SingleLine.jar",
         dataJarUrl = s3BaseUri + "jars/Data.jar",
@@ -72,9 +72,10 @@ public class JobFlow {
         joinInput2 = biarcsOutput + hadoopOutputFileName,
         sumInput = joinOutput + hadoopOutputFileName,
         labelsInput = sumOutput + hadoopOutputFileName,
-        attributesInput = labelsOutput + hadoopOutputFileName,
+        attributesInput = labelsOutput + "labels-small",
+        // attributesInput = labelsOutput + "labels-large",
         singleLineInput = sumOutput + hadoopOutputFileName,
-        dataInput1 = "steps/labels/output/labels",
+        dataInput1 = "steps/labels/output/labels-small",
         dataInput2 = singleLineOutput + hadoopOutputFileName;
 
 
@@ -122,14 +123,17 @@ public class JobFlow {
         AWSCredentials credentials = Utils.loadCredentials();
         AmazonElasticMapReduce mapReduce = new AmazonElasticMapReduceClient(credentials);
 
+        String dpMin = args[0],
+               featureType = args[1];
+
         StepConfig
             pairsConfig = createStepConfig(pairsClass, createJarStepConfig(pairsJarUrl, pairsClass, pairsInput, pairsOutput)),
-            biarcsConfig = createStepConfig(biarcsClass, createJarStepConfig(biarcsSmallJarUrl, biarcsClass, biarcsInputPrefix, biarcsOutput)),
-            // biarcsConfig = createStepConfig(biarcsClass, createJarStepConfig(biarcsLargeJarUrl, biarcsClass, biarcsInputPrefix, biarcsOutput)),
+            biarcsConfig = createStepConfig(biarcsClass, createJarStepConfig(biarcsSmallJarUrl, biarcsClass, featureType, biarcsInputPrefix, biarcsOutput)),
+            // biarcsConfig = createStepConfig(biarcsClass, createJarStepConfig(biarcsLargeJarUrl, biarcsClass, featureType, biarcsInputPrefix, biarcsOutput)),
             joinConfig = createStepConfig(joinClass, createJarStepConfig(joinJarUrl, joinClass, joinInput1, joinInput2, joinOutput)),
             sumConfig = createStepConfig(sumClass, createJarStepConfig(sumJarUrl, sumClass, sumInput, sumOutput)),
-            // labelsConfig = createStepConfig(labelsClass, createJarStepConfig(labelsJarUrl, labelsClass, labelsInput, labelsOutput)),
-            // attributesConfig = createStepConfig(attributesClass, createJarStepConfig(attributesJarUrl, attributesClass, attributesInput, attributesOutput)),
+            labelsConfig = createStepConfig(labelsClass, createJarStepConfig(labelsJarUrl, labelsClass, dpMin, labelsInput, labelsOutput)),
+            attributesConfig = createStepConfig(attributesClass, createJarStepConfig(attributesJarUrl, attributesClass, attributesInput, attributesOutput)),
             singleLineConfig = createStepConfig(singleLineClass, createJarStepConfig(singleLineJarUrl, singleLineClass, singleLineInput, singleLineOutput)),
             dataConfig = createStepConfig(dataClass, createJarStepConfig(dataJarUrl, dataClass, dataInput1, dataInput2, dataOutput));
 
@@ -138,12 +142,13 @@ public class JobFlow {
         // Set job flow request.
         RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
                 pairsConfig, biarcsConfig, joinConfig, sumConfig,
-                // labelsConfig, attributesConfig,
-                singleLineConfig, dataConfig);
+                labelsConfig, singleLineConfig);
 
-        // After labels/arff has finished.
         // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
-        //         singleLineConfig, dataConfig);
+        //         attributesConfig, dataConfig);
+
+        // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances, attributesConfig);
+        // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances, dataConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
