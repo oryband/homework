@@ -1,5 +1,6 @@
 package com.dsp.ass3;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 import com.amazonaws.auth.AWSCredentials;
@@ -20,128 +21,80 @@ public class JobFlow {
 
     private static int instanceCount = 3;
 
-    private static String actionOnFailure = "TERMINATE_JOB_FLOW",
-            jobName = "jobname",
+    private static String
+        actionOnFailure = "TERMINATE_JOB_FLOW",
+        jobName = "jobname",
 
-            ec2KeyName = "ec2",
-            placementType = "us-east-1a",
-            amiVersion = "2.4.2",
-            // amiVersion = "3.1.0",
-            hadoopVersion = "1.0.3",
-            // hadoopVersion = "2.4.0",
-            instanceType = InstanceType.M1Small.toString(),
-            // instanceType = InstanceType.M1Xlarge.toString(),
+        ec2KeyName = "ec2",
+        placementType = "us-east-1a",
+        amiVersion = "2.4.2",
+        hadoopVersion = "1.0.3",
+        instanceType = InstanceType.M1Small.toString(),
+        // instanceType = InstanceType.M1Xlarge.toString(),
 
-            s3BaseUri = "s3://" + Utils.bucket + "/",
+        s3BaseUri = "s3://" + Utils.bucket + "/",
 
-            logUri = s3BaseUri + "logs/",
+        logUri = s3BaseUri + "logs/",
 
-            hadoopOutputFileName = "part-r-*",
+        hadoopOutputFileName = "part-r-*",
 
-            pairsClass = "Pairs",
-            biarcsClass = "Biarcs",
-            joinClass = "Join",
-            labelsClass = "Labels",
-            headersClass = "Headers",
-            singleLineClass = "SingleLine",
+        pairsClass = "Pairs",
+        biarcsClass = "Biarcs",
+        joinClass = "Join",
+        sumClass = "Sum",
+        labelsClass = "Labels",
+        headersClass = "Headers",
+        singleLineClass = "SingleLine",
+        vectorsClass = "Vectors",
 
-            pairsJarUrl = s3BaseUri + "jars/Pairs.jar",
-            biarcsJarUrl = s3BaseUri + "jars/Biarcs.jar",
-            joinJarUrl = s3BaseUri + "jars/Join.jar",
-            labelsJarUrl = s3BaseUri + "jars/labels.jar",
-            headersJarUrl = s3BaseUri + "jars/headers.jar",
-            singleLineJarUrl = s3BaseUri + "jars/SingleLine.jar",
+        pairsJarUrl = s3BaseUri + "jars/Pairs.jar",
+        biarcsJarUrl = s3BaseUri + "jars/Biarcs.jar",
+        joinJarUrl = s3BaseUri + "jars/Join.jar",
+        sumJarUrl = s3BaseUri + "jars/sum.jar",
+        labelsJarUrl = s3BaseUri + "jars/labels.jar",
+        headersJarUrl = s3BaseUri + "jars/headers.jar",
+        singleLineJarUrl = s3BaseUri + "jars/SingleLine.jar",
+        vectorsJarUrl = s3BaseUri + "jars/Vectors.jar",
 
-            pairsOutput =  s3BaseUri + "steps/pairs/output/",
-            biarcsOutput = s3BaseUri +  "steps/biarcs/output/",
-            joinOutput = s3BaseUri + "steps/join/output/",
-            labelsOutput = s3BaseUri + "steps/labels/output/",
-            headersOutput = s3BaseUri + "steps/headers/output/",
-            singleLineOutput = s3BaseUri + "steps/singleLine/output/",
+        pairsOutput =  s3BaseUri + "steps/pairs/output/",
+        biarcsOutput = s3BaseUri +  "steps/biarcs/output/",
+        joinOutput = s3BaseUri + "steps/join/output/",
+        sumOutput = s3BaseUri + "steps/sum/output/",
+        labelsOutput = s3BaseUri + "steps/labels/output/",
+        headersOutput = s3BaseUri + "steps/headers/output/",
+        singleLineOutput = s3BaseUri + "steps/singleLine/output/",
+        vectorsOutput = s3BaseUri + "steps/vectors/output/",
 
-            pairsInput = s3BaseUri + "steps/pairs/input/hypernym.txt",
-            biarcsInputPrefix = "s3://bgudsp142/syntactic-ngram/biarcs/biarcs.",
-            joinInput1 = pairsOutput + hadoopOutputFileName,
-            joinInput2 = biarcsOutput + hadoopOutputFileName,
-            labelsInput = joinOutput + hadoopOutputFileName,
-            headersInput = labelsOutput + hadoopOutputFileName,
-            singleLineInput = joinOutput + hadoopOutputFileName;
+        pairsInput = s3BaseUri + "steps/pairs/input/hypernym.txt",
+        biarcsInputPrefix = "s3://bgudsp142/syntactic-ngram/biarcs/biarcs.",
+        joinInput1 = pairsOutput + hadoopOutputFileName,
+        joinInput2 = biarcsOutput + hadoopOutputFileName,
+        sumInput = joinOutput + hadoopOutputFileName,
+        labelsInput = sumOutput + hadoopOutputFileName,
+        headersInput = labelsOutput + hadoopOutputFileName,
+        singleLineInput = sumOutput + hadoopOutputFileName,
+        vectorsInput = singleLineOutput + hadoopOutputFileName;
 
 
-    public static void main(String[] args) throws Exception {
-        // Load credentials.
-        AWSCredentials credentials = Utils.loadCredentials();
-        AmazonElasticMapReduce mapReduce = new AmazonElasticMapReduceClient(credentials);
+    private static HadoopJarStepConfig createJarStepConfig(String jar, String cls, String... args) {
+        return new HadoopJarStepConfig()
+            .withJar(jar)
+            .withMainClass(cls)
+            .withArgs(Arrays.asList(args));
+    }
 
-        // Set Pairs job flow step.
-        HadoopJarStepConfig pairsJarConfig = new HadoopJarStepConfig()
-            .withJar(pairsJarUrl)
-            .withMainClass(pairsClass)
-            .withArgs(pairsInput, pairsOutput);
 
-        StepConfig pairsConfig = new StepConfig()
-            .withName(pairsClass)
-            .withHadoopJarStep(pairsJarConfig)
+    private static StepConfig createStepConfig(String cls, HadoopJarStepConfig stepConfig) {
+        return new StepConfig()
+            .withName(cls)
+            .withHadoopJarStep(stepConfig)
             .withActionOnFailure(actionOnFailure);
+    }
 
-        // Set Biarcs job flow step.
-        HadoopJarStepConfig biarcsJarConfig = new HadoopJarStepConfig()
-            .withJar(biarcsJarUrl)
-            .withMainClass(biarcsClass)
-            .withArgs(biarcsInputPrefix, biarcsOutput);
 
-        StepConfig biarcsConfig = new StepConfig()
-            .withName(biarcsClass)
-            .withHadoopJarStep(biarcsJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set Join job flow step.
-        HadoopJarStepConfig joinJarConfig = new HadoopJarStepConfig()
-            .withJar(joinJarUrl)
-            .withMainClass(joinClass)
-            // NOTE we JOIN the output of the two previous steps.
-            .withArgs(joinInput1, joinInput2, joinOutput);
-
-        StepConfig joinConfig = new StepConfig()
-            .withName(joinClass)
-            .withHadoopJarStep(joinJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set Labels job flow step.
-        HadoopJarStepConfig labelsJarConfig = new HadoopJarStepConfig()
-            .withJar(labelsJarUrl)
-            .withMainClass(labelsClass)
-            .withArgs(labelsInput, labelsOutput);
-
-        StepConfig labelsConfig = new StepConfig()
-            .withName(labelsClass)
-            .withHadoopJarStep(labelsJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set Headers job flow step.
-        HadoopJarStepConfig headersJarConfig = new HadoopJarStepConfig()
-            .withJar(headersJarUrl)
-            .withMainClass(headersClass)
-            .withArgs(headersInput, headersOutput);
-
-        StepConfig headersConfig = new StepConfig()
-            .withName(headersClass)
-            .withHadoopJarStep(headersJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set SingleLine job flow step.
-        HadoopJarStepConfig singleLineJarConfig = new HadoopJarStepConfig()
-            .withJar(singleLineJarUrl)
-            .withMainClass(singleLineClass)
-            .withArgs(singleLineInput, singleLineOutput);
-
-        StepConfig singleLineConfig = new StepConfig()
-            .withName(singleLineClass)
-            .withHadoopJarStep(singleLineJarConfig)
-            .withActionOnFailure(actionOnFailure);
-
-        // Set instances.
-        JobFlowInstancesConfig instances = new JobFlowInstancesConfig()
+    // Create instances configuration.
+    private static JobFlowInstancesConfig createJobFlowInstancesConfig() {
+        return new JobFlowInstancesConfig()
             .withInstanceCount(instanceCount)
             .withMasterInstanceType(instanceType)
             .withSlaveInstanceType(instanceType)
@@ -149,17 +102,45 @@ public class JobFlow {
             .withEc2KeyName(ec2KeyName)
             .withKeepJobFlowAliveWhenNoSteps(false)
             .withPlacement(new PlacementType(placementType));
+    }
 
-
-        // Set job flow request.
-        RunJobFlowRequest runFlowRequest = new RunJobFlowRequest()
+    // Create job flow request.
+    private static RunJobFlowRequest createRunJobFlowRequest(JobFlowInstancesConfig instances, StepConfig... steps) {
+        return new RunJobFlowRequest()
             .withName(jobName)
             .withAmiVersion(amiVersion)
             .withInstances(instances)
             .withLogUri(logUri)
-            // .withSteps(pairsConfig, biarcsConfig, joinConfig, labelsConfig, headersClass, singleLineConfig);
-            // Custom steps.
-            .withSteps(joinConfig);
+            .withSteps(Arrays.asList(steps));
+    }
+
+
+
+    public static void main(String[] args) throws Exception {
+        // Load credentials and init AWS EMR client.
+        AWSCredentials credentials = Utils.loadCredentials();
+        AmazonElasticMapReduce mapReduce = new AmazonElasticMapReduceClient(credentials);
+
+        StepConfig
+            pairsConfig = createStepConfig(pairsClass, createJarStepConfig(pairsJarUrl, pairsClass, pairsInput, pairsOutput)),
+            biarcsConfig = createStepConfig(biarcsClass, createJarStepConfig(biarcsJarUrl, biarcsClass, biarcsInputPrefix, biarcsOutput)),
+            joinConfig = createStepConfig(joinClass, createJarStepConfig(joinJarUrl, joinClass, joinInput1, joinInput2, joinOutput)),
+            sumConfig = createStepConfig(sumClass, createJarStepConfig(sumJarUrl, sumClass, sumInput, sumOutput)),
+            labelsConfig = createStepConfig(labelsClass, createJarStepConfig(labelsJarUrl, labelsClass, labelsInput, labelsOutput)),
+            headersConfig = createStepConfig(headersClass, createJarStepConfig(headersJarUrl, headersClass, headersInput, headersOutput)),
+            singleLineConfig = createStepConfig(singleLineClass, createJarStepConfig(singleLineJarUrl, singleLineClass, singleLineInput, singleLineOutput)),
+            vectorsConfig = createStepConfig(vectorsClass, createJarStepConfig(vectorsJarUrl, vectorsClass, vectorsInput, vectorsOutput));
+
+        JobFlowInstancesConfig instances = createJobFlowInstancesConfig();
+
+        // Set job flow request.
+        RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
+                pairsConfig, biarcsConfig, joinConfig, sumConfig,
+                labelsConfig, headersConfig,
+                singleLineConfig, vectorsConfig);
+
+        // Custom steps.
+        // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances, joinConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
