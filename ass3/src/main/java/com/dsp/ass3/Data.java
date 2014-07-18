@@ -210,10 +210,6 @@ public class Data {
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
 
-        // Use this for local testing.
-        // labelsPath = args[Utils.argInIndex];
-
-        // Use this for AWS.
         conf.set(Utils.labelsPath, args[Utils.argInIndex]);
 
         Job job = new Job(conf, "Data");
