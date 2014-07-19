@@ -20,7 +20,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.SimpleDirectedGraph;
 
 import com.google.common.collect.Lists;
 
@@ -30,10 +30,12 @@ public class Biarcs {
     private static final int maximumPathLength = 4;
 
     private static final String
+        inverseArg = "inverse",
         tokenDelim = " ",
         splitTokenDelim = "/",
         posLabelNounPrefix = "NN",
         posLabelVerbPrefix = "VB",
+        posLabelPlural = "S",
         inversePrefix = "@",
         depTreeDelim = ":",
         depTreeTokenDelim = ",",
@@ -46,17 +48,20 @@ public class Biarcs {
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Biarcs.class.getName()));
 
 
-    // Write { (N1, N2), i1, i2 : dep-tree, total-count }
+    // Write { N1, N2 : dep-tree, total-count }
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
+        private Stemmer stemmer = new Stemmer();
 
         private Text newKey = new Text(),
                 newValue = new Text();
 
 
-        // private String stemTerm (String term) {
-        //     PorterStemmer stemmer = new PorterStemmer();
-        //     return stemmer.stem(term);
-        // }
+        // Stem a word i.e. "Catlike" --> "Cat"
+        public String stemWord(String word) {
+            stemmer.add(word.toCharArray(), word.length());
+            stemmer.stem();
+            return new String(stemmer.getResultBuffer()).substring(0, stemmer.getResultLength());
+        }
 
 
         // 'word/pos-label/dep-label/head-index' parsing methods.
@@ -77,15 +82,45 @@ public class Biarcs {
         }
 
 
+        // Fetch root token from token list (the one with 'head-index' == 0).
+        public String getRootToken(String[] tokens) {
+            for (String t: tokens) {
+                if (getHeadIndexFromToken(t).equals("0")) {
+                    return t;
+                }
+            }
+
+            // If we reached here it means no token with 'head-index' == 0 was found.
+            // This means this biarc isn't valid.
+            logger.severe("No head token found in biarc.");
+            return null;
+        }
+
+
+        // Remove plural form of noun pos-label i.e. "NNS" --> "NN"
+        public String getLemmatizedNounPosLabel(String posLabel) {
+            // Check if last char is plural postfix i.e. "NN[S]" and remove it if so.
+            if (posLabel.substring(posLabel.length() -1).equals(posLabelPlural)) {
+                return posLabel.substring(0, posLabel.length() -1);
+            } else {
+                // Else return original pos-label.
+                return posLabel;
+            }
+        }
+
+
         // Create token tree (graph).
-        public SimpleGraph<String, DefaultEdge> createTree(String[] tokens) {
+        // Note the tree is actually a simple directed graph.
+        // This is because we will search shortest paths between leaves.
+        public SimpleDirectedGraph<String, DefaultEdge> createTree(String[] tokens) {
             // Init empty graph.
-            SimpleGraph<String, DefaultEdge> g = new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
+            SimpleDirectedGraph<String, DefaultEdge> g = new SimpleDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 
             // Init token list.
             List<String> l = new ArrayList<String>();
 
             // Add token vertices to tree and list.
+            // The list will be used to construct edges.
             for (String t : tokens) {
                 g.addVertex(t);
                 l.add(t);
@@ -101,6 +136,7 @@ public class Biarcs {
                 // Add edge if this vertex isn't the root vertex.
                 if (i >= 0) {
                     g.addEdge(tokens[i], t);
+                    g.addEdge(t, tokens[i]);  // We need the opposite edge to find shortest paths between leaves.
                 }
             }
 
@@ -127,7 +163,7 @@ public class Biarcs {
 
         // Return true if pos-label is a verb.
         public boolean isPosLabelVerb(String posLabel) {
-            if (posLabel.length() >= 2 && posLabel.substring(0, 2).equals(posLabelNounPrefix)) {
+            if (posLabel.length() >= 2 && posLabel.substring(0, 2).equals(posLabelVerbPrefix)) {
                 return posLabel.substring(0, 2).equals(posLabelVerbPrefix);
             } else {
                 return false;
@@ -136,49 +172,53 @@ public class Biarcs {
 
 
         // Create dep-tree from shortest path i.e. 'danny,eating,banana' --> 'NN:subj,vv:V<eat>V,obj:NN'
-        public String createDepTree(SimpleGraph<String, DefaultEdge> g, List<String> path, boolean inverse) {
+        public String createDepTree(SimpleDirectedGraph<String, DefaultEdge> g, List<String> path, boolean inverse) {
+            // Create a copy so we won't mutate original list.
+            path = new ArrayList<String>(path);
+
             // Init empty string.
             StringBuilder depTree = new StringBuilder();
 
             // Fetch start, end vertices.
             String start = path.remove(0),
-                   end = path.remove(path.size() -1);
+                   end = path.remove(path.size() -1),
+                   posLabel, depLabel, word;
 
-            // TODO stem noun.
             // Build first dep-tree token i.e. 'NN:obj,'
-            depTree.append(getPosLabelFromToken(start)).append(depTreeDelim)
+            posLabel = getPosLabelFromToken(start);
+            depTree.append(getLemmatizedNounPosLabel(posLabel)).append(depTreeDelim)
                 .append(getDepLabelFromToken(start)).append(depTreeTokenDelim);
 
             // Add dep-tree middle tokens for middle vertices in path.
-            String posLabel, depLabel, word;
             for (String v : path) {
                 posLabel = getPosLabelFromToken(v);
                 depLabel = getDepLabelFromToken(v);
                 word = getWordFromToken(v);
 
-                // TODO Stem verb.
-                // Verbs have a unique dep-tree token.
+                // Append a verb middle-token. Verbs have a unique dep-tree token.
                 if (isPosLabelVerb(posLabel)) {
-                    depTree.append(posLabel)
+                    depTree.append(depLabel)
+                        .append(depTreeDelim)
+                        .append(posLabel)
                         .append(wordDelimStart)
                         .append(inverse ? inversePrefix : "")  // Append inverse '@' prefix to word if necessary.
-                        .append(word)
+                        .append(stemWord(word))
                         .append(wordDelimEnd)
                         .append(posLabel)
                         .append(depTreeTokenDelim);
                 } else {
-                    // TODO Stem words.
+                    // Append a normal middle-token if this token isn't a verb.
                     depTree.append(depLabel).append(depTreeDelim)
                         .append(posLabel).append(depTreeDelim)
-                        .append(word).append(depTreeDelim)
+                        .append(stemWord(word)).append(depTreeDelim)
                         .append(posLabel).append(depTreeTokenDelim);
                 }
             }
 
-            // TODO stem noun.
-            // Build last dep-tree token i.e. subj:NN
+            // Build last dep-tree token i.e. 'subj:NN'
+            posLabel = getPosLabelFromToken(end);
             depTree.append(getDepLabelFromToken(end)).append(depTreeDelim)
-                .append(getPosLabelFromToken(end));
+                .append(getLemmatizedNounPosLabel(posLabel));
 
             return depTree.toString();
         }
@@ -193,10 +233,11 @@ public class Biarcs {
                 return;
             }
 
-            inverse = r.toLowerCase().equals("inverse") ? true : false ;
+            inverse = r.toLowerCase().equals(inverseArg) ? true : false ;
         }
 
 
+        // TODO need to add i1, i2.
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
@@ -205,14 +246,17 @@ public class Biarcs {
             String[] ngram = value.toString().split(Utils.biarcDelim),
                 tokens;
 
-            // Fetch head token and syntactic ngram.
+            // Fetch syntactic ngram.
             String syntacticNgram = ngram[1];
 
             // Split syntactic ngram to tokens.
             tokens = syntacticNgram.split(tokenDelim);
 
+            // Fetch root token.
+            String rootToken = getRootToken(tokens);
+
             // Create token dependency tree.
-            SimpleGraph<String, DefaultEdge> tree = createTree(tokens);
+            SimpleDirectedGraph<String, DefaultEdge> tree = createTree(tokens);
 
             // List all noun tokens.
             List<String> nounTokens = getNounTokens(tokens);
@@ -230,27 +274,31 @@ public class Biarcs {
                             path = Graphs.getPathVertexList(
                                     new DijkstraShortestPath<String, DefaultEdge> (tree, n1, n2).getPath());
 
-                            // Only if path length <= 4.
-                            if (path != null && path.size() <= maximumPathLength) {
-                                // Set key := shortest path dep-tree.
-                                // logger.info("tree: " + tree.toString());
+                            // Only if path length <= 4
+                            // (and of course path is at least of size 2, otherwise this isn't really a path).
+                            if (path != null && path.size() >= 2 && path.size() <= maximumPathLength) {
+                                // Set key := n1, n2
                                 depTree = createDepTree(tree, path, false);
-                                newKey.set(depTree);
 
-                                // Set value := dep-tree corpus occurences.
-                                newValue.set(ngram[2]);
+                                // TODO need to add i1, i2.
+                                newKey.set(n1 + Utils.delim + n2);
+
+                                // Set value := dep-tree, dep-tree corpus occurences (hits).
+                                newValue.set(depTree + Utils.biarcDelim + ngram[2]);
 
                                 context.write(newKey, newValue);
 
                                 // Additionaly, create inverse dep-tree and emit,
                                 // but only if root token is of 'verb' type and 'inverse' was given as argument.
-                                if (inverse && isPosLabelVerb(getPosLabelFromToken(tokens[0]))) {
+                                if (inverse && isPosLabelVerb(getPosLabelFromToken(rootToken))) {
                                     // Set key := shortest path dep-tree.
-                                    depTree = createDepTree(tree, Lists.reverse(path), true);
-                                    newKey.set(depTree);
+                                    depTree = createDepTree(tree, Lists.reverse(path), inverse);
 
-                                    // Set value := dep-tree corpus occurences.
-                                    newValue.set(ngram[2]);
+                                    // Set key := n2, n1  (NOTE we switch the order since this is the inverse).
+                                    newKey.set(n2 + Utils.delim + n1);
+
+                                    // Set value := inversed dep-tree, ORIGINAL dep-tree corpus occurences (hits).
+                                    newValue.set(depTree + Utils.biarcDelim + ngram[2]);
 
                                     context.write(newKey, newValue);
                                 }
