@@ -31,23 +31,23 @@ import com.amazonaws.services.s3.model.S3Object;
 
 public class Utils {
     public static final String
-    joinStart = "*",  // Join start reducer char.
-    delim = " ",  // Data delimeter.
-    keyValueDelim = "\t",
-    biarcDelim = "\t",
-    coordinateDelim = "\t\t",
-    lineDelim = "\n",
+        joinStart = "*",  // Join start reducer char.
+        delim = " ",  // Data delimeter.
+        keyValueDelim = "\t",
+        biarcDelim = "\t",
+        coordinateDelim = "\t\t",
+        lineDelim = "\n",
 
-    DpMinArg = "DPMin",
-    labelsPath = "LabelsPath",
-    inverse = "inverse",
+        DpMinArg = "DPMin",
+        labelsPath = "LabelsPath",
+        inverse = "inverse",
 
-    txtEnding = ".txt",
-    countersPath =  "counters/",
-    bucket = "ory-dsp-ass3",
-    s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
+        txtEnding = ".txt",
+        countersPath =  "counters/",
+        bucket = "ory-dsp-ass3",
+        s3Uri = "https://s3.amazonaws.com/" + bucket + "/";
 
-    public static final int argInIndex = 0;  // Use =0 for local testing, =1 for AWS.
+    public static final int argInIndex = 1;  // Use =0 for local testing, =1 for AWS.
 
     private static final Logger logger = setLogger(Logger.getLogger(Utils.class.getName()));
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -30,7 +32,7 @@ public class Biarcs {
     private static final int maximumPathLength = 4;
 
     private static final String
-        inverseArg = "inverse",
+        inverseArg = "inver",
         tokenDelim = " ",
         splitTokenDelim = "/",
         posLabelNounPrefix = "NN",
@@ -48,7 +50,8 @@ public class Biarcs {
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Biarcs.class.getName()));
 
 
-    // Write { N1, N2 : dep-tree, total-count }
+    // Write { N1, N2, i1, i2 : dep-tree, total-count }
+    // and if 'inver' option was given, write: { N2, N1, i2, i1 : dep-tree, total-count }  -- Inverted nouns/indexes.
     public static class MapClass extends Mapper<LongWritable, Text, Text, Text> {
         private Stemmer stemmer = new Stemmer();
 
@@ -57,7 +60,7 @@ public class Biarcs {
 
 
         // Stem a word i.e. "Catlike" --> "Cat"
-        public String stemWord(String word) {
+        private String stemWord(String word) {
             stemmer.add(word.toCharArray(), word.length());
             stemmer.stem();
             return new String(stemmer.getResultBuffer()).substring(0, stemmer.getResultLength());
@@ -65,25 +68,25 @@ public class Biarcs {
 
 
         // 'word/pos-label/dep-label/head-index' parsing methods.
-        public String getWordFromToken(String token) {
+        private static String getWordFromToken(String token) {
             return token.substring(0, token.indexOf(splitTokenDelim));
         }
 
-        public String getPosLabelFromToken(String token) {
+        private String getPosLabelFromToken(String token) {
             return token.split(splitTokenDelim)[1];
         }
 
-        public String getDepLabelFromToken(String token) {
+        private String getDepLabelFromToken(String token) {
             return token.split(splitTokenDelim)[2];
         }
 
-        public String getHeadIndexFromToken(String token) {
+        private String getHeadIndexFromToken(String token) {
             return token.substring(token.lastIndexOf(splitTokenDelim) +1);
         }
 
 
         // Fetch root token from token list (the one with 'head-index' == 0).
-        public String getRootToken(String[] tokens) {
+        private String getRootToken(String[] tokens) {
             for (String t: tokens) {
                 if (getHeadIndexFromToken(t).equals("0")) {
                     return t;
@@ -98,7 +101,7 @@ public class Biarcs {
 
 
         // Remove plural form of noun pos-label i.e. "NNS" --> "NN"
-        public String getLemmatizedNounPosLabel(String posLabel) {
+        private String getLemmatizedNounPosLabel(String posLabel) {
             // Check if last char is plural postfix i.e. "NN[S]" and remove it if so.
             if (posLabel.substring(posLabel.length() -1).equals(posLabelPlural)) {
                 return posLabel.substring(0, posLabel.length() -1);
@@ -112,7 +115,7 @@ public class Biarcs {
         // Create token tree (graph).
         // Note the tree is actually a simple directed graph.
         // This is because we will search shortest paths between leaves.
-        public SimpleDirectedGraph<String, DefaultEdge> createTree(String[] tokens) {
+        private SimpleDirectedGraph<String, DefaultEdge> createTree(String[] tokens) {
             // Init empty graph.
             SimpleDirectedGraph<String, DefaultEdge> g = new SimpleDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
 
@@ -145,24 +148,24 @@ public class Biarcs {
 
 
         // Get noun tokens.
-        public List<String> getNounTokens(String[] tokens) {
-            List<String> l = new ArrayList<String>();
+        private List<TokenIndex> getNounTokens(String[] tokens) {
+            List<TokenIndex> n = new ArrayList<TokenIndex>();
 
             String p;
-            for (String t : tokens) {
+            for (int i=0; i < tokens.length; i++) {
                 // Return token if pos-label begins with "NN", which means it's a noun.
-                p = getPosLabelFromToken(t);
+                p = getPosLabelFromToken(tokens[i]);
                 if (p.length() >= 2 && p.substring(0, 2).equals(posLabelNounPrefix)) {
-                    l.add(t);
+                    n.add(new TokenIndex(i, tokens[i]));
                 }
             }
 
-            return l;
+            return n;
         }
 
 
         // Return true if pos-label is a verb.
-        public boolean isPosLabelVerb(String posLabel) {
+        private boolean isPosLabelVerb(String posLabel) {
             if (posLabel.length() >= 2 && posLabel.substring(0, 2).equals(posLabelVerbPrefix)) {
                 return posLabel.substring(0, 2).equals(posLabelVerbPrefix);
             } else {
@@ -172,7 +175,7 @@ public class Biarcs {
 
 
         // Create dep-tree from shortest path i.e. 'danny,eating,banana' --> 'NN:subj,vv:V<eat>V,obj:NN'
-        public String createDepTree(SimpleDirectedGraph<String, DefaultEdge> g, List<String> path, boolean inverse) {
+        private String createDepTree(SimpleDirectedGraph<String, DefaultEdge> g, List<String> path, boolean inverse) {
             // Create a copy so we won't mutate original list.
             path = new ArrayList<String>(path);
 
@@ -224,6 +227,28 @@ public class Biarcs {
         }
 
 
+        // Creates all possible unique pairs combinations from list, where (a,b) == (b,a).
+        // For example [1,2,3] --> [ (1,2), (1,3), (2,3) ]
+        private List<Pair<TokenIndex, TokenIndex>> getPairsFromList(List<TokenIndex> l) {
+            // Generate a new empty pair-list and a copy of the original token list.
+            List<Pair<TokenIndex, TokenIndex>> r = new ArrayList<Pair<TokenIndex, TokenIndex>>();
+            List<TokenIndex> copy = new ArrayList<TokenIndex>(l);
+
+            for (TokenIndex t1 : l) {
+                // Remove token and create a new pair for each other element in list.
+                // NOTE This avoids creating symmetric (non-unique) pairs i.e. (1,2) & (2,1)
+                // and also avoids creating pairs with the same element i.e. (1,1) - as long as the list doesn't inculde duplicates.
+                copy.remove(t1);
+
+                for (TokenIndex t2 : copy) {
+                    r.add(new ImmutablePair<TokenIndex, TokenIndex>(t1, t2));
+                }
+            }
+
+            return r;
+        }
+
+
         // Init 'inverse' option.
         @Override
         public void setup(Context context) {
@@ -237,7 +262,6 @@ public class Biarcs {
         }
 
 
-        // TODO need to add i1, i2.
         @Override
         public void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
@@ -259,50 +283,52 @@ public class Biarcs {
             SimpleDirectedGraph<String, DefaultEdge> tree = createTree(tokens);
 
             // List all noun tokens.
-            List<String> nounTokens = getNounTokens(tokens);
+            List<TokenIndex> nounTokens = getNounTokens(tokens);
 
             // Create dep-tree and emit.
             List<String> path;
             String depTree;
+            TokenIndex t1, t2;
             // Only if there are at least two nouns to find paths between.
             if (nounTokens.size() >= 2) {
-                for (String n1 : nounTokens) {
-                    for (String n2 : nounTokens) {
-                        // Skip paths between a node and itself.
-                        if ( ! n1.equals(n2)) {
-                            // Find shortest path between n1, n2.
-                            path = Graphs.getPathVertexList(
-                                    new DijkstraShortestPath<String, DefaultEdge> (tree, n1, n2).getPath());
+                for (Pair<TokenIndex, TokenIndex> pair : getPairsFromList(nounTokens)) {
+                    t1 = pair.getLeft();
+                    t2 = pair.getRight();
 
-                            // Only if path length <= 4
-                            // (and of course path is at least of size 2, otherwise this isn't really a path).
-                            if (path != null && path.size() >= 2 && path.size() <= maximumPathLength) {
-                                // Set key := n1, n2
-                                depTree = createDepTree(tree, path, false);
+                    // Find shortest path between t1, t2.
+                    path = Graphs.getPathVertexList(
+                            new DijkstraShortestPath<String, DefaultEdge> (tree, t1.token, t2.token).getPath());
 
-                                // TODO need to add i1, i2.
-                                newKey.set(n1 + Utils.delim + n2);
+                    // Only if path length <= 4
+                    // (and of course path is at least of size 2, otherwise this isn't really a path).
+                    if (path != null && path.size() >= 2 && path.size() <= maximumPathLength) {
+                        // Set key := n1, n2, i1, i2
+                        depTree = createDepTree(tree, path, false);
 
-                                // Set value := dep-tree, dep-tree corpus occurences (hits).
-                                newValue.set(depTree + Utils.biarcDelim + ngram[2]);
+                        newKey.set(getWordFromToken(t1.token) + Utils.delim
+                                + getWordFromToken(t2.token) + Utils.delim
+                                + t1.index + Utils.delim + t2.index);
 
-                                context.write(newKey, newValue);
+                        // Set value := dep-tree, dep-tree corpus occurences (hits).
+                        newValue.set(depTree + Utils.biarcDelim + ngram[2]);
 
-                                // Additionaly, create inverse dep-tree and emit,
-                                // but only if root token is of 'verb' type and 'inverse' was given as argument.
-                                if (inverse && isPosLabelVerb(getPosLabelFromToken(rootToken))) {
-                                    // Set key := shortest path dep-tree.
-                                    depTree = createDepTree(tree, Lists.reverse(path), inverse);
+                        context.write(newKey, newValue);
 
-                                    // Set key := n2, n1  (NOTE we switch the order since this is the inverse).
-                                    newKey.set(n2 + Utils.delim + n1);
+                        // Additionaly, create inverse dep-tree and emit,
+                        // but only if root token is of 'verb' type and 'inverse' was given as argument.
+                        if (inverse && isPosLabelVerb(getPosLabelFromToken(rootToken))) {
+                            // Set key := shortest path dep-tree.
+                            depTree = createDepTree(tree, Lists.reverse(path), inverse);
 
-                                    // Set value := inversed dep-tree, ORIGINAL dep-tree corpus occurences (hits).
-                                    newValue.set(depTree + Utils.biarcDelim + ngram[2]);
+                            // Set key := n2, n1, i2, i1  -- NOTE we switch the order since this is the inverse).
+                            newKey.set(getWordFromToken(t2.token) + Utils.delim
+                                    + getWordFromToken(t1.token) + Utils.delim
+                                    + t2.index + Utils.delim + t1.index);
 
-                                    context.write(newKey, newValue);
-                                }
-                            }
+                            // Set value := inversed dep-tree, ORIGINAL dep-tree corpus occurences (hits).
+                            newValue.set(depTree + Utils.biarcDelim + ngram[2]);
+
+                            context.write(newKey, newValue);
                         }
                     }
                 }
