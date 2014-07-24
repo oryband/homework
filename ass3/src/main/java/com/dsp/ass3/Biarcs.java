@@ -382,7 +382,8 @@ public class Biarcs {
         // Add all but last argument as input path,
         // and append biarcs file postfix.
         String biarc;
-        for (int i=0; i < 1; i++) {
+        for (int i=0; i < 20; i++) {  // Small dataset (20%)
+        // for (int i=0; i < 99; i++) {  // Large dataset (100%)
             biarc = i <= 9 ? "0" + i : String.valueOf(i);
             FileInputFormat.addInputPath(job, new Path(args[Utils.argInIndex +1] + biarc + "-of-99"));
         }
