@@ -72,10 +72,15 @@ public class JobFlow {
         joinInput2 = biarcsOutput + hadoopOutputFileName,
         sumInput = joinOutput + hadoopOutputFileName,
         labelsInput = sumOutput + hadoopOutputFileName,
-        attributesInput = labelsOutput + "labels-small",
-        // attributesInput = labelsOutput + "labels-large",
+        attributesInput = labelsOutput + "small-stan",
+        // attributesInput = labelsOutput + "small-inver",
+        // attributesInput = labelsOutput + "large-stan",
+        // attributesInput = labelsOutput + "large-inver",
         singleLineInput = sumOutput + hadoopOutputFileName,
-        dataInput1 = "steps/labels/output/labels-small",
+        dataInput1 = "steps/labels/output/small-stan",
+        // dataInput1 = "steps/labels/output/small-inver",
+        // dataInput1 = "steps/labels/output/large-stan",
+        // dataInput1 = "steps/labels/output/large-inver",
         dataInput2 = singleLineOutput + hadoopOutputFileName;
 
 
@@ -139,16 +144,14 @@ public class JobFlow {
 
         JobFlowInstancesConfig instances = createJobFlowInstancesConfig();
 
-        // Set job flow request.
-        RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
-                pairsConfig, biarcsConfig, joinConfig, sumConfig,
-                labelsConfig, singleLineConfig);
-
+        // Set job flow request, first stage.
         // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
-        //         attributesConfig, dataConfig);
+        //         pairsConfig, biarcsConfig, joinConfig, sumConfig,
+        //         labelsConfig, singleLineConfig);
 
-        // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances, attributesConfig);
-        // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances, dataConfig);
+        // Second stage.
+        RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
+                attributesConfig, dataConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
