@@ -1,1908 +1,1159 @@
-$/$/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3	3 1
-$/$/ROOT/0 */NN/nn/3 */NN/dep/1	1 2
-$/$/ROOT/0 */NN/nn/3 */NN/dep/1	2 1
-$/$/ROOT/0 */NNP/dep/1 of/IN/prep/2 */NNP/pobj/3	1 3
-$/$/ROOT/0 */NNP/nn/3 */NN/dep/1	1 2
-$/$/ROOT/0 */NNP/nn/3 */NN/dep/1	2 1
-$/$/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-$/$/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-$/$/ROOT/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/attr/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/conj/0 */NN/nn/3 */NN/dep/1	1 2
-$/$/conj/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/conj/0 for/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-$/$/conj/0 for/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-$/$/conj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/dep/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3	1 3
-$/$/dep/0 */NN/nn/3 */NN/dep/1	1 2
-$/$/dep/0 */NN/nn/3 */NN/dep/1	2 1
-$/$/dep/0 */NNP/nn/3 */NNP/dep/1	1 2
-$/$/dep/0 */NNP/nn/3 */NNP/dep/1	2 1
-$/$/dep/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/dep/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/dep/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/dobj/0 */NN/nn/3 */NN/dep/1	2 1
-$/$/dobj/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-$/$/dobj/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/dobj/0 for/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-$/$/dobj/0 for/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-$/$/dobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-$/$/dobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/dobj/0 in/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-$/$/dobj/0 in/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-$/$/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-$/$/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/dobj/0 per/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/nsubjpass/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/pobj/0 */NN/nn/3 */NN/appos/1	1 2
-$/$/pobj/0 */NN/nn/3 */NN/appos/1	2 1
-$/$/pobj/0 */NN/nn/3 */NN/dep/1	1 2
-$/$/pobj/0 */NN/nn/3 */NN/dep/1	2 1
-$/$/pobj/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-$/$/pobj/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/pobj/0 for/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-$/$/pobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/pobj/0 per/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-$/$/pobj/0 per/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-$/$/pobj/0 per/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'/IN/ROOT/0 */NN/nn/3 */NN/pobj/1	2 1
-'/IN/ROOT/0 */NN/pobj/1 and/CC/cc/2 */NN/conj/2	1 3
-'/IN/ROOT/0 */NN/pobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'/IN/ROOT/0 */NN/pobj/1 of/IN/prep/2 */NN/pobj/3	3 1
-'/IN/ROOT/0 */NN/pobj/1 of/IN/prep/2 */NNP/pobj/3	1 3
-'/IN/ROOT/0 */NN/pobj/1 of/IN/prep/2 */NNP/pobj/3	3 1
-'/IN/ROOT/0 */NNP/nn/3 */NN/pobj/1	2 1
-'/IN/ROOT/0 */NNP/nn/3 */NNP/pobj/1	1 2
-'/IN/ROOT/0 */NNP/nn/3 */NNP/pobj/1	2 1
-'/IN/ROOT/0 */NNP/pobj/1 */NN/appos/2	1 2
-'/IN/ROOT/0 */NNP/pobj/1 */NN/dep/2	2 1
-'/IN/ROOT/0 */NNP/pobj/1 */NNP/appos/2	2 1
-'/IN/ROOT/0 */NNP/pobj/1 */NNP/dep/2	1 2
-'/IN/ROOT/0 */NNP/pobj/1 */NNP/dep/2	2 1
-'/IN/ROOT/0 */NNP/pobj/1 and/CC/cc/2 */NNP/conj/2	1 3
-'/IN/ROOT/0 */NNP/pobj/1 and/CC/cc/2 */NNP/conj/2	3 1
-'/IN/ROOT/0 */NNP/pobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'/IN/ROOT/0 */NNP/pobj/1 of/IN/prep/2 */NNP/pobj/3	1 3
-'/IN/ROOT/0 */NNP/pobj/1 of/IN/prep/2 */NNP/pobj/3	3 1
-'/IN/dep/0 */NNP/nn/3 */NNP/pobj/1	2 1
-'/POS/ROOT/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	3 2
-'/POS/nsubj/0 */NN/dep/3 */NN/dep/1	2 1
-'/POS/pobj/0 */NN/dep/3 */NN/dep/1	2 1
-'/POS/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	3 2
-'/PRP/pobj/0 */NNP/nn/3 */NNP/dep/1	1 2
-'/PRP/pobj/0 */NNP/nn/3 */NNP/dep/1	2 1
-'/VB/infmod/0 */NN/dobj/1 and/CC/cc/2 */NN/conj/2	3 1
-'/VB/xcomp/0 */NN/dobj/1 and/CC/cc/2 */NN/conj/2	3 1
-'/VB/xcomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'/VB/xcomp/0 */NN/nn/3 */NN/dobj/1	1 2
-'/VB/xcomp/0 */NN/nn/3 */NN/dobj/1	2 1
-'/VB/xcomp/0 */NNP/nn/3 */NNP/dobj/1	1 2
-'/VB/xcomp/0 */NNP/nn/3 */NNP/dobj/1	2 1
-'/VBZ/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'/VBZ/ROOT/0 */NNS/dobj/1 */NN/dep/2	2 1
-'/VBZ/ROOT/0 */NNS/dobj/1 in/IN/prep/1 */NN/pobj/3	3 1
-'/VBZ/ROOT/0 */NNS/iobj/1 */NN/dobj/1	2 1
-'/VBZ/ccomp/0 */NNS/dobj/1 in/IN/prep/1 */NN/pobj/3	3 1
-'/VBZ/ccomp/0 */NNS/iobj/1 */NN/dobj/1	2 1
-'m/VBP/ROOT/0 */NN/attr/1 */NN/appos/2	1 2
-'m/VBP/ROOT/0 */NN/attr/1 */NN/appos/2	2 1
-'m/VBP/ROOT/0 */NN/attr/1 */NN/attr/1	1 2
-'m/VBP/ROOT/0 */NN/attr/1 */NN/dep/2	1 2
-'m/VBP/ROOT/0 */NN/attr/1 */NNP/appos/2	1 2
-'m/VBP/ROOT/0 */NN/attr/1 and/CC/cc/2 */NN/conj/2	1 3
-'m/VBP/ROOT/0 */NN/attr/1 and/CC/cc/2 */NN/conj/2	3 1
-'m/VBP/ROOT/0 */NN/attr/1 in/IN/prep/2 */NN/pobj/3	3 1
-'m/VBP/ROOT/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'m/VBP/ROOT/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'m/VBP/ROOT/0 */NN/nn/3 */NN/attr/1	1 2
-'m/VBP/ROOT/0 */NN/nn/3 */NN/attr/1	2 1
-'m/VBP/ROOT/0 */NNP/nn/3 */NN/attr/1	2 1
-'m/VBP/ROOT/0 */NNP/nn/3 */NNP/attr/1	1 2
-'m/VBP/ROOT/0 */NNP/nn/3 */NNP/attr/1	2 1
-'m/VBP/ROOT/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'m/VBP/ROOT/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'m/VBP/ROOT/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'m/VBP/ROOT/0 on/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'m/VBP/advcl/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'m/VBP/ccomp/0 */NN/attr/1 */NN/appos/2	1 2
-'m/VBP/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'m/VBP/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'m/VBP/ccomp/0 */NN/nn/3 */NN/attr/1	1 2
-'m/VBP/ccomp/0 */NN/nn/3 */NN/attr/1	2 1
-'m/VBP/ccomp/0 */NNP/nn/3 */NNP/attr/1	1 2
-'m/VBP/ccomp/0 */NNP/nn/3 */NNP/attr/1	2 1
-'m/VBP/ccomp/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'m/VBP/ccomp/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'m/VBP/ccomp/0 on/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'re/VBP/ROOT/0 */NN/attr/1 */NN/appos/2	1 2
-'re/VBP/ROOT/0 */NN/attr/1 */NN/appos/2	2 1
-'re/VBP/ROOT/0 */NN/attr/1 */NN/attr/1	1 2
-'re/VBP/ROOT/0 */NN/attr/1 */NNP/appos/2	1 2
-'re/VBP/ROOT/0 */NN/attr/1 */NNP/attr/1	1 2
-'re/VBP/ROOT/0 */NN/attr/1 and/CC/cc/2 */NN/conj/2	1 3
-'re/VBP/ROOT/0 */NN/attr/1 and/CC/cc/2 */NN/conj/2	3 1
-'re/VBP/ROOT/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'re/VBP/ROOT/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'re/VBP/ROOT/0 */NN/nn/3 */NN/attr/1	1 2
-'re/VBP/ROOT/0 */NN/nn/3 */NN/attr/1	2 1
-'re/VBP/ROOT/0 */NN/nn/3 */NNS/attr/1	2 1
-'re/VBP/ROOT/0 */NNP/nn/3 */NNP/attr/1	1 2
-'re/VBP/ROOT/0 */NNP/nn/3 */NNP/attr/1	2 1
-'re/VBP/ROOT/0 at/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'re/VBP/ROOT/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-'re/VBP/ROOT/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'re/VBP/ROOT/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'re/VBP/ROOT/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'re/VBP/ROOT/0 on/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'re/VBP/advcl/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'re/VBP/advcl/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'re/VBP/advcl/0 */NN/attr/1 or/CC/cc/2 */NN/conj/2	1 3
-'re/VBP/advcl/0 */NN/nn/3 */NN/attr/1	2 1
-'re/VBP/advcl/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'re/VBP/advcl/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'re/VBP/ccomp/0 */NN/attr/1 */NN/appos/2	1 2
-'re/VBP/ccomp/0 */NN/attr/1 */NN/appos/2	2 1
-'re/VBP/ccomp/0 */NN/attr/1 */NNP/appos/2	1 2
-'re/VBP/ccomp/0 */NN/attr/1 and/CC/cc/2 */NN/conj/2	1 3
-'re/VBP/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'re/VBP/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'re/VBP/ccomp/0 */NN/attr/1 or/CC/cc/2 */NN/conj/2	1 3
-'re/VBP/ccomp/0 */NN/nn/3 */NN/attr/1	1 2
-'re/VBP/ccomp/0 */NN/nn/3 */NN/attr/1	2 1
-'re/VBP/ccomp/0 */NNP/nn/3 */NNP/attr/1	1 2
-'re/VBP/ccomp/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'re/VBP/ccomp/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'re/VBP/ccomp/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'re/VBP/conj/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'re/VBP/dep/0 */NN/nn/3 */NN/attr/1	2 1
-'s/POS/ROOT/0 */NN/dep/3 */NN/dep/1	1 2
-'s/POS/ROOT/0 */NN/dep/3 */NN/dep/1	2 1
-'s/POS/ROOT/0 */NNP/nn/3 */NNP/appos/1	2 1
-'s/POS/attr/0 */NN/dep/3 */NN/dep/1	1 2
-'s/POS/attr/0 */NN/dep/3 */NN/dep/1	2 1
-'s/POS/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/POS/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/POS/conj/0 */NN/dep/3 */NN/dep/1	2 1
-'s/POS/dobj/0 */NN/dep/3 */NN/dep/1	2 1
-'s/POS/nsubj/0 */NN/dep/3 */NN/dep/1	1 2
-'s/POS/nsubj/0 */NN/dep/3 */NN/dep/1	2 1
-'s/POS/pobj/0 */NN/conj/1 and/CC/cc/2 */NN/conj/2	1 3
-'s/POS/pobj/0 */NN/dep/3 */NN/dep/1	1 2
-'s/POS/pobj/0 */NN/dep/3 */NN/dep/1	2 1
-'s/POS/pobj/0 */NN/nn/3 */NN/appos/1	2 1
-'s/POS/pobj/0 */NNP/nn/3 */NNP/appos/1	2 1
-'s/POS/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	2 4
-'s/POS/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	4 2
-'s/POS/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	3 2
-'s/POS/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	2 3
-'s/POS/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	3 2
-'s/POS/pobj/0 at/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-'s/POS/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NNP/pobj/4	2 4
-'s/POS/pobj/0 in/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-'s/POS/pobj/0 on/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-'s/POS/pobj/0 or/CC/cc/1 */NN/nn/4 */NN/conj/1	2 3
-'s/POS/pobj/0 or/CC/cc/1 */NN/nn/4 */NN/conj/1	3 2
-'s/VBZ/ROOT/0 */NN/amod/3 */NN/attr/1	2 1
-'s/VBZ/ROOT/0 */NN/attr/1 */NN/appos/2	1 2
-'s/VBZ/ROOT/0 */NN/attr/1 */NN/appos/2	2 1
-'s/VBZ/ROOT/0 */NN/attr/1 */NN/attr/1	1 2
-'s/VBZ/ROOT/0 */NN/attr/1 */NN/attr/1	2 1
-'s/VBZ/ROOT/0 */NN/attr/1 */NN/dep/2	1 2
-'s/VBZ/ROOT/0 */NN/attr/1 */NN/dep/2	2 1
-'s/VBZ/ROOT/0 */NN/attr/1 */NN/rcmod/2	1 2
-'s/VBZ/ROOT/0 */NN/attr/1 */NN/rcmod/2	2 1
-'s/VBZ/ROOT/0 */NN/attr/1 */NNP/appos/2	1 2
-'s/VBZ/ROOT/0 */NN/attr/1 */NNP/appos/2	2 1
-'s/VBZ/ROOT/0 */NN/attr/1 */NNP/attr/1	1 2
-'s/VBZ/ROOT/0 */NN/attr/1 */NNP/attr/1	2 1
-'s/VBZ/ROOT/0 */NN/attr/1 and/CC/cc/1 */NN/conj/1	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 and/CC/cc/2 */NN/conj/2	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 and/CC/cc/2 */NN/conj/2	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 at/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 at/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 but/CC/cc/2 */NN/conj/2	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 for/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 for/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 for/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 for/IN/prep/2 */NNS/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 from/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 in/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 in/IN/prep/1 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 in/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 in/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 in/IN/prep/2 */NNP/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 like/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 of/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 of/IN/prep/2 */NNP/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 of/IN/prep/2 */NNP/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 of/IN/prep/2 */NNS/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 of/IN/prep/2 */NNS/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 on/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 on/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 or/CC/cc/2 */NN/conj/2	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 or/CC/cc/2 */NN/conj/2	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 to/TO/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 to/TO/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/attr/1 with/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/attr/1 with/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/dep/3 */NN/attr/1	1 2
-'s/VBZ/ROOT/0 */NN/dep/3 */NN/attr/1	2 1
-'s/VBZ/ROOT/0 */NN/dep/3 */NN/nsubj/1	1 2
-'s/VBZ/ROOT/0 */NN/dep/3 */NN/nsubj/1	2 1
-'s/VBZ/ROOT/0 */NN/nn/3 */NN/attr/1	1 2
-'s/VBZ/ROOT/0 */NN/nn/3 */NN/attr/1	2 1
-'s/VBZ/ROOT/0 */NN/nn/3 */NN/nsubj/1	1 2
-'s/VBZ/ROOT/0 */NN/nn/3 */NN/nsubj/1	2 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/appos/2	1 2
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/appos/2	2 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/attr/1	1 2
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/attr/1	2 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/conj/2 and/CC/cc/2	1 2
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/conj/2 and/CC/cc/2	2 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/dep/1	1 2
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/dep/2	1 2
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/dep/2	2 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/nsubj/1	1 2
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NN/nsubj/1	2 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 */NNP/attr/1	1 2
-'s/VBZ/ROOT/0 */NN/nsubj/1 and/CC/cc/2 */NN/conj/2	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 and/CC/cc/2 */NN/conj/2	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 at/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 at/IN/prep/1 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 at/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 at/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 between/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 between/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 for/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 for/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 for/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 in/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 in/IN/prep/1 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 in/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 in/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 in/IN/prep/2 */NNP/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 like/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 of/IN/prep/2 */NNP/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 of/IN/prep/2 */NNS/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 of/IN/prep/2 */NNS/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 on/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 on/IN/prep/1 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 on/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 on/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 or/CC/cc/2 */NN/conj/2	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 or/CC/cc/2 */NN/conj/2	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 to/TO/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 to/TO/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NN/nsubj/1 to/TO/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ROOT/0 */NN/nsubj/1 with/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 */NNP/attr/1 */NN/appos/2	1 2
-'s/VBZ/ROOT/0 */NNP/attr/1 */NN/appos/2	2 1
-'s/VBZ/ROOT/0 */NNP/attr/1 and/CC/cc/2 */NNP/conj/2	1 3
-'s/VBZ/ROOT/0 */NNP/attr/1 and/CC/cc/2 */NNP/conj/2	3 1
-'s/VBZ/ROOT/0 */NNP/attr/1 of/IN/prep/2 */NNP/pobj/3	1 3
-'s/VBZ/ROOT/0 */NNP/nn/3 */NN/attr/1	1 2
-'s/VBZ/ROOT/0 */NNP/nn/3 */NN/attr/1	2 1
-'s/VBZ/ROOT/0 */NNP/nn/3 */NN/nsubj/1	2 1
-'s/VBZ/ROOT/0 */NNP/nn/3 */NNP/attr/1	1 2
-'s/VBZ/ROOT/0 */NNP/nn/3 */NNP/attr/1	2 1
-'s/VBZ/ROOT/0 */NNP/nn/3 */NNP/nsubj/1	1 2
-'s/VBZ/ROOT/0 */NNP/nn/3 */NNP/nsubj/1	2 1
-'s/VBZ/ROOT/0 */NNS/attr/1 in/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ROOT/0 about/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-'s/VBZ/ROOT/0 at/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-'s/VBZ/ROOT/0 at/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'s/VBZ/ROOT/0 at/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'s/VBZ/ROOT/0 at/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'s/VBZ/ROOT/0 at/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-'s/VBZ/ROOT/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'s/VBZ/ROOT/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-'s/VBZ/ROOT/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'s/VBZ/ROOT/0 in/IN/prep/1 */NN/pobj/2 */NN/attr/1	3 2
-'s/VBZ/ROOT/0 in/IN/prep/1 */NN/pobj/2 in/IN/prep/1 */NN/pobj/4	4 2
-'s/VBZ/ROOT/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'s/VBZ/ROOT/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'s/VBZ/ROOT/0 in/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-'s/VBZ/ROOT/0 like/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-'s/VBZ/ROOT/0 like/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'s/VBZ/ROOT/0 like/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'s/VBZ/ROOT/0 like/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'s/VBZ/ROOT/0 on/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-'s/VBZ/ROOT/0 on/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'s/VBZ/ROOT/0 on/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'s/VBZ/ROOT/0 on/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'s/VBZ/ROOT/0 on/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-'s/VBZ/ROOT/0 with/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-'s/VBZ/advcl/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/advcl/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/advcl/0 */NN/nn/3 */NN/attr/1	1 2
-'s/VBZ/advcl/0 */NN/nn/3 */NN/attr/1	2 1
-'s/VBZ/advcl/0 */NN/nn/3 */NN/nsubj/1	2 1
-'s/VBZ/advcl/0 */NN/nsubj/1 in/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/advcl/0 */NN/nsubj/1 in/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/advcl/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/advcl/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/attr/1 */NN/appos/2	1 2
-'s/VBZ/ccomp/0 */NN/attr/1 */NN/appos/2	2 1
-'s/VBZ/ccomp/0 */NN/attr/1 */NN/attr/1	1 2
-'s/VBZ/ccomp/0 */NN/attr/1 */NN/attr/1	2 1
-'s/VBZ/ccomp/0 */NN/attr/1 */NN/dep/2	1 2
-'s/VBZ/ccomp/0 */NN/attr/1 */NNP/appos/2	1 2
-'s/VBZ/ccomp/0 */NN/attr/1 and/CC/cc/2 */NN/conj/2	1 3
-'s/VBZ/ccomp/0 */NN/attr/1 and/CC/cc/2 */NN/conj/2	3 1
-'s/VBZ/ccomp/0 */NN/attr/1 for/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/attr/1 for/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/attr/1 in/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/attr/1 in/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/attr/1 in/IN/prep/2 */NNP/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/attr/1 of/IN/prep/2 */NNP/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/attr/1 of/IN/prep/2 */NNP/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/attr/1 on/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/attr/1 on/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/attr/1 or/CC/cc/2 */NN/conj/2	1 3
-'s/VBZ/ccomp/0 */NN/attr/1 or/CC/cc/2 */NN/conj/2	3 1
-'s/VBZ/ccomp/0 */NN/attr/1 to/TO/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/dep/3 */NN/attr/1	1 2
-'s/VBZ/ccomp/0 */NN/dep/3 */NN/attr/1	2 1
-'s/VBZ/ccomp/0 */NN/dep/3 */NN/nsubj/1	2 1
-'s/VBZ/ccomp/0 */NN/nn/3 */NN/attr/1	1 2
-'s/VBZ/ccomp/0 */NN/nn/3 */NN/attr/1	2 1
-'s/VBZ/ccomp/0 */NN/nn/3 */NN/nsubj/1	1 2
-'s/VBZ/ccomp/0 */NN/nn/3 */NN/nsubj/1	2 1
-'s/VBZ/ccomp/0 */NN/nsubj/1 */NN/appos/2	1 2
-'s/VBZ/ccomp/0 */NN/nsubj/1 */NN/appos/2	2 1
-'s/VBZ/ccomp/0 */NN/nsubj/1 */NN/nsubj/1	1 2
-'s/VBZ/ccomp/0 */NN/nsubj/1 and/CC/cc/2 */NN/conj/2	1 3
-'s/VBZ/ccomp/0 */NN/nsubj/1 and/CC/cc/2 */NN/conj/2	3 1
-'s/VBZ/ccomp/0 */NN/nsubj/1 in/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/nsubj/1 in/IN/prep/1 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/nsubj/1 in/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/nsubj/1 in/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/nsubj/1 of/IN/prep/2 */NNS/pobj/3	3 1
-'s/VBZ/ccomp/0 */NN/nsubj/1 on/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/ccomp/0 */NN/nsubj/1 on/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/ccomp/0 */NNP/nn/3 */NN/attr/1	2 1
-'s/VBZ/ccomp/0 */NNP/nn/3 */NNP/attr/1	1 2
-'s/VBZ/ccomp/0 */NNP/nn/3 */NNP/attr/1	2 1
-'s/VBZ/ccomp/0 at/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'s/VBZ/ccomp/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'s/VBZ/ccomp/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'s/VBZ/ccomp/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-'s/VBZ/ccomp/0 in/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-'s/VBZ/ccomp/0 like/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'s/VBZ/ccomp/0 on/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-'s/VBZ/ccomp/0 on/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-'s/VBZ/conj/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/conj/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/conj/0 */NN/nn/3 */NN/attr/1	1 2
-'s/VBZ/conj/0 */NN/nn/3 */NN/attr/1	2 1
-'s/VBZ/conj/0 */NN/nn/3 */NN/nsubj/1	1 2
-'s/VBZ/conj/0 */NN/nn/3 */NN/nsubj/1	2 1
-'s/VBZ/conj/0 */NN/nsubj/1 in/IN/prep/1 */NN/pobj/3	1 3
-'s/VBZ/conj/0 */NN/nsubj/1 in/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/conj/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/conj/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/dep/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/dep/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/dep/0 */NN/nn/3 */NN/attr/1	1 2
-'s/VBZ/dep/0 */NN/nn/3 */NN/attr/1	2 1
-'s/VBZ/dep/0 */NN/nn/3 */NN/nsubj/1	2 1
-'s/VBZ/dep/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/dep/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/dep/0 */NNP/nn/3 */NNP/attr/1	1 2
-'s/VBZ/dep/0 */NNP/nn/3 */NNP/attr/1	2 1
-'s/VBZ/parataxis/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/parataxis/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/parataxis/0 */NN/nn/3 */NN/attr/1	2 1
-'s/VBZ/parataxis/0 */NN/nsubj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/rcmod/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	1 3
-'s/VBZ/rcmod/0 */NN/attr/1 of/IN/prep/2 */NN/pobj/3	3 1
-'s/VBZ/rcmod/0 */NN/nn/3 */NN/attr/1	2 1
-'ve/VBP/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-'ve/VBP/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	3 1
-*/NN/ROOT/0 */NN/conj/1 */NN/conj/1	0 1
-*/NN/ROOT/0 */NN/conj/1 */NN/conj/1	2 1
-*/NN/ROOT/0 */NN/dep/1 and/CC/cc/2 */NN/conj/2	1 3
-*/NN/ROOT/0 */NN/dep/1 in/IN/prep/2 */NN/pobj/3	3 1
-*/NN/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3	1 3
-*/NN/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3	3 1
-*/NN/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-*/NN/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	3 1
-*/NN/ROOT/0 */NN/nn/3 */NN/dep/1	1 2
-*/NN/ROOT/0 */NN/nn/3 */NN/dep/1	2 1
-*/NN/ROOT/0 */NNP/dep/1 and/CC/cc/2 */NNP/conj/2	1 3
-*/NN/ROOT/0 */NNP/dep/1 and/CC/cc/2 */NNP/conj/2	3 1
-*/NN/ROOT/0 */NNP/dep/1 of/IN/prep/2 */NNP/pobj/3	1 3
-*/NN/ROOT/0 */NNP/nn/3 */NN/dep/1	2 1
-*/NN/ROOT/0 */NNP/nn/3 */NNP/appos/1	2 1
-*/NN/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-*/NN/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-*/NN/ROOT/0 */NNP/nn/3 */NNP/dobj/1	2 1
-*/NN/ROOT/0 develop/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/ROOT/0 maintain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/ROOT/0 make/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/ROOT/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-*/NN/ROOT/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/ROOT/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-*/NN/ROOT/0 use/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/advmod/2 's/VBZ/ROOT/0 */NN/attr/2	2 0
-*/NN/appos/0 */NN/dep/1 */NN/dep/2	2 1
-*/NN/appos/0 */NN/dep/1 in/IN/prep/2 */NN/pobj/3	1 3
-*/NN/appos/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3	1 3
-*/NN/appos/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3	3 1
-*/NN/appos/0 */NN/dep/1 of/IN/prep/2 */NNP/pobj/3	1 3
-*/NN/appos/0 */NN/nn/3 */NN/dep/1	2 1
-*/NN/appos/0 */NNP/dep/1 of/IN/prep/2 */NNP/pobj/3	1 3
-*/NN/appos/0 */NNP/dep/1 of/IN/prep/2 */NNP/pobj/3	3 1
-*/NN/appos/0 */NNP/nn/3 */NNP/appos/1	2 1
-*/NN/appos/0 */NNP/nn/3 */NNP/dep/1	1 2
-*/NN/appos/0 */NNP/nn/3 */NNP/dep/1	2 1
-*/NN/appos/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/appos/0 use/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 */NN/nn/3 */NN/appos/1	2 1
-*/NN/attr/0 apply/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 control/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 create/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 develop/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 give/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 have/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 maintain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 make/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-*/NN/attr/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/attr/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-*/NN/attr/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-*/NN/attr/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/attr/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/attr/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-*/NN/attr/0 produce/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 provide/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 understand/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/attr/0 use/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 acquire/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 apply/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 carry/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 change/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 control/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 create/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 demonstrate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 develop/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 do/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 exercise/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/conj/0 form/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 give/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/conj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	0 4
-*/NN/conj/0 keep/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/conj/0 maintain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 make/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 manage/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-*/NN/conj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/conj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/conj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/conj/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2	0 3
-*/NN/conj/0 participate/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/conj/0 perform/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 produce/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 provide/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 take/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 understand/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 use/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/conj/0 utilize/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dep/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	0 1
-*/NN/dep/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	0 3
-*/NN/dep/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	1 3
-*/NN/dep/0 */NN/nn/3 */NN/dep/1	2 1
-*/NN/dep/0 */NNP/dep/1 of/IN/prep/2 */NNP/pobj/3	1 3
-*/NN/dep/0 */NNP/nn/3 */NN/dep/1	2 1
-*/NN/dep/0 */NNP/nn/3 */NNP/dep/1	1 2
-*/NN/dep/0 */NNP/nn/3 */NNP/dep/1	2 1
-*/NN/dep/0 create/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dep/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/dep/0 maintain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dep/0 make/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dep/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	0 3
-*/NN/dep/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-*/NN/dep/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/dep/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/dep/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/dep/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-*/NN/dep/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2	0 3
-*/NN/dep/0 provide/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dep/0 use/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dep/2 's/POS/ROOT/0 */NN/nsubj/2	2 0
-*/NN/dep/2 's/POS/ROOT/0 */NNP/dep/2	0 2
-*/NN/dep/2 's/POS/conj/0 */NN/dep/2	2 0
-*/NN/dep/2 's/POS/pobj/0 */NN/dep/2	0 2
-*/NN/dep/2 's/POS/pobj/0 */NN/dep/2	2 0
-*/NN/dep/2 's/POS/pobj/0 and/CC/cc/2 */NN/conj/2	0 3
-*/NN/dep/2 's/POS/pobj/0 and/CC/cc/2 */NN/conj/2	3 0
-*/NN/dep/2 's/POS/pobj/0 or/CC/cc/2 */NN/conj/2	0 3
-*/NN/dep/2 's/POS/pobj/0 or/CC/cc/2 */NN/conj/2	3 0
-*/NN/dep/2 's/VBZ/ROOT/0 */NN/attr/2	2 0
-*/NN/dep/2 */NN/dep/3 's/POS/nsubj/0	0 1
-*/NN/dep/2 */NN/dep/3 's/POS/pobj/0	0 1
-*/NN/dep/2 */NN/dep/3 's/POS/pobj/0	1 0
-*/NN/dep/2 */NN/dep/3 */NN/dobj/0	2 0
-*/NN/dep/2 */NN/dep/3 */NN/pobj/0	2 0
-*/NN/dep/2 */NN/dep/3 */NN/pobj/0	2 1
-*/NN/dep/2 */NN/dep/3 ]/SYM/dep/0	0 1
-*/NN/dep/2 */NN/dep/3 ]/SYM/dep/0	1 0
-*/NN/dep/2 the/DT/dep/3 */NN/dobj/0	2 0
-*/NN/dep/2 the/DT/dep/3 */NN/pobj/0	2 0
-*/NN/dep/3 */NN/dep/3 */NNP/nsubj/0	0 2
-*/NN/dep/3 */NN/dep/3 ]/SYM/ROOT/0	0 1
-*/NN/dep/3 */NN/dep/3 ]/SYM/dep/0	0 1
-*/NN/dep/3 */NN/dep/3 ]/SYM/dep/0	1 0
-*/NN/dep/3 */NNP/dep/3 ]/SYM/dep/0	0 1
-*/NN/dep/3 */NNP/nn/3 1/LS/ROOT/0	1 0
-*/NN/dep/3 */NNP/nn/3 ]/SYM/dep/0	0 1
-*/NN/dep/3 */NNP/nn/3 ]/SYM/nsubj/0	0 1
-*/NN/dep/3 //NN/dep/3 */NN/dep/0	2 0
-*/NN/dep/4 and/CC/cc/1 */NNP/conj/1 2/LS/ROOT/0	2 0
-*/NN/dep/4 of/IN/prep/1 */NN/pobj/2 ]/SYM/dep/0	0 2
-*/NN/dep/4 of/IN/prep/1 */NN/pobj/2 ]/SYM/dep/0	2 0
-*/NN/dep/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/dep/0	0 2
-*/NN/dobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1	0 1
-*/NN/dobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1	0 2
-*/NN/dobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1	1 2
-*/NN/dobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1	2 1
-*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	0 1
-*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	0 3
-*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	1 0
-*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	1 3
-*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	3 0
-*/NN/dobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	3 1
-*/NN/dobj/0 */NN/nn/3 */NN/conj/1 and/CC/cc/1	0 2
-*/NN/dobj/0 accept/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 access/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 achieve/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 acquire/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 adapt/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 adjust/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 affect/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 alter/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 do/VB/infmod/1	0 2
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/3 */NN/pobj/4	0 2
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/3 */NN/pobj/4	0 4
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	0 2
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	0 4
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	2 0
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NNS/pobj/4	0 2
-*/NN/dobj/0 and/CC/cc/1 */NN/conj/1 perform/VB/infmod/1	0 2
-*/NN/dobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	0 2
-*/NN/dobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	0 3
-*/NN/dobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	3 0
-*/NN/dobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	3 2
-*/NN/dobj/0 and/CC/cc/1 */NN/nn/4 */NNS/conj/1	0 2
-*/NN/dobj/0 and/CC/cc/1 good/JJ/amod/4 */NN/conj/1	0 3
-*/NN/dobj/0 and/CC/cc/1 keen/JJ/amod/4 */NN/conj/1	0 3
-*/NN/dobj/0 and/CC/cc/1 physical/JJ/amod/4 */NN/conj/1	0 3
-*/NN/dobj/0 and/CC/cc/1 political/JJ/amod/4 */NN/conj/1	0 3
-*/NN/dobj/0 apply/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 articulate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 assess/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 assess/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/dobj/0 be/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 bring/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 build/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 capture/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 carry/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 carry/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 change/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 choose/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 combine/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 communicate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 construct/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 contribute/VB/infmod/1 to/TO/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 control/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 control/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/dobj/0 convey/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 coordinate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 cope/VB/infmod/1 with/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 create/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 create/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/dobj/0 deal/VB/infmod/1 with/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 deliver/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 demonstrate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 detect/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 determine/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 develop/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 direct/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 do/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 employ/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 engage/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 enhance/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 establish/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 evaluate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 execute/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 exercise/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 expand/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 exploit/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 express/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 extend/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 finance/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 find/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 focus/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 follow/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/dobj/0 form/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 gain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 generate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 get/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 give/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 handle/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 have/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 hold/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 hold/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 identify/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 implement/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 impose/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 improve/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/dobj/0 in/IN/prep/1 */NNS/pobj/2 of/IN/prep/3 */NN/pobj/4	0 4
-*/NN/dobj/0 increase/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 influence/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 interpret/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 is/VBZ/rcmod/1 */NN/attr/2	0 2
-*/NN/dobj/0 judge/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 keep/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 keep/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 learn/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 listen/VB/infmod/1 to/TO/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 maintain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 maintain/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 make/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 make/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 manage/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 master/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 measure/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 monitor/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 obtain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	0 3
-*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 0
-*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2	3 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 achieve/VB/infmod/1	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 as/IN/prep/3 */NN/pobj/4	2 4
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 control/VB/infmod/1	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 detect/VB/infmod/1	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 distinguish/VB/infmod/1	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NN/pobj/4	2 4
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NN/pobj/4	4 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NNP/pobj/4	2 4
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 maintain/VB/infmod/1	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 make/VB/infmod/1	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NNP/pobj/4	2 4
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 or/CC/cc/3 */NN/conj/3	4 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 perceive/VB/infmod/1	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 provide/VB/infmod/1	0 2
-*/NN/dobj/0 of/IN/prep/1 */NN/pobj/2 respond/VB/infmod/1	0 2
-*/NN/dobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	2 3
-*/NN/dobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-*/NN/dobj/0 of/IN/prep/1 */NNP/pobj/2 of/IN/prep/3 */NNP/pobj/4	2 4
-*/NN/dobj/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2	0 3
-*/NN/dobj/0 offer/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 or/CC/cc/1 */NN/conj/1 do/VB/infmod/1	0 2
-*/NN/dobj/0 organize/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 participate/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 perceive/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 perform/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 perform/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 predict/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 produce/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 produce/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 promote/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 provide/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 pursue/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 put/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 reach/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 read/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 recognize/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 recognize/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/dobj/0 reduce/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 regulate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 remain/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 resist/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 respond/VB/infmod/1 to/TO/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 retain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 see/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 see/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/dobj/0 see/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 select/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 shift/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 stimulate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 support/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 sustain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 take/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 teach/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 to/TO/prep/1 */NN/nn/4 */NN/pobj/2	0 3
-*/NN/dobj/0 transfer/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 turn/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 understand/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 understand/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/dobj/0 undertake/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 use/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 use/VB/infmod/1 as/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 use/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 utilize/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/dobj/0 work/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 work/VB/infmod/1 with/IN/prep/2 */NN/pobj/3	0 3
-*/NN/dobj/0 write/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nn/2 */NN/ROOT/0 */NN/appos/2	0 2
-*/NN/nn/2 */NN/ROOT/0 */NN/dep/2	0 2
-*/NN/nn/2 */NN/ROOT/0 */NNP/dep/2	0 2
-*/NN/nn/2 */NN/ROOT/0 for/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nn/2 */NN/dep/3 's/POS/pobj/0	0 1
-*/NN/nn/2 */NN/dep/3 's/POS/pobj/0	1 0
-*/NN/nn/2 */NN/dep/3 ]/SYM/ROOT/0	0 1
-*/NN/nn/2 */NN/dep/3 ]/SYM/ROOT/0	1 0
-*/NN/nn/2 */NN/dep/3 ]/SYM/dep/0	0 1
-*/NN/nn/2 */NN/dep/3 ]/SYM/dep/0	1 0
-*/NN/nn/2 */NN/dobj/0 */NN/conj/2 and/CC/cc/2	1 2
-*/NN/nn/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 0
-*/NN/nn/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-*/NN/nn/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	3 0
-*/NN/nn/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	3 1
-*/NN/nn/2 */NN/dobj/0 of/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nn/2 */NN/dobj/0 of/IN/prep/2 */NN/pobj/3	1 3
-*/NN/nn/2 */NN/dobj/0 of/IN/prep/2 */NNS/pobj/3	1 0
-*/NN/nn/2 */NN/nsubj/0 and/CC/cc/2 */NN/conj/2	1 3
-*/NN/nn/2 */NN/nsubj/0 of/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nn/2 */NN/nsubj/0 of/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nn/2 */NN/nsubj/0 of/IN/prep/2 */NN/pobj/3	3 1
-*/NN/nn/2 */NN/nsubj/3 's/POS/ROOT/0	1 0
-*/NN/nn/2 */NN/nsubj/3 's/VBZ/ROOT/0	0 1
-*/NN/nn/2 */NN/nsubj/3 's/VBZ/ROOT/0	1 0
-*/NN/nn/2 */NN/nsubj/3 1/CD/ROOT/0	1 0
-*/NN/nn/2 */NN/nsubj/3 1/LS/ROOT/0	1 0
-*/NN/nn/2 */NN/nsubj/3 2/CD/ROOT/0	1 0
-*/NN/nn/2 */NN/nsubj/3 2/LS/ROOT/0	1 0
-*/NN/nn/2 */NN/nsubj/3 3/CD/ROOT/0	0 1
-*/NN/nn/2 */NN/nsubj/3 3/CD/ROOT/0	1 0
-*/NN/nn/2 */NN/nsubj/3 ]/SYM/dep/0	1 0
-*/NN/nn/2 */NN/nsubjpass/3 abandoned/VBN/ROOT/0	1 0
-*/NN/nn/2 */NN/nsubjpass/3 abandoned/VBN/ccomp/0	1 0
-*/NN/nn/2 */NN/nsubjpass/3 abolished/VBN/ROOT/0	0 1
-*/NN/nn/2 */NN/nsubjpass/3 abolished/VBN/ROOT/0	1 0
-*/NN/nn/2 */NN/nsubjpass/3 abolished/VBN/ccomp/0	1 0
-*/NN/nn/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	1 2
-*/NN/nn/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	2 0
-*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	0 3
-*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 0
-*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	3 0
-*/NN/nn/2 */NN/pobj/0 and/CC/cc/2 */NNS/conj/2	1 0
-*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3	0 1
-*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3	1 0
-*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NNP/pobj/3	0 1
-*/NN/nn/2 */NN/pobj/0 in/IN/prep/2 */NNS/pobj/3	0 1
-*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3	0 1
-*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3	1 0
-*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3	1 3
-*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3	3 1
-*/NN/nn/2 */NN/pobj/0 of/IN/prep/2 */NNS/pobj/3	1 0
-*/NN/nn/2 */NN/pobj/0 or/CC/cc/2 */NN/conj/2	1 0
-*/NN/nn/2 */NN/pobj/0 or/CC/cc/2 */NN/conj/2	1 3
-*/NN/nn/2 */NNP/ROOT/0 */NN/appos/2	0 1
-*/NN/nn/2 */NNP/ROOT/0 */NN/appos/2	0 2
-*/NN/nn/2 */NNP/ROOT/0 */NN/appos/2	2 0
-*/NN/nn/2 */NNP/dep/0 */NNP/appos/2	0 2
-*/NN/nn/2 */NNP/dep/0 and/CC/cc/2 */NNP/conj/2	0 3
-*/NN/nn/2 */NNP/dobj/0 and/CC/cc/2 */NN/conj/2	0 3
-*/NN/nn/2 */NNP/dobj/0 and/CC/cc/2 */NNP/conj/2	0 1
-*/NN/nn/2 */NNP/dobj/0 and/CC/cc/2 */NNP/conj/2	0 3
-*/NN/nn/2 */NNP/nsubj/0 */NN/appos/2	2 1
-*/NN/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2	0 1
-*/NN/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2	0 3
-*/NN/nn/2 */NNP/pobj/0 */NN/appos/2	0 2
-*/NN/nn/2 */NNP/pobj/0 */NN/appos/2	2 0
-*/NN/nn/2 */NNP/pobj/0 */NN/appos/2	2 1
-*/NN/nn/2 */NNP/pobj/0 */NNP/appos/2	0 2
-*/NN/nn/2 */NNP/pobj/0 */NNP/conj/2 and/CC/cc/2	0 2
-*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NN/conj/2	0 1
-*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NN/conj/2	0 3
-*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NN/conj/2	3 0
-*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2	0 1
-*/NN/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2	0 3
-*/NN/nn/2 */NNP/pobj/0 is/VBZ/rcmod/2	0 1
-*/NN/nn/2 */NNP/pobj/0 of/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nn/2 */NNP/pobj/0 or/CC/cc/2 */NNP/conj/2	0 1
-*/NN/nn/2 */NNP/pobj/0 or/CC/cc/2 */NNP/conj/2	0 3
-*/NN/nn/2 */NNS/dep/3 */NN/nsubj/0	0 1
-*/NN/nn/2 */NNS/dep/3 */NN/nsubj/0	0 2
-*/NN/nn/2 */NNS/dep/3 */NNP/dep/0	0 2
-*/NN/nn/2 */NNS/dep/3 */NNP/nsubj/0	0 1
-*/NN/nn/2 //NN/dobj/0 and/CC/cc/2 */NN/conj/2	3 0
-*/NN/nn/2 //NN/pobj/0 and/CC/cc/2 */NN/conj/2	3 0
-*/NN/nn/2 //NN/pobj/0 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nn/2 //NN/pobj/0 of/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nn/2 //NN/pobj/0 of/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nn/3 */NN/dep/3 's/POS/pobj/0	0 1
-*/NN/nn/3 */NN/dep/3 's/POS/pobj/0	1 0
-*/NN/nn/3 */NN/nn/3 */NN/ROOT/0	1 0
-*/NN/nn/3 */NN/nn/3 */NN/ROOT/0	2 0
-*/NN/nn/3 */NN/nn/3 */NN/conj/0	2 1
-*/NN/nn/3 */NN/nn/3 */NN/dobj/0	0 1
-*/NN/nn/3 */NN/nn/3 */NN/dobj/0	0 2
-*/NN/nn/3 */NN/nn/3 */NN/dobj/0	1 0
-*/NN/nn/3 */NN/nn/3 */NN/dobj/0	1 2
-*/NN/nn/3 */NN/nn/3 */NN/dobj/0	2 0
-*/NN/nn/3 */NN/nn/3 */NN/dobj/0	2 1
-*/NN/nn/3 */NN/nn/3 */NN/nsubj/0	0 1
-*/NN/nn/3 */NN/nn/3 */NN/nsubj/0	1 0
-*/NN/nn/3 */NN/nn/3 */NN/nsubj/0	2 0
-*/NN/nn/3 */NN/nn/3 */NN/nsubj/0	2 1
-*/NN/nn/3 */NN/nn/3 */NN/pobj/0	0 1
-*/NN/nn/3 */NN/nn/3 */NN/pobj/0	0 2
-*/NN/nn/3 */NN/nn/3 */NN/pobj/0	1 0
-*/NN/nn/3 */NN/nn/3 */NN/pobj/0	1 2
-*/NN/nn/3 */NN/nn/3 */NN/pobj/0	2 0
-*/NN/nn/3 */NN/nn/3 */NN/pobj/0	2 1
-*/NN/nn/3 */NN/nn/3 */NNP/ROOT/0	1 0
-*/NN/nn/3 */NN/nn/3 */NNP/dobj/0	0 1
-*/NN/nn/3 */NN/nn/3 */NNP/dobj/0	0 2
-*/NN/nn/3 */NN/nn/3 */NNP/dobj/0	1 0
-*/NN/nn/3 */NN/nn/3 */NNP/nsubj/0	0 1
-*/NN/nn/3 */NN/nn/3 */NNP/nsubj/0	0 2
-*/NN/nn/3 */NN/nn/3 */NNP/nsubj/0	1 0
-*/NN/nn/3 */NN/nn/3 */NNP/nsubj/0	1 2
-*/NN/nn/3 */NN/nn/3 */NNP/nsubjpass/0	0 1
-*/NN/nn/3 */NN/nn/3 */NNP/nsubjpass/0	0 2
-*/NN/nn/3 */NN/nn/3 */NNP/nsubjpass/0	1 0
-*/NN/nn/3 */NN/nn/3 */NNP/pobj/0	0 1
-*/NN/nn/3 */NN/nn/3 */NNP/pobj/0	0 2
-*/NN/nn/3 */NN/nn/3 */NNP/pobj/0	1 0
-*/NN/nn/3 */NN/nn/3 */NNP/pobj/0	1 2
-*/NN/nn/3 */NN/nn/3 */NNS/conj/0	1 0
-*/NN/nn/3 */NN/nn/3 */NNS/dobj/0	0 1
-*/NN/nn/3 */NN/nn/3 */NNS/dobj/0	1 0
-*/NN/nn/3 */NN/nn/3 */NNS/pobj/0	0 1
-*/NN/nn/3 */NN/nn/3 */NNS/pobj/0	1 0
-*/NN/nn/3 */NN/nn/3 //NN/dobj/0	1 0
-*/NN/nn/3 */NN/nn/3 //NN/nsubj/0	1 0
-*/NN/nn/3 */NN/nn/3 //NN/nsubjpass/0	1 0
-*/NN/nn/3 */NN/nn/3 //NN/pobj/0	0 1
-*/NN/nn/3 */NN/nn/3 //NN/pobj/0	1 0
-*/NN/nn/3 */NNP/nn/3 */NN/ROOT/0	0 1
-*/NN/nn/3 */NNP/nn/3 */NNP/ROOT/0	0 1
-*/NN/nn/3 */NNP/nn/3 */NNP/ROOT/0	0 2
-*/NN/nn/3 */NNP/nn/3 */NNP/ROOT/0	1 0
-*/NN/nn/3 */NNP/nn/3 */NNP/ROOT/0	1 2
-*/NN/nn/3 */NNP/nn/3 */NNP/nsubj/0	0 1
-*/NN/nn/3 */NNP/nn/3 */NNP/nsubj/0	0 2
-*/NN/nn/3 */NNP/nn/3 */NNP/nsubj/0	1 0
-*/NN/nn/3 */NNP/nn/3 */NNP/nsubj/0	1 2
-*/NN/nn/3 */NNP/nn/3 */NNP/pobj/0	0 1
-*/NN/nn/3 */NNP/nn/3 */NNP/pobj/0	0 2
-*/NN/nn/3 */NNP/nn/3 //NNP/pobj/0	0 1
-*/NN/nn/3 */NNS/nn/3 */NNP/pobj/0	0 2
-*/NN/nn/3 s/POS/dep/1 */NN/dobj/0	2 0
-*/NN/nn/3 s/POS/dep/1 */NN/pobj/0	2 0
-*/NN/nn/4 and/CC/cc/1 */NNP/conj/1 1/LS/ROOT/0	0 2
-*/NN/nn/4 and/CC/cc/1 */NNP/conj/1 1/LS/ROOT/0	2 0
-*/NN/nn/4 and/CC/cc/1 */NNP/conj/1 2/LS/ROOT/0	0 2
-*/NN/nn/4 and/CC/cc/1 */NNP/conj/1 2/LS/ROOT/0	2 0
-*/NN/nsubj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	0 3
-*/NN/nsubj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	3 1
-*/NN/nsubj/0 */NNP/nn/3 */NNP/dep/1	2 1
-*/NN/nsubj/0 achieve/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 acquire/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	0 2
-*/NN/nsubj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	0 4
-*/NN/nsubj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/nsubj/0 apply/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 change/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 combined/VBN/partmod/1 with/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nsubj/0 communicate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 control/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 create/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 demonstrate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 develop/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 do/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 exercise/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 get/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 give/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 have/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 hold/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nsubj/0 identify/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 increase/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 influence/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 keep/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nsubj/0 learn/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 maintain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 make/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 manage/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 measure/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	0 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	0 3
-*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2	0 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2	3 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 detect/VB/infmod/1	0 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 distinguish/VB/infmod/1	0 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NN/pobj/4	2 4
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NN/pobj/4	4 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NNP/pobj/4	2 4
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/nsubj/0 of/IN/prep/1 */NN/pobj/2 provide/VB/infmod/1	0 2
-*/NN/nsubj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-*/NN/nsubj/0 of/IN/prep/1 */NNS/pobj/2 in/IN/prep/3 */NN/pobj/4	2 4
-*/NN/nsubj/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2	0 3
-*/NN/nsubj/0 participate/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nsubj/0 perform/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 predict/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 produce/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 provide/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 recognize/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 retain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 sustain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 understand/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 understand/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/nsubj/0 use/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/0 vary/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubj/2 're/VBP/ROOT/0 */NN/attr/2	0 2
-*/NN/nsubj/2 're/VBP/ROOT/0 */NN/attr/2	2 0
-*/NN/nsubj/2 's/POS/ROOT/0 */NN/attr/2	0 2
-*/NN/nsubj/2 's/POS/ROOT/0 */NN/attr/2	2 0
-*/NN/nsubj/2 's/POS/ROOT/0 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nsubj/2 's/POS/ROOT/0 in/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nsubj/2 's/POS/ccomp/0 in/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nsubj/2 's/VBZ/ROOT/0 */NN/attr/2	0 2
-*/NN/nsubj/2 's/VBZ/ROOT/0 */NN/attr/2	2 0
-*/NN/nsubj/2 's/VBZ/ROOT/0 */NNP/attr/2	0 2
-*/NN/nsubj/2 's/VBZ/ROOT/0 */NNP/attr/2	2 0
-*/NN/nsubj/2 's/VBZ/advcl/0 */NN/attr/2	0 2
-*/NN/nsubj/2 's/VBZ/advcl/0 */NN/attr/2	2 0
-*/NN/nsubj/2 's/VBZ/ccomp/0 */NN/attr/2	0 2
-*/NN/nsubj/2 's/VBZ/ccomp/0 */NN/attr/2	2 0
-*/NN/nsubj/2 's/VBZ/conj/0 */NN/attr/2	0 2
-*/NN/nsubj/2 's/VBZ/conj/0 */NN/attr/2	2 0
-*/NN/nsubj/2 's/VBZ/dep/0 */NN/attr/2	2 0
-*/NN/nsubj/2 's/VBZ/parataxis/0 */NN/attr/2	2 0
-*/NN/nsubj/2 //VBP/ROOT/0 */NN/dobj/2	0 2
-*/NN/nsubj/2 abandon/VB/ROOT/0 */NN/dobj/2	2 0
-*/NN/nsubj/2 abandon/VB/ccomp/0 */NN/dobj/2	2 0
-*/NN/nsubj/2 abandoned/VBD/ROOT/0 */NN/dobj/2	0 2
-*/NN/nsubj/2 abandoned/VBD/ROOT/0 */NN/dobj/2	2 0
-*/NN/nsubj/2 abandoned/VBN/ROOT/0 */NN/dobj/2	0 2
-*/NN/nsubj/2 abandoned/VBN/ROOT/0 */NN/dobj/2	2 0
-*/NN/nsubj/2 abandons/VBZ/ROOT/0 */NN/dobj/2	2 0
-*/NN/nsubj/2 abides/VBZ/ROOT/0 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nsubj/2 abolish/VB/ROOT/0 */NN/dobj/2	2 0
-*/NN/nsubj/2 abolished/VBD/ROOT/0 */NN/dobj/2	0 2
-*/NN/nsubj/2 abolished/VBD/ROOT/0 */NN/dobj/2	2 0
-*/NN/nsubj/2 abolishes/VBZ/ROOT/0 */NN/dobj/2	2 0
-*/NN/nsubj/4 and/CC/cc/1 */NN/conj/1 abated/VBN/ROOT/0	2 0
-*/NN/nsubjpass/0 develop/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubjpass/0 maintain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubjpass/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-*/NN/nsubjpass/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/nsubjpass/0 of/IN/prep/1 */NN/nn/4 */NNP/pobj/2	2 3
-*/NN/nsubjpass/0 of/IN/prep/1 */NN/pobj/2 detect/VB/infmod/1	0 2
-*/NN/nsubjpass/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NN/pobj/4	4 2
-*/NN/nsubjpass/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/nsubjpass/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/nsubjpass/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2	0 3
-*/NN/nsubjpass/0 perceive/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubjpass/0 understand/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubjpass/0 use/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/nsubjpass/2 abandoned/VBN/ROOT/0 by/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nsubjpass/2 abandoned/VBN/ROOT/0 for/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nsubjpass/2 abandoned/VBN/ROOT/0 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nsubjpass/2 abolished/VBN/ROOT/0 as/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nsubjpass/2 abolished/VBN/ROOT/0 by/IN/prep/2 */NN/pobj/3	0 3
-*/NN/nsubjpass/2 abolished/VBN/ROOT/0 by/IN/prep/2 */NN/pobj/3	3 0
-*/NN/nsubjpass/4 and/CC/cc/1 */NN/conj/1 abolished/VBN/ROOT/0	0 2
-*/NN/nsubjpass/4 and/CC/cc/1 */NN/conj/1 abolished/VBN/ROOT/0	2 0
-*/NN/nsubjpass/4 of/IN/prep/1 */NN/pobj/2 abandoned/VBN/ROOT/0	0 2
-*/NN/nsubjpass/4 of/IN/prep/1 */NN/pobj/2 abandoned/VBN/ROOT/0	2 0
-*/NN/nsubjpass/4 of/IN/prep/1 */NN/pobj/2 abandoned/VBN/ccomp/0	0 2
-*/NN/nsubjpass/4 of/IN/prep/1 */NN/pobj/2 abolished/VBN/ROOT/0	0 2
-*/NN/nsubjpass/4 of/IN/prep/1 */NN/pobj/2 abolished/VBN/ROOT/0	2 0
-*/NN/nsubjpass/4 of/IN/prep/1 */NN/pobj/2 abolished/VBN/advcl/0	0 2
-*/NN/nsubjpass/4 of/IN/prep/1 */NN/pobj/2 abolished/VBN/ccomp/0	0 2
-*/NN/nsubjpass/4 of/IN/prep/1 */NN/pobj/2 abolished/VBN/conj/0	0 2
-*/NN/nsubjpass/4 of/IN/prep/1 */NNP/pobj/2 abolished/VBN/ROOT/0	0 2
-*/NN/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	0 1
-*/NN/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	1 0
-*/NN/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	3 1
-*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1	0 1
-*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1	0 2
-*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1	1 0
-*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1	1 2
-*/NN/pobj/0 */NN/conj/1 */NN/conj/1 and/CC/cc/1	2 1
-*/NN/pobj/0 */NN/conj/1 */NN/conj/1 or/CC/cc/1	0 1
-*/NN/pobj/0 */NN/conj/1 */NNS/conj/1 and/CC/cc/1	0 1
-*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	0 1
-*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	0 3
-*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	1 0
-*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	1 3
-*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	3 0
-*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	3 1
-*/NN/pobj/0 */NN/conj/1 and/CC/cc/1 */NNS/conj/1	0 1
-*/NN/pobj/0 */NN/conj/1 and/CC/cc/2 */NN/conj/2	1 3
-*/NN/pobj/0 */NN/conj/1 of/IN/prep/2 */NN/pobj/3 and/CC/cc/1	0 3
-*/NN/pobj/0 */NN/conj/1 or/CC/cc/1 */NN/conj/1	0 3
-*/NN/pobj/0 */NN/conj/1 or/CC/cc/1 */NN/conj/1	1 3
-*/NN/pobj/0 */NN/conj/1 or/CC/cc/1 */NN/conj/1	3 1
-*/NN/pobj/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3	1 3
-*/NN/pobj/0 */NN/nn/3 */NN/appos/1	2 1
-*/NN/pobj/0 */NN/nn/3 */NN/conj/1 and/CC/cc/1	0 1
-*/NN/pobj/0 */NN/nn/3 */NN/conj/1 and/CC/cc/1	0 2
-*/NN/pobj/0 */NN/nn/3 */NN/conj/1 and/CC/cc/1	2 1
-*/NN/pobj/0 */NN/nn/3 */NN/dep/1	2 1
-*/NN/pobj/0 */NN/nn/3 */NNS/conj/1 and/CC/cc/1	0 1
-*/NN/pobj/0 */NNP/nn/3 */NNP/dep/1	2 1
-*/NN/pobj/0 access/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 achieve/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 acquire/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 adapt/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 adjust/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 affect/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 alter/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 for/IN/prep/3 */NN/pobj/4	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 in/IN/prep/1 */NN/pobj/4	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 in/IN/prep/1 */NN/pobj/4	0 4
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 in/IN/prep/1 */NNS/pobj/4	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/1 */NN/pobj/4	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/1 */NNS/pobj/4	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	0 4
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	2 0
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	4 0
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NNP/pobj/4	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NNS/pobj/4	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NNS/pobj/4	2 0
-*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	0 2
-*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	0 3
-*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	2 3
-*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	3 0
-*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	3 2
-*/NN/pobj/0 and/CC/cc/1 */NN/nn/4 */NNS/conj/1	0 2
-*/NN/pobj/0 and/CC/cc/1 creative/JJ/amod/4 */NN/conj/1	0 3
-*/NN/pobj/0 and/CC/cc/1 good/JJ/amod/4 */NN/conj/1	0 3
-*/NN/pobj/0 and/CC/cc/1 great/JJ/amod/4 */NN/conj/1	0 3
-*/NN/pobj/0 and/CC/cc/1 high/JJ/amod/4 */NN/conj/1	0 3
-*/NN/pobj/0 and/CC/cc/1 military/JJ/amod/4 */NN/conj/1	0 3
-*/NN/pobj/0 and/CC/cc/1 political/JJ/amod/4 */NN/conj/1	0 3
-*/NN/pobj/0 and/CC/cc/1 practical/JJ/amod/4 */NN/conj/1	0 3
-*/NN/pobj/0 and/CC/cc/1 social/JJ/amod/4 */NN/conj/1	0 3
-*/NN/pobj/0 apply/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 appreciate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 articulate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 be/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 bring/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 build/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 capture/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 carry/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 carry/VB/infmod/1 on/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 change/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 combine/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 combine/VB/infmod/1 with/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 communicate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 comprehend/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 construct/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 contribute/VB/infmod/1 to/TO/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 control/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 control/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/pobj/0 convert/VB/infmod/1 into/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 convey/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 cope/VB/infmod/1 with/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 create/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 deal/VB/infmod/1 with/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 deal/VB/infmod/1 with/IN/prep/2 */NN/pobj/3	3 0
-*/NN/pobj/0 deliver/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 demonstrate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 detect/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 detect/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 determine/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 develop/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 direct/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 distinguish/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 do/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 engage/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 enhance/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 establish/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 execute/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 exercise/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 exploit/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 express/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 extend/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 finance/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 find/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 focus/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 follow/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 for/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/pobj/0 form/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 gain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 generate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 get/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 give/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 give/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/pobj/0 grow/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 handle/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 have/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 hold/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 hold/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 implement/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 improve/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	0 2
-*/NN/pobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	0 3
-*/NN/pobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-*/NN/pobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/pobj/0 in/IN/prep/1 */NN/nn/4 */NNS/pobj/2	0 2
-*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	0 2
-*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	0 2
-*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	0 4
-*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NNP/pobj/4	2 4
-*/NN/pobj/0 in/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-*/NN/pobj/0 increase/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 induce/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 influence/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 inhibit/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 integrate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 interpret/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 is/VBZ/rcmod/1 */NN/attr/2	0 2
-*/NN/pobj/0 is/VBZ/rcmod/1 */NN/attr/2	2 0
-*/NN/pobj/0 judge/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 keep/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 keep/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 learn/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 maintain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 maintain/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 make/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 make/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 manage/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 manipulate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 master/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 measure/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 monitor/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 move/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 obtain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	0 3
-*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 0
-*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	2 3
-*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 0
-*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NNP/pobj/2	2 3
-*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/nn/4 */NNS/pobj/2	3 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/1 */NN/conj/1	2 4
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/1 */NN/conj/1	4 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	0 4
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 control/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 create/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 detect/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 distinguish/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 do/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 find/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NN/pobj/4	2 4
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NN/pobj/4	4 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 in/IN/prep/3 */NNP/pobj/4	2 4
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 maintain/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 make/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	0 4
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NNP/pobj/4	2 4
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 or/CC/cc/3 */NN/conj/3	2 4
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 or/CC/cc/3 */NN/conj/3	4 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 perceive/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 produce/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 provide/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 respond/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NN/pobj/2 solve/VB/infmod/1	0 2
-*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NN/pobj/2	3 2
-*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	0 3
-*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	2 3
-*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 0
-*/NN/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-*/NN/pobj/0 of/IN/prep/1 */NNP/pobj/2 */NN/appos/3	2 3
-*/NN/pobj/0 of/IN/prep/1 */NNP/pobj/2 */NN/appos/3	3 2
-*/NN/pobj/0 of/IN/prep/1 */NNP/pobj/2 of/IN/prep/3 */NNP/pobj/4	2 4
-*/NN/pobj/0 of/IN/prep/1 human/JJ/amod/4 */NN/pobj/2	0 3
-*/NN/pobj/0 offer/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 on/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/pobj/0 or/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	0 2
-*/NN/pobj/0 or/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	0 4
-*/NN/pobj/0 or/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	2 0
-*/NN/pobj/0 or/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	2 4
-*/NN/pobj/0 or/CC/cc/1 */NN/nn/4 */NN/conj/1	0 2
-*/NN/pobj/0 or/CC/cc/1 */NN/nn/4 */NN/conj/1	3 2
-*/NN/pobj/0 over/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/pobj/0 participate/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 pay/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 perceive/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 perform/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 perform/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 predict/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 prevent/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 produce/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 produce/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/pobj/0 produce/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 promote/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 provide/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 pursue/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 put/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 reach/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 read/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 recognize/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 recognize/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/pobj/0 recognize/VB/infmod/1 by/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 reduce/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 reproduce/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 resist/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 respond/VB/infmod/1 to/TO/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 restore/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 retain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 satisfy/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 see/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 see/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 share/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 stimulate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 sustain/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 take/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 teach/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 to/TO/prep/1 */NN/nn/4 */NN/pobj/2	0 3
-*/NN/pobj/0 to/TO/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NN/pobj/0 translate/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 turn/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 understand/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 understand/VB/infmod/1 */NN/dobj/2	2 0
-*/NN/pobj/0 use/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 use/VB/infmod/1 in/IN/prep/2 */NN/pobj/3	0 3
-*/NN/pobj/0 utilize/VB/infmod/1 */NN/dobj/2	0 2
-*/NN/pobj/0 whose/WP$/rcmod/1 */NN/dep/2	0 2
-*/NN/pobj/0 work/VB/infmod/1 with/IN/prep/2 */NN/pobj/3	0 3
-*/NNP/ROOT/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	1 3
-*/NNP/ROOT/0 */NN/dep/1 and/CC/cc/2 */NN/conj/2	1 3
-*/NNP/ROOT/0 */NN/dep/1 and/CC/cc/2 */NN/conj/2	3 1
-*/NNP/ROOT/0 */NN/dep/1 in/IN/prep/2 */NN/pobj/3	3 1
-*/NNP/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3	1 3
-*/NNP/ROOT/0 */NN/dep/1 of/IN/prep/2 */NN/pobj/3	3 1
-*/NNP/ROOT/0 */NN/nn/3 */NN/appos/1	2 1
-*/NNP/ROOT/0 */NN/nn/3 */NN/dep/1	1 0
-*/NNP/ROOT/0 */NN/nn/3 */NN/dep/1	2 1
-*/NNP/ROOT/0 */NNP/appos/1 */NNP/appos/2	1 2
-*/NNP/ROOT/0 */NNP/appos/1 */NNP/appos/2	2 1
-*/NNP/ROOT/0 */NNP/conj/1 */NN/dep/1	1 2
-*/NNP/ROOT/0 */NNP/conj/1 */NN/dep/1	2 1
-*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1	1 2
-*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1	2 1
-*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1	1 2
-*/NNP/ROOT/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1	2 1
-*/NNP/ROOT/0 */NNP/conj/1 and/CC/cc/1 */NN/conj/1	3 1
-*/NNP/ROOT/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1	1 3
-*/NNP/ROOT/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1	3 1
-*/NNP/ROOT/0 */NNP/dep/1 */NNP/dep/1	1 2
-*/NNP/ROOT/0 */NNP/dep/1 of/IN/prep/2 */NNP/pobj/3	1 3
-*/NNP/ROOT/0 */NNP/nn/3 */NN/appos/1	1 0
-*/NNP/ROOT/0 */NNP/nn/3 */NN/appos/1	2 1
-*/NNP/ROOT/0 */NNP/nn/3 */NN/dep/1	2 1
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/appos/1	1 2
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/appos/1	2 0
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/appos/1	2 1
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/conj/1	1 0
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/conj/1	1 2
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/conj/1	2 0
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/conj/1	2 1
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/conj/1 and/CC/cc/1	1 2
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 0
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 0
-*/NNP/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-*/NNP/ROOT/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	2 3
-*/NNP/appos/0 */NNP/nn/3 */NNP/appos/1	2 1
-*/NNP/dep/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	1 3
-*/NNP/dep/0 */NN/nn/3 */NN/appos/1	2 1
-*/NNP/dep/0 */NN/nn/3 */NNP/appos/1	1 2
-*/NNP/dep/0 */NNP/appos/1 */NNP/appos/1	1 2
-*/NNP/dep/0 */NNP/appos/1 */NNP/appos/1	2 1
-*/NNP/dep/0 */NNP/appos/1 */NNP/appos/2	1 2
-*/NNP/dep/0 */NNP/conj/1 */NNP/appos/2	1 2
-*/NNP/dep/0 */NNP/conj/1 */NNP/conj/1	1 2
-*/NNP/dep/0 */NNP/conj/1 */NNP/conj/1	2 1
-*/NNP/dep/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1	1 2
-*/NNP/dep/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1	2 1
-*/NNP/dep/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1	1 3
-*/NNP/dep/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1	3 1
-*/NNP/dep/0 */NNP/dep/1 */NNP/appos/2	1 2
-*/NNP/dep/0 */NNP/dep/1 */NNP/appos/2	2 1
-*/NNP/dep/0 */NNP/nn/3 */NNP/appos/1	1 2
-*/NNP/dep/0 */NNP/nn/3 */NNP/appos/1	2 1
-*/NNP/dep/0 */NNP/nn/3 */NNP/conj/1	1 0
-*/NNP/dep/0 */NNP/nn/3 */NNP/conj/1	1 2
-*/NNP/dep/0 */NNP/nn/3 */NNP/conj/1	2 1
-*/NNP/dep/0 */NNP/nn/3 */NNP/conj/1 and/CC/cc/1	1 2
-*/NNP/dep/0 */NNP/nn/3 */NNP/dep/1	1 0
-*/NNP/dep/0 */NNP/nn/3 */NNP/dep/1	1 2
-*/NNP/dep/0 */NNP/nn/3 */NNP/dep/1	2 1
-*/NNP/dep/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1	2 0
-*/NNP/dep/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1	2 3
-*/NNP/dep/0 and/CC/cc/1 */NNP/conj/1 of/IN/prep/3 */NN/pobj/4	4 0
-*/NNP/dep/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	2 3
-*/NNP/dep/2 */NNP/dep/3 's/POS/pobj/0	0 1
-*/NNP/dep/2 */NNP/dep/3 ]/SYM/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/1 ]/SYM/dep/0	1 0
-*/NNP/dep/3 */NNP/dep/3 */NNP/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 1/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 1/LS/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 12/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 2/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 2/LS/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 3/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 3/JJ/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 4/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 5/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 6/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 7/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 8/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 9/CD/dep/0	0 1
-*/NNP/dep/3 */NNP/dep/3 ]/SYM/ROOT/0	1 0
-*/NNP/dep/3 */NNP/dep/3 ]/SYM/dep/0	1 0
-*/NNP/dep/3 */NNP/nn/3 ]/SYM/dep/0	0 1
-*/NNP/dep/3 */NNP/nn/3 ]/SYM/dep/0	1 0
-*/NNP/dep/3 */NNP/nn/3 ]/SYM/nsubj/0	0 1
-*/NNP/dep/3 */NNP/nn/3 ]/SYM/pobj/0	0 1
-*/NNP/dep/3 */NNP/nn/3 ]/SYM/pobj/0	1 0
-*/NNP/dep/3 */NNP/nsubj/3 ]/SYM/dep/0	0 1
-*/NNP/dep/3 */NNP/nsubj/3 ]/SYM/dep/0	1 0
-*/NNP/dep/3 //NNP/dep/3 */NNP/dep/0	0 2
-*/NNP/dep/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/ROOT/0	0 2
-*/NNP/dep/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/ROOT/0	2 0
-*/NNP/dep/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/dep/0	0 2
-*/NNP/dep/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/dep/0	2 0
-*/NNP/dobj/0 from/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	3 2
-*/NNP/nn/2 's/POS/pobj/0 */NN/appos/2	2 0
-*/NNP/nn/2 */NN/appos/0 */NNP/appos/2	2 0
-*/NNP/nn/2 */NN/appos/0 */NNP/dep/2	2 0
-*/NNP/nn/2 */NNP/ROOT/0 */NN/appos/2	0 1
-*/NNP/nn/2 */NNP/ROOT/0 */NN/appos/2	0 2
-*/NNP/nn/2 */NNP/ROOT/0 */NN/appos/2	2 0
-*/NNP/nn/2 */NNP/ROOT/0 */NN/appos/2	2 1
-*/NNP/nn/2 */NNP/ROOT/0 */NN/dep/2	0 2
-*/NNP/nn/2 */NNP/ROOT/0 */NN/dep/2	2 0
-*/NNP/nn/2 */NNP/ROOT/0 */NN/dep/2	2 1
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/appos/2	0 1
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/appos/2	0 2
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/appos/2	2 0
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/appos/2	2 1
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2	0 2
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2	2 0
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2 and/CC/cc/2	0 2
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/conj/2 and/CC/cc/2	2 0
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/dep/2	0 2
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/dep/2	2 0
-*/NNP/nn/2 */NNP/ROOT/0 */NNP/dep/2	2 1
-*/NNP/nn/2 */NNP/ROOT/0 1/CD/dep/2	0 1
-*/NNP/nn/2 */NNP/ROOT/0 and/CC/cc/2 */NNP/conj/2	0 3
-*/NNP/nn/2 */NNP/ROOT/0 and/CC/cc/2 */NNP/conj/2	3 0
-*/NNP/nn/2 */NNP/ROOT/0 for/IN/prep/2 */NN/pobj/3	0 3
-*/NNP/nn/2 */NNP/ROOT/0 for/IN/prep/2 */NN/pobj/3	3 0
-*/NNP/nn/2 */NNP/ROOT/0 for/IN/prep/2 */NNP/pobj/3	3 0
-*/NNP/nn/2 */NNP/appos/0 */NN/appos/2	0 2
-*/NNP/nn/2 */NNP/appos/0 */NNP/appos/2	0 2
-*/NNP/nn/2 */NNP/appos/0 */NNP/appos/2	2 0
-*/NNP/nn/2 */NNP/dep/0 */NN/appos/2	0 2
-*/NNP/nn/2 */NNP/dep/0 */NN/dep/2	0 2
-*/NNP/nn/2 */NNP/dep/0 */NNP/appos/2	0 1
-*/NNP/nn/2 */NNP/dep/0 */NNP/appos/2	0 2
-*/NNP/nn/2 */NNP/dep/0 */NNP/appos/2	2 0
-*/NNP/nn/2 */NNP/dep/0 */NNP/conj/2	0 2
-*/NNP/nn/2 */NNP/dep/0 */NNP/conj/2 and/CC/cc/2	0 2
-*/NNP/nn/2 */NNP/dep/0 */NNP/dep/2	0 2
-*/NNP/nn/2 */NNP/dep/0 */NNP/dep/2	2 0
-*/NNP/nn/2 */NNP/dep/0 */NNP/dep/2	2 1
-*/NNP/nn/2 */NNP/dep/0 and/CC/cc/2 */NNP/conj/2	0 3
-*/NNP/nn/2 */NNP/dep/0 and/CC/cc/2 */NNP/conj/2	3 0
-*/NNP/nn/2 */NNP/dep/3 '/POS/pobj/0	0 1
-*/NNP/nn/2 */NNP/dep/3 '/POS/pobj/0	1 0
-*/NNP/nn/2 */NNP/dep/3 ]/SYM/ROOT/0	0 1
-*/NNP/nn/2 */NNP/dep/3 ]/SYM/ROOT/0	1 0
-*/NNP/nn/2 */NNP/dep/3 ]/SYM/dep/0	0 1
-*/NNP/nn/2 */NNP/dep/3 ]/SYM/dep/0	1 0
-*/NNP/nn/2 */NNP/dobj/0 */NN/appos/2	0 2
-*/NNP/nn/2 */NNP/dobj/0 */NN/appos/2	2 1
-*/NNP/nn/2 */NNP/dobj/0 */NNP/appos/2	0 2
-*/NNP/nn/2 */NNP/dobj/0 and/CC/cc/2 */NNP/conj/2	0 3
-*/NNP/nn/2 */NNP/nsubj/0 */NN/appos/2	2 0
-*/NNP/nn/2 */NNP/nsubj/0 */NN/appos/2	2 1
-*/NNP/nn/2 */NNP/nsubj/0 */NNP/appos/2	0 2
-*/NNP/nn/2 */NNP/nsubj/0 */NNP/appos/2	2 0
-*/NNP/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2	0 1
-*/NNP/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2	0 3
-*/NNP/nn/2 */NNP/nsubj/0 and/CC/cc/2 */NNP/conj/2	3 0
-*/NNP/nn/2 */NNP/nsubj/3 $/$/dep/0	1 0
-*/NNP/nn/2 */NNP/nsubj/3 'm/VBP/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 'm/VBP/ROOT/0	1 0
-*/NNP/nn/2 */NNP/nsubj/3 're/VBP/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 're/VBP/ROOT/0	1 0
-*/NNP/nn/2 */NNP/nsubj/3 's/POS/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 's/POS/ccomp/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 's/POS/conj/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 's/POS/pobj/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 's/VBZ/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 's/VBZ/ROOT/0	1 0
-*/NNP/nn/2 */NNP/nsubj/3 's/VBZ/ccomp/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 1/CD/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 1/CD/ROOT/0	1 0
-*/NNP/nn/2 */NNP/nsubj/3 2/CD/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 3/CD/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 3/CD/ROOT/0	1 0
-*/NNP/nn/2 */NNP/nsubj/3 ]/SYM/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 ]/SYM/ROOT/0	1 0
-*/NNP/nn/2 */NNP/nsubj/3 ]/SYM/dep/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 ]/SYM/dep/0	1 0
-*/NNP/nn/2 */NNP/nsubj/3 ]/SYM/nsubj/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 abandon/VB/xcomp/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 abandoned/VBD/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 abandoned/VBD/ROOT/0	1 0
-*/NNP/nn/2 */NNP/nsubj/3 abandoned/VBD/ccomp/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 abandoned/VBN/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 abolished/VBD/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubj/3 abolished/VBN/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubjpass/3 abandoned/VBN/ROOT/0	1 0
-*/NNP/nn/2 */NNP/nsubjpass/3 abolished/VBN/ROOT/0	0 1
-*/NNP/nn/2 */NNP/nsubjpass/3 abolished/VBN/ROOT/0	1 0
-*/NNP/nn/2 */NNP/pobj/0 */NN/appos/2	0 1
-*/NNP/nn/2 */NNP/pobj/0 */NN/appos/2	0 2
-*/NNP/nn/2 */NNP/pobj/0 */NN/appos/2	2 0
-*/NNP/nn/2 */NNP/pobj/0 */NN/appos/2	2 1
-*/NNP/nn/2 */NNP/pobj/0 */NNP/appos/2	0 1
-*/NNP/nn/2 */NNP/pobj/0 */NNP/appos/2	0 2
-*/NNP/nn/2 */NNP/pobj/0 */NNP/appos/2	2 0
-*/NNP/nn/2 */NNP/pobj/0 */NNP/conj/2 and/CC/cc/2	0 2
-*/NNP/nn/2 */NNP/pobj/0 */NNP/dep/2	0 2
-*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2	0 1
-*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2	0 3
-*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2	1 3
-*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2	3 0
-*/NNP/nn/2 */NNP/pobj/0 and/CC/cc/2 */NNP/conj/2	3 1
-*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NN/pobj/3	0 3
-*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NN/pobj/3	3 0
-*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NNP/pobj/3	0 3
-*/NNP/nn/2 */NNP/pobj/0 of/IN/prep/2 */NNP/pobj/3	3 0
-*/NNP/nn/3 */NN/dep/3 's/POS/pobj/0	1 0
-*/NNP/nn/3 */NN/nn/3 */NN/dobj/0	1 2
-*/NNP/nn/3 */NN/nn/3 */NNP/nsubj/0	0 2
-*/NNP/nn/3 */NNP/dep/3 */NN/nsubj/0	0 2
-*/NNP/nn/3 */NNP/nn/3 's/POS/pobj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 's/POS/pobj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NN/ROOT/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NN/ROOT/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NN/appos/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NN/conj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NN/dep/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NN/dep/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NN/dobj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NN/dobj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NN/nsubj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NN/nsubj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NN/pobj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NN/pobj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0	0 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0	1 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/ROOT/0	2 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/appos/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/appos/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/appos/0	1 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/attr/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/conj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/conj/0	0 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/conj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/conj/0	1 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0	0 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0	1 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/dep/0	2 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/dobj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/dobj/0	0 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/dobj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/dobj/0	1 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/nsubj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/nsubj/0	0 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/nsubj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/nsubj/0	1 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/nsubj/0	2 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/nsubj/0	2 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/nsubjpass/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/nsubjpass/0	0 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/nsubjpass/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0	0 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0	1 2
-*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0	2 0
-*/NNP/nn/3 */NNP/nn/3 */NNP/pobj/0	2 1
-*/NNP/nn/3 */NNP/nn/3 //NNP/ROOT/0	0 1
-*/NNP/nn/3 */NNP/nn/3 //NNP/ROOT/0	1 0
-*/NNP/nn/3 */NNP/nn/3 //NNP/conj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 //NNP/dep/0	0 1
-*/NNP/nn/3 */NNP/nn/3 //NNP/dep/0	1 0
-*/NNP/nn/3 */NNP/nn/3 //NNP/nsubj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 //NNP/nsubj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 //NNP/pobj/0	0 1
-*/NNP/nn/3 */NNP/nn/3 //NNP/pobj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 15/CD/ROOT/0	0 1
-*/NNP/nn/3 */NNP/nn/3 15/CD/dep/0	0 1
-*/NNP/nn/3 */NNP/nn/3 2/CD/ROOT/0	0 1
-*/NNP/nn/3 */NNP/nn/3 3/CD/ROOT/0	0 1
-*/NNP/nn/3 */NNP/nn/3 3/CD/ROOT/0	1 0
-*/NNP/nn/3 */NNP/nn/3 3/CD/pobj/0	1 0
-*/NNP/nn/3 */NNP/nn/3 9/CD/ROOT/0	0 1
-*/NNP/nn/3 */NNP/nn/3 9/CD/dep/0	0 1
-*/NNP/nn/3 */NNP/nn/3 9/CD/dep/0	1 0
-*/NNP/nn/3 */NNP/nn/3 ]/SYM/dep/0	0 1
-*/NNP/nsubj/0 */NNP/appos/1 */NNP/appos/2	1 2
-*/NNP/nsubj/0 */NNP/conj/1 */NNP/conj/1	1 2
-*/NNP/nsubj/0 */NNP/conj/1 */NNP/conj/1	2 1
-*/NNP/nsubj/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1	1 2
-*/NNP/nsubj/0 */NNP/conj/1 */NNP/conj/1 and/CC/cc/1	2 1
-*/NNP/nsubj/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1	1 3
-*/NNP/nsubj/0 */NNP/nn/3 */NNP/appos/1	1 2
-*/NNP/nsubj/0 */NNP/nn/3 */NNP/conj/1 and/CC/cc/1	1 2
-*/NNP/nsubj/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1	2 3
-*/NNP/nsubj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	2 3
-*/NNP/nsubj/2 're/VBP/ROOT/0 */NN/attr/2	2 0
-*/NNP/nsubj/2 's/POS/ROOT/0 */NN/attr/2	2 0
-*/NNP/nsubj/2 's/VBZ/ROOT/0 */NN/attr/2	0 2
-*/NNP/nsubj/2 's/VBZ/ROOT/0 */NN/attr/2	2 0
-*/NNP/nsubj/2 's/VBZ/ROOT/0 */NNP/attr/2	0 2
-*/NNP/nsubj/2 's/VBZ/ccomp/0 */NN/attr/2	0 2
-*/NNP/nsubj/2 's/VBZ/ccomp/0 */NN/attr/2	2 0
-*/NNP/nsubj/2 's/VBZ/dep/0 */NN/attr/2	2 0
-*/NNP/nsubj/2 abandoned/VBD/ROOT/0 */NN/dobj/2	0 2
-*/NNP/nsubj/2 abandoned/VBD/ROOT/0 */NN/dobj/2	2 0
-*/NNP/nsubj/2 abandoned/VBN/ROOT/0 */NN/dobj/2	2 0
-*/NNP/nsubj/2 abolished/VBD/ROOT/0 */NN/dobj/2	2 0
-*/NNP/nsubj/4 of/IN/prep/1 */NNP/pobj/2 ]/SYM/dep/0	0 2
-*/NNP/nsubjpass/4 of/IN/prep/1 */NNP/pobj/2 abolished/VBN/ROOT/0	0 2
-*/NNP/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	1 0
-*/NNP/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	1 3
-*/NNP/pobj/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	3 1
-*/NNP/pobj/0 */NN/appos/1 of/IN/prep/2 */NNP/pobj/3	1 0
-*/NNP/pobj/0 */NN/nn/3 */NN/appos/1	1 2
-*/NNP/pobj/0 */NN/nn/3 */NN/appos/1	2 0
-*/NNP/pobj/0 */NN/nn/3 */NN/appos/1	2 1
-*/NNP/pobj/0 */NNP/conj/1 */NNP/conj/1	1 2
-*/NNP/pobj/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1	1 3
-*/NNP/pobj/0 */NNP/conj/1 and/CC/cc/1 */NNP/conj/1	3 1
-*/NNP/pobj/0 */NNP/nn/3 */NNP/appos/1	1 0
-*/NNP/pobj/0 */NNP/nn/3 */NNP/appos/1	1 2
-*/NNP/pobj/0 */NNP/nn/3 */NNP/appos/1	2 1
-*/NNP/pobj/0 */NNP/nn/3 */NNP/conj/1 and/CC/cc/1	1 2
-*/NNP/pobj/0 */NNP/nn/3 */NNP/dep/1	1 0
-*/NNP/pobj/0 */NNP/nn/3 */NNP/dep/1	1 2
-*/NNP/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	2 0
-*/NNP/pobj/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1	2 0
-*/NNP/pobj/0 and/CC/cc/1 */NN/nn/4 */NNP/conj/1	2 3
-*/NNP/pobj/0 and/CC/cc/1 */NN/nn/4 */NNS/conj/1	2 0
-*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	0 2
-*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	0 3
-*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	2 0
-*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	2 3
-*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	3 0
-*/NNP/pobj/0 and/CC/cc/1 */NNP/nn/4 */NNP/conj/1	3 2
-*/NNP/pobj/0 first/JJ/amod/3 */NN/appos/1	2 0
-*/NNP/pobj/0 is/VBZ/rcmod/1 */NN/attr/2	2 0
-*/NNP/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNP/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	2 3
-*/NNS/ROOT/0 */NNP/dep/1 */NN/appos/2	2 1
-*/NNS/ROOT/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNS/ROOT/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNS/conj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNS/dobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNS/nn/3 */NNP/nn/3 */NNP/ROOT/0	1 2
-*/NNS/nsubj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNS/nsubj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNS/nsubj/2 //VBP/ROOT/0 */NN/dobj/2	2 0
-*/NNS/nsubjpass/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNS/pobj/0 */NN/appos/1 saw/VBD/rcmod/2	1 0
-*/NNS/pobj/0 */NN/conj/1 and/CC/cc/1 */NN/conj/1	1 3
-*/NNS/pobj/0 and/CC/cc/1 */NN/nn/4 */NN/conj/1	3 2
-*/NNS/pobj/0 and/CC/cc/1 early/JJ/amod/4 */NN/conj/1	3 0
-*/NNS/pobj/0 in/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNS/pobj/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-*/NNS/pobj/0 of/IN/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-*/NNS/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	2 4
-*/NNS/pobj/0 of/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-*/NNS/pobj/0 was/VBD/rcmod/1 */NN/attr/2	2 0
-//VBP/ROOT/0 */NN/nn/3 */NN/dobj/1	1 2
-//VBP/ROOT/0 */NN/nn/3 */NN/dobj/1	2 1
-//VBP/ROOT/0 */NNP/nn/3 */NNP/dobj/1	1 2
-//VBP/ROOT/0 */NNP/nn/3 */NNP/dobj/1	2 1
-//VBP/rcmod/0 */NN/nn/3 */NN/dobj/1	2 1
-0/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-0/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-0/CD/dep/0 */NNP/nn/3 */NNP/dep/1	2 1
-1/CD/ROOT/0 */NNP/appos/1 */NN/appos/2	1 2
-1/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	2 1
-1/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-1/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-1/CD/ROOT/0 of/IN/prep/1 */NNP/pobj/2 of/IN/prep/3 */NNP/pobj/4	2 4
-1/CD/nsubj/0 for/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-1/CD/nsubj/0 for/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-1/CD/num/3 */NNP/nn/3 */NNP/ROOT/0	1 2
-1/CD/num/3 */NNP/nn/3 */NNP/dep/0	1 2
-10/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-10/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-10/CD/dep/0 */NNP/nn/3 */NNP/dep/1	2 1
-100/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-100/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-11/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-11/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-18/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-1906/CD/ROOT/0 */NNP/dep/1 */NNP/conj/2	1 2
-2/CD/ROOT/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	1 3
-2/CD/ROOT/0 */NN/nn/3 */NN/appos/1	1 2
-2/CD/ROOT/0 */NNP/appos/1 */NN/appos/2	1 2
-2/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	1 2
-2/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	2 1
-2/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-2/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-2/LS/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-2/LS/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	3 1
-2/LS/ROOT/0 */NN/nn/3 */NN/dobj/1	1 2
-2/LS/ROOT/0 */NN/nn/3 */NN/dobj/1	2 1
-2/LS/ROOT/0 */NNP/nn/3 */NNP/dobj/1	2 1
-20/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-20/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-20/CD/dep/0 */NNP/nn/3 */NNP/dep/1	2 1
-25/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-25/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-27/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-3/CD/ROOT/0 */NN/appos/1 */NN/appos/2	1 2
-3/CD/ROOT/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	1 3
-3/CD/ROOT/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	3 1
-3/CD/ROOT/0 */NN/nn/3 */NN/appos/1	2 1
-3/CD/ROOT/0 */NNP/appos/1 of/IN/prep/2 */NNP/pobj/3	1 3
-3/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	1 2
-3/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	2 1
-3/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-3/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-3/CD/nsubj/0 */NNP/nn/3 */NNP/appos/1	1 2
-30/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-30/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-31/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-4/CD/ROOT/0 */NNP/appos/1 */NN/appos/2	1 2
-4/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	1 2
-4/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	2 1
-5/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	1 2
-50/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	1 2
-5th/JJ/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	2 3
-6/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	1 2
-6/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-6/CD/dep/0 */NNP/nn/3 */NNP/dep/1	2 1
-6th/JJ/pobj/0 of/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	2 3
-7/CD/ROOT/0 */NNP/nn/3 */NNP/dep/1	2 1
-8/CD/ROOT/0 */NN/appos/1 of/IN/prep/2 */NN/pobj/3	1 3
-8/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	1 2
-8/CD/ROOT/0 */NNP/nn/3 */NNP/appos/1	2 1
-]/SYM/ROOT/0 */NNP/nn/3 */NNP/dobj/1	1 2
-]/SYM/ROOT/0 */NNP/nn/3 */NNP/dobj/1	2 1
-a/DT/dep/0 and/CC/cc/1 */NN/conj/1 of/IN/prep/3 */NN/pobj/4	2 4
-abandon/VB/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandon/VB/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	3 1
-abandon/VB/ccomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandon/VB/conj/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandon/VB/infmod/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandon/VB/xcomp/0 */NN/dobj/1 and/CC/cc/2 */NN/conj/2	1 3
-abandon/VB/xcomp/0 */NN/dobj/1 for/IN/prep/1 */NN/pobj/3	3 1
-abandon/VB/xcomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandon/VB/xcomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	3 1
-abandon/VB/xcomp/0 */NN/dobj/1 of/IN/prep/2 */NNP/pobj/3	1 3
-abandon/VB/xcomp/0 */NN/dobj/1 on/IN/prep/1 */NN/pobj/3	1 3
-abandon/VB/xcomp/0 */NN/nn/3 */NN/dobj/1	1 2
-abandon/VB/xcomp/0 */NN/nn/3 */NN/dobj/1	2 1
-abandon/VB/xcomp/0 */NNP/nn/3 */NNP/dobj/1	2 1
-abandoned/VBD/ROOT/0 */NN/dobj/1 in/IN/prep/2 */NN/pobj/3	1 3
-abandoned/VBD/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandoned/VBD/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	3 1
-abandoned/VBD/ROOT/0 */NN/nn/3 */NN/dobj/1	1 2
-abandoned/VBD/ROOT/0 */NN/nn/3 */NN/dobj/1	2 1
-abandoned/VBD/ROOT/0 */NNP/nn/3 */NNP/dobj/1	2 1
-abandoned/VBD/ccomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandoned/VBD/conj/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandoned/VBN/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandoned/VBN/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	3 1
-abandoned/VBN/ROOT/0 by/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	2 3
-abandoned/VBN/ROOT/0 in/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	4 2
-abandoning/VBG/pcomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abandoning/VBG/pcomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	3 1
-abandoning/VBG/pcomp/0 */NN/nn/3 */NN/dobj/1	2 1
-abandons/VBZ/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-able/JJ/acomp/0 */NN/xcomp/1 */NN/dobj/2	1 2
-able/JJ/acomp/0 */NN/xcomp/1 */NN/dobj/2	2 1
-able/JJ/acomp/0 to/TO/prep/1 */NN/nn/4 */NN/pobj/2	3 2
-able/JJ/acomp/0 to/TO/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-able/JJ/acomp/0 to/TO/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-abolish/VB/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abolish/VB/ROOT/0 */NN/nn/3 */NN/dobj/1	2 1
-abolish/VB/ccomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abolish/VB/conj/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abolish/VB/infmod/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abolish/VB/infmod/0 */NN/nn/3 */NN/dobj/1	2 1
-abolish/VB/infmod/0 */NNP/nn/3 */NNP/dobj/1	2 1
-abolish/VB/xcomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abolish/VB/xcomp/0 */NN/nn/3 */NN/dobj/1	2 1
-abolish/VB/xcomp/0 */NNP/nn/3 */NNP/dobj/1	2 1
-abolished/VBD/ROOT/0 */NN/dobj/1 and/CC/cc/2 */NN/conj/2	1 3
-abolished/VBD/ROOT/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abolished/VBD/ROOT/0 */NN/nn/3 */NN/dobj/1	2 1
-abolished/VBD/conj/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abolished/VBN/ROOT/0 */NN/nn/3 */NN/dobj/1	2 1
-abolished/VBN/ROOT/0 by/IN/prep/1 */NN/pobj/2 of/IN/prep/3 */NN/pobj/4	2 4
-abolished/VBN/ROOT/0 by/IN/prep/1 */NNP/nn/4 */NNP/pobj/2	2 3
-abolishes/VBZ/ROOT/0 */NN/nn/3 */NN/dobj/1	2 1
-abolishing/VBG/pcomp/0 */NN/dobj/1 of/IN/prep/2 */NN/pobj/3	1 3
-abolishing/VBG/pcomp/0 */NN/nn/3 */NN/dobj/1	2 1
-abound/VBP/ROOT/0 in/IN/prep/1 */NN/pobj/2 and/CC/cc/3 */NN/conj/3	4 2
-abounded/VBD/ROOT/0 in/IN/prep/1 */NN/pobj/2 in/IN/prep/1 */NN/pobj/4	2 4
-academic/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-administrative/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-administrative/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-after/IN/prep/3 */NN/pobj/1 abandoned/VBD/ROOT/0 */NN/dobj/3	3 1
-all/PDT/predet/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-analytical/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-artistic/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-artistic/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-at/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	1 3
-at/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	3 1
-athletic/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-average/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-both/DT/preconj/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-both/DT/preconj/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-both/DT/preconj/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	3 1
-by/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	3 1
-cognitive/JJ/amod/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	1 2
-cognitive/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-considerable/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-considerable/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-consummate/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-creative/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-creative/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-equal/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-exceptional/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-executive/JJ/amod/2 */NN/dobj/0 */NN/conj/2 and/CC/cc/2	1 2
-executive/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-executive/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-extraordinary/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-for/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	1 3
-for/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	3 1
-general/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-general/JJ/amod/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	1 2
-general/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-general/JJ/amod/3 */NN/nn/3 */NN/pobj/0	2 1
-good/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-good/JJ/amod/3 */NN/nn/3 */NN/dobj/0	2 1
-good/JJ/amod/3 */NN/nn/3 */NN/pobj/0	2 1
-great/JJ/amod/2 */NN/dobj/0 */NN/conj/2 and/CC/cc/2	1 2
-great/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-great/JJ/amod/2 */NN/nsubj/0 and/CC/cc/2 */NN/conj/2	1 3
-great/JJ/amod/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	1 2
-great/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-great/JJ/amod/2 */NN/pobj/0 in/IN/prep/2 */NN/pobj/3	1 3
-high/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-high/JJ/amod/3 */NN/nn/3 */NN/dobj/0	2 1
-high/JJ/amod/3 */NN/nn/3 */NN/pobj/0	2 1
-highest/JJS/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-human/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-in/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	1 3
-in/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	3 1
-in/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/nsubj/3	1 3
-in/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/nsubj/3	3 1
-in/IN/prep/3 */NN/pobj/1 abandoned/VBD/ROOT/0 */NN/dobj/3	3 1
-in/IN/prep/3 */NN/pobj/1 abandons/VBZ/ROOT/0 */NN/dobj/3	3 1
-in/IN/prep/4 */NN/nn/3 */NN/pobj/1 's/VBZ/ROOT/0	2 1
-in/IN/prep/4 */NN/pobj/1 */NN/nsubjpass/4 abandoned/VBN/ROOT/0	2 1
-in/IN/prep/5 */NN/pobj/1 of/IN/prep/2 */NN/pobj/3 's/VBZ/ROOT/0	3 1
-individual/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-innate/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-intellectual/JJ/amod/2 */NN/dobj/0 */NN/conj/2 and/CC/cc/2	1 2
-intellectual/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-intellectual/JJ/amod/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	1 2
-intellectual/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-intellectual/JJ/amod/2 */NN/pobj/0 or/CC/cc/2 */NN/conj/2	1 3
-late/JJ/amod/2 */NNS/pobj/0 */NN/appos/2	2 1
-late/JJ/amod/2 */NNS/pobj/0 and/CC/cc/2 */NN/conj/2	3 1
-limited/JJ/amod/2 */NN/pobj/0 of/IN/prep/2 */NN/pobj/3	1 3
-linguistic/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-literary/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-managerial/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-marked/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-marked/VBN/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-mathematical/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-mechanical/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-mental/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-mental/JJ/amod/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	1 2
-mental/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-mental/JJ/amod/2 */NN/pobj/0 or/CC/cc/2 */NN/conj/2	1 3
-military/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-more/JJR/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-more/JJR/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-much/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-much/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-musical/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-native/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-native/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-natural/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-natural/JJ/amod/2 */NN/dobj/0 or/CC/cc/2 */NN/conj/2	1 3
-natural/JJ/amod/2 */NN/nsubj/0 and/CC/cc/2 */NN/conj/2	1 3
-natural/JJ/amod/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	1 2
-natural/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-natural/JJ/amod/2 */NN/pobj/0 or/CC/cc/2 */NN/conj/2	1 3
-neither/CC/preconj/2 */NN/dobj/0 nor/CC/cc/2 */NN/conj/2	1 3
-neither/CC/preconj/2 */NN/dobj/0 nor/CC/cc/2 */NN/conj/2	3 1
-of/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	1 3
-of/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	3 1
-of/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/nsubj/3	1 3
-on/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/attr/3	3 1
-on/IN/prep/3 */NN/pobj/1 's/VBZ/ROOT/0 */NN/nsubj/3	3 1
-only/RB/preconj/2 */NN/dobj/0 but/CC/cc/2 */NN/conj/2	1 3
-organizational/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-organizational/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-organizing/VBG/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-outstanding/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-own/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-own/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-own/JJ/amod/3 */NN/nn/3 */NN/dobj/0	2 1
-personal/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-physical/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-poor/JJ/amod/3 */NN/nn/3 */NN/pobj/0	2 1
-practical/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-rare/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-real/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-recognized/VBN/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-remarkable/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-solving/JJ/dep/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-special/JJ/amod/2 */NN/dobj/0 or/CC/cc/2 */NN/conj/2	1 3
-such/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-sufficient/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-superior/JJ/amod/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	1 2
-superior/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-technical/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-technical/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-unusual/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
-verbal/JJ/amod/2 */NN/dobj/0 and/CC/cc/2 */NN/conj/2	1 3
-verbal/JJ/amod/2 */NN/pobj/0 */NN/conj/2 and/CC/cc/2	1 2
-verbal/JJ/amod/2 */NN/pobj/0 and/CC/cc/2 */NN/conj/2	1 3
+NN:ROOT,appos:NN	0 2
+NN:ROOT,appos:NN	2 0
+NN:ROOT,conj:NN	0 1
+NN:ROOT,conj:NN	0 2
+NN:ROOT,conj:NN	0 3
+NN:ROOT,conj:NN	1 0
+NN:ROOT,conj:NN	1 3
+NN:ROOT,conj:NN	2 0
+NN:ROOT,conj:NN	3 0
+NN:ROOT,conj:NN	3 1
+NN:ROOT,dep:NN	0 1
+NN:ROOT,dep:NN	0 2
+NN:ROOT,dep:NN	1 0
+NN:ROOT,dep:NN	1 2
+NN:ROOT,dep:NN	2 0
+NN:ROOT,dep:NN	2 1
+NN:ROOT,dep:NNP	1 0
+NN:ROOT,dep:NNP	2 0
+NN:ROOT,dep:NNP	2 1
+NN:ROOT,infmod:VB<develop>VB,dobj:NN	0 2
+NN:ROOT,infmod:VB<maintain>VB,dobj:NN	0 2
+NN:ROOT,infmod:VB<make>VB,dobj:NN	0 2
+NN:ROOT,infmod:VB<us>VB,dobj:NN	0 2
+NN:ROOT,prep:IN:for:IN,pobj:NN	0 3
+NN:ROOT,prep:IN:in:IN,pobj:NN	0 2
+NN:ROOT,prep:IN:of:IN,pobj:NN	0 2
+NN:ROOT,prep:IN:of:IN,pobj:NN	0 3
+NN:appos,appos:NN	1 2
+NN:appos,appos:NN	2 1
+NN:appos,attr:NN	1 2
+NN:appos,attr:NN	2 1
+NN:appos,conj:NN	0 2
+NN:appos,conj:NN	0 3
+NN:appos,conj:NN	1 3
+NN:appos,conj:NN	3 1
+NN:appos,dobj:NN	1 2
+NN:appos,dobj:NN	2 1
+NN:appos,infmod:VB<us>VB,dobj:NN	0 2
+NN:appos,nsubj:NN	1 2
+NN:appos,nsubj:NN	2 1
+NN:appos,prep:IN:of:IN,pobj:NN	0 3
+NN:appos,prep:IN:of:IN,pobj:NN	1 3
+NN:appos,prep:IN:of:IN,pobj:NN	3 1
+NN:appos,prep:IN:of:IN,pobj:NNP	1 3
+NN:appos,prep:IN:of:IN,pobj:NNP	3 1
+NN:attr,ROOT:VBP<'re>VBP,attr:NN	1 2
+NN:attr,ROOT:VBP<@'re>VBP,attr:NN	1 2
+NN:attr,ROOT:VBP<@'re>VBP,nsubj:NN	2 0
+NN:attr,ROOT:VBZ<'s>VBZ,attr:NN	1 2
+NN:attr,ROOT:VBZ<'s>VBZ,attr:NN	2 1
+NN:attr,ROOT:VBZ<'s>VBZ,attr:NNP	1 2
+NN:attr,ROOT:VBZ<'s>VBZ,prep:IN:for:IN,pobj:NN	1 3
+NN:attr,ROOT:VBZ<'s>VBZ,prep:IN:in:IN,pobj:NN	1 3
+NN:attr,ROOT:VBZ<'s>VBZ,prep:IN:in:IN,pobj:NN	3 1
+NN:attr,ROOT:VBZ<@'s>VBZ,advmod:NN	2 0
+NN:attr,ROOT:VBZ<@'s>VBZ,attr:NN	1 2
+NN:attr,ROOT:VBZ<@'s>VBZ,attr:NN	2 1
+NN:attr,ROOT:VBZ<@'s>VBZ,dep:NN	2 0
+NN:attr,ROOT:VBZ<@'s>VBZ,nsubj:NN	0 2
+NN:attr,ROOT:VBZ<@'s>VBZ,nsubj:NN	2 0
+NN:attr,ROOT:VBZ<@'s>VBZ,nsubj:NNP	0 2
+NN:attr,ROOT:VBZ<@'s>VBZ,nsubj:NNP	2 0
+NN:attr,ROOT:VBZ<@'s>VBZ,prep:IN:by:IN,pobj:NN	3 1
+NN:attr,ROOT:VBZ<@'s>VBZ,prep:IN:for:IN,pobj:NN	3 1
+NN:attr,ROOT:VBZ<@'s>VBZ,prep:IN:in:IN,pobj:NN	1 3
+NN:attr,ROOT:VBZ<@'s>VBZ,prep:IN:in:IN,pobj:NN	3 1
+NN:attr,advcl:VBZ<@'s>VBZ,nsubj:NN	0 2
+NN:attr,advcl:VBZ<@'s>VBZ,nsubj:NN	2 0
+NN:attr,amod:NN	2 1
+NN:attr,appos:NN	0 1
+NN:attr,appos:NN	0 2
+NN:attr,appos:NN	1 2
+NN:attr,appos:NN	2 1
+NN:attr,appos:NNP	1 2
+NN:attr,appos:NNP	2 1
+NN:attr,ccomp:VBZ<'s>VBZ,attr:NN	1 2
+NN:attr,ccomp:VBZ<'s>VBZ,attr:NN	2 1
+NN:attr,ccomp:VBZ<@'s>VBZ,attr:NN	1 2
+NN:attr,ccomp:VBZ<@'s>VBZ,nsubj:NN	0 2
+NN:attr,ccomp:VBZ<@'s>VBZ,nsubj:NN	2 0
+NN:attr,ccomp:VBZ<@'s>VBZ,nsubj:NNP	2 0
+NN:attr,conj:NN	0 2
+NN:attr,conj:NN	0 3
+NN:attr,conj:NN	1 2
+NN:attr,conj:NN	1 3
+NN:attr,conj:NN	2 0
+NN:attr,conj:NN	2 1
+NN:attr,conj:NN	3 0
+NN:attr,conj:NN	3 1
+NN:attr,conj:VBZ<@'s>VBZ,nsubj:NN	2 0
+NN:attr,dep:NN	0 1
+NN:attr,dep:NN	1 2
+NN:attr,dep:NN	2 1
+NN:attr,dep:NNP	1 2
+NN:attr,dep:VBZ<@'s>VBZ,nsubj:NN	2 0
+NN:attr,infmod:VB<appli>VB,dobj:NN	0 2
+NN:attr,infmod:VB<control>VB,dobj:NN	0 2
+NN:attr,infmod:VB<creat>VB,dobj:NN	0 2
+NN:attr,infmod:VB<develop>VB,dobj:NN	0 2
+NN:attr,infmod:VB<give>VB,dobj:NN	0 2
+NN:attr,infmod:VB<have>VB,dobj:NN	0 2
+NN:attr,infmod:VB<maintain>VB,dobj:NN	0 2
+NN:attr,infmod:VB<make>VB,dobj:NN	0 2
+NN:attr,infmod:VB<produc>VB,dobj:NN	0 2
+NN:attr,infmod:VB<provid>VB,dobj:NN	0 2
+NN:attr,infmod:VB<understand>VB,dobj:NN	0 2
+NN:attr,infmod:VB<us>VB,dobj:NN	0 2
+NN:attr,nn:NN	1 2
+NN:attr,nn:NN	2 1
+NN:attr,nn:NNP	2 1
+NN:attr,prep:IN:at:IN,pobj:NN	3 1
+NN:attr,prep:IN:for:IN,pobj:NN	1 3
+NN:attr,prep:IN:for:IN,pobj:NN	3 1
+NN:attr,prep:IN:from:IN,pobj:NN	1 3
+NN:attr,prep:IN:in:IN,pobj:NN	1 3
+NN:attr,prep:IN:in:IN,pobj:NN	3 1
+NN:attr,prep:IN:in:IN,pobj:NNP	1 3
+NN:attr,prep:IN:of:IN,pobj:NN	0 2
+NN:attr,prep:IN:of:IN,pobj:NN	0 3
+NN:attr,prep:IN:of:IN,pobj:NN	1 3
+NN:attr,prep:IN:of:IN,pobj:NN	3 1
+NN:attr,prep:IN:of:IN,pobj:NNP	1 3
+NN:attr,prep:IN:of:IN,pobj:NNP	3 1
+NN:attr,prep:IN:on:IN,pobj:NN	1 3
+NN:attr,prep:IN:on:IN,pobj:NN	3 1
+NN:attr,prep:IN:with:IN,pobj:NN	1 3
+NN:attr,prep:IN:with:IN,pobj:NN	3 1
+NN:attr,prep:TO:to:TO,pobj:NN	3 1
+NN:conj,ROOT:NN:abil:NN,conj:NN	2 1
+NN:conj,appos:NN	2 3
+NN:conj,attr:NN	1 3
+NN:conj,attr:NN	3 1
+NN:conj,conj:NN	0 2
+NN:conj,conj:NN	0 3
+NN:conj,conj:NN	1 3
+NN:conj,conj:NN	3 1
+NN:conj,dobj:NN	1 2
+NN:conj,dobj:NN	1 3
+NN:conj,dobj:NN	3 1
+NN:conj,dobj:NN:abil:NN,conj:NN	1 3
+NN:conj,dobj:NN:abil:NN,conj:NN	3 1
+NN:conj,infmod:VB<acquir>VB,dobj:NN	0 2
+NN:conj,infmod:VB<appli>VB,dobj:NN	0 2
+NN:conj,infmod:VB<carri>VB,dobj:NN	0 2
+NN:conj,infmod:VB<chang>VB,dobj:NN	0 2
+NN:conj,infmod:VB<control>VB,dobj:NN	0 2
+NN:conj,infmod:VB<creat>VB,dobj:NN	0 2
+NN:conj,infmod:VB<demonstr>VB,dobj:NN	0 2
+NN:conj,infmod:VB<develop>VB,dobj:NN	0 2
+NN:conj,infmod:VB<do>VB,dobj:NN	0 2
+NN:conj,infmod:VB<exercis>VB,dobj:NN	0 2
+NN:conj,infmod:VB<form>VB,dobj:NN	0 2
+NN:conj,infmod:VB<give>VB,dobj:NN	0 2
+NN:conj,infmod:VB<keep>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:conj,infmod:VB<maintain>VB,dobj:NN	0 2
+NN:conj,infmod:VB<make>VB,dobj:NN	0 2
+NN:conj,infmod:VB<manag>VB,dobj:NN	0 2
+NN:conj,infmod:VB<particip>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:conj,infmod:VB<perform>VB,dobj:NN	0 2
+NN:conj,infmod:VB<produc>VB,dobj:NN	0 2
+NN:conj,infmod:VB<provid>VB,dobj:NN	0 2
+NN:conj,infmod:VB<take>VB,dobj:NN	0 2
+NN:conj,infmod:VB<understand>VB,dobj:NN	0 2
+NN:conj,infmod:VB<us>VB,dobj:NN	0 2
+NN:conj,infmod:VB<util>VB,dobj:NN	0 2
+NN:conj,nsubj:NN	0 2
+NN:conj,nsubj:NN	1 2
+NN:conj,nsubj:NN	1 3
+NN:conj,nsubj:NN	2 0
+NN:conj,nsubj:NN	2 1
+NN:conj,nsubj:NN	3 1
+NN:conj,nsubjpass:NN	0 2
+NN:conj,nsubjpass:NN	2 0
+NN:conj,pobj:NN	2 4
+NN:conj,pobj:NN	4 2
+NN:conj,pobj:NN:abil:NN,conj:NN	1 2
+NN:conj,pobj:NN:abil:NN,conj:NN	1 3
+NN:conj,pobj:NN:abil:NN,conj:NN	2 1
+NN:conj,pobj:NN:abil:NN,conj:NN	3 1
+NN:conj,prep:IN:for:IN,pobj:NN	0 3
+NN:conj,prep:IN:for:IN,pobj:NN	4 2
+NN:conj,prep:IN:in:IN,pobj:NN	0 2
+NN:conj,prep:IN:in:IN,pobj:NN	0 3
+NN:conj,prep:IN:in:IN,pobj:NN	2 4
+NN:conj,prep:IN:in:IN,pobj:NN	4 2
+NN:conj,prep:IN:of:IN,pobj:NN	0 2
+NN:conj,prep:IN:of:IN,pobj:NN	0 3
+NN:conj,prep:IN:of:IN,pobj:NN	1 3
+NN:conj,prep:IN:of:IN,pobj:NN	2 0
+NN:conj,prep:IN:of:IN,pobj:NN	2 4
+NN:conj,prep:IN:of:IN,pobj:NN	3 0
+NN:conj,prep:IN:of:IN,pobj:NN	3 1
+NN:conj,prep:IN:of:IN,pobj:NN	4 2
+NN:conj,prep:IN:of:IN,pobj:NNP	2 4
+NN:dep,ROOT:LS:1:LS,nn:NNP	1 0
+NN:dep,ROOT:VBZ<'s>VBZ,attr:NN	2 0
+NN:dep,attr:NN	1 2
+NN:dep,attr:NN	2 1
+NN:dep,conj:NN	0 1
+NN:dep,conj:NN	0 2
+NN:dep,conj:NN	0 3
+NN:dep,conj:NN	1 2
+NN:dep,conj:NN	1 3
+NN:dep,conj:NN	2 0
+NN:dep,conj:NN	2 1
+NN:dep,conj:NN	3 0
+NN:dep,conj:NN	3 1
+NN:dep,conj:NNP	2 0
+NN:dep,dep:NN	0 1
+NN:dep,dep:NN	1 0
+NN:dep,dep:NN	1 2
+NN:dep,dep:NN	2 1
+NN:dep,dep:NNP	0 1
+NN:dep,dep:SYM:]:SYM,dep:NN	0 1
+NN:dep,dep:SYM:]:SYM,dep:NN	1 0
+NN:dep,dep:SYM:]:SYM,nn:NNP	0 1
+NN:dep,dobj:NN	1 2
+NN:dep,dobj:NN	2 1
+NN:dep,dobj:POS:'s:POS,conj:NN	3 0
+NN:dep,infmod:VB<creat>VB,dobj:NN	0 2
+NN:dep,infmod:VB<maintain>VB,dobj:NN	0 2
+NN:dep,infmod:VB<make>VB,dobj:NN	0 2
+NN:dep,infmod:VB<provid>VB,dobj:NN	0 2
+NN:dep,infmod:VB<us>VB,dobj:NN	0 2
+NN:dep,nsubj:NN	1 2
+NN:dep,nsubj:NN	2 1
+NN:dep,pobj:NN	2 3
+NN:dep,pobj:NN	3 2
+NN:dep,pobj:POS:'s:POS,conj:NN	0 3
+NN:dep,pobj:POS:'s:POS,conj:NN	3 0
+NN:dep,prep:IN:for:IN,pobj:NN	3 1
+NN:dep,prep:IN:in:IN,pobj:NN	1 3
+NN:dep,prep:IN:in:IN,pobj:NN	3 1
+NN:dep,prep:IN:of:IN,pobj:NN	0 2
+NN:dep,prep:IN:of:IN,pobj:NN	0 3
+NN:dep,prep:IN:of:IN,pobj:NN	1 3
+NN:dep,prep:IN:of:IN,pobj:NN	2 0
+NN:dep,prep:IN:of:IN,pobj:NN	3 1
+NN:dep,prep:IN:of:IN,pobj:NNP	0 2
+NN:dep,prep:IN:of:IN,pobj:NNP	1 3
+NN:dep,prep:IN:of:IN,pobj:NNP	3 1
+NN:dobj,ROOT:VBD<@abandon>VBD,nsubj:NN	0 2
+NN:dobj,ROOT:VBD<@abandon>VBD,nsubj:NN	2 0
+NN:dobj,ROOT:VBD<@abandon>VBD,nsubj:NNP	2 0
+NN:dobj,ROOT:VBD<@abandon>VBD,prep:IN:in:IN,pobj:NN	3 1
+NN:dobj,ROOT:VBD<@abolish>VBD,nsubj:NN	2 0
+NN:dobj,ROOT:VBN<@abandon>VBN,nsubj:NN	0 2
+NN:dobj,ROOT:VBZ<@abandon>VBZ,nsubj:NN	2 0
+NN:dobj,ROOT:VBZ<@abolish>VBZ,nsubj:NN	2 0
+NN:dobj,appos:NN	0 1
+NN:dobj,appos:NN	0 2
+NN:dobj,appos:NN	1 2
+NN:dobj,appos:NN	2 1
+NN:dobj,conj:NN	0 1
+NN:dobj,conj:NN	0 2
+NN:dobj,conj:NN	0 3
+NN:dobj,conj:NN	0 4
+NN:dobj,conj:NN	0 5
+NN:dobj,conj:NN	1 0
+NN:dobj,conj:NN	1 2
+NN:dobj,conj:NN	1 3
+NN:dobj,conj:NN	2 0
+NN:dobj,conj:NN	2 1
+NN:dobj,conj:NN	3 0
+NN:dobj,conj:NN	3 1
+NN:dobj,dep:NN	0 1
+NN:dobj,dep:NN	0 2
+NN:dobj,dep:NN	0 3
+NN:dobj,dep:NN	1 2
+NN:dobj,dep:NN	2 1
+NN:dobj,infmod:VB<accept>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<access>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<achiev>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<acquir>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<adapt>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<adjust>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<affect>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<alter>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<appli>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<articul>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<assess>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<assess>VB,dobj:NN	2 0
+NN:dobj,infmod:VB<be>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<bring>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<build>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<captur>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<carri>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<carri>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<chang>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<choos>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<combin>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<commun>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<construct>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<contribut>VB,prep:TO:to:TO,pobj:NN	0 3
+NN:dobj,infmod:VB<control>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<control>VB,dobj:NN	2 0
+NN:dobj,infmod:VB<convei>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<coordin>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<cope>VB,prep:IN:with:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<creat>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<creat>VB,dobj:NN	2 0
+NN:dobj,infmod:VB<deal>VB,prep:IN:with:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<deliv>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<demonstr>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<detect>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<determin>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<develop>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<direct>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<do>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<emploi>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<engag>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<enhanc>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<establish>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<evalu>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<execut>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<exercis>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<expand>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<exploit>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<express>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<extend>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<financ>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<find>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<focu>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<follow>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<form>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<gain>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<gener>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<get>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<give>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<handl>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<have>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<hold>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<hold>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<identifi>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<implement>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<impos>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<improv>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<increas>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<influenc>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<interpret>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<judg>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<keep>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<keep>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<learn>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<listen>VB,prep:TO:to:TO,pobj:NN	0 3
+NN:dobj,infmod:VB<maintain>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<maintain>VB,dobj:NN	2 0
+NN:dobj,infmod:VB<maintain>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<make>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<make>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<manag>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<manag>VB,dobj:NN	2 0
+NN:dobj,infmod:VB<master>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<measur>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<monitor>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<obtain>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<offer>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<organ>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<particip>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<perceiv>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<perform>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<perform>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<predict>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<produc>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<produc>VB,dobj:NN	2 0
+NN:dobj,infmod:VB<produc>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<promot>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<provid>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<pursu>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<put>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<reach>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<read>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<recogn>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<recogn>VB,dobj:NN	2 0
+NN:dobj,infmod:VB<reduc>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<regul>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<remain>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<resist>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<respond>VB,prep:TO:to:TO,pobj:NN	0 3
+NN:dobj,infmod:VB<retain>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<see>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<see>VB,dobj:NN	2 0
+NN:dobj,infmod:VB<see>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<select>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<shift>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<stimul>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<support>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<sustain>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<take>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<teach>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<transfer>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<turn>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<understand>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<understand>VB,dobj:NN	2 0
+NN:dobj,infmod:VB<undertak>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<us>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<us>VB,prep:IN:as:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<us>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<util>VB,dobj:NN	0 2
+NN:dobj,infmod:VB<work>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<work>VB,prep:IN:with:IN,pobj:NN	0 3
+NN:dobj,infmod:VB<write>VB,dobj:NN	0 2
+NN:dobj,nn:NN	1 2
+NN:dobj,nn:NN	2 1
+NN:dobj,nn:NNP	2 1
+NN:dobj,prep:IN:for:IN,pobj:NN	0 3
+NN:dobj,prep:IN:for:IN,pobj:NN	1 3
+NN:dobj,prep:IN:for:IN,pobj:NN	3 1
+NN:dobj,prep:IN:in:IN,pobj:NN	0 2
+NN:dobj,prep:IN:in:IN,pobj:NN	0 3
+NN:dobj,prep:IN:in:IN,pobj:NN	0 4
+NN:dobj,prep:IN:in:IN,pobj:NN	1 3
+NN:dobj,prep:IN:in:IN,pobj:NN	3 1
+NN:dobj,prep:IN:in:IN,pobj:NNP	1 3
+NN:dobj,prep:IN:of:IN,pobj:NN	0 2
+NN:dobj,prep:IN:of:IN,pobj:NN	0 3
+NN:dobj,prep:IN:of:IN,pobj:NN	1 3
+NN:dobj,prep:IN:of:IN,pobj:NN	2 0
+NN:dobj,prep:IN:of:IN,pobj:NN	3 0
+NN:dobj,prep:IN:of:IN,pobj:NN	3 1
+NN:dobj,prep:IN:of:IN,pobj:NNP	1 3
+NN:dobj,prep:IN:of:IN,pobj:NNP	3 1
+NN:dobj,prep:IN:with:IN,pobj:NN	0 3
+NN:dobj,prep:TO:to:TO,pobj:NN	0 3
+NN:dobj,rcmod:VBZ<is>VBZ,attr:NN	0 2
+NN:nn,NN:::,conj:NN	3 0
+NN:nn,NN:::,nn:NN	0 1
+NN:nn,NN:::,nn:NN	1 0
+NN:nn,NN:::,prep:IN:in:IN,pobj:NN	0 3
+NN:nn,NN:::,prep:IN:of:IN,pobj:NN	3 0
+NN:nn,NNS:::,nn:NN	1 0
+NN:nn,ROOT:NNP:a:NNP,appos:NN	0 2
+NN:nn,ROOT:NNP:a:NNP,nn:NN	1 0
+NN:nn,appos:NN	1 2
+NN:nn,appos:NN	2 1
+NN:nn,attr:NN	1 2
+NN:nn,attr:NN	2 1
+NN:nn,conj:NN	0 2
+NN:nn,conj:NN	1 0
+NN:nn,conj:NN	1 2
+NN:nn,conj:NN	2 0
+NN:nn,conj:NN	2 1
+NN:nn,conj:NN	2 3
+NN:nn,conj:NN	3 2
+NN:nn,conj:NNP	2 0
+NN:nn,conj:NNP	2 3
+NN:nn,dep:NN	0 1
+NN:nn,dep:NN	1 0
+NN:nn,dep:NN	1 2
+NN:nn,dep:NN	2 1
+NN:nn,dobj:NN	1 2
+NN:nn,dobj:NN	2 1
+NN:nn,dobj:NN:a:NN,prep:IN:of:IN,pobj:NN	0 3
+NN:nn,nsubj:NN	0 1
+NN:nn,nsubj:NN	1 0
+NN:nn,nsubj:NN	1 2
+NN:nn,nsubj:NN	2 1
+NN:nn,nsubj:NN:a:NN,prep:IN:of:IN,pobj:NN	0 3
+NN:nn,nsubj:NNP:a:NNP,nn:NN	0 1
+NN:nn,nsubj:NNP:a:NNP,nn:NN	1 0
+NN:nn,nsubjpass:NN	0 1
+NN:nn,nsubjpass:NN	1 0
+NN:nn,pobj:NN	1 2
+NN:nn,pobj:NN	2 1
+NN:nn,pobj:NN	2 3
+NN:nn,pobj:NN	3 2
+NN:nn,pobj:NN:a:NN,nn:NN	1 0
+NN:nn,pobj:NN:a:NN,prep:IN:in:IN,pobj:NN	0 3
+NN:nn,pobj:NN:a:NN,prep:IN:of:IN,pobj:NN	0 3
+NN:nn,pobj:NN:a:NN,prep:IN:of:IN,pobj:NN	3 0
+NN:nn,pobj:NN:abil:NN,conj:NN	0 3
+NN:nn,pobj:NNP	2 3
+NN:nn,pobj:NNP:a:NNP,conj:NN	3 0
+NN:nn,pobj:NNP:a:NNP,nn:NN	0 1
+NN:nn,pobj:NNP:a:NNP,nn:NN	1 0
+NN:nn,pobj:POS:'s:POS,dep:NN	1 0
+NN:nsubj,ROOT:POS:'s:POS,attr:NN	2 0
+NN:nsubj,ROOT:VBD<abandon>VBD,dobj:NN	0 2
+NN:nsubj,ROOT:VBD<abandon>VBD,dobj:NN	2 0
+NN:nsubj,ROOT:VBD<abolish>VBD,dobj:NN	0 2
+NN:nsubj,ROOT:VBD<abolish>VBD,dobj:NN	2 0
+NN:nsubj,ROOT:VBN<abandon>VBN,dobj:NN	2 0
+NN:nsubj,ROOT:VBP<'re>VBP,attr:NN	0 2
+NN:nsubj,ROOT:VBZ<'s>VBZ,attr:NN	0 2
+NN:nsubj,ROOT:VBZ<'s>VBZ,attr:NN	1 2
+NN:nsubj,ROOT:VBZ<'s>VBZ,attr:NN	2 0
+NN:nsubj,ROOT:VBZ<'s>VBZ,attr:NN	2 1
+NN:nsubj,ROOT:VBZ<'s>VBZ,attr:NNP	0 2
+NN:nsubj,ROOT:VBZ<'s>VBZ,attr:NNP	2 0
+NN:nsubj,ROOT:VBZ<'s>VBZ,conj:NN	3 1
+NN:nsubj,ROOT:VBZ<'s>VBZ,dep:NN	1 2
+NN:nsubj,ROOT:VBZ<'s>VBZ,nsubj:NN	1 2
+NN:nsubj,ROOT:VBZ<'s>VBZ,nsubj:NN	2 1
+NN:nsubj,ROOT:VBZ<'s>VBZ,prep:IN:at:IN,pobj:NN	3 1
+NN:nsubj,ROOT:VBZ<'s>VBZ,prep:IN:in:IN,pobj:NN	1 3
+NN:nsubj,ROOT:VBZ<'s>VBZ,prep:IN:in:IN,pobj:NN	3 1
+NN:nsubj,ROOT:VBZ<'s>VBZ,prep:IN:on:IN,pobj:NN	1 3
+NN:nsubj,ROOT:VBZ<'s>VBZ,prep:IN:on:IN,pobj:NN	3 1
+NN:nsubj,ROOT:VBZ<@'s>VBZ,nsubj:NN	1 2
+NN:nsubj,ROOT:VBZ<@'s>VBZ,prep:IN:in:IN,pobj:NN	1 3
+NN:nsubj,ROOT:VBZ<@'s>VBZ,prep:IN:in:IN,pobj:NN	3 1
+NN:nsubj,VBP:::,dobj:NN	0 2
+NN:nsubj,VBP:::,dobj:NN	2 0
+NN:nsubj,advcl:VBZ<'s>VBZ,attr:NN	2 0
+NN:nsubj,appos:NN	0 1
+NN:nsubj,appos:NN	1 0
+NN:nsubj,appos:NN	1 2
+NN:nsubj,appos:NN	2 1
+NN:nsubj,appos:NNP	1 2
+NN:nsubj,ccomp:VBZ<'s>VBZ,attr:NN	0 2
+NN:nsubj,ccomp:VBZ<'s>VBZ,attr:NN	2 0
+NN:nsubj,ccomp:VBZ<'s>VBZ,prep:IN:in:IN,pobj:NN	1 3
+NN:nsubj,ccomp:VBZ<'s>VBZ,prep:IN:in:IN,pobj:NN	3 1
+NN:nsubj,conj:NN	0 1
+NN:nsubj,conj:NN	0 2
+NN:nsubj,conj:NN	0 3
+NN:nsubj,conj:NN	1 0
+NN:nsubj,conj:NN	1 2
+NN:nsubj,conj:NN	1 3
+NN:nsubj,conj:NN	2 0
+NN:nsubj,conj:NN	2 1
+NN:nsubj,conj:NN	3 0
+NN:nsubj,conj:NN	3 1
+NN:nsubj,conj:VBZ<'s>VBZ,attr:NN	2 0
+NN:nsubj,dep:NN	0 1
+NN:nsubj,dep:NN	1 0
+NN:nsubj,dep:NN	1 2
+NN:nsubj,dep:NN	2 1
+NN:nsubj,infmod:VB<achiev>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<acquir>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<appli>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<chang>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<commun>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<control>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<creat>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<demonstr>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<develop>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<do>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<exercis>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<gener>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<get>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<give>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<have>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<hold>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:nsubj,infmod:VB<identifi>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<increas>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<influenc>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<keep>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:nsubj,infmod:VB<learn>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<maintain>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<make>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<manag>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<measur>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<particip>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:nsubj,infmod:VB<perform>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<predict>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<produc>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<provid>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<recogn>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<retain>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<sustain>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<understand>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<understand>VB,dobj:NN	2 0
+NN:nsubj,infmod:VB<us>VB,dobj:NN	0 2
+NN:nsubj,infmod:VB<vari>VB,dobj:NN	0 2
+NN:nsubj,nn:NN	0 1
+NN:nsubj,nn:NN	1 0
+NN:nsubj,nn:NN	1 2
+NN:nsubj,nn:NN	2 1
+NN:nsubj,partmod:VBN<combin>VBN,prep:IN:with:IN,pobj:NN	0 3
+NN:nsubj,prep:IN:at:IN,pobj:NN	1 3
+NN:nsubj,prep:IN:between:IN,pobj:NN	1 3
+NN:nsubj,prep:IN:between:IN,pobj:NN	3 1
+NN:nsubj,prep:IN:for:IN,pobj:NN	0 3
+NN:nsubj,prep:IN:for:IN,pobj:NN	1 3
+NN:nsubj,prep:IN:for:IN,pobj:NN	3 1
+NN:nsubj,prep:IN:in:IN,pobj:NN	0 2
+NN:nsubj,prep:IN:in:IN,pobj:NN	0 3
+NN:nsubj,prep:IN:in:IN,pobj:NN	0 4
+NN:nsubj,prep:IN:in:IN,pobj:NN	1 3
+NN:nsubj,prep:IN:in:IN,pobj:NN	3 1
+NN:nsubj,prep:IN:of:IN,pobj:NN	0 2
+NN:nsubj,prep:IN:of:IN,pobj:NN	0 3
+NN:nsubj,prep:IN:of:IN,pobj:NN	1 3
+NN:nsubj,prep:IN:of:IN,pobj:NN	2 0
+NN:nsubj,prep:IN:of:IN,pobj:NN	3 0
+NN:nsubj,prep:IN:of:IN,pobj:NN	3 1
+NN:nsubj,prep:IN:of:IN,pobj:NNP	0 2
+NN:nsubj,prep:IN:on:IN,pobj:NN	1 3
+NN:nsubj,prep:IN:on:IN,pobj:NN	3 1
+NN:nsubj,prep:TO:to:TO,pobj:NN	3 1
+NN:nsubjpass,ROOT:VBN<@abandon>VBN,prep:IN:in:IN,pobj:NN	2 1
+NN:nsubjpass,ROOT:VBN<abandon>VBN,prep:IN:by:IN,pobj:NN	0 3
+NN:nsubjpass,ROOT:VBN<abandon>VBN,prep:IN:for:IN,pobj:NN	3 0
+NN:nsubjpass,ROOT:VBN<abolish>VBN,prep:IN:by:IN,pobj:NN	0 3
+NN:nsubjpass,conj:NN	0 2
+NN:nsubjpass,conj:NN	0 3
+NN:nsubjpass,conj:NN	1 3
+NN:nsubjpass,conj:NN	2 0
+NN:nsubjpass,infmod:VB<develop>VB,dobj:NN	0 2
+NN:nsubjpass,infmod:VB<maintain>VB,dobj:NN	0 2
+NN:nsubjpass,infmod:VB<perceiv>VB,dobj:NN	0 2
+NN:nsubjpass,infmod:VB<understand>VB,dobj:NN	0 2
+NN:nsubjpass,infmod:VB<us>VB,dobj:NN	0 2
+NN:nsubjpass,nn:NN	0 1
+NN:nsubjpass,nn:NN	1 0
+NN:nsubjpass,prep:IN:of:IN,pobj:NN	0 2
+NN:nsubjpass,prep:IN:of:IN,pobj:NN	0 3
+NN:nsubjpass,prep:IN:of:IN,pobj:NN	1 3
+NN:nsubjpass,prep:IN:of:IN,pobj:NN	2 0
+NN:nsubjpass,prep:IN:of:IN,pobj:NN	3 1
+NN:pobj,appos:NN	0 1
+NN:pobj,appos:NN	0 2
+NN:pobj,appos:NN	1 0
+NN:pobj,appos:NN	1 2
+NN:pobj,appos:NN	2 0
+NN:pobj,appos:NN	2 1
+NN:pobj,appos:NN	2 3
+NN:pobj,appos:NN	3 0
+NN:pobj,appos:NN	3 2
+NN:pobj,conj:NN	0 1
+NN:pobj,conj:NN	0 2
+NN:pobj,conj:NN	0 3
+NN:pobj,conj:NN	0 4
+NN:pobj,conj:NN	1 0
+NN:pobj,conj:NN	1 2
+NN:pobj,conj:NN	1 3
+NN:pobj,conj:NN	2 0
+NN:pobj,conj:NN	2 1
+NN:pobj,conj:NN	2 3
+NN:pobj,conj:NN	2 4
+NN:pobj,conj:NN	3 0
+NN:pobj,conj:NN	3 1
+NN:pobj,conj:NN	3 2
+NN:pobj,conj:NN	4 0
+NN:pobj,conj:NN	4 2
+NN:pobj,conj:NN:power:NN,prep:IN:of:IN,pobj:NN	0 4
+NN:pobj,dep:NN	0 1
+NN:pobj,dep:NN	0 2
+NN:pobj,dep:NN	1 0
+NN:pobj,dep:NN	1 2
+NN:pobj,dep:NN	2 1
+NN:pobj,dep:NN	2 3
+NN:pobj,dep:NN	3 2
+NN:pobj,dep:NNP	2 3
+NN:pobj,infmod:VB<access>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<achiev>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<acquir>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<adapt>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<adjust>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<affect>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<alter>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<appli>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<appreci>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<articul>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<be>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<bring>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<build>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<captur>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<carri>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<carri>VB,prep:IN:on:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<chang>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<combin>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<combin>VB,prep:IN:with:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<commun>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<comprehend>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<construct>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<contribut>VB,prep:TO:to:TO,pobj:NN	0 3
+NN:pobj,infmod:VB<control>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<control>VB,dobj:NN	2 0
+NN:pobj,infmod:VB<convei>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<convert>VB,prep:IN:into:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<cope>VB,prep:IN:with:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<creat>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<deal>VB,prep:IN:with:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<deal>VB,prep:IN:with:IN,pobj:NN	3 0
+NN:pobj,infmod:VB<deliv>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<demonstr>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<detect>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<detect>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<determin>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<develop>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<direct>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<distinguish>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<do>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<engag>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<enhanc>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<establish>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<execut>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<exercis>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<exploit>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<express>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<extend>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<financ>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<find>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<focu>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<follow>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<form>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<gain>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<gener>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<get>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<give>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<give>VB,dobj:NN	2 0
+NN:pobj,infmod:VB<grow>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<handl>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<have>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<hold>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<hold>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<implement>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<improv>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<increas>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<induc>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<influenc>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<inhibit>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<integr>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<interpret>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<judg>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<keep>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<keep>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<learn>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<maintain>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<maintain>VB,dobj:NN	2 0
+NN:pobj,infmod:VB<maintain>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<make>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<make>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<manag>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<manipul>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<master>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<measur>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<monitor>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<move>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<obtain>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<offer>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<pai>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<particip>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<perceiv>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<perform>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<perform>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<predict>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<prevent>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<produc>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<produc>VB,dobj:NN	2 0
+NN:pobj,infmod:VB<produc>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<promot>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<provid>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<pursu>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<put>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<reach>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<read>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<recogn>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<recogn>VB,dobj:NN	2 0
+NN:pobj,infmod:VB<recogn>VB,prep:IN:by:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<reduc>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<reproduc>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<resist>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<respond>VB,prep:TO:to:TO,pobj:NN	0 3
+NN:pobj,infmod:VB<restor>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<retain>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<retain>VB,dobj:NN	2 0
+NN:pobj,infmod:VB<satisfi>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<see>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<see>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<share>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<stimul>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<sustain>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<take>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<teach>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<translat>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<turn>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<understand>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<understand>VB,dobj:NN	2 0
+NN:pobj,infmod:VB<us>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<us>VB,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,infmod:VB<util>VB,dobj:NN	0 2
+NN:pobj,infmod:VB<work>VB,prep:IN:with:IN,pobj:NN	0 3
+NN:pobj,nn:NN	2 1
+NN:pobj,nn:NN	2 3
+NN:pobj,nn:NN	3 2
+NN:pobj,nn:NNP	3 2
+NN:pobj,prep:IN:as:IN,ROOT:VBN<@abolish>VBN,nsubjpass:NN	3 0
+NN:pobj,prep:IN:as:IN,pobj:NN	2 4
+NN:pobj,prep:IN:as:IN,pobj:NN	4 2
+NN:pobj,prep:IN:at:IN,ROOT:VBZ<@'s>VBZ,nsubj:NN	1 3
+NN:pobj,prep:IN:at:IN,attr:NN	1 3
+NN:pobj,prep:IN:at:IN,nsubj:NN	1 3
+NN:pobj,prep:IN:by:IN,ROOT:VBN<@abandon>VBN,nsubjpass:NN	0 3
+NN:pobj,prep:IN:by:IN,ROOT:VBN<@abolish>VBN,nsubjpass:NN	0 3
+NN:pobj,prep:IN:by:IN,ROOT:VBN<@abolish>VBN,nsubjpass:NN	3 0
+NN:pobj,prep:IN:for:IN,ROOT:VBZ<'s>VBZ,attr:NN	1 3
+NN:pobj,prep:IN:for:IN,ROOT:VBZ<@'s>VBZ,attr:NN	1 3
+NN:pobj,prep:IN:for:IN,attr:NN	1 3
+NN:pobj,prep:IN:for:IN,attr:NN	3 1
+NN:pobj,prep:IN:for:IN,dobj:NN	1 3
+NN:pobj,prep:IN:for:IN,nsubj:NN	1 3
+NN:pobj,prep:IN:for:IN,nsubj:NN	3 1
+NN:pobj,prep:IN:for:IN,pobj:NN	0 2
+NN:pobj,prep:IN:for:IN,pobj:NN	0 3
+NN:pobj,prep:IN:for:IN,pobj:NN	1 3
+NN:pobj,prep:IN:for:IN,pobj:NN	2 4
+NN:pobj,prep:IN:for:IN,pobj:NN	4 2
+NN:pobj,prep:IN:from:IN,attr:NN	1 3
+NN:pobj,prep:IN:from:IN,attr:NN	3 1
+NN:pobj,prep:IN:from:IN,pobj:NN	2 4
+NN:pobj,prep:IN:from:IN,pobj:NN	4 2
+NN:pobj,prep:IN:in:IN,ROOT:VBD<abandon>VBD,dobj:NN	3 1
+NN:pobj,prep:IN:in:IN,ROOT:VBZ<'s>VBZ,attr:NN	1 3
+NN:pobj,prep:IN:in:IN,ROOT:VBZ<'s>VBZ,attr:NN	3 1
+NN:pobj,prep:IN:in:IN,ROOT:VBZ<'s>VBZ,nsubj:NN	1 3
+NN:pobj,prep:IN:in:IN,ROOT:VBZ<'s>VBZ,nsubj:NN	3 1
+NN:pobj,prep:IN:in:IN,ROOT:VBZ<@'>VBZ,dobj:NN	3 1
+NN:pobj,prep:IN:in:IN,ROOT:VBZ<@'s>VBZ,attr:NN	1 3
+NN:pobj,prep:IN:in:IN,ROOT:VBZ<@'s>VBZ,attr:NN	3 1
+NN:pobj,prep:IN:in:IN,ROOT:VBZ<@'s>VBZ,nsubj:NN	1 3
+NN:pobj,prep:IN:in:IN,ROOT:VBZ<@'s>VBZ,nsubj:NN	3 1
+NN:pobj,prep:IN:in:IN,advcl:VBZ<@'s>VBZ,nsubj:NN	1 3
+NN:pobj,prep:IN:in:IN,attr:NN	1 3
+NN:pobj,prep:IN:in:IN,attr:NN	3 1
+NN:pobj,prep:IN:in:IN,ccomp:VBZ<@'>VBZ,dobj:NN	3 1
+NN:pobj,prep:IN:in:IN,ccomp:VBZ<@'s>VBZ,nsubj:NN	1 3
+NN:pobj,prep:IN:in:IN,ccomp:VBZ<@'s>VBZ,nsubj:NN	3 1
+NN:pobj,prep:IN:in:IN,dobj:NN	1 3
+NN:pobj,prep:IN:in:IN,dobj:NN	3 1
+NN:pobj,prep:IN:in:IN,nsubj:NN	1 3
+NN:pobj,prep:IN:in:IN,nsubj:NN	3 1
+NN:pobj,prep:IN:in:IN,pobj:NN	0 2
+NN:pobj,prep:IN:in:IN,pobj:NN	0 3
+NN:pobj,prep:IN:in:IN,pobj:NN	0 4
+NN:pobj,prep:IN:in:IN,pobj:NN	1 3
+NN:pobj,prep:IN:in:IN,pobj:NN	2 0
+NN:pobj,prep:IN:in:IN,pobj:NN	2 4
+NN:pobj,prep:IN:in:IN,pobj:NN	3 0
+NN:pobj,prep:IN:in:IN,pobj:NN	3 1
+NN:pobj,prep:IN:in:IN,pobj:NN	4 1
+NN:pobj,prep:IN:in:IN,pobj:NN	4 2
+NN:pobj,prep:IN:in:IN,pobj:NNP	1 3
+NN:pobj,prep:IN:like:IN,ROOT:VBZ<@'s>VBZ,attr:NN	1 3
+NN:pobj,prep:IN:like:IN,nsubj:NN	1 3
+NN:pobj,prep:IN:of:IN,ROOT:VBZ<'s>VBZ,attr:NN	1 3
+NN:pobj,prep:IN:of:IN,ROOT:VBZ<'s>VBZ,attr:NN	3 1
+NN:pobj,prep:IN:of:IN,ROOT:VBZ<'s>VBZ,nsubj:NN	1 3
+NN:pobj,prep:IN:of:IN,attr:NN	1 3
+NN:pobj,prep:IN:of:IN,attr:NN	3 1
+NN:pobj,prep:IN:of:IN,dobj:NN	1 3
+NN:pobj,prep:IN:of:IN,dobj:NN	3 1
+NN:pobj,prep:IN:of:IN,nsubj:NN	0 2
+NN:pobj,prep:IN:of:IN,nsubj:NN	1 3
+NN:pobj,prep:IN:of:IN,nsubj:NN	2 0
+NN:pobj,prep:IN:of:IN,nsubj:NN	3 1
+NN:pobj,prep:IN:of:IN,nsubjpass:NN	0 2
+NN:pobj,prep:IN:of:IN,nsubjpass:NN	2 0
+NN:pobj,prep:IN:of:IN,pobj:NN	0 2
+NN:pobj,prep:IN:of:IN,pobj:NN	0 3
+NN:pobj,prep:IN:of:IN,pobj:NN	0 4
+NN:pobj,prep:IN:of:IN,pobj:NN	1 3
+NN:pobj,prep:IN:of:IN,pobj:NN	2 0
+NN:pobj,prep:IN:of:IN,pobj:NN	2 4
+NN:pobj,prep:IN:of:IN,pobj:NN	3 0
+NN:pobj,prep:IN:of:IN,pobj:NN	3 1
+NN:pobj,prep:IN:of:IN,pobj:NN	4 2
+NN:pobj,prep:IN:of:IN,pobj:NNP	0 3
+NN:pobj,prep:IN:of:IN,pobj:NNP	1 3
+NN:pobj,prep:IN:of:IN,pobj:NNP	2 4
+NN:pobj,prep:IN:of:IN,pobj:NNP	3 0
+NN:pobj,prep:IN:of:IN,pobj:NNP	3 1
+NN:pobj,prep:IN:of:IN,pobj:NNP	4 2
+NN:pobj,prep:IN:on:IN,ROOT:VBZ<'s>VBZ,attr:NN	3 1
+NN:pobj,prep:IN:on:IN,ROOT:VBZ<@'s>VBZ,nsubj:NN	1 3
+NN:pobj,prep:IN:on:IN,attr:NN	1 3
+NN:pobj,prep:IN:on:IN,attr:NN	3 1
+NN:pobj,prep:IN:on:IN,dobj:NN	1 3
+NN:pobj,prep:IN:on:IN,nsubj:NN	1 3
+NN:pobj,prep:IN:on:IN,nsubj:NN	3 1
+NN:pobj,prep:IN:on:IN,pobj:NN	1 3
+NN:pobj,prep:IN:on:IN,pobj:NN	2 4
+NN:pobj,prep:IN:on:IN,pobj:NN	4 2
+NN:pobj,prep:IN:with:IN,attr:NN	1 3
+NN:pobj,prep:IN:with:IN,attr:NN	3 1
+NN:pobj,prep:IN:with:IN,nsubj:NN	1 3
+NN:pobj,prep:IN:with:IN,pobj:NN	0 2
+NN:pobj,prep:IN:with:IN,pobj:NN	0 3
+NN:pobj,prep:IN:with:IN,pobj:NN	1 3
+NN:pobj,prep:IN:with:IN,pobj:NN	2 4
+NN:pobj,prep:IN:with:IN,pobj:NN	4 2
+NN:pobj,prep:TO:to:TO,attr:NN	1 3
+NN:pobj,prep:TO:to:TO,attr:NN	3 1
+NN:pobj,prep:TO:to:TO,nsubj:NN	1 3
+NN:pobj,prep:TO:to:TO,pobj:NN	0 2
+NN:pobj,prep:TO:to:TO,pobj:NN	0 3
+NN:pobj,prep:TO:to:TO,pobj:NN	1 3
+NN:pobj,prep:TO:to:TO,pobj:NN	2 4
+NN:pobj,prep:TO:to:TO,pobj:NN	4 2
+NN:pobj,rcmod:VBD<wa>VBD,attr:NN	2 0
+NN:pobj,rcmod:VBZ<is>VBZ,attr:NN	0 2
+NN:pobj,rcmod:VBZ<is>VBZ,attr:NN	2 0
+NN:pobj,rcmod:WP$:whose:WP$,dep:NN	0 2
+NN:rcmod,attr:NN	1 2
+NN:xcomp,dobj:NN	1 2
+NN:xcomp,dobj:NN	2 1
+NNP:ROOT,appos:NN	1 0
+NNP:ROOT,appos:NN	2 0
+NNP:ROOT,appos:NN	2 1
+NNP:ROOT,appos:NNP	1 0
+NNP:ROOT,appos:NNP	2 0
+NNP:ROOT,appos:NNP	2 1
+NNP:ROOT,conj:NNP	1 0
+NNP:ROOT,conj:NNP	2 0
+NNP:ROOT,conj:NNP	2 1
+NNP:ROOT,dep:NN	0 1
+NNP:ROOT,dep:NN	0 2
+NNP:ROOT,dep:NN	1 0
+NNP:ROOT,dep:NN	2 0
+NNP:ROOT,dep:NN	2 1
+NNP:ROOT,dep:NNP	2 0
+NNP:ROOT,dep:NNP	2 1
+NNP:appos,appos:NN	1 2
+NNP:appos,appos:NN	2 1
+NNP:appos,appos:NNP	1 2
+NNP:appos,appos:NNP	2 1
+NNP:appos,attr:NN	1 2
+NNP:appos,attr:NN	2 1
+NNP:appos,conj:NNP	1 3
+NNP:appos,conj:NNP	3 1
+NNP:appos,dep:NNP	2 1
+NNP:appos,prep:IN:of:IN,pobj:NN	1 3
+NNP:appos,prep:IN:of:IN,pobj:NNP	1 3
+NNP:appos,prep:IN:of:IN,pobj:NNP	3 1
+NNP:attr,ROOT:VBP<@'re>VBP,attr:NN	1 2
+NNP:attr,ROOT:VBZ<@'s>VBZ,attr:NN	1 2
+NNP:attr,ROOT:VBZ<@'s>VBZ,attr:NN	2 1
+NNP:attr,ROOT:VBZ<@'s>VBZ,nsubj:NN	0 2
+NNP:attr,ROOT:VBZ<@'s>VBZ,nsubj:NN	2 0
+NNP:attr,appos:NN	2 1
+NNP:attr,conj:NNP	1 3
+NNP:attr,conj:NNP	3 1
+NNP:attr,nn:NNP	1 2
+NNP:attr,nn:NNP	2 1
+NNP:attr,prep:IN:of:IN,pobj:NNP	1 3
+NNP:conj,ROOT:NNP:a:NNP,conj:NNP	1 2
+NNP:conj,ROOT:NNP:a:NNP,conj:NNP	2 1
+NNP:conj,ROOT:NNP:a:NNP,dep:NN	1 2
+NNP:conj,appos:NN	2 3
+NNP:conj,appos:NN	3 2
+NNP:conj,conj:NNP	1 3
+NNP:conj,dep:NN	2 0
+NNP:conj,dep:NNP:a:NNP,conj:NNP	2 1
+NNP:conj,dobj:NNP	1 3
+NNP:conj,prep:IN:of:IN,pobj:NNP	2 4
+NNP:dep,appos:NN	1 0
+NNP:dep,appos:NN	1 2
+NNP:dep,appos:NN	2 0
+NNP:dep,appos:NN	2 1
+NNP:dep,appos:NNP	1 0
+NNP:dep,appos:NNP	1 2
+NNP:dep,appos:NNP	2 1
+NNP:dep,conj:NNP	0 1
+NNP:dep,conj:NNP	0 2
+NNP:dep,conj:NNP	1 0
+NNP:dep,conj:NNP	1 2
+NNP:dep,conj:NNP	1 3
+NNP:dep,conj:NNP	2 0
+NNP:dep,conj:NNP	2 1
+NNP:dep,conj:NNP	3 1
+NNP:dep,dep:CD:1:CD,dep:NNP	0 1
+NNP:dep,dep:CD:2:CD,dep:NNP	0 1
+NNP:dep,dep:CD:3:CD,dep:NNP	0 1
+NNP:dep,dep:CD:4:CD,dep:NNP	0 1
+NNP:dep,dep:CD:5:CD,dep:NNP	0 1
+NNP:dep,dep:CD:6:CD,dep:NNP	0 1
+NNP:dep,dep:CD:7:CD,dep:NNP	0 1
+NNP:dep,dep:CD:8:CD,dep:NNP	0 1
+NNP:dep,dep:CD:9:CD,dep:NNP	0 1
+NNP:dep,dep:LS:1:LS,dep:NNP	0 1
+NNP:dep,dep:NN	0 1
+NNP:dep,dep:NN	1 0
+NNP:dep,dep:NN	2 0
+NNP:dep,dep:NN	2 1
+NNP:dep,dep:NNP	0 1
+NNP:dep,dep:NNP	1 0
+NNP:dep,dep:NNP	1 2
+NNP:dep,dep:NNP	2 1
+NNP:dep,dep:SYM:]:SYM,dep:NNP	1 0
+NNP:dep,dep:SYM:]:SYM,nn:NNP	0 1
+NNP:dep,dep:SYM:]:SYM,nn:NNP	1 0
+NNP:dep,pobj:SYM:]:SYM,nn:NNP	1 0
+NNP:dep,prep:IN:of:IN,pobj:NN	2 0
+NNP:dep,prep:IN:of:IN,pobj:NN	3 1
+NNP:dep,prep:IN:of:IN,pobj:NNP	0 2
+NNP:dep,prep:IN:of:IN,pobj:NNP	1 3
+NNP:dep,prep:IN:of:IN,pobj:NNP	2 0
+NNP:dep,prep:IN:of:IN,pobj:NNP	3 1
+NNP:dobj,appos:NN	1 0
+NNP:dobj,appos:NN	2 0
+NNP:dobj,appos:NN	2 1
+NNP:dobj,appos:NNP	2 1
+NNP:dobj,conj:NN	3 0
+NNP:dobj,nn:NNP	1 2
+NNP:dobj,nn:NNP	2 1
+NNP:dobj,prep:IN:of:IN,pobj:NNP	1 3
+NNP:nn,NNP:::,nn:NNP	0 1
+NNP:nn,NNP:::,nn:NNP	1 0
+NNP:nn,ROOT:CD:15:CD,nn:NNP	0 1
+NNP:nn,ROOT:CD:3:CD,nn:NNP	0 1
+NNP:nn,ROOT:CD:3:CD,nn:NNP	1 0
+NNP:nn,ROOT:NN:a.:NN,nn:NNP	0 1
+NNP:nn,ROOT:NN:a.:NN,nn:NNP	1 0
+NNP:nn,ROOT:NNP:a:NNP,appos:NN	0 2
+NNP:nn,ROOT:NNP:a:NNP,appos:NN	2 0
+NNP:nn,ROOT:NNP:a:NNP,appos:NNP	2 0
+NNP:nn,ROOT:NNP:a:NNP,conj:NNP	2 0
+NNP:nn,ROOT:NNP:a:NNP,dep:NN	0 2
+NNP:nn,ROOT:NNP:a:NNP,dep:NNP	0 2
+NNP:nn,ROOT:NNP:a:NNP,dep:NNP	2 0
+NNP:nn,ROOT:NNP:a:NNP,nn:NNP	0 1
+NNP:nn,ROOT:NNP:a:NNP,nn:NNP	1 0
+NNP:nn,ROOT:NNP:abbrevi:NNP,prep:IN:for:IN,pobj:NN	3 0
+NNP:nn,appos:NN	1 2
+NNP:nn,appos:NN	2 1
+NNP:nn,appos:NNP	1 2
+NNP:nn,appos:NNP	2 1
+NNP:nn,appos:NNP:a:NNP,nn:NNP	1 0
+NNP:nn,attr:NN	2 1
+NNP:nn,attr:NNP	1 2
+NNP:nn,attr:NNP	2 1
+NNP:nn,conj:NN	3 2
+NNP:nn,conj:NNP	0 2
+NNP:nn,conj:NNP	1 2
+NNP:nn,conj:NNP	2 1
+NNP:nn,conj:NNP	2 3
+NNP:nn,conj:NNP	3 2
+NNP:nn,conj:NNP:a:NNP,nn:NNP	0 1
+NNP:nn,conj:NNP:a:NNP,nn:NNP	1 0
+NNP:nn,dep:CD:9:CD,nn:NNP	1 0
+NNP:nn,dep:NN	1 2
+NNP:nn,dep:NN	2 1
+NNP:nn,dep:NN:a.:NN,nn:NNP	0 1
+NNP:nn,dep:NN:a.:NN,nn:NNP	1 0
+NNP:nn,dep:NNP	0 1
+NNP:nn,dep:NNP	1 0
+NNP:nn,dep:NNP	1 2
+NNP:nn,dep:NNP	2 1
+NNP:nn,dep:NNP:a:NNP,appos:NN	0 2
+NNP:nn,dep:NNP:a:NNP,appos:NNP	0 2
+NNP:nn,dep:NNP:a:NNP,appos:NNP	2 0
+NNP:nn,dep:NNP:a:NNP,dep:NN	0 2
+NNP:nn,dep:NNP:a:NNP,dep:NNP	0 2
+NNP:nn,dep:NNP:a:NNP,nn:NNP	0 1
+NNP:nn,dep:NNP:a:NNP,nn:NNP	1 0
+NNP:nn,dobj:NN	2 1
+NNP:nn,dobj:NNP	1 2
+NNP:nn,dobj:NNP	2 1
+NNP:nn,dobj:NNP:a:NNP,nn:NNP	0 1
+NNP:nn,dobj:NNP:a:NNP,nn:NNP	1 0
+NNP:nn,nsubj:NN	0 1
+NNP:nn,nsubj:NN	1 0
+NNP:nn,nsubj:NN	2 1
+NNP:nn,nsubj:NNP	0 1
+NNP:nn,nsubj:NNP	1 0
+NNP:nn,nsubj:NNP	1 2
+NNP:nn,nsubj:NNP	2 1
+NNP:nn,nsubj:NNP:'s:NNP,nn:NNP	0 1
+NNP:nn,nsubj:NNP:'s:NNP,nn:NNP	1 0
+NNP:nn,nsubj:NNP:a:NNP,nn:NNP	0 1
+NNP:nn,nsubj:NNP:a:NNP,nn:NNP	1 0
+NNP:nn,nsubjpass:NNP	1 0
+NNP:nn,nsubjpass:NNP:a:NNP,nn:NNP	1 0
+NNP:nn,pobj:CD:3:CD,nn:NNP	1 0
+NNP:nn,pobj:NN	2 1
+NNP:nn,pobj:NN	2 3
+NNP:nn,pobj:NN	3 2
+NNP:nn,pobj:NN:a.:NN,nn:NNP	0 1
+NNP:nn,pobj:NN:a.:NN,nn:NNP	1 0
+NNP:nn,pobj:NNP	1 2
+NNP:nn,pobj:NNP	2 1
+NNP:nn,pobj:NNP	2 3
+NNP:nn,pobj:NNP	3 2
+NNP:nn,pobj:NNP:a:NNP,appos:NN	0 2
+NNP:nn,pobj:NNP:a:NNP,appos:NN	2 0
+NNP:nn,pobj:NNP:a:NNP,appos:NNP	0 2
+NNP:nn,pobj:NNP:a:NNP,conj:NNP	0 3
+NNP:nn,pobj:NNP:a:NNP,nn:NNP	0 1
+NNP:nn,pobj:NNP:a:NNP,nn:NNP	1 0
+NNP:nn,pobj:NNP:a:NNP,prep:IN:of:IN,pobj:NNP	0 3
+NNP:nn,pobj:POS:'s:POS,dep:NN	1 0
+NNP:nn,pobj:POS:'s:POS,nn:NNP	1 0
+NNP:nsubj,ROOT:VBD<abandon>VBD,dobj:NN	2 0
+NNP:nsubj,ROOT:VBP<'re>VBP,attr:NN	2 0
+NNP:nsubj,ROOT:VBZ<'s>VBZ,attr:NN	0 2
+NNP:nsubj,ROOT:VBZ<'s>VBZ,attr:NN	2 0
+NNP:nsubj,appos:NN	1 0
+NNP:nsubj,appos:NN	2 0
+NNP:nsubj,appos:NN	2 1
+NNP:nsubj,appos:NNP	1 0
+NNP:nsubj,ccomp:VBZ<'s>VBZ,attr:NN	2 0
+NNP:nsubj,conj:NN	0 2
+NNP:nsubj,conj:NNP	0 2
+NNP:nsubj,conj:NNP	1 0
+NNP:nsubj,conj:NNP	2 0
+NNP:nsubj,conj:NNP	3 1
+NNP:nsubj,nn:NNP	0 1
+NNP:nsubj,nn:NNP	1 0
+NNP:nsubj,nn:NNP	1 2
+NNP:nsubj,nn:NNP	2 1
+NNP:nsubj,prep:IN:of:IN,pobj:NNP	0 2
+NNP:nsubjpass,appos:NN	2 0
+NNP:nsubjpass,nn:NNP	0 1
+NNP:nsubjpass,nn:NNP	1 0
+NNP:pobj,appos:NN	1 0
+NNP:pobj,appos:NN	1 2
+NNP:pobj,appos:NN	2 0
+NNP:pobj,appos:NN	2 1
+NNP:pobj,appos:NN	2 3
+NNP:pobj,appos:NN	3 0
+NNP:pobj,appos:NN	3 2
+NNP:pobj,appos:NNP	1 0
+NNP:pobj,appos:NNP	2 1
+NNP:pobj,appos:NNP	2 3
+NNP:pobj,appos:NNP	3 2
+NNP:pobj,conj:NN	1 3
+NNP:pobj,conj:NN	3 0
+NNP:pobj,conj:NN	3 1
+NNP:pobj,conj:NN	4 2
+NNP:pobj,conj:NNP	0 3
+NNP:pobj,conj:NNP	1 3
+NNP:pobj,conj:NNP	2 0
+NNP:pobj,conj:NNP	2 3
+NNP:pobj,conj:NNP	2 4
+NNP:pobj,conj:NNP	3 0
+NNP:pobj,conj:NNP	3 1
+NNP:pobj,conj:NNP	4 2
+NNP:pobj,conj:NNP:b:NNP,nn:NN	2 0
+NNP:pobj,conj:NNP:b:NNP,nn:NNP	2 0
+NNP:pobj,dep:NN	2 1
+NNP:pobj,dep:NNP	1 2
+NNP:pobj,dep:NNP	2 1
+NNP:pobj,dep:NNP	3 2
+NNP:pobj,nn:NNP	1 2
+NNP:pobj,nn:NNP	2 3
+NNP:pobj,nn:NNP	3 2
+NNP:pobj,prep:IN:in:IN,attr:NN	1 3
+NNP:pobj,prep:IN:in:IN,nsubj:NN	1 3
+NNP:pobj,prep:IN:of:IN,attr:NN	1 3
+NNP:pobj,prep:IN:of:IN,attr:NN	3 1
+NNP:pobj,prep:IN:of:IN,attr:NNP	1 3
+NNP:pobj,prep:IN:of:IN,dobj:NN	1 3
+NNP:pobj,prep:IN:of:IN,dobj:NN	3 1
+NNP:pobj,prep:IN:of:IN,dobj:NNP	1 3
+NNP:pobj,prep:IN:of:IN,nsubj:NN	0 2
+NNP:pobj,prep:IN:of:IN,nsubj:NN	2 0
+NNP:pobj,prep:IN:of:IN,nsubjpass:NN	0 2
+NNP:pobj,prep:IN:of:IN,pobj:NN	1 3
+NNP:pobj,prep:IN:of:IN,pobj:NN	2 4
+NNP:pobj,prep:IN:of:IN,pobj:NN	3 1
+NNP:pobj,prep:IN:of:IN,pobj:NN	4 2
+NNP:pobj,prep:IN:of:IN,pobj:NNP	1 3
+NNP:pobj,prep:IN:of:IN,pobj:NNP	2 4
+NNP:pobj,prep:IN:of:IN,pobj:NNP	3 0
+NNP:pobj,prep:IN:of:IN,pobj:NNP	3 1
+NNP:pobj,prep:IN:of:IN,pobj:NNP	4 2
+NNP:pobj,rcmod:VBZ<is>VBZ,attr:NN	2 0
