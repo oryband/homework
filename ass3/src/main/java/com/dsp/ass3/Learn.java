@@ -3,12 +3,15 @@ package com.dsp.ass3;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 
@@ -21,6 +24,7 @@ public class Learn {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Learn.class.getName()));
 
+    // Read source file according to protocol ('s3' or local-file) and return InputStream.
     private static InputStream readSource(String protocol, String path) {
         InputStream is;
 
@@ -60,6 +64,7 @@ public class Learn {
     }
 
 
+    // Parse InputStream data and return WEKA instances, ready for learning.
     private static Instances readData(String protocol, String path) {
         logger.info("Reading file: " + path);
 
@@ -109,20 +114,74 @@ public class Learn {
         Evaluation eval = new Evaluation(randData);
 
         // Learn and perform 10-fold validation.
+        Classifier cModel = null;
         int folds = 10;
         for (int n=0; n < folds; n++) {
             // Set train/test instances.
             Instances train = randData.trainCV(folds, n),
                       test = randData.testCV(folds, n);
 
-            // Build and evaluate classifier.
-            Classifier cModel = (Classifier) new NaiveBayes();
+            // Build and evaluate classifier using NaiveBayes.
+            cModel = (Classifier) new NaiveBayes();
             cModel.buildClassifier(train);
             eval.evaluateModel(cModel, test);
         }
 
+        // Use the last classifier (from the 10th fold) to classify,
+        // and fetch 10 pairs from each TP/TN/FP/FN instance.
+        Instance instance;
+        boolean correctClassValue, predictedClassValue;
+        List<Instance>
+            tp = new ArrayList<Instance>(),
+            tn = new ArrayList<Instance>(),
+            fp = new ArrayList<Instance>(),
+            fn = new ArrayList<Instance>();
+
+        for (int i=0; i < 100; i++) {
+            // Get instance and correct class value.
+            instance = data.instance(i);
+            correctClassValue = instance.classValue() == 0.0 ? false : true ;
+
+            // Delete correct classifcation and let classifier predict its own classification.
+            instance.setClassMissing();
+            predictedClassValue = cModel.classifyInstance(instance) == 0.0 ? false : true ;
+
+            // Populate tp/tn/fp/fn instance list.
+            // *P
+            if (predictedClassValue == true) {
+                // TP
+                if (correctClassValue == true) {
+                    tp.add(instance);
+                } else {
+                    fp.add(instance);
+                }
+            } else {
+                // *N
+                if (correctClassValue == true) {
+                    // FN
+                    fn.add(instance);
+                } else {
+                    // TN
+                    tn.add(instance);
+                }
+            }
+        }
+
+        // TODO Print at most 10 instances (vectors) of each type to seperate files.
+        int c = 0;
+        for (Instance ins : tp) {
+            // Print at most 10 instances.
+            if (c == 10) {
+                break;
+            }
+
+            c++;
+        }
+
+
         // Print result.
         System.out.println(eval.toClassDetailsString());
+        System.out.println();
         System.out.println(eval.toSummaryString());
     }
 }
