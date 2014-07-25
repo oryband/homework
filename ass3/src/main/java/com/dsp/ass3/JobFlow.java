@@ -62,7 +62,6 @@ public class JobFlow {
         joinOutput = s3BaseUri + "steps/join/output/",
         sumOutput = s3BaseUri + "steps/sum/output/",
         labelsOutput = s3BaseUri + "steps/labels/output/",
-        attributesOutput = s3BaseUri + "steps/attributes/output/",
         singleLineOutput = s3BaseUri + "steps/singleLine/output/",
         dataOutput = s3BaseUri + "steps/data/output/",
 
@@ -72,10 +71,6 @@ public class JobFlow {
         joinInput2 = biarcsOutput + hadoopOutputFileName,
         sumInput = joinOutput + hadoopOutputFileName,
         labelsInput = sumOutput + hadoopOutputFileName,
-        attributesInput = labelsOutput + "small-stan",
-        // attributesInput = labelsOutput + "small-inver",
-        // attributesInput = labelsOutput + "large-stan",
-        // attributesInput = labelsOutput + "large-inver",
         singleLineInput = sumOutput + hadoopOutputFileName,
         dataInput1 = "steps/labels/output/small-stan",
         // dataInput1 = "steps/labels/output/small-inver",
@@ -138,20 +133,18 @@ public class JobFlow {
             joinConfig = createStepConfig(joinClass, createJarStepConfig(joinJarUrl, joinClass, joinInput1, joinInput2, joinOutput)),
             sumConfig = createStepConfig(sumClass, createJarStepConfig(sumJarUrl, sumClass, sumInput, sumOutput)),
             labelsConfig = createStepConfig(labelsClass, createJarStepConfig(labelsJarUrl, labelsClass, dpMin, labelsInput, labelsOutput)),
-            attributesConfig = createStepConfig(attributesClass, createJarStepConfig(attributesJarUrl, attributesClass, attributesInput, attributesOutput)),
             singleLineConfig = createStepConfig(singleLineClass, createJarStepConfig(singleLineJarUrl, singleLineClass, singleLineInput, singleLineOutput)),
             dataConfig = createStepConfig(dataClass, createJarStepConfig(dataJarUrl, dataClass, dataInput1, dataInput2, dataOutput));
 
         JobFlowInstancesConfig instances = createJobFlowInstancesConfig();
 
         // Set job flow request, first stage.
-        // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
-        //         pairsConfig, biarcsConfig, joinConfig, sumConfig,
-        //         labelsConfig, singleLineConfig);
+        RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
+                pairsConfig, biarcsConfig, joinConfig, sumConfig,
+                labelsConfig, singleLineConfig);
 
         // Second stage.
-        RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances,
-                attributesConfig, dataConfig);
+        // RunJobFlowRequest runFlowRequest = createRunJobFlowRequest(instances, dataConfig);
 
         // Execute job flow.
         RunJobFlowResult runJobFlowResult = mapReduce.runJobFlow(runFlowRequest);
