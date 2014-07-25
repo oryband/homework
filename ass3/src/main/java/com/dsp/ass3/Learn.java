@@ -105,7 +105,11 @@ public class Learn {
             return;
         }
 
+        logger.info("Finished parsing data.");
+
         // Randomize seed.
+        logger.info("Randomizing instances.");
+
         int seed = 10;
         Instances randData = new Instances(data);
         randData.randomize(new Random(seed));
@@ -117,13 +121,20 @@ public class Learn {
         Classifier cModel = null;
         int folds = 10;
         for (int n=0; n < folds; n++) {
+            logger.info("Fold #" + (n+1));
+
             // Set train/test instances.
-            Instances train = randData.trainCV(folds, n),
-                      test = randData.testCV(folds, n);
+            Instances train = randData.trainCV(folds, n);
+
+            Instances test = randData.testCV(folds, n);
 
             // Build and evaluate classifier using NaiveBayes.
             cModel = (Classifier) new NaiveBayes();
+
+            logger.info("\tTraining.");
             cModel.buildClassifier(train);
+
+            logger.info("\tEvaluating.");
             eval.evaluateModel(cModel, test);
         }
 
