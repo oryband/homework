@@ -1,3 +1,3 @@
 #!/bin/bash
 
-clear && mvn compile --quiet && rm -rf ./out && clear && ./run-class.sh $@
+clear && mvn clean compile --quiet && rm -rf ./out && clear && ./run-class.sh $@
