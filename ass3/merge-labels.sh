@@ -5,7 +5,7 @@ DIR=$1
 OUTPUT=$DIR"labels"
 
 # Init empty file.
-echo "" > $OUTPUT
+> $OUTPUT
 
 # For each 'part-r-..' file, echo its contents.
 for f in $DIR"part-r-*"

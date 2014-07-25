@@ -3,7 +3,6 @@ set -x
 
 DIR=$1
 ATTRIBUTES=$DIR/attributes
-DATA=$DIR/data
 OUTPUT=$DIR/data.arff
 
 # Echo title.
@@ -19,4 +18,7 @@ cat $ATTRIBUTES >> $OUTPUT
 echo "@DATA" >> $OUTPUT
 
 # Echo all data.
-cat $DATA >> $OUTPUT
+for f in $DIR"part-r-*"
+do
+    cat $f >> $OUTPUT
+done
