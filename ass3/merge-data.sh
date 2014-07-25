@@ -1,18 +1,22 @@
 #!/bin/bash
+set -x
 
 DIR=$1
+ATTRIBUTES=$DIR/attributes
+DATA=$DIR/data
+OUTPUT=$DIR/data.arff
 
 # Echo title.
-echo "@RELATION deptrees" > $DIR/data.arff
+echo "@RELATION deptrees" > $OUTPUT
 
 # Echo first attribute (class).
-echo "@ATTRIBUTE related {true,false}" >> $DIR/data.arff
+echo "@ATTRIBUTE related {true,false}" >> $OUTPUT
 
 # Echo all attributes.
-cat $DIR/attributes >> $DIR/data.arff
+cat $ATTRIBUTES >> $OUTPUT
 
 # Echo data title.
-echo "@DATA" >> $DIR/data.arff
+echo "@DATA" >> $OUTPUT
 
 # Echo all data.
-cat $DIR/data >> $DIR/data.arff
+cat $DATA >> $OUTPUT
