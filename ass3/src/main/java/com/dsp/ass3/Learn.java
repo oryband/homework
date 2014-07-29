@@ -24,6 +24,11 @@ public class Learn {
 
     private static final Logger logger = Utils.setLogger(Logger.getLogger(Learn.class.getName()));
 
+    private static final String attributesOpen = "{ ",
+                                attributesClose = "}",
+                                attributesDelim = ",",
+                                tab = "/t";
+
     // Read source file according to protocol ('s3' or local-file) and return InputStream.
     private static InputStream readSource(String protocol, String path) {
         InputStream is;
@@ -94,6 +99,43 @@ public class Learn {
         return data;
     }
 
+    // Add the instance only if the list size if smaller then 10
+    private static void myAdd(List<Instance> list, Instance instance) {
+        if (list.size() < 10) {
+            list.add(instance);
+        }
+    }
+
+    // Print each the list with its info at the beginning.
+    private static void printList(List<Instance> list, String info) {
+
+        String[] attributes;
+        String pos, attribute;
+        Instance instance;
+
+        System.out.println(info);
+
+        for (int i = 0 ; i < list.size() ; i++) {
+            instance = list.get(i);
+
+            // Get the attributes from the instance
+            attributes = instance.toString().split(attributesDelim);
+            System.out.print(attributesOpen);
+
+            // Look for each attribute and print it
+            for (int j = 1 ; j < attributes.length ; j++) {
+                attribute = attributes[j];
+                pos = attribute.substring(0, attribute.indexOf(Utils.delim));
+                System.out.print(instance.attribute(Integer.valueOf(pos)));
+                if (j != attributes.length -1) {
+                    System.out.print(tab);
+                }
+            }
+            System.out.println(attributesClose);
+        }
+
+    }
+
 
     public static void main(String[] args) throws Exception {
         // Read path.
@@ -140,7 +182,7 @@ public class Learn {
 
         // Use the last classifier (from the 10th fold) to classify,
         // and fetch 10 pairs from each TP/TN/FP/FN instance.
-        Instance instance;
+        Instance instance, lastInstance = data.lastInstance();
         boolean correctClassValue, predictedClassValue;
         List<Instance>
             tp = new ArrayList<Instance>(),
@@ -148,9 +190,12 @@ public class Learn {
             fp = new ArrayList<Instance>(),
             fn = new ArrayList<Instance>();
 
-        for (int i=0; i < 100; i++) {
-            // Get instance and correct class value.
-            instance = data.instance(i);
+        // Get the first instance
+        int i = 0;
+        instance = data.instance(i);
+
+        while ((tp.size() < 10 || tn.size() < 10 || fp.size() < 10 || fn.size() < 10 ) && ! instance.equals(lastInstance) ) {
+            //correct class value.
             correctClassValue = instance.classValue() == 0.0 ? false : true ;
 
             // Delete correct classifcation and let classifier predict its own classification.
@@ -160,34 +205,34 @@ public class Learn {
             // Populate tp/tn/fp/fn instance list.
             // *P
             if (predictedClassValue == true) {
-                // TP
                 if (correctClassValue == true) {
-                    tp.add(instance);
+                    // TP
+                    myAdd(tp, instance);
                 } else {
-                    fp.add(instance);
+                    // FP
+                    myAdd(fp, instance);
                 }
             } else {
                 // *N
                 if (correctClassValue == true) {
                     // FN
-                    fn.add(instance);
+                    myAdd(fn, instance);
                 } else {
                     // TN
-                    tn.add(instance);
+                    myAdd(tn, instance);
                 }
             }
+
+            // Get the next instance
+            i++;
+            instance = data.instance(i);
         }
 
-        // TODO Print at most 10 instances (vectors) of each type to seperate files.
-        int c = 0;
-        for (Instance ins : tp) {
-            // Print at most 10 instances.
-            if (c == 10) {
-                break;
-            }
-
-            c++;
-        }
+        // Print tp/tn/fp/fn lists.
+        printList(tp,"TP ::");
+        printList(fp,"FP ::");
+        printList(fn,"FN ::");
+        printList(tn,"TN ::");
 
 
         // Print result.
