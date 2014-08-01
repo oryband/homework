@@ -25,7 +25,7 @@ public class Attribute {
             System.out.println(e.getMessage());
             return;
         } catch (IOException e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
             return;
         }
         System.out.println("Done...");
