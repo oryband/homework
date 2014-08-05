@@ -27,7 +27,7 @@ public class Learn {
     private static final String attributesOpen = "{ ",
                                 attributesClose = "}",
                                 attributesDelim = ",",
-                                tab = "/t";
+                                tab = "\t";
 
     // Read source file according to protocol ('s3' or local-file) and return InputStream.
     private static InputStream readSource(String protocol, String path) {
@@ -110,7 +110,7 @@ public class Learn {
     private static void printList(List<Instance> list, String info) {
 
         String[] attributes;
-        String pos, attribute;
+        String pos, attribute, strValue;
         Instance instance;
 
         System.out.println(info);
@@ -126,7 +126,8 @@ public class Learn {
             for (int j = 1 ; j < attributes.length ; j++) {
                 attribute = attributes[j];
                 pos = attribute.substring(0, attribute.indexOf(Utils.delim));
-                System.out.print(instance.attribute(Integer.valueOf(pos)));
+                strValue = instance.attribute(Integer.valueOf(pos)).toString();
+                System.out.print(strValue.substring(strValue.indexOf("'") + 1, strValue.lastIndexOf("'")));
                 if (j != attributes.length -1) {
                     System.out.print(tab);
                 }
@@ -229,10 +230,10 @@ public class Learn {
         }
 
         // Print tp/tn/fp/fn lists.
-        printList(tp,"TP ::");
-        printList(fp,"FP ::");
-        printList(fn,"FN ::");
-        printList(tn,"TN ::");
+        printList(tp,"True positive:");
+        printList(fp,"False positive:");
+        printList(fn,"False negative:");
+        printList(tn,"True negative:");
 
 
         // Print result.
