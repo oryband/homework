@@ -27,7 +27,8 @@ public class Learn {
     private static final String attributesOpen = "{ ",
                                 attributesClose = "}",
                                 attributesDelim = ",",
-                                tab = "\t";
+                                tab = "\t",
+                                coma = "'";
 
     // Read source file according to protocol ('s3' or local-file) and return InputStream.
     private static InputStream readSource(String protocol, String path) {
@@ -127,7 +128,9 @@ public class Learn {
                 attribute = attributes[j];
                 pos = attribute.substring(0, attribute.indexOf(Utils.delim));
                 strValue = instance.attribute(Integer.valueOf(pos)).toString();
-                System.out.print(strValue.substring(strValue.indexOf("'") + 1, strValue.lastIndexOf("'")));
+
+                //print attribute value : @ATTRIBUTE 'NN:ROOT\,appos:NN03' INTEGER -> NN:ROOT\,appos:NN03
+                System.out.print(strValue.substring(strValue.indexOf(coma) + 1, strValue.lastIndexOf(coma)));
                 if (j != attributes.length -1) {
                     System.out.print(tab);
                 }
