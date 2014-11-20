@@ -1,0 +1,2 @@
+In order to just run a server, execute 'node tester yes 30000' for a server that
+will run for 30 seconds.

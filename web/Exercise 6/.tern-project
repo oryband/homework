@@ -1,0 +1,15 @@
+{
+  "libs": [
+      "browser",
+      "ecma5",
+      "jquery",
+      "underscore"
+  ],
+  "loadEagerly": [
+      "node_modules/underscore/underscore.js",
+      "node_modules/backbone/bacbkone.js"
+  ],
+  "plugins": {
+    "node": {}
+  }
+}

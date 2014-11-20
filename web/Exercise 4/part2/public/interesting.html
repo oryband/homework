@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Interesting Functions Test</title>
+  <meta name="viewport" content="width=device-width">
+</head>
+<body>
+  <h1>Interesting Functions Test</h1>
+  <p>
+    These tests send <code>GET/POST</code> normal and Ajax requests, and display the json responses on screen.
+    <ol>
+      <li>Test #1 sends a normal <code>GET</code> request to <code>http://[address]:[port]/test/one</code></li>
+      <li>
+        Test #2 sends an empty (data-less) Ajax <code>GET</code> request to <code>http://[address]:[port]/test/two</code>,
+        and shows the json response below.
+      </li>
+      <li>Test #3 sends an Ajax <code>POST</code> request with data, and shows the json response below.</li>
+    </ol>
+  </p>
+  <div id="ajax-form">
+    <ul>
+      <li><a href="test/one">GET /test/one</a></li>
+      <li><button id="test-two-button">Ajax GET /test/two (no data)</button></li>
+      <li>
+        <input id="a-input" placeholder="parameter a">
+        <input id="b-input" placeholder="parameter b">
+        <button id="test-three-button">Ajax POST /test/three (with data)</button>
+      </li>
+  </div>
+
+  <p>Test #2 + #3 output:</p>
+  <div id="data-container">... Click a button first!</div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      'use strict';
+
+      $('#ajax-form').submit(function () { return false; });
+
+      var container = $('#data-container');
+
+      $('#test-two-button').click(function () {
+        $.get('/test/two', function (data) {
+          var list = $('<ul/>');
+          container.empty().append(list);
+          for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+              list.append('<li>' + key + ': ' + data[key] + '</li>');
+            }
+          }
+        });
+      });
+
+      $('#test-three-button').click(function () {
+        $.post(
+          '/test/three', // URL
+          JSON.stringify({ 'a': $('#a-input').val(), 'b': $('#b-input').val() }),  // Data
+          function (data) {  // Success function.
+            var json = JSON.parse(data),
+                list = $('<ul/>');
+
+            container.empty().append(list);
+
+            for (var key in json) {
+              if (json.hasOwnProperty(key)) {
+                list.append('<li>' + key + ': ' + json[key] + '</li>');
+              }
+            }
+          }
+        );
+      });
+    });
+  </script>
+</body>
+</html>

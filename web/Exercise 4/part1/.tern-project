@@ -1,0 +1,16 @@
+{
+  "libs": [
+      "browser",
+      "ecma5",
+      "jquery",
+      "underscore"
+  ],
+  "loadEagerly": [
+      "bower_components/underscore/underscore.js",
+      "bower_components/jquery/jquery.js",
+      "bower_components/backbone/bacbkone.js"
+  ],
+  "plugins": {
+    "node": {}
+  }
+}

@@ -1,0 +1,6 @@
+To import the mock data:
+mongoimport -d db -c shows shows.json
+mongoimport -d db -c participants participants.json
+
+To run the sample tests:
+node test_the_falling_star.js

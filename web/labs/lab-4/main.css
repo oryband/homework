@@ -1,0 +1,12 @@
+li {
+  display: block;
+  border: 1px solid black;
+  text-align: center;
+  list-style-type: none;
+}
+
+@media screen and (min-width: 700px) {
+  li {
+    display: inline;
+  }
+}

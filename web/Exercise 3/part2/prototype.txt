@@ -1,0 +1,7 @@
+1. JS doesn't support encapsulation (per se), while Java does.
+2. JS inheritance happens at run-time, while in Java it happens in compile-time.
+   From here we can conclude that in JS, a certain object's methods can be changed on-the-fly at run-time.
+3. JS inheritance is based on objects' instances, while Java is based on Classes.
+   That is, JS copies instances, while Java builds from a 'blueprint', that is, that instance's class.
+4. JS objects are their own classes. That is, each object is its own class.
+   In Java, every object has a different class which 'describes' the instance.

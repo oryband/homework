@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html manifest="manifest.mf">
+  <head>
+    <title>Awesome Email App</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="css/default.css">
+    <script src="bower_components/jquery/jquery.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/backbone.localStorage/backbone.localStorage.js"></script>
+    <script src="bower_components/socket.io-client/socket.io.js"></script>
+    <script type="text/javascript" src="js/default.js"></script>
+    <script type="text/javascript" src="js/mail.js"></script>
+  </head>
+  <body>
+    <div class="mailContainer" id="emailapp">
+      <h1>Awesome Email App <small>by <b>Ory Band</b> and <b>Dvir Azulay</b></small></h1>
+      <p class="bg-success" id="success"></p>
+      <button type="button" class="btn btn-primary compose">Compose a new mail</button>
+      <div id="compose"></div>
+      <table class="table table-hover" id="email-list">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="toggle-all" /></th>
+            <th>Sender</th>
+            <th>Subject</th>
+            <th>Time</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+
+    <script type="text/template" id="email-template">
+      <tr class="email read_<%- read %>">
+        <td><input type="checkbox" /></td>
+        <td><%- from.firstName + ' ' + from.lastName %></td>
+        <td><%- subject %></td>
+        <td><%- date %></td>
+        <td>
+          <a class="reply" href="#"><span class="glyphicon glyphicon-share-alt"></span></a>
+          <a class="delete" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+        </td>
+      </tr>
+      <tr class="mail_content">
+        <td colspan="5">
+          <button type="button" class="close" aria-hidden="true">&times;</button>
+          <p><%- body %></p>
+        </td>
+      </tr>
+    </script>
+
+    <script type="text/template" id="compose_dialog-template">
+      <button type="button" class="close close_dialog" aria-hidden="true">&times;</button>
+      <h3>Compose a new email</h3>
+      <p class="bg-warning" id="error"></p>
+      <form role="form" action="/sendmail" method="POST">
+        <div class="form-group">
+          <label for="recipient">Recipient</label>
+          <input required="required" type="text" class="form-control" id="recipient" name="to" placeholder="Enter one recipient for your email" value="<% if (from) { print(from.username); } %>">
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input required="required" type="text" class="form-control" id="subject" name="subject" placeholder="Enter the subject for your email" value="<% if (subject) { print('RE: '); print(subject); } %>">
+        </div>
+        <div class="form-group">
+          <label for="body">Email</label>
+          <textarea class="form-control" id="body" name="body" rows="8" placeholder="Enter your email"><%
+            if (body) {
+            print('\n\n');
+            print('-----------------------');
+            print('\n');
+            print(body);
+            }
+            %></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" id="create_email">Submit</button>
+        <a class="close_dialog" href="#">Cancel</a>
+      </form>
+    </script>
+
+    <script src="js/models/email.js"></script>
+    <script src="js/collections/emails.js"></script>
+    <script src="js/views/email-compose.js"></script>
+    <script src="js/views/emails.js"></script>
+    <script src="js/views/app.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
