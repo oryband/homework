@@ -1,0 +1,8 @@
+threshold	1
+fp	3
+fn	7
+tp	13
+tn	9
+precision	0.8125
+recall	0.65
+f-measure	0.7222222222222223

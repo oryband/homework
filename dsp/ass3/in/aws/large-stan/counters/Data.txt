@@ -1,0 +1,2 @@
+totalRecords	110652
+totalBytes	27897103
